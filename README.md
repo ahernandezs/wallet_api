@@ -1,7 +1,7 @@
-MFM Api dummy
+Wallet Demp Api 
 =============
 
-Single RESTful api server using  nodejs and express
+RESTful api server using  nodejs and express
 
 
 ##Prerequisites
