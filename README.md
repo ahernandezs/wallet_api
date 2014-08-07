@@ -1,4 +1,4 @@
-Wallet Demp Api 
+Wallet Demo Api 
 =============
 
 RESTful api server using  nodejs and express
