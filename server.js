@@ -37,14 +37,17 @@ app.get('api/ping', function(req, res){
 });
 
 app.get('/api/createsession', function(req, res) {
+	console.log('execute GET method createsession');
   soap.createClient(soapurl, function(err, client) {
     client.createsession({}, function(err, result) {
-      console.log(result);
+      if(err) {
+        res.send(500);
+      } else {
+        console.log(result);
 
-      var response = result.createsessionReturn;
-      console.log(response);
-      res.send(response);
-      res.end;
+        var response = result.createsessionReturn;
+        res.json(response);
+      }
     });
   });
 });
@@ -52,10 +55,22 @@ app.get('/api/createsession', function(req, res) {
 app.post('/api/login', function(req, res){
 	console.log('execute POST method login');
 
-	for(var item in req.headers) {
-		console.log(item + ": " + req.headers[item]);
-	}
-	res.send(200);
+  console.log(req.body);
+
+  var request = {loginRequest: req.body};
+  soap.createClient(soapurl, function(err, client) {
+    client.login(request, function(err, result) {
+      if(err) {
+        res.send(500);
+      } else {
+        console.log(result);
+
+        var response = result.loginReturn;
+        res.json(response);
+      }
+    });
+  });
+
 });
 
 app.get('/api/accounts/:type', function(req, res){
