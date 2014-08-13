@@ -25,6 +25,8 @@ var allowCrossDomain = function(req, res, next) {
 
 app.use(allowCrossDomain);
 
+var soap = require('soap');
+var soapurl = 'http://152.186.37.50:8280/services/umarketsc?wsdl';
 
 app.get('api/ping', function(req, res){
 	var body = 'pong';
@@ -32,6 +34,19 @@ app.get('api/ping', function(req, res){
 	res.setHeader('Content-Length', Buffer.byteLength(body));
 	res.end(body);
 	console.log('execute GET method ping');
+});
+
+app.get('/api/createsession', function(req, res) {
+  soap.createClient(soapurl, function(err, client) {
+    client.createsession({}, function(err, result) {
+      console.log(result);
+
+      var response = result.createsessionReturn;
+      console.log(response);
+      res.send(response);
+      res.end;
+    });
+  });
 });
 
 app.post('/api/login', function(req, res){
