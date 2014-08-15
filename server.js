@@ -1,7 +1,7 @@
 var express = require('express')
-, url = require("url")
-
+var  url = require("url");
 var app = express();
+var user = require('./users');
 app.use(express.json());
 app.use(express.urlencoded())
 
@@ -23,9 +23,6 @@ var allowCrossDomain = function(req, res, next) {
 
 app.use(allowCrossDomain);
 
-var soap = require('soap');
-var soapurl = 'http://152.186.37.50:8280/services/umarketsc?wsdl';
-
 app.get('api/ping', function(req, res){
 	var body = 'pong';
 	res.setHeader('Content-Type', 'text/plain');
@@ -34,23 +31,7 @@ app.get('api/ping', function(req, res){
 	console.log('execute GET method ping');
 });
 
-app.get('/api/createsession', function(req, res) {
-	console.log('execute GET method createsession');
-  soap.createClient(soapurl, function(err, client) {
-    client.createsession({}, function(err, result) {
-      if(err) {
-        res.send(500);
-      } else {
-        console.log(result);
-
-        var response = result.createsessionReturn;
-        res.json(response);
-      }
-    });
-  });
-});
-
-var user = require('./users');
+app.get('/api/createsession',user.createsession);
 app.post('/api/login',user.login);
 app.post('/api/register', user.register);
 
