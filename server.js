@@ -35,5 +35,5 @@ app.get('/api/createsession',user.createsession);
 app.post('/api/login',user.login);
 app.post('/api/register', user.register);
 
-app.listen(3000);
+app.listen( process.env.PORT  || 3000);
 console.log('Listening on port 3000');
