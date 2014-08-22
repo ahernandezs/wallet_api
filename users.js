@@ -3,13 +3,9 @@ var User = require('./model');
 var soap = require('soap');
 var soapurl = 'http://152.186.37.50:8280/services/umarketsc?wsdl';
 
-
-
 exports.login =  function(req, res){
-	console.log('execute POST method login');
-
+  console.log('execute POST method login');
   console.log(req.body);
-
   var request = {loginRequest: req.body};
   soap.createClient(soapurl, function(err, client) {
     client.login(request, function(err, result) {
@@ -23,7 +19,6 @@ exports.login =  function(req, res){
       }
     });
   });
-
 };
 
 
@@ -56,17 +51,73 @@ exports.logout = function(req, res){
     res.send(responseString);
 };
 
-exports.register = function(req, res){
-	console.log("Executing register user operation");
-	var user = req.body ;
-	console.log(req.body);
-	var userToPersist = new User(req.body);
-	console.log('User to persist user' + userToPersist);
+function registerUserMongo(user){
+	console.log("Saving User in MongoDB");
+  console.log(user);
 
+  var propSessionID = "sessionid";
+  delete user[propSessionID];
+  var propInitiator = "initiator";
+  delete user[propInitiator];
+
+  user.pin = user.new_pin ;
+  user.email = user.email_address;
+
+	console.log(user);
+	var userToPersist = new User(user);
+	console.log('User to persist user' + userToPersist);
 	userToPersist.save(function (err) {
 	  if (err) 
 	  console.log('Error to persist user');
 	});
+};
 
-	res.send(200);
+exports.register = function(req, res){
+  console.log('execute POST method register');
+  console.log(req.body);
+  var userMongo = JSON.parse(JSON.stringify(req.body));
+  var requestSoap = req.body;
+  var propPhoneID = "phoneID";
+  var propAppID = "appID";
+  delete requestSoap[propPhoneID];
+  delete requestSoap[propAppID];
+  console.log(requestSoap);
+  var request = {registerRequest: requestSoap};
+  console.log(request);
+
+  soap.createClient(soapurl, function(err, client) {
+    client.register(request, function(err, result) {
+      if(err) {
+        console.log(err);
+        res.send(500);
+      } else {
+        //register User in MongoDB
+        console.log("Register User in Mongo " + req.body);
+        registerUserMongo(userMongo);
+        var response = result.registerReturn;
+        res.json(response);
+      }
+    });
+  });
+};
+
+
+exports.authorize = function(req, res){
+  console.log('execute POST method authorize');
+  console.log(req.body);
+  var request = {authorizeRequest: req.body};
+  soap.createClient(soapurl, function(err, client) {
+    client.authorize(request, function(err, result) {
+      if(err) {
+        console.log(err);
+        res.send(500);
+      } else {
+        //register User in MongoDB
+        //registerUserMongo()
+        console.log(result);
+        var response = result.authorizeRequestReturn;
+        res.json(response);
+      }
+    });
+  });
 };
