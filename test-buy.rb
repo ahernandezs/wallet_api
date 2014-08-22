@@ -13,8 +13,6 @@ puts "pin? "
 pin = gets
 pin.chomp!
 
-
-
 puts "The product provider ?"
 target = gets
 target.chomp!
