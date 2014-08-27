@@ -13,13 +13,11 @@ puts "pin? "
 pin = gets
 pin.chomp!
 
-
-
 puts "The product provider ?"
 target = gets
 target.chomp!
 
-puts "Wallet type to use? "
+puts "Wallet type to use (1/2)? "
 type = gets
 type.chomp!
 
@@ -45,22 +43,12 @@ response = RestClient.post rest_url + 'api/login',
   :content_type => :json, :accept => :json
 
 
-response = RestClient.post rest_url + 'api/sell',
-  {:sessionid => sessionid, :to => 666 ,:amount => amount ,:type => 1 }.to_json,
-  :content_type => :json, :accept => :json
-
-
-response = RestClient.post rest_url + 'api/transfer',
-  {:sessionid => sessionid, :to => 666 ,:amount => amount , :type => 1 , :message => 'Transfer 1' }.to_json,
-  :content_type => :json, :accept => :json
-
 response = RestClient.post rest_url + 'api/buy',
-  {:sessionid => sessionid, :target => target ,:type => type , :amount => pin }.to_json,
+  {:sessionid => sessionid, :target => target ,:type => 1 , :amount => amount }.to_json,
   :content_type => :json, :accept => :json
 
 response = RestClient.post rest_url + 'api/balance',
-  {:sessionid => sessionid, :type => type  }.to_json,
+  {:sessionid => sessionid, :type => 1  }.to_json,
   :content_type => :json, :accept => :json
-
 
 puts JSON.parse(response)

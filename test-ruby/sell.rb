@@ -1,43 +1,36 @@
 require 'rubygems'
-require 'digest/sha1'
 require 'rest_client'
 
 
 rest_url = 'http://localhost:3000/'
 
-puts "Username? "
+
+puts "Username?"
 username = gets
 username.chomp!
 
-puts "PIN? "
+puts "pin? "
 pin = gets
 pin.chomp!
 
-puts "name? "
-name = gets
-name.chomp!
+puts "Transfer to? "
+to = gets
+to.chomp!
 
-puts "email address? "
-email = gets
-email.chomp!
 
-puts "phoneID? "
-phoneID = gets
-phoneID.chomp!
+puts "Wallet type to use (1/2)? "
+type = gets
+type.chomp!
 
-puts "appID? "
-appID = gets
-appID.chomp!
+puts "Amount $? "
+amount = gets
+amount.chomp!
 
 response = RestClient.get rest_url + 'api/createsession'
 
 response = JSON.parse(response)
 sessionid = response["sessionid"]
 puts sessionid
-
-response = RestClient.post rest_url + 'api/register',
-  {:sessionid => sessionid, :initiator => username , :new_pin => pin , :name => name , :email_address  => email , :phoneID => phoneID , :appID => appID }.to_json,
-  :content_type => :json, :accept => :json
 
 
 result = username.downcase + pin
@@ -49,5 +42,12 @@ puts hashpin
 response = RestClient.post rest_url + 'api/login',
   {:sessionid => sessionid, :initiator =>  username , :pin => hashpin }.to_json,
   :content_type => :json, :accept => :json
+
+
+response = RestClient.post rest_url + 'api/sell',
+  {:sessionid => sessionid, :to => to ,:amount => amount ,:type => 1 }.to_json,
+  :content_type => :json, :accept => :json
+
+
 
 puts JSON.parse(response)
