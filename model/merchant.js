@@ -11,6 +11,3 @@ var merchantSchema =  new Schema({
 });
 
 module.exports = mongoose.model('Merchant', merchantSchema);  
-
-
-

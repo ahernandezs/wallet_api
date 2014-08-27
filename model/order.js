@@ -13,5 +13,3 @@ var orderSchema =  new Schema({
 });
 
 module.exports = mongoose.model('Order', orderSchema);
-
-

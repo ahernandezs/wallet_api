@@ -58,4 +58,5 @@ response = RestClient.post rest_url + 'api/register',
 response = RestClient.post rest_url + 'api/resetpin',
   {:sessionid => sessionid, :new_pin => pin ,  :agent => agent ,:suppress_pin_expiry => true }.to_json,
   :content_type => :json, :accept => :json
+
 puts JSON.parse(response)

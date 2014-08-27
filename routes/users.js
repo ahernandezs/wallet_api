@@ -111,8 +111,6 @@ exports.authorize = function(req, res){
         console.log(err);
         res.send(500);
       } else {
-        //register User in MongoDB
-        //registerUserMongo()
         console.log(result);
         var response = result.authoriseReturn;
         res.json(response);
@@ -121,10 +119,19 @@ exports.authorize = function(req, res){
   });
 };
 
+exports.orders = function(req, res) {
+  console.log('execute GET method orders');
+};
+
+exports.orderDetail = function(req, res) {
+  console.log('execute GET method orders')
+};
+
 exports.resetPin = function(req, res){
   console.log('execute POST method resetPin');
   console.log(req.body);
   var request = { resetPinRequestType : req.body } ;
+  //var request = {resetPinRequest: requestType };
   console.log(request);
   soap.createClient(soapurl, function(err, client) {
     client.resetPin(request, function(err, result) {
@@ -139,14 +146,3 @@ exports.resetPin = function(req, res){
     });
   });
 };
-
-exports.orders = function(req, res) {
-  console.log('execute GET method orders');
-  soap.createClient(soapurl, function(err, client) {
-};
-
-
-exports.orderDetail = function(req, res) {
-  console.log('execute GET method orders')
-};
-
