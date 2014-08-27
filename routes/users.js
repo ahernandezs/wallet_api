@@ -121,35 +121,32 @@ exports.authorize = function(req, res){
   });
 };
 
-exports.orders = function(req, res) {
-  console.log('execute GET method orders');
+exports.resetPin = function(req, res){
+  console.log('execute POST method resetPin');
+  console.log(req.body);
+  var request = { resetPinRequestType : req.body } ;
+  console.log(request);
   soap.createClient(soapurl, function(err, client) {
-    client.createsession({}, function(err, result) {
+    client.resetPin(request, function(err, result) {
       if(err) {
+        console.log(err);
         res.send(500);
       } else {
         console.log(result);
-
-        var response = result.createsessionReturn;
+        var response = result.resetPinReturn;
         res.json(response);
       }
     });
   });
+};
+
+exports.orders = function(req, res) {
+  console.log('execute GET method orders');
+  soap.createClient(soapurl, function(err, client) {
 };
 
 
 exports.orderDetail = function(req, res) {
-  console.log('execute GET method orders');
-  soap.createClient(soapurl, function(err, client) {
-    client.createsession({}, function(err, result) {
-      if(err) {
-        res.send(500);
-      } else {
-        console.log(result);
-
-        var response = result.createsessionReturn;
-        res.json(response);
-      }
-    });
-  });
+  console.log('execute GET method orders')
 };
+
