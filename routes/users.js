@@ -111,8 +111,6 @@ exports.authorize = function(req, res){
         console.log(err);
         res.send(500);
       } else {
-        //register User in MongoDB
-        //registerUserMongo()
         console.log(result);
         var response = result.authoriseReturn;
         res.json(response);
@@ -124,7 +122,6 @@ exports.authorize = function(req, res){
 exports.orders = function(req, res) {
   console.log('execute GET method orders');
 };
-
 
 exports.orderDetail = function(req, res) {
   console.log('execute GET method orders')
