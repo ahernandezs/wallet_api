@@ -48,6 +48,4 @@ response = RestClient.post rest_url + 'api/sell',
   {:sessionid => sessionid, :to => to ,:amount => amount ,:type => 1 }.to_json,
   :content_type => :json, :accept => :json
 
-
-
 puts JSON.parse(response)
