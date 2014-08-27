@@ -1,38 +1,29 @@
 require 'rubygems'
-require 'digest/sha1'
 require 'rest_client'
 
 
 rest_url = 'http://localhost:3000/'
 
-puts "Username? "
+
+puts "Username?"
 username = gets
 username.chomp!
 
-puts "PIN? "
+puts "pin? "
 pin = gets
 pin.chomp!
 
-puts "Agent to register? "
-agent = gets
-agent.chomp!
+puts "The product provider ?"
+target = gets
+target.chomp!
 
+puts "Wallet type to use (1/2)? "
+type = gets
+type.chomp!
 
-puts "name? "
-name = gets
-name.chomp!
-
-puts "email address? "
-email = gets
-email.chomp!
-
-puts "phoneID? "
-phoneID = gets
-phoneID.chomp!
-
-puts "appID? "
-appID = gets
-appID.chomp!
+puts "Amount to pay ($)? "
+amount = gets
+amount.chomp!
 
 response = RestClient.get rest_url + 'api/createsession'
 
@@ -51,8 +42,13 @@ response = RestClient.post rest_url + 'api/login',
   {:sessionid => sessionid, :initiator =>  username , :pin => hashpin }.to_json,
   :content_type => :json, :accept => :json
 
-response = RestClient.post rest_url + 'api/register',
-  {:sessionid => sessionid, :agent => agent , :new_pin => pin , :name => name , :email_address  => email , :phoneID => phoneID , :appID => appID }.to_json,
+
+response = RestClient.post rest_url + 'api/buy',
+  {:sessionid => sessionid, :target => target ,:type => 1 , :amount => amount }.to_json,
+  :content_type => :json, :accept => :json
+
+response = RestClient.post rest_url + 'api/balance',
+  {:sessionid => sessionid, :type => 1  }.to_json,
   :content_type => :json, :accept => :json
 
 puts JSON.parse(response)

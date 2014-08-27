@@ -13,33 +13,12 @@ puts "PIN? "
 pin = gets
 pin.chomp!
 
-puts "Agent to register? "
-agent = gets
-agent.chomp!
-
-
-puts "name? "
-name = gets
-name.chomp!
-
-puts "email address? "
-email = gets
-email.chomp!
-
-puts "phoneID? "
-phoneID = gets
-phoneID.chomp!
-
-puts "appID? "
-appID = gets
-appID.chomp!
 
 response = RestClient.get rest_url + 'api/createsession'
 
 response = JSON.parse(response)
 sessionid = response["sessionid"]
 puts sessionid
-
 
 result = username.downcase + pin
 result = Digest::SHA1.hexdigest(result).downcase
@@ -51,8 +30,8 @@ response = RestClient.post rest_url + 'api/login',
   {:sessionid => sessionid, :initiator =>  username , :pin => hashpin }.to_json,
   :content_type => :json, :accept => :json
 
-response = RestClient.post rest_url + 'api/register',
-  {:sessionid => sessionid, :agent => agent , :new_pin => pin , :name => name , :email_address  => email , :phoneID => phoneID , :appID => appID }.to_json,
+response = RestClient.post rest_url + 'api/authorize',
+  {:sessionid => sessionid }.to_json,
   :content_type => :json, :accept => :json
 
 puts JSON.parse(response)
