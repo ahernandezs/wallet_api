@@ -1,8 +1,10 @@
 var express = require('express')
 var  url = require("url");
+var user =  require('./routes/users');
+var wallet = require('./routes/wallet');
+var product = require('./routes/products');
+var merchant = require('./routes/merchants');
 var app = express();
-var user = require('./users');
-var wallet = require('./wallet');
 app.use(express.json());
 app.use(express.urlencoded())
 
@@ -33,12 +35,15 @@ app.get('/api/ping', function(req, res){
 });
 
 app.get('/api/createsession',user.createsession);
+app.post('/api/authorize',user.authorize);
 app.post('/api/login',user.login);
 app.post('/api/register', user.register);
 app.post('/api/buy', wallet.buy);
 app.post('/api/balance', wallet.balance);
 app.post('/api/transfer', wallet.transfer);
 app.post('/api/sell', wallet.sell);
+app.get('/api/products',product.products);
+app.get('/api/merchants',merchant.merchants);
 
 
 app.listen( process.env.PORT  || 3000);
