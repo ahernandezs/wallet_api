@@ -38,6 +38,7 @@ app.get('/api/createsession',user.createsession);
 app.post('/api/authorize',user.authorize);
 app.post('/api/login',user.login);
 app.post('/api/register', user.register);
+app.post('/api/resetpin', user.resetPin);
 app.post('/api/buy', wallet.buy);
 app.post('/api/balance', wallet.balance);
 app.post('/api/transfer', wallet.transfer);
