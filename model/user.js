@@ -4,7 +4,6 @@ var db = mongoose.connect(   process.env.MONGOLAB_URI || process.env.MONGOHQ_URL
 var Schema = mongoose.Schema;
 
 var userSchema = new Schema({
-	_id: Number ,
 	name: String ,
 	email:String ,
 	pin:String ,

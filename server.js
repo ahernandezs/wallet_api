@@ -35,6 +35,7 @@ app.get('/api/ping', function(req, res){
 });
 
 app.get('/api/createsession',user.createsession);
+app.post('/api/validate',user.validate);
 app.post('/api/authorize',user.authorize);
 app.post('/api/login',user.login);
 app.post('/api/register', user.register);

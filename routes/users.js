@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var User = require('../model/user');
-var anzenUser = require('./registerOperations');
+var Userquery = require('../model/userQueryBuilder');
+var anzenUser = require('./registerFlow');
 var soap = require('soap');
 var soapurl = 'http://152.186.37.50:8280/services/umarketsc?wsdl';
 
@@ -39,35 +40,12 @@ exports.createsession = function(req, res) {
 exports.logout = function(req, res){
   var logoutResponse = {
   };
-
   var responseString = JSON.stringify(user);
   var headers = {
     'Content-Type': 'application/json',
     'Content-Length': userString.length
   };
-
-    res.send(responseString);
-};
-
-function registerUserMongo(user){
-  console.log("Saving User in MongoDB");
-  console.log(user);
-
-  var propSessionID = "sessionid";
-  delete user[propSessionID];
-  var propInitiator = "initiator";
-  delete user[propInitiator];
-
-  user.pin = user.new_pin ;
-  user.email = user.email_address;
-
-  console.log(user);
-  var userToPersist = new User(user);
-  console.log('User to persist user' + userToPersist);
-  userToPersist.save(function (err) {
-    if (err) 
-    console.log('Error to persist user');
-  });
+  res.send(responseString);
 };
 
 exports.register = function(req, res){
@@ -121,5 +99,13 @@ exports.resetPin = function(req, res){
         res.json(response);
       }
     });
+  });
+};
+
+exports.validate = function(req, res){
+  console.log('execute POST method validate');
+  console.log(req.body);
+  Userquery.validateUser(req.body.phoneID, function(err,result){
+    res.json(result);
   });
 };
