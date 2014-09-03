@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var User = require('../model/user');
-var anzenUser = require('./registerOperations');
+var anzenUser = require('./registerFlow');
 var soap = require('soap');
 var soapurl = 'http://152.186.37.50:8280/services/umarketsc?wsdl';
 
