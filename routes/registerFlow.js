@@ -1,6 +1,7 @@
 var async = require('async');
 var soap = require('soap');
 var crypto = require('crypto');
+var Userquery = require('../model/userQueryBuilder');
 var soapurl = 'http://152.186.37.50:8280/services/umarketsc?wsdl';
 
 var username = 'anzen_01';
@@ -65,9 +66,17 @@ exports.registerFlow = function(payload,callback) {
             if(response.result == 18)
                callback("ERROR", response);
             else
-              callback(null,sessionid);   
+              callback(null,sessionid);
           }
         });
+      });
+    },
+    function(sessionid, callback){
+      console.log('Register in Mongo ' + sessionid);
+      Userquery.createUser(payload,function(err,result){
+          if (err) return handleError(err);
+          else
+            callback(null,sessionid);
       });
     },
     function(sessionid,callback){
@@ -82,9 +91,9 @@ exports.registerFlow = function(payload,callback) {
             return new Error(err);
           } else {
             console.log(result);
-            var response = result.registerReturn;
+            var response = result.resetPinReturn;
             console.log(result);
-            callback(null, result);
+            callback(null, response);
           }
         });
       });
