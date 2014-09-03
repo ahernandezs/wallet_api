@@ -69,7 +69,6 @@ exports.balance = function(req, res) {
         res.send(500);
       } else {
         console.log(result);
-
         var response = result.balanceReturn;
         res.json(response);
       }
