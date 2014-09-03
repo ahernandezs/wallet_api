@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var User = require('../model/user');
+var anzenUser = require('./registerOperations');
 var soap = require('soap');
 var soapurl = 'http://152.186.37.50:8280/services/umarketsc?wsdl';
 
@@ -13,14 +14,12 @@ exports.login =  function(req, res){
         res.send(500);
       } else {
         console.log(result);
-
         var response = result.loginReturn;
         res.json(response);
       }
     });
   });
 };
-
 
 exports.createsession = function(req, res) {
   console.log('execute GET method createsession');
@@ -30,7 +29,6 @@ exports.createsession = function(req, res) {
         res.send(500);
       } else {
         console.log(result);
-
         var response = result.createsessionReturn;
         res.json(response);
       }
@@ -75,29 +73,8 @@ function registerUserMongo(user){
 exports.register = function(req, res){
   console.log('execute POST method register');
   console.log(req.body);
-  var userMongo = JSON.parse(JSON.stringify(req.body));
-  var requestSoap = req.body;
-  var propPhoneID = "phoneID";
-  var propAppID = "appID";
-  delete requestSoap[propPhoneID];
-  delete requestSoap[propAppID];
-  console.log(requestSoap);
-  var request = {registerRequest: requestSoap};
-  console.log(request);
-
-  soap.createClient(soapurl, function(err, client) {
-    client.register(request, function(err, result) {
-      if(err) {
-        console.log(err);
-        res.send(500);
-      } else {
-        //register User in MongoDB
-        registerUserMongo(userMongo);
-        console.log(result);
-        var response = result.registerReturn;
-        res.json(response);
-      }
-    });
+  anzenUser.registerFlow(req.body, function(err,result){
+    res.json(result);
   });
 };
 
