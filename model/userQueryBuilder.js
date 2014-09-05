@@ -4,10 +4,10 @@ exports.validateUser = function(phoneID,callback){
 	console.log('Search user in mongoDB');
 	User.findOne({ 'phoneID': phoneID }, 'name 	email pin	phoneID appID', function (err, person) {
 		if (err) return handleError(err); 
-		else if(person === null)
-			callback("ERROR", { code: '0' ,  message: 'User is not yet registered' });
+		else if(!person)
+			callback("ERROR", { statusCode: 0 ,  message: 'User is not yet registered' });
 		else{
-			var  response = { code: '18' ,  message: 'User is already registered' };
+			var  response =   { statusCode: 1 ,  message: 'User is already registered' };
 			callback(null, person); 
 		}	
 	});
@@ -26,9 +26,7 @@ exports.createUser = function(user,callback){
   var userToPersist = new User(user);
   console.log('User to persist user' + userToPersist);
   userToPersist.save(function (err) {
-    //if (err) return handleError(err);
-    var  response = { code: '0' ,  message: 'User registered correctly' };
-    if (err) console.log('Error to persist user ->'+ err);
-	callback(null, response); ;
+    if (err) callback("ERROR", { statusCode: 1,  message: 'Error to register user' });
+	callback(null, { statusCode: 0 ,  message: 'User registered correctly' }); ;
   });
 };

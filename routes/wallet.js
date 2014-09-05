@@ -3,6 +3,7 @@ var User = require('../model/user');
 var soap = require('soap');
 var soapurl = 'http://152.186.37.50:8280/services/umarketsc?wsdl';
 
+
 exports.sell =  function(req, res){
   console.log('execute POST method sell');
   console.log(req.body);
