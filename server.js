@@ -3,7 +3,8 @@ var  url = require("url");
 var user =  require('./routes/users');
 var wallet = require('./routes/wallet');
 var product = require('./routes/products');
-var merchant = require('./routes/merchants');
+var merchant = require('./routes/merchants')
+var urbanService = require('./services/urban');
 var app = express();
 app.use(express.json());
 app.use(express.urlencoded())
@@ -46,6 +47,7 @@ app.post('/api/transfer', wallet.transfer);
 app.post('/api/sell', wallet.sell);
 app.get('/api/products',product.products);
 app.get('/api/merchants',merchant.merchants);
+app.post('/api/sendpush',urbanService.singlePush);
 
 
 app.listen( process.env.PORT  || 3000);

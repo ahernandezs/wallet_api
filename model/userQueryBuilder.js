@@ -5,9 +5,9 @@ exports.validateUser = function(phoneID,callback){
 	User.findOne({ 'phoneID': phoneID }, 'name 	email pin	phoneID appID', function (err, person) {
 		if (err) return handleError(err); 
 		else if(!person)
-			callback("ERROR", { statusCode: 0 ,  message: 'User is not yet registered' });
+			callback("ERROR", { statusCode: 1 ,  message: 'User is not yet registered' });
 		else{
-			var  response =   { statusCode: 1 ,  message: 'User is already registered' };
+			var  response =   { statusCode: 0 ,  message: 'User is already registered' };
 			callback(null, person); 
 		}	
 	});
@@ -28,5 +28,18 @@ exports.createUser = function(user,callback){
   userToPersist.save(function (err) {
     if (err) callback("ERROR", { statusCode: 1,  message: 'Error to register user' });
 	callback(null, { statusCode: 0 ,  message: 'User registered correctly' }); ;
+  });
+};
+
+
+exports.findAppID = function(phoneID,callback){
+  console.log('Search user in mongoDB');
+  User.findOne({ 'phoneID': phoneID }, 'appID', function (err, person) {
+    if (err) return handleError(err);
+    else if(!person)
+      callback("ERROR", { statusCode: 0 ,  message: 'User not  Found' });
+    else{
+      callback(null, person.appID);
+    }
   });
 };
