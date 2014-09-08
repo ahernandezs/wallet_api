@@ -15,6 +15,10 @@ puts "name? "
 name = gets
 name.chomp!
 
+puts "company?"
+company = gets
+company.chomp!
+
 puts "email address? "
 email = gets
 email.chomp!
@@ -29,7 +33,7 @@ appID.chomp!
 
 
 response = RestClient.post rest_url + 'api/register',
-  {:agent => agent , :new_pin => pin , :name => name , :email_address  => email , :phoneID => phoneID , :appID => appID }.to_json,
+  {:agent => agent , :new_pin => pin , :name => name , :company => company , :email_address  => email , :phoneID => phoneID , :appID => appID }.to_json,
   :content_type => :json, :accept => :json
 
 puts JSON.parse(response)

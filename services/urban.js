@@ -19,10 +19,12 @@ exports.singlePush = function(req, res){
 		ua.pushNotification('/api/push', payload, function(error) {
 			if(error) {
 				console.log('Error to send notification ' + error);
-				res.send(500);
+				var response =  { statusCode: 0 ,  message: 'Error to send notification' };
+				res.json(response);
 			}
-			console.log('notification send  correctly ');
-			res.send(200);
+			console.log('notification sent  correctly ');
+			var response = { statusCode: 0 ,  message: 'Notification sent  correctly' };
+			res.json(response)
 		});
 	});
 }
