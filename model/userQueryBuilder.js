@@ -5,10 +5,10 @@ exports.validateUser = function(phoneID,callback){
 	User.findOne({ 'phoneID': phoneID }, 'name 	email pin	phoneID appID', function (err, person) {
 		if (err) return handleError(err); 
 		else if(!person)
-			callback("ERROR", { statusCode: 1 ,  message: 'User is not yet registered' });
+			callback("ERROR", { statusCode: 1 ,  additionalInfo: 'User is not yet registered' });
 		else{
-			var  response =   { statusCode: 0 ,  message: 'User is already registered' };
-			callback(null, person); 
+			var  response =   { statusCode: 0 ,  additionalInfo: person };
+			callback(null, response);
 		}	
 	});
 };
@@ -21,7 +21,6 @@ exports.createUser = function(user,callback){
   delete user[propInitiator];
   user.pin = user.new_pin ;
   user.email = user.email_address;
-
   console.log(user);
   var userToPersist = new User(user);
   console.log('User to persist user' + userToPersist);

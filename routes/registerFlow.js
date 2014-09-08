@@ -63,8 +63,10 @@ exports.registerFlow = function(payload,callback) {
           } else {
             console.log(result);
             var response = result.registerReturn;
-            if(response.result == 18)
+            if(response.result == 18){
+                var response = { statusCode:1 ,  additionalInfo : result };
                callback("ERROR", response);
+            }
             else
               callback(null,sessionid);
           }
@@ -81,7 +83,7 @@ exports.registerFlow = function(payload,callback) {
     },
     function(sessionid,callback){
       console.log('Reset PIN ' + sessionid);
-      var requestSoap = { sessionid:sessionid, new_pin: payload.new_pin , agent: payload.agent, suppress_pin_expiry:'true' };
+      var requestSoap = { sessionid:sessionid, new_pin: payload.pin , agent: payload.agent, suppress_pin_expiry:'true' };
       var request = { resetPinRequestType: requestSoap };
       console.log(request);
       soap.createClient(soapurl, function(err, client) {
@@ -91,8 +93,7 @@ exports.registerFlow = function(payload,callback) {
             return new Error(err);
           } else {
             console.log(result);
-            var response = result.resetPinReturn;
-            console.log(result);
+            var response = { statusCode:0 ,  additionalInfo : result.resetPinReturn };
             callback(null, response);
           }
         });

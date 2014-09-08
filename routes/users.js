@@ -2,23 +2,15 @@ var mongoose = require('mongoose');
 var User = require('../model/user');
 var Userquery = require('../model/userQueryBuilder');
 var anzenUser = require('./registerFlow');
+var sessionUser = require('./loginFlow');
 var soap = require('soap');
 var soapurl = 'http://152.186.37.50:8280/services/umarketsc?wsdl';
 
 exports.login =  function(req, res){
   console.log('execute POST method login');
   console.log(req.body);
-  var request = {loginRequest: req.body};
-  soap.createClient(soapurl, function(err, client) {
-    client.login(request, function(err, result) {
-      if(err) {
-        res.send(500);
-      } else {
-        console.log(result);
-        var response = result.loginReturn;
-        res.json(response);
-      }
-    });
+  sessionUser.loginFlow(req.body,function(err,result){
+      res.json(result);
   });
 };
 

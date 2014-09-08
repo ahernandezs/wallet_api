@@ -15,7 +15,7 @@ app.use(express.urlencoded())
 var allowCrossDomain = function(req, res, next) {
 	res.header('Access-Control-Allow-Origin', '*');
 	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-	res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization,X-BANK-TOKEN');
+	res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 	// intercept OPTIONS method
 	if ('OPTIONS' == req.method) {
 		res.send(200);
@@ -47,7 +47,7 @@ app.post('/api/transfer', wallet.transfer);
 app.post('/api/sell', wallet.sell);
 app.get('/api/products',product.products);
 app.get('/api/merchants',merchant.merchants);
-app.post('/api/sendpush',urbanService.singlePush);
+app.post('/api/push',urbanService.singlePush);
 
 
 app.listen( process.env.PORT  || 3000);
