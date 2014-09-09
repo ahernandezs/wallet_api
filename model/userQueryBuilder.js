@@ -25,8 +25,8 @@ exports.createUser = function(user,callback){
   var userToPersist = new User(user);
   console.log('User to persist user' + userToPersist);
   userToPersist.save(function (err) {
-    if (err) callback("ERROR", { statusCode: 1,  message: 'Error to register user' });
-	callback(null, { statusCode: 0 ,  message: 'User registered correctly' }); ;
+    if (err) callback("ERROR", { statusCode: 1,  additionalInfo: 'Error to register user' });
+	  callback(null, { statusCode: 0 ,  additionalInfo: 'User registered correctly' }); ;
   });
 };
 
@@ -36,8 +36,9 @@ exports.updateUser = function(payload,callback){
   delete payload[propPhoneID];
   var update = payload ;
   console.log(payload);
-  User.update(conditions, payload, null, function(error, result) {
-    callback(null,result);
+  User.update(conditions, payload, null, function(err, result) {
+    if (err) callback("ERROR", { statusCode: 1,  message: 'Update Fail' });
+    callback(null, { statusCode: 0 ,  additionalInfo: result });
   });
 };
 
@@ -46,9 +47,8 @@ exports.findAppID = function(phoneID,callback){
   User.findOne({ 'phoneID': phoneID }, 'appID', function (err, person) {
     if (err) return handleError(err);
     else if(!person)
-      callback("ERROR", { statusCode: 0 ,  message: 'User not  Found' });
-    else{
+      callback("ERROR", { statusCode: 0 ,  additionalInfo: 'User not  Found' });
+    else
       callback(null, person.appID);
-    }
   });
 };
