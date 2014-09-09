@@ -83,7 +83,7 @@ exports.registerFlow = function(payload,callback) {
     },
     function(sessionid,callback){
       console.log('Reset PIN ' + sessionid);
-      var requestSoap = { sessionid:sessionid, new_pin: payload.pin , agent: payload.agent, suppress_pin_expiry:'true' };
+      var requestSoap = { sessionid:sessionid, new_pin: payload.pin , agent: payload.phoneID, suppress_pin_expiry:'true' };
       var request = { resetPinRequestType: requestSoap };
       console.log(request);
       soap.createClient(soapurl, function(err, client) {
