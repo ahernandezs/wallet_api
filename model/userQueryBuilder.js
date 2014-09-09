@@ -30,6 +30,16 @@ exports.createUser = function(user,callback){
   });
 };
 
+exports.updateUser = function(payload,callback){
+  var conditions = { 'phoneID': payload.phoneID }
+  var propPhoneID = 'phoneID';
+  delete payload[propPhoneID];
+  var update = payload ;
+  console.log(payload);
+  User.update(conditions, payload, null, function(error, result) {
+    callback(null,result);
+  });
+};
 
 exports.findAppID = function(phoneID,callback){
   console.log('Search user in mongoDB');

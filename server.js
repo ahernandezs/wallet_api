@@ -40,6 +40,7 @@ app.post('/api/validate',user.validate);
 app.post('/api/authorize',user.authorize);
 app.post('/api/login',user.login);
 app.post('/api/register', user.register);
+app.post('/api/updateprofile', user.updateProfile);
 app.post('/api/resetpin', user.resetPin);
 app.post('/api/buy', wallet.buy);
 app.post('/api/balance', wallet.balance);
