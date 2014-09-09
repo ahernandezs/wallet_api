@@ -19,7 +19,6 @@ exports.createUser = function(user,callback){
   delete user[propSessionID];
   var propInitiator = "initiator";
   delete user[propInitiator];
-  user.pin = user.new_pin ;
   user.email = user.email_address;
   console.log(user);
   var userToPersist = new User(user);

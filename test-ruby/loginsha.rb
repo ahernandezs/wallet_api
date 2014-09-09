@@ -3,7 +3,8 @@ require 'digest/sha1'
 require 'rest_client'
 
 
-rest_url = 'http://localhost:3000/'
+#rest_url = 'http://localhost:3000/'
+rest_url = 'http://wallet-demo-api.herokuapp.com/'
 
 puts "Username? "
 username = gets
@@ -26,7 +27,7 @@ hashpin = Digest::SHA1.hexdigest(result).upcase
 puts hashpin
 
 response = RestClient.post rest_url + 'api/login',
-  {:sessionid => sessionid, :initiator =>  username , :pin => hashpin }.to_json,
+  {:sessionid => sessionid, :phoneID =>  username , :pin => hashpin }.to_json,
   :content_type => :json, :accept => :json
 
 
