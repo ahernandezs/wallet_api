@@ -4,13 +4,14 @@ var Schema = mongoose.Schema;
 
 var orderSchema =  new Schema({
 	_id: Number ,
-    products: [  ,
+	userId: Number,
+    products: [ {name: String,
 				 quantity : String ,
 				 cost : Number }
 			  ] ,
 	total : Number ,
-	status : Number ,
-	date : String
-});
+	date : String, 
+	status: String
+}); 
 
 module.exports = mongoose.model('Order', orderSchema);
