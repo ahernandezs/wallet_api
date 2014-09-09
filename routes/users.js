@@ -48,6 +48,14 @@ exports.register = function(req, res){
   });
 };
 
+exports.updateProfile = function(req, res){
+  console.log('execute POST method updateProfile');
+  console.log(req.body);
+  Userquery.updateUser(req.body, function(err,result){
+    res.json(result);
+  });
+};
+
 exports.authorize = function(req, res){
   console.log('execute POST method authorize');
   console.log(req.body);
