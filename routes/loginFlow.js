@@ -24,7 +24,7 @@ exports.loginFlow = function(payload,callback) {
     },
     function(sessionid, callback){
       console.log('Create hashpin');
-      var hashpin = payload.initiator.toLowerCase() + payload.pin ;
+      var hashpin = payload.phoneID.toLowerCase() + payload.pin ;
       hashpin = sessionid + crypto.createHash('sha1').update(hashpin).digest('hex').toLowerCase();
       hashpin = crypto.createHash('sha1').update(hashpin).digest('hex').toUpperCase();
       console.log(hashpin);
@@ -32,7 +32,7 @@ exports.loginFlow = function(payload,callback) {
     },
     function(sessionid, hashpin, callback){
       console.log('Login');
-      var  request = { sessionid: sessionid, initiator: payload.initiator, pin: hashpin  };
+      var  request = { sessionid: sessionid, initiator: payload.phoneID , pin: hashpin  };
       var request = {loginRequest: request};
       console.log(request);
       soap.createClient(soapurl, function(err, client) {
