@@ -5,11 +5,12 @@ var ua = new UA('z6DMkdyDQJGD3wZorFFD6g', '6T6NnUa3SBqR-sjTxdjj5g', '6T6NnUa3SBq
 exports.singlePush = function(req, res){
 	console.log(req.body);
 	UserQuery.findAppID(req.body.phoneID, function(err,result){
-		var deviceID;
-		if(req.body.OS === 'ANDROID')
-			deviceID = {'apid' : result };
+		console.log(result);
+		var deviceID = null;
+		if(result.OS === 'ANDROID')
+			deviceID = {'apid' : result.appID };
 		else
-			deviceID = {'device_token' : result } ;
+			deviceID = {'device_token' : result.appID } ;
 
 		var payload = {
 			'notification': {
@@ -22,7 +23,7 @@ exports.singlePush = function(req, res){
 		ua.pushNotification('/api/push', payload, function(error) {
 			if(error) {
 				console.log('Error to send notification ' + error);
-				var response =  { statusCode: 0 ,  message: 'Error to send notification' };
+				var response =  { statusCode: 1 ,  message: 'Error to send notification' };
 				res.json(response);
 			}else{
 				console.log('notification sent  correctly ');

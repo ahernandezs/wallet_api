@@ -10,7 +10,10 @@ var userSchema = new Schema({
 	pin:String ,
 	phoneID:Number ,
 	appID:String,
-	doxs:Number
+	phoneID:String ,
+	appID:String ,
+	doxs:Number ,
+	OS : String
 });
 
 module.exports = mongoose.model('User', userSchema);
