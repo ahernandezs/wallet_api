@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Product = require('../model/merchant');
 var soap = require('soap');
-var soapurl = 'http://152.186.37.50:8280/services/umarketsc?wsdl';
+var soapurl = process.env.SOAP_URL;
 
 exports.merchants =  function(req, res){
   console.log('execute GET method merchants');

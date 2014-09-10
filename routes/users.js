@@ -4,7 +4,7 @@ var Userquery = require('../model/userQueryBuilder');
 var anzenUser = require('./registerFlow');
 var sessionUser = require('./loginFlow');
 var soap = require('soap');
-var soapurl = 'http://152.186.37.50:8280/services/umarketsc?wsdl';
+var soapurl = process.env.SOAP_URL;
 
 exports.login =  function(req, res){
   console.log('execute POST method login');

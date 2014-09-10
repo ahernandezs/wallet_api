@@ -2,7 +2,7 @@ var async = require('async');
 var soap = require('soap');
 var crypto = require('crypto');
 var Userquery = require('../model/userQueryBuilder');
-var soapurl = 'http://152.186.37.50:8280/services/umarketsc?wsdl';
+var soapurl = process.env.SOAP_URL;
 
 
 exports.loginFlow = function(payload,callback) {
@@ -36,7 +36,7 @@ exports.loginFlow = function(payload,callback) {
       var request = {loginRequest: request};
       console.log(request);
       soap.createClient(soapurl, function(err, client) {
-        client.login(request, function(err, result) {
+          client.login(request, function(err, result) {
           if(err) {
             console.log('Error' + err);
             return new Error(err);

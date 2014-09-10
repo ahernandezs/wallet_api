@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var User = require('../model/user');
 var soap = require('soap');
-var soapurl = 'http://152.186.37.50:8280/services/umarketsc?wsdl';
+var soapurl = process.env.SOAP_URL;
 
 
 exports.sell =  function(req, res){
