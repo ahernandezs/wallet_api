@@ -2,7 +2,7 @@ var async = require('async');
 var soap = require('soap');
 var crypto = require('crypto');
 var Userquery = require('../model/userQueryBuilder');
-var soapurl = 'http://152.186.37.50:8280/services/umarketsc?wsdl';
+var soapurl = process.env.SOAP_URL;
 
 var username = 'anzen_01';
 var pin  = '1234';
