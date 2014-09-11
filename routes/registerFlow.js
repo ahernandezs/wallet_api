@@ -63,7 +63,7 @@ exports.registerFlow = function(payload,callback) {
           } else {
             console.log(result);
             var response = result.registerReturn;
-            if(response.result == 18){
+            if(response.result != 0){
                 var response = { statusCode:1 ,  additionalInfo : result };
                callback("ERROR", response);
             }
