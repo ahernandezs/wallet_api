@@ -50,6 +50,7 @@ app.post('/api/sell', wallet.sell);
 app.get('/api/products',product.products);
 app.get('/api/merchants',merchant.merchants);
 app.post('/api/push',urbanService.singlePush);
+app.post('/api/getorderhistory',merchant.getOrderHistory);
 
 app.listen( process.env.PORT  || 3000);
 console.log('Listening on port 3000');

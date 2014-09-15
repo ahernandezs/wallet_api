@@ -14,3 +14,9 @@ db.products.insert({ _id : 7 ,  name : "Mocha", description : "","url":"http://a
 db.products.insert({ _id : 8 ,  name : "Caramel Macchiato", description : "","url":"http://amdocs/img/8.jpg",cost : 4.00 });
 db.products.insert({ _id : 9 ,  name : "Coffee milk", description : "","url":"http://amdocs/img/9.jpg",cost : 10.00 });
 db.products.insert({ _id : 10 , name :"Affogato", description : "","url":"http://amdocs/img/9.jpg", cost : 12.00 });
+db.orders.remove({});
+db.orders.insert({ _id : 1 , userId : 12345 , products:[{name : "Black Cofee",quantity : "2",cost : 50}], total : 100 , date : "21/08/2014" , status : "Delivered"})
+db.orders.insert({ _id : 2 , userId : 12345 , products:[{name : "Frappucino",quantity : "3",cost : 50}], total : 150 , date : "24/08/2014" , status : "Delivered"})
+db.orders.insert({ _id : 10 , userId : 1234 , products:[{name : "Americano",quantity : "1",cost : 50}], total : 50 , date : "28/08/2014" , status : "Delivered"})
+db.orders.insert({ _id : 11 , userId : 1234 , products:[{name : "Latte",quantity : "1",cost : 50}], total : 50 , date : "28/08/2014" , status : "Delivered"})
+db.orders.insert({ _id : 3 , userId : 12345 , products:[{name : "Espresso",quantity : "1",cost : 50}], total : 50 , date : "28/08/2014" , status : "Delivered"})
