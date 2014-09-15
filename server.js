@@ -1,5 +1,5 @@
 var express = require('express')
-var  url = require("url");
+var url = require("url");
 var user =  require('./routes/users');
 var wallet = require('./routes/wallet');
 var product = require('./routes/products');
@@ -8,6 +8,7 @@ var urbanService = require('./services/urban');
 var app = express();
 app.use(express.json());
 app.use(express.urlencoded())
+app.use(express.static(__dirname + '/app'));
 
 // ## CORS middleware
 //
@@ -49,7 +50,6 @@ app.post('/api/sell', wallet.sell);
 app.get('/api/products',product.products);
 app.get('/api/merchants',merchant.merchants);
 app.post('/api/push',urbanService.singlePush);
-
 
 app.listen( process.env.PORT  || 3000);
 console.log('Listening on port 3000');
