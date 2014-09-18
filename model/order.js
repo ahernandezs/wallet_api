@@ -3,7 +3,6 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var orderSchema =  new Schema({
-	_id: Number ,
 	userId: Number,
     products: [ {name: String,
 				 quantity : String ,

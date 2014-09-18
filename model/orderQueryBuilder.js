@@ -12,3 +12,16 @@ exports.validateOrders = function(userID,callback){
 		}
 	});
 };
+
+exports.putOrder = function(order,callback){
+	var newOrder = new Order(order);
+	newOrder.save(function (err) {
+		if (err){
+	        console.log(err);
+			callback("ERROR", { statusCode: 1 ,  additionalInfo: 'Order failed' });
+		}else{
+			var  response =   { statusCode: 0 ,  additionalInfo: 'Order success' };
+			callback(null, response);
+		}
+	});
+}
