@@ -22,3 +22,11 @@ exports.getOrderHistory = function(req,res){
 	});
 	console.log(req.body);
 };
+
+exports.putOrder = function(req,res){
+  Orderquery.putOrder(req.body, function(err,result){
+    if(err)
+         res.send(err);
+    res.json(result);
+  });
+};
