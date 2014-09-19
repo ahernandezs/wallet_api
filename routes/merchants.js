@@ -37,3 +37,11 @@ exports.updateOrder = function(req, res){
          res.send(err);
     res.json(result);  });
 };
+
+exports.getOrders = function(req, res) {
+    console.log( 'POST method getOrders' );
+    console.log( req.body );
+    Orderquery.getOrders(req.body.merchantID, function(err, result) {
+        res.json(result);
+    });
+};
