@@ -4,6 +4,9 @@ var Schema = mongoose.Schema;
 
 var orderSchema =  new Schema({
 	userId: Number,
+    merchantId: Number,
+    customerImage: String,
+    customerName: String,
     products: [ {name: String,
 				 quantity : String ,
 				 cost : Number }

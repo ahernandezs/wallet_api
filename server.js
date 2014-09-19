@@ -53,6 +53,7 @@ app.post('/api/push',urbanService.singlePush);
 app.post('/api/getorderhistory',merchant.getOrderHistory);
 app.put('/api/order', merchant.putOrder);
 app.post('/api/order', merchant.updateOrder)
+app.post('/api/orders', merchant.getOrders);
 
 app.listen( process.env.PORT  || 3000);
 console.log('Listening on port 3000');

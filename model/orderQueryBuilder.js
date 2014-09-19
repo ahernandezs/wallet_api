@@ -1,4 +1,5 @@
 var Order = require('./order');
+var config = require('../model/config.js');
 
 exports.validateOrders = function(userID,callback){
 	console.log('Search user in mongoDB');
@@ -36,4 +37,24 @@ exports.updateOrder = function(payload,callback){
 			callback(null, { statusCode: 0 ,  additionalInfo: 'Update success' });
 		}
 	});
+};
+
+exports.getOrders =  function(merchantID, callback) {
+    console.log( 'getOrders from MongoDB with status: ' + config.orders.status );
+    Order.find({ 'merchantId': merchantID , 'status': config.orders.status }, '_id customerImage customerName date status', function(err, orders)  {
+        var response;
+        if (err) {
+            response = { statusCode: 1, additionalInfo: config.orders.errMsg };
+            callback("ERROR: " + err.message, response);
+            console.log(err.message);
+        } else if (orders.length === 0) {
+            response = { statusCode: 0, additionalInfo: config.orders.emptyMsg }
+            callback(null, response);
+            console.log(config.orders.emptyMsg);
+        } else {
+            response = { statusCode: 0, additionalInfo: orders };
+            callback(null, response);
+            console.log(response);
+        }
+    });
 };
