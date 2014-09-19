@@ -20,8 +20,20 @@ exports.putOrder = function(order,callback){
 	        console.log(err);
 			callback("ERROR", { statusCode: 1 ,  additionalInfo: 'Order failed' });
 		}else{
-			var  response =   { statusCode: 0 ,  additionalInfo: 'Order success' };
-			callback(null, response);
+			callback(null, { statusCode: 0 ,  additionalInfo: 'Order success' });
 		}
 	});
 }
+
+exports.updateOrder = function(payload,callback){
+	var conditions = payload._id
+	delete payload['_id'];
+	Order.update(conditions, payload, null, function(err, result) {
+		if (err){
+			console.log(err)
+			callback("ERROR", { statusCode: 1,  additionalInfo: 'Update Fail' });
+		}else{
+			callback(null, { statusCode: 0 ,  additionalInfo: 'Update success' });
+		}
+	});
+};
