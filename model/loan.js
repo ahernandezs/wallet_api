@@ -2,11 +2,12 @@ var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
-var merchantSchema =  new Schema({
-	_id: Number ,
-	user: String ,
-	statusLoan:Number,
-	Date: String
+var loanSchema =  new Schema({
+    merchantId: Number,
+    customerImage: String,
+	customerName: String,
+	status:String,
+	date: String
 });
 
-module.exports = mongoose.model('Loan', merchantSchema);  
+module.exports = mongoose.model('Loan', loanSchema);

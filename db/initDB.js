@@ -20,3 +20,9 @@ db.orders.insert({ userId : 12345 , merchantId: 2, customerImage: 'http://imgur.
 db.orders.insert({ userId : 1234 , merchantId: 1, customerImage: 'http://imgur.com/image.jpg', customerName: 'Carlos', products:[{name : "Americano",quantity : "1",cost : 50}], total : 50 , date : "28/08/2014" , status : "Delivered"})
 db.orders.insert({ userId : 1234 , merchantId: 3, customerImage: 'http://imgur.com/image.jpg', customerName: 'JJ', products:[{name : "Latte",quantity : "1",cost : 50}], total : 50 , date : "28/08/2014" , status : "Delivered"})
 db.orders.insert({ userId : 12345 , merchantId: 2, customerImage: 'http://imgur.com/image.jpg', customerName: 'Alex', products:[{name : "Espresso",quantity : "1",cost : 50}], total : 50 , date : "28/08/2014" , status : "Delivered"})
+db.loans.remove({});
+db.loans.insert({ userId: 12345, merchantId: 1, customerImage: 'http://imgur.com/image.jpg', customerName: 'Jesus', status: 'New', date: '19/09/2014' });
+db.loans.insert({ userId: 12345, merchantId: 2, customerImage: 'http://imgur.com/image.jpg', customerName: 'JJ', status: 'New', date: '19/09/2014' });
+db.loans.insert({ userId: 12345, merchantId: 3, customerImage: 'http://imgur.com/image.jpg', customerName: 'Maximo', status: 'Accepted', date: '19/09/2014' });
+db.loans.insert({ userId: 12345, merchantId: 1, customerImage: 'http://imgur.com/image.jpg', customerName: 'Carlos', status: 'Rejected', date: '19/09/2014' });
+db.loans.insert({ userId: 12345, merchantId: 2, customerImage: 'http://imgur.com/image.jpg', customerName: 'Alex', status: 'Accepted', date: '19/09/2014' });
