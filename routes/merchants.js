@@ -30,3 +30,10 @@ exports.putOrder = function(req,res){
     res.json(result);
   });
 };
+
+exports.updateOrder = function(req, res){
+  Orderquery.updateOrder(req.body, function(err,result){
+    if(err)
+         res.send(err);
+    res.json(result);  });
+};
