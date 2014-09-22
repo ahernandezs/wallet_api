@@ -4,6 +4,7 @@ var user =  require('./routes/users');
 var wallet = require('./routes/wallet');
 var product = require('./routes/products');
 var merchant = require('./routes/merchants')
+var loan = require('./routes/loans');
 var urbanService = require('./services/urban');
 var app = express();
 app.use(express.json());
@@ -54,6 +55,7 @@ app.post('/api/getorderhistory',merchant.getOrderHistory);
 app.put('/api/order', merchant.putOrder);
 app.post('/api/order', merchant.updateOrder)
 app.post('/api/orders', merchant.getOrders);
+app.post('/api/loans', loan.getLoans);
 
 app.listen( process.env.PORT  || 3000);
 console.log('Listening on port 3000');
