@@ -48,7 +48,7 @@ app.post('/api/buy', wallet.buy);
 app.post('/api/balance', wallet.balance);
 app.post('/api/transfer', wallet.transfer);
 app.post('/api/sell', wallet.sell);
-app.get('/api/products',product.products);
+app.post('/api/products', product.products);
 app.get('/api/merchants',merchant.merchants);
 app.post('/api/push',urbanService.singlePush);
 app.post('/api/getorderhistory',merchant.getOrderHistory);
