@@ -4,16 +4,16 @@ db.merchants.insert({ id: 1, name : "amdocs Cafe 1" ,address: "Av. Mariano Escob
 db.merchants.insert({ id: 2, name : "amdocs Cafe 2" ,address: "Av. Universidad #1000, Col. Santa Cruz Atoya " , latitude:19.366944 , longitude:-99.16527  });
 db.merchants.insert({ id: 3, name : "amdocs Cafe 3" ,address: "Parroquia No. 194. Col. Del Valle" , latitude:19.371944 , longitude:-99.178333 });
 db.products.remove({});
-db.products.insert({ name : "Black Cofee", description : "", "url":"http://amdocs/img/1.jpg" , cost : 5.00 });
-db.products.insert({ name : "Frappucino", description : "","url":"http://amdocs/img/2.jpg", cost : 7.00 });
-db.products.insert({ name : "Espresso ", description : "","url":"http://amdocs/img/3.jpg", cost : 12.00 });
-db.products.insert({ name : "Cappuccino", description : "","url":"http://amdocs/img/4.jpg",cost : 15.00 });
-db.products.insert({ name : "Americano", description : "","url":"http://amdocs/img/5.jpg",cost : 9.00 });
-db.products.insert({ name : "Latte", description : "","url":"http://amdocs/img/6.jpg",cost : 8.00 });
-db.products.insert({ name : "Mocha", description : "","url":"http://amdocs/img/7.jpg",cost : 5.00 });
-db.products.insert({ name : "Caramel Macchiato", description : "","url":"http://amdocs/img/8.jpg",cost : 4.00 });
-db.products.insert({ name : "Coffee milk", description : "","url":"http://amdocs/img/9.jpg",cost : 10.00 });
-db.products.insert({ name :"Affogato", description : "","url":"http://amdocs/img/9.jpg", cost : 12.00 });
+db.products.insert({ merchantId: 1, name : "Black Cofee", description : "", "url":"http://amdocs/img/1.jpg", cost : 5.00, status: "In Stock" });
+db.products.insert({ merchantId: 2, name : "Frappucino", description : "", "url":"http://amdocs/img/2.jpg", cost : 7.00, status: "In Stock" });
+db.products.insert({ merchantId: 3, name : "Espresso ", description : "", "url":"http://amdocs/img/3.jpg", cost : 12.00, status: "In Stock" });
+db.products.insert({ merchantId: 1, name : "Cappuccino", description : "", "url":"http://amdocs/img/4.jpg", cost : 15.00, status: "Out Stock" });
+db.products.insert({ merchantId: 2, name : "Americano", description : "", "url":"http://amdocs/img/5.jpg", cost : 9.00, status: "Out Stock" });
+db.products.insert({ merchantId: 3, name : "Latte", description : "", "url":"http://amdocs/img/6.jpg", cost : 8.00, status: "Out Stock" });
+db.products.insert({ merchantId: 1, name : "Mocha", description : "", "url":"http://amdocs/img/7.jpg", cost : 5.00, status: "In Stock" });
+db.products.insert({ merchantId: 2, name : "Caramel Macchiato", description : "", "url":"http://amdocs/img/8.jpg", cost : 4.00, status: "In Stock" });
+db.products.insert({ merchantId: 3, name : "Coffee milk", description : "", "url":"http://amdocs/img/9.jpg", cost : 10.00, status: "In Stock" });
+db.products.insert({ merchantId: 1, name :"Affogato", description : "", "url":"http://amdocs/img/9.jpg", cost : 12.00, status: "In Stock" });
 db.orders.remove({});
 db.orders.insert({ userId : 12345 , merchantId: 1, customerImage: 'http://imgur.com/image.jpg', customerName: 'Jesus', products:[{name : "Black Cofee",quantity : "2",cost : 50}], total : 100 , date : "21/08/2014" , status : "Open"})
 db.orders.insert({ userId : 12345 , merchantId: 2, customerImage: 'http://imgur.com/image.jpg', customerName: 'Maximo', products:[{name : "Frappucino",quantity : "3",cost : 50}], total : 150 , date : "24/08/2014" , status : "Open"})
