@@ -27,9 +27,12 @@ puts "appID? "
 appID = gets
 appID.chomp!
 
+puts "OS? "
+os = gets
+os.chomp!
 
 response = RestClient.post rest_url + 'api/register',
-  {:agent => agent , :pin => pin , :name => name , :email_address  => email , :phoneID => phoneID , :appID => appID }.to_json,
+  {:agent => agent , :pin => pin , :name => name , :email_address  => email , :phoneID => phoneID , :appID => appID , :OS => os }.to_json,
   :content_type => :json, :accept => :json
 
 puts JSON.parse(response)

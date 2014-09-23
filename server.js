@@ -26,10 +26,20 @@ var allowCrossDomain = function(req, res, next) {
 		next();
 	}
 };
-
 app.use(allowCrossDomain);
+app.use(function(req, res, next){
+  if (req.is('text/*')) {
+    req.text = '';
+    req.setEncoding('utf8');
+    req.on('data', function(chunk){ req.text += chunk });
+    req.on('end', next);
+  } else {
+    next();
+  }
+});
 
 app.get('/api/ping', function(req, res){
+	console.log(req.body)
 	var body = 'pong';
 	res.setHeader('Content-Type', 'text/plain');
 	res.setHeader('Content-Length', Buffer.byteLength(body));
@@ -43,6 +53,7 @@ app.post('/api/authorize',user.authorize);
 app.post('/api/login',user.login);
 app.post('/api/register', user.register);
 app.post('/api/updateprofile', user.updateProfile);
+app.post('/api/uploadimage', user.uploadImage);
 app.post('/api/resetpin', user.resetPin);
 app.post('/api/buy', wallet.buy);
 app.post('/api/balance', wallet.balance);
