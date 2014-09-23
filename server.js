@@ -56,6 +56,8 @@ app.put('/api/order', merchant.putOrder);
 app.post('/api/order', merchant.updateOrder)
 app.post('/api/orders', merchant.getOrders);
 app.post('/api/loans', loan.getLoans);
+app.post('/api/getdoxs', user.getDoxs);
+app.post('/api/putdoxs', user.putDoxs);
 
 app.listen( process.env.PORT  || 3000);
 console.log('Listening on port 3000');

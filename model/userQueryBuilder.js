@@ -1,4 +1,5 @@
 var User = require('./user');
+var config = require('../model/config.js');
 
 exports.validateUser = function(phoneID,callback){
 	console.log('Search user in mongoDB');
@@ -49,5 +50,31 @@ exports.findAppID = function(phoneID,callback){
       callback("ERROR", { statusCode: 0 ,  additionalInfo: 'User not  Found' });
     else
       callback(null, person.appID);
+  });
+};
+
+exports.getDoxs = function(phoneID, callback){
+  User.findOne({ 'phoneID': phoneID }, 'doxs', function (err, person) {
+    if (err) return handleError(err);
+    else if(!person){
+      callback("ERROR", { statusCode: 0 ,  additionalInfo: 'User not  Found' });
+    }else
+      callback(null, person.doxs);
+  });
+};
+
+exports.putDoxs = function(payload, callback){
+
+  var puntos = config.doxs[payload.operation];
+  var query = { 'phoneID': payload.phoneID };
+  var update = { $inc : {doxs:puntos} };
+  var options = { new: false };
+
+  User.findOneAndUpdate(query, update, options, function (err, person) {
+    if (err) return handleError(err);
+    else if(!person)
+      callback("ERROR", { statusCode: 0 ,  additionalInfo: 'User not  Found' });
+    else
+      callback(null, person.doxs);
   });
 };

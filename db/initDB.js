@@ -26,3 +26,6 @@ db.loans.insert({ userId: 12345, merchantId: 2, customerImage: 'http://imgur.com
 db.loans.insert({ userId: 12345, merchantId: 3, customerImage: 'http://imgur.com/image.jpg', customerName: 'Maximo', status: 'Accepted', date: '19/09/2014' });
 db.loans.insert({ userId: 12345, merchantId: 1, customerImage: 'http://imgur.com/image.jpg', customerName: 'Carlos', status: 'Rejected', date: '19/09/2014' });
 db.loans.insert({ userId: 12345, merchantId: 2, customerImage: 'http://imgur.com/image.jpg', customerName: 'Alex', status: 'Accepted', date: '19/09/2014' });
+
+db.users.remove({});
+db.users.insert({ name: "Jotajota", company: "anzen", email:"jj@anzen.com", pin:1238, phoneID:55591111, appID: "el appId", doxs: 5 });
