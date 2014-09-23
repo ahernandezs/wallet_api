@@ -28,7 +28,7 @@ exports.singlePush = function(req, res){
 			}else{
 				console.log('notification sent  correctly ');
 				var response = { statusCode: 0 ,  message: 'Notification sent  correctly' };
-				res.json(response)
+				res.json(response);
 			}
 		});
 	});

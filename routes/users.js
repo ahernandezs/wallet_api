@@ -3,6 +3,7 @@ var User = require('../model/user');
 var Userquery = require('../model/userQueryBuilder');
 var anzenUser = require('./registerFlow');
 var sessionUser = require('./loginFlow');
+var awsS3 = require('../services/aws-S3');
 var soap = require('soap');
 var soapurl = process.env.SOAP_URL;
 
@@ -118,6 +119,13 @@ exports.putDoxs = function(req, res){
 
 exports.getDoxs = function(req, res){
   Userquery.getDoxs(req.body.phoneID, function(err,result){
+    res.json(result);
+  });
+};
+exports.uploadImage = function(req,res){
+  console.log('execute POST method uploadImage');
+  console.log(req.headers['image-profile']);
+  awsS3.uploadImage2S3(req,function(err,result){
     res.json(result);
   });
 };

@@ -1,4 +1,4 @@
-db = db.getSiblingDB('amdocs'); //mongo kahana.mongohq.com:10056/app28614432 -u carlos -p 123 initDB.js mongo localhost:27017/max initDB.js
+db = db.getSiblingDB('app28614432'); //mongo kahana.mongohq.com:10056/app28614432 -u carlos -p 123 initDB.js mongo localhost:27017/max initDB.js
 db.merchants.remove({});
 db.merchants.insert({ id: 1, name : "amdocs Cafe 1" ,address: "Av. Mariano Escobedo esquina Lago Alberto Colonia polanco " , latitude:19.440833 , longitude:-99.185  });
 db.merchants.insert({ id: 2, name : "amdocs Cafe 2" ,address: "Av. Universidad #1000, Col. Santa Cruz Atoya " , latitude:19.366944 , longitude:-99.16527  });
@@ -27,5 +27,3 @@ db.loans.insert({ userId: 12345, merchantId: 3, customerImage: 'http://imgur.com
 db.loans.insert({ userId: 12345, merchantId: 1, customerImage: 'http://imgur.com/image.jpg', customerName: 'Carlos', status: 'Rejected', date: '19/09/2014' });
 db.loans.insert({ userId: 12345, merchantId: 2, customerImage: 'http://imgur.com/image.jpg', customerName: 'Alex', status: 'Accepted', date: '19/09/2014' });
 
-db.users.remove({});
-db.users.insert({ name: "Jotajota", company: "anzen", email:"jj@anzen.com", pin:1238, phoneID:55591111, appID: "el appId", doxs: 5 });
