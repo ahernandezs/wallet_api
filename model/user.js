@@ -8,8 +8,9 @@ var userSchema = new Schema({
 	company: String ,
 	email:String ,
 	pin:String ,
-	phoneID:String ,
-	appID:String
+	phoneID:Number ,
+	appID:String,
+	doxs:Number
 });
 
 module.exports = mongoose.model('User', userSchema);

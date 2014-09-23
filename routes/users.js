@@ -109,3 +109,15 @@ exports.validate = function(req, res){
     res.json(result);
   });
 };
+
+exports.putDoxs = function(req, res){
+  Userquery.putDoxs(req.body, function(err,result){
+    res.json(result);
+  });
+};
+
+exports.getDoxs = function(req, res){
+  Userquery.getDoxs(req.body.phoneID, function(err,result){
+    res.json(result);
+  });
+};

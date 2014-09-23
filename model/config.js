@@ -16,4 +16,13 @@ config.products.status = 'In Stock';
 config.products.errMsg = 'Something went wrong';
 config.products.emptyMsg = 'There are no products ' + config.products.status;
 
+config.doxs = {};
+config.doxs.p2p = 500;
+config.doxs.pic = 200;
+config.doxs.checkin = 300;
+config.doxs.linking = 100;
+config.doxs.payment = 500;
+config.doxs.social = 500;
+config.doxs.trivia = 100;
+
 module.exports = config;
