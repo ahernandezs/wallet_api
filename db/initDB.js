@@ -5,23 +5,31 @@ db.merchants.insert({ id: 2, name : "amdocs Cafe 2" ,address: "Av. Universidad #
 db.merchants.insert({ id: 3, name : "amdocs Cafe 3" ,address: "Parroquia No. 194. Col. Del Valle" , latitude:19.371944 , longitude:-99.178333 });
 db.products.remove({});
 // supported status for products: IN STOCK, OUT STOCK
-db.products.insert({ merchantId: 1, name : "Black Cofee", description : "", "url":"http://amdocs/img/1.jpg", cost : 5.00, status: "IN STOCK" });
-db.products.insert({ merchantId: 2, name : "Frappucino", description : "", "url":"http://amdocs/img/2.jpg", cost : 7.00, status: "IN STOCK" });
-db.products.insert({ merchantId: 3, name : "Espresso ", description : "", "url":"http://amdocs/img/3.jpg", cost : 12.00, status: "IN STOCK" });
-db.products.insert({ merchantId: 1, name : "Cappuccino", description : "", "url":"http://amdocs/img/4.jpg", cost : 15.00, status: "OUT STOCK" });
-db.products.insert({ merchantId: 2, name : "Americano", description : "", "url":"http://amdocs/img/5.jpg", cost : 9.00, status: "OUT STOCK" });
-db.products.insert({ merchantId: 3, name : "Latte", description : "", "url":"http://amdocs/img/6.jpg", cost : 8.00, status: "OUT STOCK" });
-db.products.insert({ merchantId: 1, name : "Mocha", description : "", "url":"http://amdocs/img/7.jpg", cost : 5.00, status: "IN STOCK" });
-db.products.insert({ merchantId: 2, name : "Caramel Macchiato", description : "", "url":"http://amdocs/img/8.jpg", cost : 4.00, status: "IN STOCK" });
-db.products.insert({ merchantId: 3, name : "Coffee milk", description : "", "url":"http://amdocs/img/9.jpg", cost : 10.00, status: "IN STOCK" });
-db.products.insert({ merchantId: 1, name :"Affogato", description : "", "url":"http://amdocs/img/9.jpg", cost : 12.00, status: "IN STOCK" });
+db.products.insert({ merchantId: 1, name : "Black Cofee", description : "", "url":"https://s3-us-west-1.amazonaws.com/amdocs-images/products/black.jpg", cost : 5.00, status: "IN STOCK" });
+db.products.insert({ merchantId: 1, name : "Frappucino", description : "", "url":"https://s3-us-west-1.amazonaws.com/amdocs-images/products/frapuccino.jpg", cost : 7.00, status: "IN STOCK" });
+db.products.insert({ merchantId: 1, name : "Espresso ", description : "", "url":"https://s3-us-west-1.amazonaws.com/amdocs-images/products/espresso.jpg", cost : 12.00, status: "IN STOCK" });
+db.products.insert({ merchantId: 1, name : "Cappuccino", description : "", "url":"https://s3-us-west-1.amazonaws.com/amdocs-images/products/capuccino.jpg", cost : 15.00, status: "OUT STOCK" });
+db.products.insert({ merchantId: 1, name : "Americano", description : "", "url":"https://s3-us-west-1.amazonaws.com/amdocs-images/products/american.jpg", cost : 9.00, status: "OUT STOCK" });
+db.products.insert({ merchantId: 1, name : "Latte", description : "", "url":"https://s3-us-west-1.amazonaws.com/amdocs-images/products/latte.jpg", cost : 8.00, status: "OUT STOCK" });
+db.products.insert({ merchantId: 1, name : "Mocha", description : "", "url":"https://s3-us-west-1.amazonaws.com/amdocs-images/products/mocha.jpg", cost : 5.00, status: "IN STOCK" });
+db.products.insert({ merchantId: 1, name : "Caramel Macchiato", description : "", "url":"https://s3-us-west-1.amazonaws.com/amdocs-images/products/machiato.jpg", cost : 4.00, status: "IN STOCK" });
+db.products.insert({ merchantId: 1, name : "Coffee milk", description : "", "url":"https://s3-us-west-1.amazonaws.com/amdocs-images/products/milk.jpg", cost : 10.00, status: "IN STOCK" });
+db.products.insert({ merchantId: 1, name :"Affogato", description : "", "url":"https://s3-us-west-1.amazonaws.com/amdocs-images/products/affogato.jpg", cost : 12.00, status: "IN STOCK" });
 db.orders.remove({});
 // supported status for orders: NEW, IN PROGRESS, READY, DELIVERED, CANCELED
-db.orders.insert({ userId : 12345 , merchantId: 1, customerImage: 'http://imgur.com/image.jpg', customerName: 'Jesus', products:[{name : "Black Cofee",quantity : "2",cost : 50}], total : 100 , date : "21/08/2014" , status : "NEW"})
-db.orders.insert({ userId : 12345 , merchantId: 2, customerImage: 'http://imgur.com/image.jpg', customerName: 'Maximo', products:[{name : "Frappucino",quantity : "3",cost : 50}], total : 150 , date : "24/08/2014" , status : "NEW"})
-db.orders.insert({ userId : 1234 , merchantId: 1, customerImage: 'http://imgur.com/image.jpg', customerName: 'Carlos', products:[{name : "Americano",quantity : "1",cost : 50}], total : 50 , date : "28/08/2014" , status : "DELIVERED"})
-db.orders.insert({ userId : 1234 , merchantId: 3, customerImage: 'http://imgur.com/image.jpg', customerName: 'JJ', products:[{name : "Latte",quantity : "1",cost : 50}], total : 50 , date : "28/08/2014" , status : "DELIVERED"})
-db.orders.insert({ userId : 12345 , merchantId: 2, customerImage: 'http://imgur.com/image.jpg', customerName: 'Alex', products:[{name : "Espresso",quantity : "1",cost : 50}], total : 50 , date : "28/08/2014" , status : "DELIVERED"})
+db.orders.insert({ userId : 359300054072625 , merchantId: 1, customerImage: 'https://s3-us-west-1.amazonaws.com/amdocs-images/profile/359300054072625.jpg', customerName: 'jesus', products:[{name : "Black Cofee",quantity : "1",cost : 5}], total : 5, date : "2014-09-23 23:36:16" , status : "NEW"})
+db.orders.insert({ userId : 359300054072625 , merchantId: 1, customerImage: 'https://s3-us-west-1.amazonaws.com/amdocs-images/profile/359300054072625.jpg', customerName: 'jesus', products:[{name : "Frappucino",quantity : "1",cost : 5}], total : 5, date : "2014-09-23 23:38:16" , status : "NEW"})
+db.orders.insert({ userId : 359300054072625 , merchantId: 1, customerImage: 'https://s3-us-west-1.amazonaws.com/amdocs-images/profile/359300054072625.jpg', customerName: 'jesus', products:[{name : "Black Cofee",quantity : "1",cost : 5}], total : 5, date : "2014-09-23 23:36:16" , status : "NEW"})
+db.orders.insert({ userId : 359300054072625 , merchantId: 1, customerImage: 'https://s3-us-west-1.amazonaws.com/amdocs-images/profile/359300054072625.jpg', customerName: 'jesus', products:[{name : "Americano",quantity : "1",cost : 5}], total : 5, date : "2014-09-23 23:36:16" , status : "NEW"})
+db.orders.insert({ userId : 359300054072625 , merchantId: 1, customerImage: 'https://s3-us-west-1.amazonaws.com/amdocs-images/profile/359300054072625.jpg', customerName: 'jesus', products:[{name : "Black Cofee",quantity : "1",cost : 5}], total : 5, date : "2014-09-23 23:36:16" , status : "NEW"})
+db.orders.insert({ userId : 359300054072625 , merchantId: 1, customerImage: 'https://s3-us-west-1.amazonaws.com/amdocs-images/profile/359300054072625.jpg', customerName: 'jesus', products:[{name : "Caramel Macchiato",quantity : "1",cost : 5}], total : 5, date : "2014-09-23 23:36:16" , status : "NEW"})
+db.orders.insert({ userId : 359300054072625 , merchantId: 1, customerImage: 'https://s3-us-west-1.amazonaws.com/amdocs-images/profile/359300054072625.jpg', customerName: 'jesus', products:[{name : "Black Cofee",quantity : "1",cost : 5}], total : 5, date : "2014-09-23 23:36:16" , status : "NEW"})
+db.orders.insert({ userId : 359300054072625 , merchantId: 1, customerImage: 'https://s3-us-west-1.amazonaws.com/amdocs-images/profile/359300054072625.jpg', customerName: 'jesus', products:[{name : "Coffee milk",quantity : "1",cost : 5}], total : 5, date : "2014-09-23 23:36:16" , status : "NEW"})
+db.orders.insert({ userId : 359300054072625 , merchantId: 1, customerImage: 'https://s3-us-west-1.amazonaws.com/amdocs-images/profile/359300054072625.jpg', customerName: 'jesus', products:[{name : "Mocha",quantity : "1",cost : 5}], total : 5, date : "2014-09-23 23:36:16" , status : "NEW"})
+db.orders.insert({ userId : 359300054072625 , merchantId: 1, customerImage: 'https://s3-us-west-1.amazonaws.com/amdocs-images/profile/359300054072625.jpg', customerName: 'jesus', products:[{name : "Black Cofee",quantity : "1",cost : 5}], total : 5, date : "2014-09-23 23:36:16" , status : "NEW"})
+db.orders.insert({ userId : 359300054072625 , merchantId: 1, customerImage: 'https://s3-us-west-1.amazonaws.com/amdocs-images/profile/359300054072625.jpg', customerName: 'jesus', products:[{name : "Affogato",quantity : "1",cost : 5}], total : 5, date : "2014-09-23 23:36:16" , status : "NEW"})
+db.orders.insert({ userId : 359300054072625 , merchantId: 1, customerImage: 'https://s3-us-west-1.amazonaws.com/amdocs-images/profile/359300054072625.jpg', customerName: 'jesus', products:[{name : "Frappucino",quantity : "1",cost : 5}], total : 5, date : "24/08/2014" , status : "NEW"})
+db.orders.insert({ userId : 359300054072625 , merchantId: 1, customerImage: 'https://s3-us-west-1.amazonaws.com/amdocs-images/profile/359300054072625.jpg', customerName: 'jesus', products:[{name : "Americano",quantity : "1",cost : 50}], total : 5 , date : "28/08/2014" , status : "NEW"})
 db.loans.remove({});
 // supported status for loans: NEW, ACCEPTED, REJECTED 
 db.loans.insert({ userId: 12345, merchantId: 1, customerImage: 'http://imgur.com/image.jpg', customerName: 'Jesus', status: 'NEW', date: '19/09/2014', phoneID : '3123312' });
