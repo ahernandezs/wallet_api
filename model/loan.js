@@ -7,7 +7,8 @@ var loanSchema =  new Schema({
     customerImage: String,
 	customerName: String,
 	status:String,
-	date: String
+	date: String,
+    phoneID: String
 });
 
 module.exports = mongoose.model('Loan', loanSchema);
