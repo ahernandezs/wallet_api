@@ -23,7 +23,7 @@ db.orders.insert({ userId : 1234 , merchantId: 1, customerImage: 'http://imgur.c
 db.orders.insert({ userId : 1234 , merchantId: 3, customerImage: 'http://imgur.com/image.jpg', customerName: 'JJ', products:[{name : "Latte",quantity : "1",cost : 50}], total : 50 , date : "28/08/2014" , status : "DELIVERED"})
 db.orders.insert({ userId : 12345 , merchantId: 2, customerImage: 'http://imgur.com/image.jpg', customerName: 'Alex', products:[{name : "Espresso",quantity : "1",cost : 50}], total : 50 , date : "28/08/2014" , status : "DELIVERED"})
 db.loans.remove({});
-// supported status for loans: NEW, ACCEPTED, REJECTED
+// supported status for loans: NEW, ACCEPTED, REJECTED 
 db.loans.insert({ userId: 12345, merchantId: 1, customerImage: 'http://imgur.com/image.jpg', customerName: 'Jesus', status: 'NEW', date: '19/09/2014', phoneID : '3123312' });
 db.loans.insert({ userId: 12345, merchantId: 2, customerImage: 'http://imgur.com/image.jpg', customerName: 'JJ', status: 'NEW', date: '19/09/2014', phoneID : '3123312' });
 db.loans.insert({ userId: 12345, merchantId: 3, customerImage: 'http://imgur.com/image.jpg', customerName: 'Maximo', status: 'ACCEPTED', date: '19/09/2014', phoneID : '3123312' });
