@@ -15,6 +15,7 @@ config.products = {};
 config.products.status = 'IN STOCK';
 config.products.errMsg = 'Something went wrong';
 config.products.emptyMsg = 'There are no products ' + config.products.status;
+config.products.emptyInventory = 'The inventory is empty';
 
 config.doxs = {};
 config.doxs.p2p = 500;

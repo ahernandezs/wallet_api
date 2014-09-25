@@ -11,3 +11,11 @@ exports.products =  function(req, res){
         res.json(result);
     });
 };
+
+exports.inventory = function(req, res) {
+    console.log( 'POST method inventary' );
+    console.log(req.body);
+    Productquery.getInventory(req.body.merchantID, function(err, result) {
+       res.json(result); 
+    });
+};
