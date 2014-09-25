@@ -19,3 +19,11 @@ exports.inventory = function(req, res) {
        res.json(result); 
     });
 };
+
+exports.updateInventory = function(req, res) {
+    console.log( 'POST method updateInventory' );
+    console.log(req.body);
+    Productquery.updateInventory(req.body, function(err, result) {
+        res.json(result);
+    });
+};

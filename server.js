@@ -71,6 +71,7 @@ app.post('/api/getdoxs', user.getDoxs);
 app.post('/api/putdoxs', user.putDoxs);
 app.post('/api/loan', loan.updateLoan);
 app.post('/api/inventory', product.inventory);
+app.post('/api/updateinventory', product.updateInventory);
 
 app.listen( process.env.PORT  || 3000);
 console.log('Listening on port 3000');
