@@ -79,3 +79,14 @@ exports.putDoxs = function(payload, callback){
       callback(null, person.doxs);
   });
 };
+
+exports.confirmPin = function(phoneID, callback){
+  console.log('Confirm Pin');
+  User.findOne({ 'phoneID': phoneID }, 'pin', function (err, person) {
+    if (err) return handleError(err);
+    else{
+      callback(null, person.pin);
+      console.log(person);
+    }
+  });
+};

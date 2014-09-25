@@ -8,6 +8,15 @@ var soapurl = process.env.SOAP_URL;
 exports.loginFlow = function(payload,callback) {
   async.waterfall([
     function(callback){
+      Userquery.confirmPin(payload.phoneID, function(err, pin) {
+        if(pin == payload.pin)
+          callback(null);
+        else{
+          var response = { statusCode:1 ,  additionalInfo : 'Invalid Pin' };
+          callback(err,response);
+        }});
+      },
+    function(callback){
       console.log('Create Session');
       var response = null;
       soap.createClient(soapurl, function(err, client) {
