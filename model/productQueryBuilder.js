@@ -40,3 +40,29 @@ exports.getInventory = function(merchantID, callback) {
         }
     });
 };
+
+exports.updateInventory = function(product, callback) {
+    console.log( 'verifying product in MongoDB' );
+    Product.find({ '_id' : product._id }, '_id name url', function(err, products) {
+        if (err) {
+            callback('ERROR', { statusCode: 1,  message: 'Something went wrong' } );
+            console.log( 'Something went wrong' );
+        } else if (products.length === 0) {
+            callback('ERROR', { statusCode: 1,  message: 'Failed Update (no product found)' } );
+            console.log( 'Failed Update (no product found)' );
+        } else {
+            console.log( 'updateInventory in MongoDB with _id: ' +  product._id + ". New status: " + product.status);
+            var conditions = product._id;
+            delete product._id;
+            Product.update( conditions, product, null, function(err, result) {
+                if (err) {
+                    callback('ERROR', { statusCode: 1,  message: 'Failed Update' } );
+                    console.log( 'Failed Update' );
+                } else {
+                    callback( null, { statusCode: 0 ,  message: 'Successful Update' } );
+                    console.log( 'Successful Update' );
+                }
+            });
+        }
+    });
+};
