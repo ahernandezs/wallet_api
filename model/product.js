@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 var productSchema = new Schema({
     merchantId: Number,
 	name: String,
+    url: String,
 	description: String,
 	cost: Number,
 	status: String
