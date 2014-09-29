@@ -99,6 +99,29 @@ exports.registerFlow = function(payload,callback) {
         });
       });
     },
+    function(sessionid,callback){
+      console.log('Transfer ' + sessionid);
+      var requestSoap = { sessionid:sessionid, to: payload.phoneID, amount : 10 , type: 1  };
+      var request = { registerRequest: requestSoap };
+      console.log(request);
+      soap.createClient(soapurl, function(err, client) {
+        client.register(request, function(err, result) {
+          if(err) {
+            console.log(err);
+            return new Error(err);
+          } else {
+            console.log(result);
+            var response = result.registerReturn;
+            if(response.result != 0){
+                var response = { statusCode:1 ,  additionalInfo : result };
+               callback("ERROR", response);
+            }
+            else
+              callback(null,sessionid);
+          }
+        });
+      });
+    },
     ], function (err, result) {
       console.log(result);
       if(err){      
