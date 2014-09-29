@@ -9,20 +9,25 @@ exports.loginFlow = function(payload,callback) {
   async.waterfall([
     function(callback){
       Userquery.confirmPin(payload.phoneID, function(err, pin) {
-        if(pin == payload.pin){
-          callback(null);
+        if(err){
+            console.log(err);
+            var response = { statusCode:1 ,  additionalInfo : err };
+            callback(err,response);
         }
-        else{
-          var response = { statusCode:1 ,  additionalInfo : 'Invalid Pin' };
-          callback(err,response);
-        }});
+        else {
+          if(pin === payload.pin)
+            callback(null);
+          else{
+            var response = { statusCode:1 ,  additionalInfo : 'INVALID PIN' };
+            callback('ERROR',response);
+          }
+        }
+      });
       },
     function(callback){
       console.log('Create Session');
       var response = null;
       soap.createClient(soapurl, function(err, client) {
-        console.log(err);
-        console.log(client);
         client.createsession({}, function(err, result) {
           if(err) {
             return new Error(err);
@@ -46,34 +51,9 @@ exports.loginFlow = function(payload,callback) {
       console.log('Login');
       var  request = { sessionid: sessionid, initiator: payload.phoneID , pin: hashpin  };
       var request = {loginRequest: request};
-      console.log(request);
       soap.createClient(soapurl, function(err, client) {
           client.login(request, function(err, result) {
           if(err) {
-            console.log('Error' + err);
-            return new Error(err);
-          } else {
-            var response = result.loginReturn;
-            console.log(response);
-            if(response.result  === 0 )
-              var response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : response };       
-            else
-              var response = { statusCode:1 ,  additionalInfo : response };
-
-            callback(null,response);
-          }
-        });
-      });
-    },
-    function(sessionid, hashpin, callback){
-      console.log('Login');
-      var  request = { sessionid: sessionid, initiator: payload.phoneID , pin: hashpin  };
-      var request = {loginRequest: request};
-      console.log(request);
-      soap.createClient(soapurl, function(err, client) {
-          client.login(request, function(err, result) {
-          if(err) {
-            console.log('Error' + err);
             return new Error(err);
           } else {
             var response = result.loginReturn;

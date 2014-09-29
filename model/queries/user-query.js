@@ -84,10 +84,13 @@ exports.confirmPin = function(phoneID, callback){
   console.log('Confirm Pin');
   User.findOne({ 'phoneID': phoneID }, 'pin', function (err, person) {
     if (err) return handleError(err);
-    else{
+    else if(person){
       console.log(person);
       callback(null, person.pin);
-      console.log(person);
+    }
+    else{
+      console.log("user not found");
+      callback("USER NOT FOUND", null);
     }
   });
 };
