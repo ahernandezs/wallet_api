@@ -5,7 +5,8 @@ var wallet = require('./routes/wallet');
 var product = require('./routes/products');
 var merchant = require('./routes/merchants')
 var loan = require('./routes/loans');
-var urbanService = require('./services/urban');
+var urbanService = require('./services/urban-service');
+var fs = require('fs');
 var app = express();
 app.use(express.json());
 app.use(express.urlencoded())

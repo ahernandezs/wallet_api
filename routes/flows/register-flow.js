@@ -1,7 +1,7 @@
 var async = require('async');
 var soap = require('soap');
 var crypto = require('crypto');
-var Userquery = require('../model/userQueryBuilder');
+var Userquery = require('../../model/queries/user-query');
 var soapurl = process.env.SOAP_URL;
 
 var username = 'anzen_01';

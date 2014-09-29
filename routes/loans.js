@@ -1,8 +1,8 @@
 var mongoose = require('mongoose');
-var Loan = require('../model/loan');
 var async = require('async');
-var Loanquery = require('../model/loanQueryBuilder');
-var urbanService = require('../services/urban');
+var Loan = require('../model/loan');
+var Loanquery = require('../model/queries/loan-query');
+var urbanService = require('../services/urban-service');
 
 exports.getLoans = function(req, res) {
     console.log('POST method getLoans');

@@ -1,5 +1,5 @@
-var User = require('./user');
-var config = require('../model/config.js');
+var User = require('../user');
+var config = require('../../config.js');
 
 exports.validateUser = function(phoneID,callback){
 	console.log('Search user in mongoDB');
@@ -85,6 +85,7 @@ exports.confirmPin = function(phoneID, callback){
   User.findOne({ 'phoneID': phoneID }, 'pin', function (err, person) {
     if (err) return handleError(err);
     else{
+      console.log(person);
       callback(null, person.pin);
       console.log(person);
     }

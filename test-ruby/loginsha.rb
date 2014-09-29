@@ -30,5 +30,8 @@ response = RestClient.post rest_url + 'api/login',
   {:sessionid => sessionid, :phoneID =>  username , :pin => hashpin }.to_json,
   :content_type => :json, :accept => :json
 
+response = RestClient.post rest_url + 'api/login',
+  {:phoneID =>  username , :pin => pin }.to_json,
+  :content_type => :json, :accept => :json
 
 puts JSON.parse(response)

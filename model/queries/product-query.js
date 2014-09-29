@@ -1,5 +1,5 @@
-var Product = require('./product');
-var config = require('../model/config.js');
+var Product = require('../product');
+var config = require('../../config.js');
 
 exports.getProducts =  function(merchantID, callback) {
     console.log( 'getProducts from MongoDB with status: ' + config.products.status );

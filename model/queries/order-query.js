@@ -1,5 +1,5 @@
-var Order = require('./order');
-var config = require('../model/config.js');
+var Order = require('../order');
+var config = require('../../config.js');
 
 exports.validateOrders = function(userID,callback){
 	console.log('Search user in mongoDB');

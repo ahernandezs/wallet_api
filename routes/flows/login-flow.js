@@ -1,7 +1,7 @@
 var async = require('async');
 var soap = require('soap');
 var crypto = require('crypto');
-var Userquery = require('../model/userQueryBuilder');
+var Userquery = require('../../model/queries/user-query');
 var soapurl = process.env.SOAP_URL;
 
 
@@ -9,8 +9,9 @@ exports.loginFlow = function(payload,callback) {
   async.waterfall([
     function(callback){
       Userquery.confirmPin(payload.phoneID, function(err, pin) {
-        if(pin == payload.pin)
+        if(pin == payload.pin){
           callback(null);
+        }
         else{
           var response = { statusCode:1 ,  additionalInfo : 'Invalid Pin' };
           callback(err,response);
@@ -20,6 +21,8 @@ exports.loginFlow = function(payload,callback) {
       console.log('Create Session');
       var response = null;
       soap.createClient(soapurl, function(err, client) {
+        console.log(err);
+        console.log(client);
         client.createsession({}, function(err, result) {
           if(err) {
             return new Error(err);
@@ -38,6 +41,29 @@ exports.loginFlow = function(payload,callback) {
       hashpin = crypto.createHash('sha1').update(hashpin).digest('hex').toUpperCase();
       console.log(hashpin);
       callback(null, sessionid, hashpin);
+    },
+    function(sessionid, hashpin, callback){
+      console.log('Login');
+      var  request = { sessionid: sessionid, initiator: payload.phoneID , pin: hashpin  };
+      var request = {loginRequest: request};
+      console.log(request);
+      soap.createClient(soapurl, function(err, client) {
+          client.login(request, function(err, result) {
+          if(err) {
+            console.log('Error' + err);
+            return new Error(err);
+          } else {
+            var response = result.loginReturn;
+            console.log(response);
+            if(response.result  === 0 )
+              var response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : response };       
+            else
+              var response = { statusCode:1 ,  additionalInfo : response };
+
+            callback(null,response);
+          }
+        });
+      });
     },
     function(sessionid, hashpin, callback){
       console.log('Login');
