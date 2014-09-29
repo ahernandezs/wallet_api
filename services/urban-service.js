@@ -1,4 +1,4 @@
-var UserQuery = require('../model/userQueryBuilder');
+var UserQuery = require('../model/queries/user-query');
 var UA = require('urban-airship');
 var ua = new UA('z6DMkdyDQJGD3wZorFFD6g', '6T6NnUa3SBqR-sjTxdjj5g', '6T6NnUa3SBqR-sjTxdjj5g');
 

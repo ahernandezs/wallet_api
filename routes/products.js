@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var Product = require('../model/product');
-var Productquery = require('../model/productQueryBuilder');
+var Productquery = require('../model/queries/product-query');
 var soap = require('soap');
 var soapurl = process.env.SOAP_URL;
 

@@ -1,5 +1,5 @@
-var Loan = require('./loan');
-var config = require('../model/config.js');
+var Loan = require('../loan');
+var config = require('../../config.js');
 
 exports.getLoans = function(merchantID, callback) {
     console.log( 'getLoans from MongoDB with status: ' + config.loans.status );
