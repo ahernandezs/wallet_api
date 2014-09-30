@@ -49,6 +49,10 @@ exports.register = function(req, res){
   console.log('execute POST method register');
   console.log(req.body);
   anzenUser.registerFlow(req.body, function(err,result){
+    if(result.statusCode === 0){
+      res.setHeader('X-AUTH-TOKEN', result.sessionid);
+      delete result.sessionid;
+    }
     res.json(result);
   });
 };

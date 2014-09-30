@@ -2,6 +2,7 @@ var async = require('async');
 var soap = require('soap');
 var crypto = require('crypto');
 var Userquery = require('../../model/queries/user-query');
+var sessionUser = require('./login-flow');
 var soapurl = process.env.SOAP_URL;
 
 var username = 'anzen_01';
@@ -101,7 +102,7 @@ exports.registerFlow = function(payload,callback) {
     },
     function(sessionid,callback){
       console.log('Transfer ' + sessionid);
-      var requestSoap = { sessionid:sessionid, to: payload.phoneID, amount : 2 , type: 3 };
+      var requestSoap = { sessionid:sessionid, to: payload.phoneID, amount : 5 , type: 1 };
       var request = { transferRequest: requestSoap };
       console.log(request);
       soap.createClient(soapurl, function(err, client) {
@@ -117,8 +118,9 @@ exports.registerFlow = function(payload,callback) {
               callback("ERROR", response);
             }
             else{
-              var response = { statusCode:0 ,  additionalInfo : result };
-              callback(null, response);
+              sessionUser.loginFlow({phoneID:payload.phoneID , pin :payload.pin },function(err,result){
+                callback(null, result);
+              });
             }
           }
         });
