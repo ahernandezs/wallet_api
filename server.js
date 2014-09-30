@@ -41,14 +41,11 @@ app.use(function(req, res, next){
 
 var interceptorHeader = function(req, res, next) {
 	console.log('Running interceptor');
-	console.log(req.headers.a);
-	if(req.headers.a){
-	//validate session
-	//is valid?
-	//regenerate session and colocate new id-sessiom
-  }
-
-  next();
+	console.log(req.originalUrl.toString());
+	console.log(req.headers['x-auth-token']);
+	if(req.originalUrl.toString() === '/api/register')
+		console.log('Interceptor in login');
+	next();
 };
 
 app.get('/api/ping', function(req, res){
