@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.7-b01-. --><xsd:schema xmlns:misc="http://www.utiba.com/delirium/ws/Misc" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.utiba.com/delirium/ws/Misc" elementFormDefault="qualified">
+    <xsd:complexType name="KeyValuePair">
+        <xsd:sequence maxOccurs="1" minOccurs="1">
+            <xsd:element name="key" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        A key used for retrieving the matching value.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="value" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        The value associated with the given key.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="KeyValuePairMap">
+        <xsd:sequence>
+            <xsd:element name="keyValuePairs" type="misc:KeyValuePair" maxOccurs="unbounded" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        A collection of key/value pairs. Self-explanatory.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

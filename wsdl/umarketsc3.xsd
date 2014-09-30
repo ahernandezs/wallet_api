@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.7-b01-. --><xsd:schema xmlns:stdquery="http://www.utiba.com/delirium/ws/StdQuery" xmlns:misc="http://www.utiba.com/delirium/ws/Misc" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.utiba.com/delirium/ws/StdQuery" elementFormDefault="qualified">
+    <xsd:import namespace="http://www.utiba.com/delirium/ws/Misc" schemaLocation="umarketsc2.xsd" />
+    <xsd:complexType name="SOAPQueryField">
+        <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="name" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="select" type="xsd:boolean" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="operation" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="sort" type="xsd:int" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="filterOperator" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="filterValues" type="xsd:string" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="SOAPQueryTable">
+        <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="name" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="1" name="multiplicity" default="1:M" type="xsd:string" />
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="fields" type="stdquery:SOAPQueryField" />
+            <xsd:element minOccurs="0" maxOccurs="unbounded" name="tables" type="stdquery:SOAPQueryTable" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="SOAPQueryRow">
+        <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="unbounded" nillable="true" name="values" type="xsd:string" />
+            <xsd:element minOccurs="0" name="dummy" type="xsd:string" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="SOAPQueryColumn">
+        <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="1" name="name" type="xsd:string" />
+            <xsd:element minOccurs="1" maxOccurs="1" name="type" type="xsd:string" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="SOAPQueryResult">
+        <xsd:sequence>
+            <xsd:element minOccurs="1" maxOccurs="unbounded" name="columns" type="stdquery:SOAPQueryColumn" />
+            <xsd:element minOccurs="1" maxOccurs="unbounded" name="rows" type="stdquery:SOAPQueryRow" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="standardRequest">
+        <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="extra_trans_data" type="misc:KeyValuePairMap">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        This KeyValuePairMap represents additional transaction information. 
+                        These parameters will be stored on the transaction. 
+                        Note that the comma, space, and tab characters are not allowed in the key.
+                        Parameters with these characters in the key will be ignored.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="standardQueryRequest">
+        <xsd:complexContent>
+            <xsd:extension base="stdquery:standardRequest">
+                <xsd:sequence>
+                    <xsd:element minOccurs="1" maxOccurs="1" name="sessionid" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                A valid session id (for most functions you will have to login)
+                            </xsd:documentation>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="standardQueryResponse">
+        <xsd:sequence>
+            <xsd:element minOccurs="0" maxOccurs="1" name="transid" type="xsd:int">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        For Biz type functions – transid represents the ID that
+                        the request was submitted to the core upon.
+                        For new transactions, transactions that were initiated
+                        by the soap call, the transid returned will represent
+                        the transaction id that is used to track the actual
+                        transaction request. This id can be supplied to query
+                        command to query the state of the transaction and
+                        will be yielded by reports that report on transactions.
+                        For existing transactions, such as transactions
+                        accessed via the confirm command, the transid
+                        returned has little value to the SOAP client and is only
+                        meaningful for systems tracing. The transid provided
+                        as part of the request is the id that is meaningful for
+                        transaction tracing purposes.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element minOccurs="1" maxOccurs="1" name="result" type="xsd:int">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        The result code represents the actual outcome of the request. A result of 0
+                        represents success.  Non zero values represent failure. See Appendix A for
+                        complete list of possible result codes.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element minOccurs="1" maxOccurs="1" name="result_namespace" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Represents a string. It can be one of the following values:
+                        'soap' - a soap based result
+                        'session' – a session based result
+                        'core' – a result generated by the biz component
+                        'umarket' – a result generated by the biz component
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="querytoolRequestType">
+        <xsd:complexContent>
+            <xsd:extension base="stdquery:standardQueryRequest">
+                <xsd:sequence>
+                    <xsd:element minOccurs="1" maxOccurs="unbounded" name="queryTables" type="stdquery:SOAPQueryTable" />
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <xsd:complexType name="querytoolResponseType">
+        <xsd:complexContent>
+            <xsd:extension base="stdquery:standardQueryResponse">
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" maxOccurs="1" name="queryResult" type="stdquery:SOAPQueryResult" />
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+</xsd:schema>

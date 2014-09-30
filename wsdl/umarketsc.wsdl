@@ -1,0 +1,2735 @@
+<?xml version='1.0' encoding='UTF-8'?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.7-b01-. --><wsdl:definitions xmlns:stdquery="http://www.utiba.com/delirium/ws/StdQuery" xmlns:typedquery="http://www.utiba.com/delirium/ws/TypedQuery" xmlns:misc="http://www.utiba.com/delirium/ws/Misc" xmlns:tns="urn:UMARKETSCWS" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xhtml="http://www.w3.org/1999/xhtml" name="UMarketSC" targetNamespace="urn:UMARKETSCWS">
+    <wsdl:types>
+        <xsd:schema targetNamespace="urn:UMARKETSCWS" elementFormDefault="qualified">
+            <xsd:include schemaLocation="umarketsc1.xsd" />
+        </xsd:schema>
+    </wsdl:types>
+
+    <!--
+    **************************************
+    *         Messages section           *
+    **************************************
+    -->
+    <wsdl:message name="getAllAgentGroups">
+        <wsdl:part name="parameters" element="tns:getAllAgentGroups" />
+    </wsdl:message>
+    <wsdl:message name="getAgentGroupByAgentID">
+        <wsdl:part name="parameters" element="tns:getAgentGroupByAgentID" />
+    </wsdl:message>
+    <wsdl:message name="AgentGroupsResponse">
+        <wsdl:part name="AgentGroupsResponse" element="tns:AgentGroupsResponse" />
+    </wsdl:message>
+    <wsdl:message name="getAgentByReference">
+        <wsdl:part name="parameters" element="tns:getAgentByReference" />
+    </wsdl:message>
+    <wsdl:message name="getAgentByReferenceID">
+        <wsdl:part name="parameters" element="tns:getAgentByReferenceID" />
+    </wsdl:message>
+    <wsdl:message name="AgentResponse">
+        <wsdl:part name="AgentResponse" element="tns:AgentResponse" />
+    </wsdl:message>
+    <wsdl:message name="getAccountByReferenceID">
+        <wsdl:part name="parameters" element="tns:getAccountByReferenceID" />
+    </wsdl:message>
+    <wsdl:message name="getAccountByReferenceIDAndType">
+        <wsdl:part name="parameters" element="tns:getAccountByReferenceIDAndType" />
+    </wsdl:message>
+    <wsdl:message name="AccountsResponse">
+        <wsdl:part name="AccountsResponse" element="tns:AccountsResponse" />
+    </wsdl:message>
+    <wsdl:message name="AccountResponse">
+        <wsdl:part name="AccountResponse" element="tns:AccountResponse" />
+    </wsdl:message>
+    <wsdl:message name="getTransactionByID">
+        <wsdl:part name="parameters" element="tns:getTransactionByID" />
+    </wsdl:message>
+    <wsdl:message name="TransactionResponse">
+        <wsdl:part name="TransactionResponse" element="tns:TransactionResponse" />
+    </wsdl:message>
+    <wsdl:message name="pin">
+        <wsdl:part name="parameters" element="tns:pin" />
+    </wsdl:message>
+    <wsdl:message name="pinResponse">
+        <wsdl:part name="pinResponse" element="tns:pinResponse" />
+    </wsdl:message>
+    <wsdl:message name="sales">
+        <wsdl:part name="parameters" element="tns:sales" />
+    </wsdl:message>
+    <wsdl:message name="createcoupon">
+        <wsdl:part name="parameters" element="tns:createcoupon" />
+    </wsdl:message>
+    <wsdl:message name="salesResponse">
+        <wsdl:part name="salesResponse" element="tns:salesResponse" />
+    </wsdl:message>
+    <wsdl:message name="createcouponResponse">
+        <wsdl:part name="createcouponResponse" element="tns:createcouponResponse" />
+    </wsdl:message>
+    <wsdl:message name="activate">
+        <wsdl:part name="parameters" element="tns:activate" />
+    </wsdl:message>
+    <wsdl:message name="activateResponse">
+        <wsdl:part name="activateResponse" element="tns:activateResponse" />
+    </wsdl:message>
+    <wsdl:message name="sell">
+        <wsdl:part name="parameters" element="tns:sell" />
+    </wsdl:message>
+    <wsdl:message name="sellResponse">
+        <wsdl:part name="sellResponse" element="tns:sellResponse" />
+    </wsdl:message>
+    <wsdl:message name="cashout">
+        <wsdl:part name="parameters" element="tns:cashout" />
+    </wsdl:message>
+    <wsdl:message name="cashoutResponse">
+        <wsdl:part name="cashoutResponse" element="tns:cashoutResponse" />
+    </wsdl:message>
+    <wsdl:message name="buy">
+        <wsdl:part name="parameters" element="tns:buy" />
+    </wsdl:message>
+    <wsdl:message name="buyResponse">
+        <wsdl:part name="buyResponse" element="tns:buyResponse" />
+    </wsdl:message>
+    <wsdl:message name="donate">
+        <wsdl:part name="parameters" element="tns:donate" />
+    </wsdl:message>
+    <wsdl:message name="donateResponse">
+        <wsdl:part name="donateResponse" element="tns:donateResponse" />
+    </wsdl:message>
+    <wsdl:message name="authorise">
+        <wsdl:part name="parameters" element="tns:authorise" />
+    </wsdl:message>
+    <wsdl:message name="authoriseResponse">
+        <wsdl:part name="authoriseResponse" element="tns:authoriseResponse" />
+    </wsdl:message>
+    <wsdl:message name="authorise2">
+        <wsdl:part name="parameters" element="tns:authorise2" />
+    </wsdl:message>
+    <wsdl:message name="authorise2Response">
+        <wsdl:part name="authorise2Response" element="tns:authorise2Response" />
+    </wsdl:message>
+    <wsdl:message name="reverse">
+        <wsdl:part name="parameters" element="tns:reverse" />
+    </wsdl:message>
+    <wsdl:message name="reverseResponse">
+        <wsdl:part name="reverseResponse" element="tns:reverseResponse" />
+    </wsdl:message>
+    <wsdl:message name="login">
+        <wsdl:part name="parameters" element="tns:login" />
+    </wsdl:message>
+    <wsdl:message name="loginResponse">
+        <wsdl:part name="loginResponse" element="tns:loginResponse" />
+    </wsdl:message>
+    <wsdl:message name="balance">
+        <wsdl:part name="parameters" element="tns:balance" />
+    </wsdl:message>
+    <wsdl:message name="balanceResponse">
+        <wsdl:part name="balanceResponse" element="tns:balanceResponse" />
+    </wsdl:message>
+    <wsdl:message name="delete">
+        <wsdl:part name="parameters" element="tns:delete" />
+    </wsdl:message>
+    <wsdl:message name="deleteResponse">
+        <wsdl:part name="deleteResponse" element="tns:deleteResponse" />
+    </wsdl:message>
+    <wsdl:message name="createsession">
+        <wsdl:part name="parameters" element="tns:createsession" />
+    </wsdl:message>
+    <wsdl:message name="createsessionResponse">
+        <wsdl:part name="createsessionResponse" element="tns:createsessionResponse" />
+    </wsdl:message>
+    <wsdl:message name="delschedule">
+        <wsdl:part name="parameters" element="tns:delschedule" />
+    </wsdl:message>
+    <wsdl:message name="delscheduleResponse">
+        <wsdl:part name="delscheduleResponse" element="tns:delscheduleResponse" />
+    </wsdl:message>
+    <wsdl:message name="transquery">
+        <wsdl:part name="parameters" element="tns:transquery" />
+    </wsdl:message>
+    <wsdl:message name="transqueryResponse">
+        <wsdl:part name="transqueryResponse" element="tns:transqueryResponse" />
+    </wsdl:message>
+    <wsdl:message name="transqueryext">
+        <wsdl:part name="parameters" element="tns:transqueryext" />
+    </wsdl:message>
+    <wsdl:message name="transqueryextResponse">
+        <wsdl:part name="transqueryextResponse" element="tns:transqueryextResponse" />
+    </wsdl:message>
+    <wsdl:message name="nextid">
+        <wsdl:part name="parameters" element="tns:nextid" />
+    </wsdl:message>
+    <wsdl:message name="nextidResponse">
+        <wsdl:part name="nextidResponse" element="tns:nextidResponse" />
+    </wsdl:message>
+    <wsdl:message name="deactivate">
+        <wsdl:part name="parameters" element="tns:deactivate" />
+    </wsdl:message>
+    <wsdl:message name="deactivateResponse">
+        <wsdl:part name="deactivateResponse" element="tns:deactivateResponse" />
+    </wsdl:message>
+    <wsdl:message name="bankcashin">
+        <wsdl:part name="parameters" element="tns:bankcashin" />
+    </wsdl:message>
+    <wsdl:message name="bankcashinResponse">
+        <wsdl:part name="bankcashinResponse" element="tns:bankcashinResponse" />
+    </wsdl:message>
+    <wsdl:message name="confirm">
+        <wsdl:part name="parameters" element="tns:confirm" />
+    </wsdl:message>
+    <wsdl:message name="confirmResponse">
+        <wsdl:part name="confirmResponse" element="tns:confirmResponse" />
+    </wsdl:message>
+    <wsdl:message name="delchild">
+        <wsdl:part name="parameters" element="tns:delchild" />
+    </wsdl:message>
+    <wsdl:message name="delchildResponse">
+        <wsdl:part name="delchildResponse" element="tns:delchildResponse" />
+    </wsdl:message>
+    <wsdl:message name="transfer">
+        <wsdl:part name="parameters" element="tns:transfer" />
+    </wsdl:message>
+    <wsdl:message name="transferResponse">
+        <wsdl:part name="transferResponse" element="tns:transferResponse" />
+    </wsdl:message>
+    <wsdl:message name="cashin">
+        <wsdl:part name="parameters" element="tns:cashin" />
+    </wsdl:message>
+    <wsdl:message name="cashinResponse">
+        <wsdl:part name="cashinResponse" element="tns:cashinResponse" />
+    </wsdl:message>
+    <wsdl:message name="delparent">
+        <wsdl:part name="parameters" element="tns:delparent" />
+    </wsdl:message>
+    <wsdl:message name="delparentResponse">
+        <wsdl:part name="delparentResponse" element="tns:delparentResponse" />
+    </wsdl:message>
+    <wsdl:message name="modify">
+        <wsdl:part name="parameters" element="tns:modify" />
+    </wsdl:message>
+    <wsdl:message name="modifyResponse">
+        <wsdl:part name="modifyResponse" element="tns:modifyResponse" />
+    </wsdl:message>
+    <wsdl:message name="billpay">
+        <wsdl:part name="parameters" element="tns:billpay" />
+    </wsdl:message>
+    <wsdl:message name="billpayResponse">
+        <wsdl:part name="billpayResponse" element="tns:billpayResponse" />
+    </wsdl:message>
+    <wsdl:message name="joinparent">
+        <wsdl:part name="parameters" element="tns:joinparent" />
+    </wsdl:message>
+    <wsdl:message name="joinparentResponse">
+        <wsdl:part name="joinparentResponse" element="tns:joinparentResponse" />
+    </wsdl:message>
+    <wsdl:message name="changeparent">
+        <wsdl:part name="parameters" element="tns:changeparent" />
+    </wsdl:message>
+    <wsdl:message name="changeparentResponse">
+        <wsdl:part name="changeparentResponse" element="tns:changeparentResponse" />
+    </wsdl:message>
+    <wsdl:message name="link">
+        <wsdl:part name="parameters" element="tns:link" />
+    </wsdl:message>
+    <wsdl:message name="linkResponse">
+        <wsdl:part name="linkResponse" element="tns:linkResponse" />
+    </wsdl:message>
+    <wsdl:message name="stop">
+        <wsdl:part name="parameters" element="tns:stop" />
+    </wsdl:message>
+    <wsdl:message name="stopResponse">
+        <wsdl:part name="stopResponse" element="tns:stopResponse" />
+    </wsdl:message>
+    <wsdl:message name="joinchild">
+        <wsdl:part name="parameters" element="tns:joinchild" />
+    </wsdl:message>
+    <wsdl:message name="joinchildResponse">
+        <wsdl:part name="joinchildResponse" element="tns:joinchildResponse" />
+    </wsdl:message>
+    <wsdl:message name="query">
+        <wsdl:part name="parameters" element="tns:query" />
+    </wsdl:message>
+    <wsdl:message name="queryResponse">
+        <wsdl:part name="queryResponse" element="tns:queryResponse" />
+    </wsdl:message>
+    <wsdl:message name="billcollect">
+        <wsdl:part name="parameters" element="tns:billcollect" />
+    </wsdl:message>
+    <wsdl:message name="billcollectResponse">
+        <wsdl:part name="billcollectResponse" element="tns:billcollectResponse" />
+    </wsdl:message>
+    <wsdl:message name="register">
+        <wsdl:part name="parameters" element="tns:register" />
+    </wsdl:message>
+    <wsdl:message name="registerResponse">
+        <wsdl:part name="registerResponse" element="tns:registerResponse" />
+    </wsdl:message>
+    <wsdl:message name="bankcashout">
+        <wsdl:part name="parameters" element="tns:bankcashout" />
+    </wsdl:message>
+    <wsdl:message name="bankcashoutResponse">
+        <wsdl:part name="bankcashoutResponse" element="tns:bankcashoutResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="finalizeExtTrans">
+        <wsdl:part name="parameters" element="tns:finalizeExtTrans" />
+    </wsdl:message>
+    <wsdl:message name="finalizeExtTransResponse">
+        <wsdl:part name="finalizeExtTransResponse" element="tns:finalizeExtTransResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="lastTransactionsRequest">
+        <wsdl:part name="parameters" element="tns:lastTransactionsRequest" />
+    </wsdl:message>
+    <wsdl:message name="lastTransactionsResponse">
+        <wsdl:part name="lastTransactionsResponse" element="tns:lastTransactionsResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="getAllCapSets">
+        <wsdl:part name="parameters" element="tns:getAllCapSets" />
+    </wsdl:message>
+    <wsdl:message name="CapSetsResponse">
+        <wsdl:part name="CapSetsResponse" element="tns:CapSetsResponse" />
+    </wsdl:message>
+    <wsdl:message name="getCapByID">
+        <wsdl:part name="parameters" element="tns:getCapByID" />
+    </wsdl:message>
+    <wsdl:message name="GetCapResponse">
+        <wsdl:part name="GetCapResponse" element="tns:GetCapResponse" />
+    </wsdl:message>
+    <!--CapDetail parts-->
+    <wsdl:message name="getAllCapDetails">
+        <wsdl:part name="parameters" element="tns:getAllCapDetails" />
+    </wsdl:message>
+    <wsdl:message name="getAllCapDetailsResponse">
+        <wsdl:part name="getAllCapDetailsResponse" element="tns:getAllCapDetailsResponse" />
+    </wsdl:message>
+    <wsdl:message name="getAllCapDetailByCapsetIdRequest">
+        <wsdl:part name="parameters" element="tns:getAllCapDetailByCapsetIdRequest" />
+    </wsdl:message>
+    <wsdl:message name="getAllCapDetailByCapsetIdResponse">
+        <wsdl:part name="getAllCapDetailByCapsetIdResponse" element="tns:getAllCapDetailByCapsetIdResponse" />
+    </wsdl:message>
+    <wsdl:message name="getCapDetailByID">
+        <wsdl:part name="parameters" element="tns:getCapDetailByID" />
+    </wsdl:message>
+    <wsdl:message name="getCapDetailResponse">
+        <wsdl:part name="getCapDetailResponse" element="tns:getCapDetailResponse" />
+    </wsdl:message>
+    
+    <!--View schedule parts-->
+    <wsdl:message name="getAllSchedules">
+        <wsdl:part name="parameters" element="tns:getAllSchedules" />
+    </wsdl:message>
+    <wsdl:message name="SchedulesResponse">
+        <wsdl:part name="SchedulesResponse" element="tns:SchedulesResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="addCapSet">
+        <wsdl:part name="parameters" element="tns:addCapSet" />
+    </wsdl:message>
+    <wsdl:message name="addCapSetResponse">
+        <wsdl:part name="addCapSetResponse" element="tns:addCapSetResponse" />
+    </wsdl:message>
+    <wsdl:message name="modCapSet">
+        <wsdl:part name="parameters" element="tns:modCapSet" />
+    </wsdl:message>
+    <wsdl:message name="modCapSetResponse">
+        <wsdl:part name="modCapSetResponse" element="tns:modCapSetResponse" />
+    </wsdl:message>
+    <wsdl:message name="delCapSet">
+        <wsdl:part name="parameters" element="tns:delCapSet" />
+    </wsdl:message>
+    <wsdl:message name="delCapSetResponse">
+        <wsdl:part name="delCapSetResponse" element="tns:delCapSetResponse" />
+    </wsdl:message>
+    <wsdl:message name="addCapDetail">
+        <wsdl:part name="parameters" element="tns:addCapDetail" />
+    </wsdl:message>
+    <wsdl:message name="addCapDetailResponse">
+        <wsdl:part name="addCapDetailResponse" element="tns:addCapDetailResponse" />
+    </wsdl:message>
+    <wsdl:message name="modCapDetailRequest">
+        <wsdl:part name="parameters" element="tns:modCapDetailRequest" />
+    </wsdl:message>
+    <wsdl:message name="modCapDetailResponse">
+        <wsdl:part name="modCapDetailResponse" element="tns:modCapDetailResponse" />
+    </wsdl:message>
+    <wsdl:message name="delCapDetail">
+        <wsdl:part name="parameters" element="tns:delCapDetail" />
+    </wsdl:message>
+    <wsdl:message name="delCapDetailResponse">
+        <wsdl:part name="delCapDetailResponse" element="tns:delCapDetailResponse" />
+    </wsdl:message>
+    <!--Rule parts-->
+    <wsdl:message name="addRuleRequest">
+        <wsdl:part name="parameters" element="tns:addRuleRequest" />
+    </wsdl:message>
+    <wsdl:message name="addRuleResponse">
+        <wsdl:part name="addRuleResponse" element="tns:addRuleResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="modRuleRequest">
+        <wsdl:part name="parameters" element="tns:modRuleRequest" />
+    </wsdl:message>
+    <wsdl:message name="modRuleResponse">
+        <wsdl:part name="modRuleResponse" element="tns:modRuleResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="delRuleRequest">
+        <wsdl:part name="parameters" element="tns:delRuleRequest" />
+    </wsdl:message>
+    <wsdl:message name="delRuleResponse">
+        <wsdl:part name="delRuleResponse" element="tns:delRuleResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="getAllRules">
+        <wsdl:part name="parameters" element="tns:getAllRules" />
+    </wsdl:message>
+    <wsdl:message name="getAllRulesResponse">
+        <wsdl:part name="getAllRulesResponse" element="tns:getAllRulesResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="getRuleRequest">
+        <wsdl:part name="parameters" element="tns:getRuleRequest" />
+    </wsdl:message>
+    <wsdl:message name="getRuleResponse">
+        <wsdl:part name="getRuleResponse" element="tns:getRuleResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="mapRuleRequest">
+        <wsdl:part name="parameters" element="tns:mapRuleRequest" />
+    </wsdl:message>
+    <wsdl:message name="mapRuleResponse">
+        <wsdl:part name="mapRuleResponse" element="tns:mapRuleResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="unmapRuleRequest">
+        <wsdl:part name="parameters" element="tns:unmapRuleRequest" />
+    </wsdl:message>
+    <wsdl:message name="unmapRuleResponse">
+        <wsdl:part name="unmapRuleResponse" element="tns:unmapRuleResponse" />
+    </wsdl:message>
+
+    <!--Rule Instances parts-->
+    <wsdl:message name="addRuleInstanceRequest">
+        <wsdl:part name="parameters" element="tns:addRuleInstanceRequest" />
+    </wsdl:message>
+    <wsdl:message name="addRuleInstanceResponse">
+        <wsdl:part name="addRuleInstanceResponse" element="tns:addRuleInstanceResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="modRuleInstanceRequest">
+        <wsdl:part name="parameters" element="tns:modRuleInstanceRequest" />
+    </wsdl:message>
+    <wsdl:message name="modRuleInstanceResponse">
+        <wsdl:part name="modRuleInstanceResponse" element="tns:modRuleInstanceResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="delRuleInstanceRequest">
+        <wsdl:part name="parameters" element="tns:delRuleInstanceRequest" />
+    </wsdl:message>
+    <wsdl:message name="delRuleInstanceResponse">
+        <wsdl:part name="delRuleInstanceResponse" element="tns:delRuleInstanceResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="actRuleInstanceRequest">
+        <wsdl:part name="parameters" element="tns:actRuleInstanceRequest" />
+    </wsdl:message>
+    <wsdl:message name="actRuleInstanceResponse">
+        <wsdl:part name="actRuleInstanceResponse" element="tns:actRuleInstanceResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="deactRuleInstanceRequest">
+        <wsdl:part name="parameters" element="tns:deactRuleInstanceRequest" />
+    </wsdl:message>
+    <wsdl:message name="deactRuleInstanceResponse">
+        <wsdl:part name="deactRuleInstanceResponse" element="tns:deactRuleInstanceResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="getRuleInstanceRequest">
+        <wsdl:part name="parameters" element="tns:getRuleInstanceRequest" />
+    </wsdl:message>
+    <wsdl:message name="getRuleInstanceResponse">
+        <wsdl:part name="getRuleInstanceResponse" element="tns:getRuleInstanceResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="getRuleInstanceListRequest">
+        <wsdl:part name="parameters" element="tns:getRuleInstanceListRequest" />
+    </wsdl:message>
+    <wsdl:message name="getRuleInstanceListResponse">
+        <wsdl:part name="getRuleInstanceListResponse" element="tns:getRuleInstanceListResponse" />
+    </wsdl:message>
+
+    <!--Rule Entities parts-->
+    <wsdl:message name="addRuleEntityRequest">
+        <wsdl:part name="parameters" element="tns:addRuleEntityRequest" />
+    </wsdl:message>
+    <wsdl:message name="addRuleEntityResponse">
+        <wsdl:part name="addRuleEntityResponse" element="tns:addRuleEntityResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="modRuleEntityRequest">
+        <wsdl:part name="parameters" element="tns:modRuleEntityRequest" />
+    </wsdl:message>
+    <wsdl:message name="modRuleEntityResponse">
+        <wsdl:part name="modRuleEntityResponse" element="tns:modRuleEntityResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="delRuleEntityRequest">
+        <wsdl:part name="parameters" element="tns:delRuleEntityRequest" />
+    </wsdl:message>
+    <wsdl:message name="delRuleEntityResponse">
+        <wsdl:part name="delRuleEntityResponse" element="tns:delRuleEntityResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="getRuleEntityRequest">
+        <wsdl:part name="parameters" element="tns:getRuleEntityRequest" />
+    </wsdl:message>
+    <wsdl:message name="getRuleEntityResponse">
+        <wsdl:part name="getRuleEntityResponse" element="tns:getRuleEntityResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="getRuleEntityListRequest">
+        <wsdl:part name="parameters" element="tns:getRuleEntityListRequest" />
+    </wsdl:message>
+    <wsdl:message name="getRuleEntityListResponse">
+        <wsdl:part name="getRuleEntityListResponse" element="tns:getRuleEntityListResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="getRuleEntitiesByParentRequest">
+        <wsdl:part name="parameters" element="tns:getRuleEntitiesByParentRequest" />
+    </wsdl:message>
+    <wsdl:message name="getRuleEntitiesByParentResponse">
+        <wsdl:part name="getRuleEntitiesByParentResponse" element="tns:getRuleEntitiesByParentResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="moveRuleEntityUpRequest">
+        <wsdl:part name="parameters" element="tns:moveRuleEntityUpRequest" />
+    </wsdl:message>
+    <wsdl:message name="moveRuleEntityUpResponse">
+        <wsdl:part name="moveRuleEntityUpResponse" element="tns:moveRuleEntityUpResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="moveRuleEntityDownRequest">
+        <wsdl:part name="parameters" element="tns:moveRuleEntityDownRequest" />
+    </wsdl:message>
+    <wsdl:message name="moveRuleEntityDownResponse">
+        <wsdl:part name="moveRuleEntityDownResponse" element="tns:moveRuleEntityDownResponse" />
+    </wsdl:message>
+
+    <!--Rule Templates parts-->
+    <wsdl:message name="getRuleTemplateRequest">
+        <wsdl:part name="parameters" element="tns:getRuleTemplateRequest" />
+    </wsdl:message>
+    <wsdl:message name="getRuleTemplateResponse">
+        <wsdl:part name="getRuleTemplateResponse" element="tns:getRuleTemplateResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="getRuleTemplateListRequest">
+        <wsdl:part name="parameters" element="tns:getRuleTemplateListRequest" />
+    </wsdl:message>
+    <wsdl:message name="getRuleTemplateListResponse">
+        <wsdl:part name="getRuleTemplateListResponse" element="tns:getRuleTemplateListResponse" />
+    </wsdl:message>
+
+    <!--Group parts-->
+    <wsdl:message name="createGroupRequest">
+        <wsdl:part name="parameters" element="tns:createGroupRequest" />
+    </wsdl:message>
+    <wsdl:message name="createGroupResponse">
+        <wsdl:part name="createGroupResponse" element="tns:createGroupResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="deleteGroupRequest">
+        <wsdl:part name="parameters" element="tns:deleteGroupRequest" />
+    </wsdl:message>
+    <wsdl:message name="deleteGroupResponse">
+        <wsdl:part name="deleteGroupResponse" element="tns:deleteGroupResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="modifyGroupRequest">
+        <wsdl:part name="parameters" element="tns:modifyGroupRequest" />
+    </wsdl:message>
+    <wsdl:message name="modifyGroupResponse">
+        <wsdl:part name="modifyGroupResponse" element="tns:modifyGroupResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="getGroupRequest">
+        <wsdl:part name="parameters" element="tns:getGroupRequest" />
+    </wsdl:message>
+    <wsdl:message name="getGroupResponse">
+        <wsdl:part name="getGroupResponse" element="tns:getGroupResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="getAllGroupsRequest">
+        <wsdl:part name="parameters" element="tns:getAllGroupsRequest" />
+    </wsdl:message>
+    <wsdl:message name="getAllGroupsResponse">
+        <wsdl:part name="getAllGroupsResponse" element="tns:getAllGroupsResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="getGroupByNameRequest">
+        <wsdl:part name="parameters" element="tns:getGroupByNameRequest" />
+    </wsdl:message>
+    <wsdl:message name="getGroupByNameResponse">
+        <wsdl:part name="getGroupByNameResponse" element="tns:getGroupByNameResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="getGroupsByTypeRequest">
+        <wsdl:part name="parameters" element="tns:getGroupsByTypeRequest" />
+    </wsdl:message>
+    <wsdl:message name="getGroupsByTypeResponse">
+        <wsdl:part name="getGroupsByTypeResponse" element="tns:getGroupsByTypeResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="mapAgentRequest">
+        <wsdl:part name="parameters" element="tns:mapAgentRequest" />
+    </wsdl:message>
+    <wsdl:message name="mapAgentResponse">
+        <wsdl:part name="mapAgentResponse" element="tns:mapAgentResponse" />
+    </wsdl:message>
+    <wsdl:message name="unmapAgentRequest">
+        <wsdl:part name="parameters" element="tns:unmapAgentRequest" />
+    </wsdl:message>
+    <wsdl:message name="unmapAgentResponse">
+        <wsdl:part name="unmapAgentResponse" element="tns:unmapAgentResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="createVoucher">
+        <wsdl:part name="parameters" element="tns:createVoucher" />
+    </wsdl:message>
+    <wsdl:message name="createVoucherResponse">
+        <wsdl:part name="createVoucherResponse" element="tns:createVoucherResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="deleteVoucher">
+        <wsdl:part name="parameters" element="tns:deleteVoucher" />
+    </wsdl:message>
+    <wsdl:message name="deleteVoucherResponse">
+        <wsdl:part name="deleteVoucherResponse" element="tns:deleteVoucherResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="resetPinRequest">
+        <wsdl:part name="parameters" element="tns:resetPinRequest" />
+    </wsdl:message>
+    <wsdl:message name="resetPinResponse">
+        <wsdl:part name="resetPinResponse" element="tns:resetPinResponse" />
+    </wsdl:message>
+    <wsdl:message name="adjustWalletRequest">
+        <wsdl:part name="parameters" element="tns:adjustWalletRequest" />
+    </wsdl:message>
+    <wsdl:message name="adjustWalletResponse">
+        <wsdl:part name="adjustWalletResponse" element="tns:adjustWalletResponse" />
+    </wsdl:message>
+    <wsdl:message name="modifyAccountRequest">
+        <wsdl:part name="parameters" element="tns:modifyAccountRequest" />
+    </wsdl:message>
+    <wsdl:message name="modifyAccountResponse">
+        <wsdl:part name="modifyAccountResponse" element="tns:modifyAccountResponse" />
+    </wsdl:message>
+    <wsdl:message name="sellStockRequest">
+        <wsdl:part name="parameters" element="tns:sellStockRequest" />
+    </wsdl:message>
+    <wsdl:message name="sellStockResponse">
+        <wsdl:part name="sellStockResponse" element="tns:sellStockResponse" />
+    </wsdl:message>
+    <wsdl:message name="dispenseVoucher">
+        <wsdl:part name="parameters" element="tns:dispenseVoucher" />
+    </wsdl:message>
+    <wsdl:message name="dispenseVoucherResponse">
+        <wsdl:part name="dispenseVoucherResponse" element="tns:dispenseVoucherResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="getVoucherRequest">
+        <wsdl:part name="parameters" element="tns:getVoucherRequest" />
+    </wsdl:message>
+    <wsdl:message name="getVoucherResponse">
+        <wsdl:part name="getVoucherResponse" element="tns:getVoucherResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="addScheduleRequest">
+        <wsdl:part name="parameters" element="tns:addScheduleRequest" />
+    </wsdl:message>
+    <wsdl:message name="addScheduleResponse">
+        <wsdl:part name="addScheduleResponse" element="tns:addScheduleResponse" />
+    </wsdl:message>
+    <wsdl:message name="deleteScheduleRequest">
+        <wsdl:part name="parameters" element="tns:deleteScheduleRequest" />
+    </wsdl:message>
+    <wsdl:message name="deleteScheduleResponse">
+        <wsdl:part name="deleteScheduleResponse" element="tns:deleteScheduleResponse" />
+    </wsdl:message>
+    <wsdl:message name="getRuleListByContextIdRequest">
+        <wsdl:part name="parameters" element="tns:getRuleListByContextIdRequest" />
+    </wsdl:message>
+    <wsdl:message name="getRuleListByContextIdResponse">
+        <wsdl:part name="getRuleListByContextIdResponse" element="tns:getRuleListByContextIdResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="coupontransfer">
+    	<wsdl:part name="parameters" element="tns:coupontransfer" />
+    </wsdl:message>
+    <wsdl:message name="coupontransferResponse">
+    	<wsdl:part name="coupontransferResponse" element="tns:coupontransferResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="invoke">
+      <wsdl:part name="parameters" element="tns:invokeRequest" />
+    </wsdl:message>
+    <wsdl:message name="invokeResponse">
+      <wsdl:part name="invokeResponse" element="tns:invokeResponse" />
+    </wsdl:message>
+
+    <wsdl:message name="getChildListByReferenceIDRequest">
+        <wsdl:part name="parameters" element="tns:getChildListByReferenceIDRequest" />
+    </wsdl:message>
+    <wsdl:message name="getChildListByReferenceIDResponse">
+        <wsdl:part name="getChildListByReferenceIDResponse" element="tns:getChildListByReferenceIDResponse" />
+    </wsdl:message>
+    <wsdl:message name="getParentListByReferenceIDRequest">
+        <wsdl:part name="parameters" element="tns:getParentListByReferenceIDRequest" />
+    </wsdl:message>
+    <wsdl:message name="getParentListByReferenceIDResponse">
+        <wsdl:part name="getParentListByReferenceIDResponse" element="tns:getParentListByReferenceIDResponse" />
+    </wsdl:message>
+    <wsdl:message name="convertRequest">
+        <wsdl:part name="parameters" element="tns:convertRequest" />
+    </wsdl:message>
+    <wsdl:message name="convertResponse">
+        <wsdl:part name="convertResponse" element="tns:convertResponse" />
+    </wsdl:message>
+    <wsdl:message name="queryVoucherRequest">
+        <wsdl:part name="parameters" element="tns:queryVoucher">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="queryVoucherResponse">
+        <wsdl:part name="queryVoucherResponse" element="tns:queryVoucherResponse">
+        </wsdl:part>
+    </wsdl:message>
+    <wsdl:message name="querySecretRequest">
+        <wsdl:part name="parameters" element="tns:querySecretRequest" />
+    </wsdl:message>
+    <wsdl:message name="querySecretResponse">
+        <wsdl:part name="querySecretResponse" element="tns:querySecretResponse" />
+    </wsdl:message>
+
+    <!-- Messages for attachment operations -->
+
+	<wsdl:message name="createAttachment">
+		<wsdl:part name="parameters" element="tns:createAttachment" />
+	</wsdl:message>
+	<wsdl:message name="createAttachmentResponse">
+		<wsdl:part name="createAttachmentResponse" element="tns:createAttachmentResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="modifyAttachment">
+		<wsdl:part name="parameters" element="tns:modifyAttachment" />
+	</wsdl:message>
+	<wsdl:message name="modifyAttachmentResponse">
+		<wsdl:part name="modifyAttachmentResponse" element="tns:modifyAttachmentResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="deleteAttachment">
+		<wsdl:part name="parameters" element="tns:deleteAttachment" />
+	</wsdl:message>
+	<wsdl:message name="deleteAttachmentResponse">
+		<wsdl:part name="deleteAttachmentResponse" element="tns:deleteAttachmentResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="getAttachment">
+		<wsdl:part name="parameters" element="tns:getAttachment" />
+	</wsdl:message>
+	<wsdl:message name="getAttachmentResponse">
+		<wsdl:part name="getAttachmentResponse" element="tns:getAttachmentResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="getAttachmentReferencesByEntity">
+		<wsdl:part name="parameters" element="tns:getAttachmentReferencesByEntity" />
+	</wsdl:message>
+	<wsdl:message name="AttachmentReferencesResponse">
+		<wsdl:part name="AttachmentReferencesResponse" element="tns:AttachmentReferencesResponse" />
+	</wsdl:message>
+
+    <!-- End of messages for attachment operations -->
+
+    <!-- %MESSAGE_DECLARATION_MARKER%    Do NOT remove this line. it is being used by code generation. -->
+
+    <!--
+    **************************************
+    *         Operations section         *
+    **************************************
+    -->
+    <wsdl:portType name="UMarketSC">
+        <wsdl:operation name="getAllAgentGroups">
+            <wsdl:documentation>
+                Get all the agent groups.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getAllAgentGroups" />
+            <wsdl:output message="tns:AgentGroupsResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getAgentGroupByAgentID">
+            <wsdl:documentation>
+                Get agent group/s by the agent ID.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getAgentGroupByAgentID" />
+            <wsdl:output message="tns:AgentGroupsResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getAgentByReference">
+            <wsdl:documentation>
+                Get agent by agent reference. If category is specified the returned agent must match the category.
+                Otherwise, null is returned. If category is NOT specified, a list of all the agents matching that
+                reference (for any category) would be returned.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getAgentByReference" />
+            <wsdl:output message="tns:AgentResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getAgentByReferenceID">
+            <wsdl:documentation>
+                Get agent by agent reference ID.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getAgentByReferenceID" />
+            <wsdl:output message="tns:AgentResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getAccountByReferenceID">
+            <wsdl:documentation>
+                Get an account by the reference ID.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getAccountByReferenceID" />
+            <wsdl:output message="tns:AccountsResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getAccountByReferenceIDAndType">
+            <wsdl:documentation>
+                Get an account by the reference ID and type.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getAccountByReferenceIDAndType" />
+            <wsdl:output message="tns:AccountResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getTransactionByID">
+            <wsdl:documentation>
+                Query an existing transaction.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getTransactionByID" />
+            <wsdl:output message="tns:TransactionResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="pin">
+            <wsdl:documentation>
+                This command is used to change the user's PIN, ie. the password they use to log
+                in to the webservice. A successful change pin will also log the agent into the
+                session – replacing the last prior successful login operation (including a prior
+                change pin).
+            </wsdl:documentation>
+            <wsdl:input message="tns:pin" />
+            <wsdl:output message="tns:pinResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="sales">
+            <wsdl:documentation>
+                This function is used to summarise transactions the initiator performed.
+                It is intended to be used by the inititator to summaries their total outbound sales activity involving
+                special agents.
+            </wsdl:documentation>
+            <wsdl:input message="tns:sales" />
+            <wsdl:output message="tns:salesResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="createcoupon">
+            <wsdl:documentation>
+                Create a coupon in the system.
+            </wsdl:documentation>
+            <wsdl:input message="tns:createcoupon" />
+            <wsdl:output message="tns:createcouponResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="activate">
+            <wsdl:documentation>
+                This command is used to allow the agent to re­activate themselves – cancelling
+                the prior deactivate/stop operation.
+            </wsdl:documentation>
+            <wsdl:input message="tns:activate" />
+            <wsdl:output message="tns:activateResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="sell">
+            <wsdl:documentation>
+                Request to debit the specified wallet.
+            </wsdl:documentation>
+            <wsdl:input message="tns:sell" />
+            <wsdl:output message="tns:sellResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="cashout">
+            <wsdl:documentation>
+                Request cashout to the specified wallet.
+            </wsdl:documentation>
+            <wsdl:input message="tns:cashout" />
+            <wsdl:output message="tns:cashoutResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="buy">
+            <wsdl:documentation>
+                Buy product or service.
+            </wsdl:documentation>
+            <wsdl:input message="tns:buy" />
+            <wsdl:output message="tns:buyResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="donate">
+            <wsdl:documentation>
+                Donate funds to a specified charity.
+            </wsdl:documentation>
+            <wsdl:input message="tns:donate" />
+            <wsdl:output message="tns:donateResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="authorise">
+            <wsdl:documentation>
+                This command allows the logged in user to retrieve information about functions
+                the are allowed to access.
+            </wsdl:documentation>
+            <wsdl:input message="tns:authorise" />
+            <wsdl:output message="tns:authoriseResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="authorise2">
+            <wsdl:documentation>
+                This command allows the logged in user to retrieve information about functions
+                the are allowed to access.
+            </wsdl:documentation>
+            <wsdl:input message="tns:authorise2" />
+            <wsdl:output message="tns:authorise2Response" />
+        </wsdl:operation>
+        <wsdl:operation name="reverse">
+            <wsdl:documentation>
+                This function is used to execute a transfer reversal.
+                It is intended to be used by a debtor of a transaction to recover debited funds.
+                Controls for accessing this function are intended to be provided via Rules capability restrictions.
+                As such actual biz function will implement minimal checks only.
+                A Transaction reversal will reverse stored value funds transfer only.
+                Performing a reversal on an operation that also involved an external system will have no impact on that
+                external system – only stored value details will be reversed.
+            </wsdl:documentation>
+            <wsdl:input message="tns:reverse" />
+            <wsdl:output message="tns:reverseResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="login">
+            <wsdl:documentation>
+                This command is used to authenticate the user. Most of the biz functions require
+                authentication in order to function.
+                If the session is already logged in then a subsequent successful login will switch
+                the session to the new login agent
+            </wsdl:documentation>
+            <wsdl:input message="tns:login" />
+            <wsdl:output message="tns:loginResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="balance">
+            <wsdl:documentation>
+                This command is used to allow an agent to query their wallet balances.
+            </wsdl:documentation>
+            <wsdl:input message="tns:balance" />
+            <wsdl:output message="tns:balanceResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="delete">
+            <wsdl:documentation>
+                This command is generally used to allow the logged in agent delete themselves.
+                The logged in agent can delete other agents if they are setup as a trusted agent.
+            </wsdl:documentation>
+            <wsdl:input message="tns:delete" />
+            <wsdl:output message="tns:deleteResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="createsession">
+            <wsdl:documentation>
+                This command is used to create a new session. A valid session is required for all other commands.
+            </wsdl:documentation>
+            <wsdl:input message="tns:createsession" />
+            <wsdl:output message="tns:createsessionResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="delschedule">
+            <wsdl:documentation>
+                Delete a schedule.
+            </wsdl:documentation>
+            <wsdl:input message="tns:delschedule" />
+            <wsdl:output message="tns:delscheduleResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="transquery">
+            <wsdl:documentation>
+                Query an existing transaction.
+            </wsdl:documentation>
+            <wsdl:input message="tns:transquery" />
+            <wsdl:output message="tns:transqueryResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="transqueryext">
+            <wsdl:documentation>
+                Query an existing transaction via external reference.
+            </wsdl:documentation>
+            <wsdl:input message="tns:transqueryext" />
+            <wsdl:output message="tns:transqueryextResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="nextid">
+            <wsdl:documentation>
+                This command is used to pre­fetch the transaction ID that will be used for the
+                next biz function. Get Trans ID is useful for tracking transactions incase
+                connectivity is broken. The client can query the transaction to check whether or
+                not the transaction went through.
+            </wsdl:documentation>
+            <wsdl:input message="tns:nextid" />
+            <wsdl:output message="tns:nextidResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="deactivate">
+            <wsdl:documentation>
+                This command is used to allow the agent to deactivate themselves. The agent or
+                its linked agents cannot initiate any transaction type operation until deactivation
+                is lifted.
+            </wsdl:documentation>
+            <wsdl:input message="tns:deactivate" />
+            <wsdl:output message="tns:deactivateResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="bankcashin">
+            <wsdl:documentation>
+                Request to cash in from an external bank account.
+            </wsdl:documentation>
+            <wsdl:input message="tns:bankcashin" />
+            <wsdl:output message="tns:bankcashinResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="confirm">
+            <wsdl:documentation>
+                Some commands require confirmation from other parties in order to process. The
+                confirm command allows the client to confirm operations that are waiting for
+                confirmation from the client.
+            </wsdl:documentation>
+            <wsdl:input message="tns:confirm" />
+            <wsdl:output message="tns:confirmResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="delchild">
+            <wsdl:documentation>
+                This command is used to allow the agent to remove a particular agent in the
+                sales channel that they current supply stock to.
+            </wsdl:documentation>
+            <wsdl:input message="tns:delchild" />
+            <wsdl:output message="tns:delchildResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="transfer">
+            <wsdl:documentation>
+                Transfer stored value from specified wallet to a specified target. Note that if the
+                target does not exist then the transaction will fail.
+            </wsdl:documentation>
+            <wsdl:input message="tns:transfer" />
+            <wsdl:output message="tns:transferResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="cashin">
+            <wsdl:documentation>
+                Cashin via transfer stored value from specified wallet to a specified target. Note that if the
+                target does not exist then the transaction will fail.
+            </wsdl:documentation>
+            <wsdl:input message="tns:cashin" />
+            <wsdl:output message="tns:cashinResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="delparent">
+            <wsdl:documentation>
+                This command is used to allow the agent to break away from an existing sales channel.
+            </wsdl:documentation>
+            <wsdl:input message="tns:delparent" />
+            <wsdl:output message="tns:delparentResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="modify">
+            <wsdl:documentation>
+                This command is used to modify an agent in the system. Typically modify is used
+                to allow the agent to modify its own details. An agent can modify other agents but
+                the modifying agent must be set­up as a trusted agent.
+            </wsdl:documentation>
+            <wsdl:input message="tns:modify" />
+            <wsdl:output message="tns:modifyResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="billpay">
+            <wsdl:documentation>
+                Pay a particular bill.
+            </wsdl:documentation>
+            <wsdl:input message="tns:billpay" />
+            <wsdl:output message="tns:billpayResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="joinparent">
+            <wsdl:documentation>
+                This command is used to allow the agent to request to join an existing sales channel.
+            </wsdl:documentation>
+            <wsdl:input message="tns:joinparent" />
+            <wsdl:output message="tns:joinparentResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="changeparent">
+            <wsdl:documentation>
+                This command is used to allow an agent to change its existing sales channel.
+            </wsdl:documentation>
+            <wsdl:input message="tns:changeparent" />
+            <wsdl:output message="tns:changeparentResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="link">
+            <wsdl:documentation>
+                This command is used to link the client to another agent in the system. After
+                successful link (i.e. After the target has confirmed the link) the client login
+                session is still valid but it will apply to the agent prior to the linking – i.e.
+                Transaction operations will be performed on the old wallet. In order to use the
+                agent in its linked form the client must login again.
+            </wsdl:documentation>
+            <wsdl:input message="tns:link" />
+            <wsdl:output message="tns:linkResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="stop">
+            <wsdl:documentation>
+                This command is used to allow the agent to stop themselves. The agent or its
+                linked agents cannot participate in any transaction type operation until stop is
+                lifted.
+            </wsdl:documentation>
+            <wsdl:input message="tns:stop" />
+            <wsdl:output message="tns:stopResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="joinchild">
+            <wsdl:documentation>
+                This command is used to allow the agent to invite another agent to their sales
+                channel as a down­stream supplier.
+            </wsdl:documentation>
+            <wsdl:input message="tns:joinchild" />
+            <wsdl:output message="tns:joinchildResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="query">
+            <wsdl:documentation>
+                Query is used to query last transaction details – specifically: Last Credit Transaction and Last Debit
+                Transaction
+            </wsdl:documentation>
+            <wsdl:input message="tns:query" />
+            <wsdl:output message="tns:queryResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="billcollect">
+            <wsdl:documentation>
+                Request a user to pay a particular bill
+            </wsdl:documentation>
+            <wsdl:input message="tns:billcollect" />
+            <wsdl:output message="tns:billcollectResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="register">
+            <wsdl:documentation>
+                This command is used to register an agent into the system. The command has
+                two modes of operation.
+                If the soap client is logged in then the register command works in a register by
+                proxy – provided the soap client is setup to perform register by proxy. This allows
+                the client to create new wallets in the platform.
+                If the soap client provides the initiator parameter register is a self register
+                operation. This command allows the soap client to register themselves. In order
+                to self register you need to provide an agent ref no (in the agent field) that clearly
+                indicates a prior business relationship with the operator – such as a prepaid
+                mobile number, a fixed line number or an internet account number. For self
+                registration, if a new_pin is also provided then the agent is also automatically
+                logged in.
+                If the soap client provides agent – the soap client is attempting to register
+                another agent on their behalf. Note that if you provide new_pin with the register
+                command than your SOAP session will automatically login as the new agent. If
+                you want to switch back to the original agent you logged in as you need to
+                reissue a login command.
+            </wsdl:documentation>
+            <wsdl:input message="tns:register" />
+            <wsdl:output message="tns:registerResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="bankcashout">
+            <wsdl:documentation>
+                Request to cash out to an external bank account.
+            </wsdl:documentation>
+            <wsdl:input message="tns:bankcashout" />
+            <wsdl:output message="tns:bankcashoutResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="finalizeExtTrans">
+            <wsdl:documentation>
+                Reconcile a broken transaction by finalizing an incomplete external element (i.e. Like an IN that did
+                not respond).
+            </wsdl:documentation>
+            <wsdl:input message="tns:finalizeExtTrans" />
+            <wsdl:output message="tns:finalizeExtTransResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="lastTransactions">
+            <wsdl:documentation>
+                Query information on your last transactions.
+            </wsdl:documentation>
+            <wsdl:input message="tns:lastTransactionsRequest" />
+            <wsdl:output message="tns:lastTransactionsResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="getAllCapSets">
+            <wsdl:documentation>
+                Get all cap sets.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getAllCapSets" />
+            <wsdl:output message="tns:CapSetsResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getCapByID">
+            <wsdl:documentation>
+                Get a single cap detail record.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getCapByID" />
+            <wsdl:output message="tns:GetCapResponse" />
+        </wsdl:operation>
+        <!--CapDetail operation-->
+        <wsdl:operation name="getAllCapDetails">
+            <wsdl:documentation>
+                Get all cap details.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getAllCapDetails" />
+            <wsdl:output message="tns:getAllCapDetailsResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getAllCapDetailByCapsetId">
+            <wsdl:input message="tns:getAllCapDetailByCapsetIdRequest" />
+            <wsdl:output message="tns:getAllCapDetailByCapsetIdResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getCapDetailByID">
+            <wsdl:documentation>
+                Get a single cap detail record.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getCapDetailByID" />
+            <wsdl:output message="tns:getCapDetailResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="addCapSet">
+            <wsdl:documentation>
+                Create a new cap set.
+            </wsdl:documentation>
+            <wsdl:input message="tns:addCapSet" />
+            <wsdl:output message="tns:addCapSetResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="modCapSet">
+            <wsdl:documentation>
+                Modify a cap set's description.
+            </wsdl:documentation>
+            <wsdl:input message="tns:modCapSet" />
+            <wsdl:output message="tns:modCapSetResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="delCapSet">
+            <wsdl:documentation>
+                Delete a cap set.
+            </wsdl:documentation>
+            <wsdl:input message="tns:delCapSet" />
+            <wsdl:output message="tns:delCapSetResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="addCapDetail">
+            <wsdl:documentation>
+                Add a cap set detail to an existing cap set.
+            </wsdl:documentation>
+            <wsdl:input message="tns:addCapDetail" />
+            <wsdl:output message="tns:addCapDetailResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="modCapDetail">
+            <wsdl:input message="tns:modCapDetailRequest" />
+            <wsdl:output message="tns:modCapDetailResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="delCapDetail">
+            <wsdl:documentation>
+                Delete a cap detail.
+            </wsdl:documentation>
+            <wsdl:input message="tns:delCapDetail" />
+            <wsdl:output message="tns:delCapDetailResponse" />
+        </wsdl:operation>
+        <!--Rule operations-->
+        <wsdl:operation name="addRule">
+            <wsdl:documentation>
+                Add a new rule.
+            </wsdl:documentation>
+            <wsdl:input message="tns:addRuleRequest" />
+            <wsdl:output message="tns:addRuleResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="modRule">
+            <wsdl:documentation>
+                Modify a rule name/description.
+            </wsdl:documentation>
+            <wsdl:input message="tns:modRuleRequest" />
+            <wsdl:output message="tns:modRuleResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="delRule">
+            <wsdl:documentation>
+                Delete a rule.
+            </wsdl:documentation>
+            <wsdl:input message="tns:delRuleRequest" />
+            <wsdl:output message="tns:delRuleResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getAllRules">
+            <wsdl:documentation>
+                Get all rules.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getAllRules" />
+            <wsdl:output message="tns:getAllRulesResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getRule">
+            <wsdl:documentation>
+                Get the rule given a rule ID.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getRuleRequest" />
+            <wsdl:output message="tns:getRuleResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="mapRule">
+            <wsdl:documentation>
+                Map a rule to a group.
+            </wsdl:documentation>
+            <wsdl:input message="tns:mapRuleRequest" />
+            <wsdl:output message="tns:mapRuleResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="unmapRule">
+            <wsdl:documentation>
+                Remove a rule mapping from a group.
+            </wsdl:documentation>
+            <wsdl:input message="tns:unmapRuleRequest" />
+            <wsdl:output message="tns:unmapRuleResponse" />
+        </wsdl:operation>
+
+
+        <!--Rule Instance operations-->
+        <wsdl:operation name="getRuleInstance">
+            <wsdl:documentation>
+                Get a single instance.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getRuleInstanceRequest" />
+            <wsdl:output message="tns:getRuleInstanceResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="getRuleInstanceList">
+            <wsdl:documentation>
+                Get all instances belong to the rule.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getRuleInstanceListRequest" />
+            <wsdl:output message="tns:getRuleInstanceListResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="addRuleInstance">
+            <wsdl:documentation>
+                Add a new rule instance, or clone an existing rule instance.
+            </wsdl:documentation>
+            <wsdl:input message="tns:addRuleInstanceRequest" />
+            <wsdl:output message="tns:addRuleInstanceResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="modRuleInstance">
+            <wsdl:documentation>
+                Change the name/description of an existing rule instance.
+            </wsdl:documentation>
+            <wsdl:input message="tns:modRuleInstanceRequest" />
+            <wsdl:output message="tns:modRuleInstanceResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="delRuleInstance">
+            <wsdl:documentation>
+                Delete a rule version/instance.
+            </wsdl:documentation>
+            <wsdl:input message="tns:delRuleInstanceRequest" />
+            <wsdl:output message="tns:delRuleInstanceResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="actRuleInstance">
+            <wsdl:documentation>
+                Activate a rule instance, making that instance the active instance for the rule.
+            </wsdl:documentation>
+            <wsdl:input message="tns:actRuleInstanceRequest" />
+            <wsdl:output message="tns:actRuleInstanceResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="deactRuleInstance">
+            <wsdl:documentation>
+                Deactivate a rule instance, making the active rule instance inactive.
+            </wsdl:documentation>
+            <wsdl:input message="tns:deactRuleInstanceRequest" />
+            <wsdl:output message="tns:deactRuleInstanceResponse" />
+        </wsdl:operation>
+
+        <!--Rule Entity operations-->
+        <wsdl:operation name="addRuleEntity">
+            <wsdl:documentation>
+                Add a rule entity to an existing, inactive rule instance.
+            </wsdl:documentation>
+            <wsdl:input message="tns:addRuleEntityRequest" />
+            <wsdl:output message="tns:addRuleEntityResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="modRuleEntity">
+            <wsdl:documentation>
+                Modify an existing rule entity.
+            </wsdl:documentation>
+            <wsdl:input message="tns:modRuleEntityRequest" />
+            <wsdl:output message="tns:modRuleEntityResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="delRuleEntity">
+            <wsdl:documentation>
+                Delete a rule entity.
+            </wsdl:documentation>
+            <wsdl:input message="tns:delRuleEntityRequest" />
+            <wsdl:output message="tns:delRuleEntityResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="getRuleEntity">
+            <wsdl:documentation>
+                Get a single entity.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getRuleEntityRequest" />
+            <wsdl:output message="tns:getRuleEntityResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="getRuleEntityList">
+            <wsdl:documentation>
+                Get all entities belonging to an instance.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getRuleEntityListRequest" />
+            <wsdl:output message="tns:getRuleEntityListResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="getRuleEntitiesByParent">
+            <wsdl:documentation>
+                Get all entities belonging to an instance where parant is a particular rule entity. Parentid=0 means get
+                base entitites connected to the rule instance.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getRuleEntitiesByParentRequest" />
+            <wsdl:output message="tns:getRuleEntitiesByParentResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="moveRuleEntityUp">
+            <wsdl:documentation>
+                Move a rule entity up.
+            </wsdl:documentation>
+            <wsdl:input message="tns:moveRuleEntityUpRequest" />
+            <wsdl:output message="tns:moveRuleEntityUpResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="moveRuleEntityDown">
+            <wsdl:documentation>
+                Move a rule entity down.
+            </wsdl:documentation>
+            <wsdl:input message="tns:moveRuleEntityDownRequest" />
+            <wsdl:output message="tns:moveRuleEntityDownResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="getRuleTemplate">
+            <wsdl:documentation>
+                Get a particular rule template.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getRuleTemplateRequest" />
+            <wsdl:output message="tns:getRuleTemplateResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="getRuleTemplateList">
+            <wsdl:documentation>
+                Get all rule templates for a given context.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getRuleTemplateListRequest" />
+            <wsdl:output message="tns:getRuleTemplateListResponse" />
+        </wsdl:operation>
+
+        <!--Groups operations-->
+        <wsdl:operation name="createGroup">
+            <wsdl:documentation>
+                Create a user group.
+            </wsdl:documentation>
+            <wsdl:input message="tns:createGroupRequest" />
+            <wsdl:output message="tns:createGroupResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="deleteGroup">
+            <wsdl:documentation>
+                Delete an agent group.
+            </wsdl:documentation>
+            <wsdl:input message="tns:deleteGroupRequest" />
+            <wsdl:output message="tns:deleteGroupResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="modifyGroup">
+            <wsdl:documentation>
+                Modify group name.
+            </wsdl:documentation>
+            <wsdl:input message="tns:modifyGroupRequest" />
+            <wsdl:output message="tns:modifyGroupResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="getGroup">
+            <wsdl:documentation>
+                Get a single group.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getGroupRequest" />
+            <wsdl:output message="tns:getGroupResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="getAllGroups">
+            <wsdl:documentation>
+                Get all groups.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getAllGroupsRequest" />
+            <wsdl:output message="tns:getAllGroupsResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="getGroupByName">
+            <wsdl:documentation>
+                Get group by a name.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getGroupByNameRequest" />
+            <wsdl:output message="tns:getGroupByNameResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="getGroupsByType">
+            <wsdl:documentation>
+                Get a group by a type.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getGroupsByTypeRequest" />
+            <wsdl:output message="tns:getGroupsByTypeResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="mapAgent">
+            <wsdl:documentation>
+                Map agent to group.
+            </wsdl:documentation>
+            <wsdl:input message="tns:mapAgentRequest" />
+            <wsdl:output message="tns:mapAgentResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="unmapAgent">
+            <wsdl:documentation>
+                Remove agent from group.
+            </wsdl:documentation>
+            <wsdl:input message="tns:unmapAgentRequest" />
+            <wsdl:output message="tns:unmapAgentResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="createVoucher">
+            <wsdl:documentation>
+                Create a voucher.
+            </wsdl:documentation>
+            <wsdl:input message="tns:createVoucher" />
+            <wsdl:output message="tns:createVoucherResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="deleteVoucher">
+            <wsdl:documentation>
+                Delete a voucher.
+            </wsdl:documentation>
+            <wsdl:input message="tns:deleteVoucher" />
+            <wsdl:output message="tns:deleteVoucherResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="resetPin">
+            <wsdl:documentation>
+                Reset an agent's pin.
+            </wsdl:documentation>
+            <wsdl:input message="tns:resetPinRequest" />
+            <wsdl:output message="tns:resetPinResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="adjustWallet">
+            <wsdl:documentation>
+                Perform an adjustment on one of an agent's wallets.
+            </wsdl:documentation>
+            <wsdl:input message="tns:adjustWalletRequest" />
+            <wsdl:output message="tns:adjustWalletResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="modifyAccount">
+            <wsdl:documentation>
+                Modify an agent wallet.
+            </wsdl:documentation>
+            <wsdl:input message="tns:modifyAccountRequest" />
+            <wsdl:output message="tns:modifyAccountResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="sellStock">
+            <wsdl:documentation>
+                Initiate a sell stock transaction.
+            </wsdl:documentation>
+            <wsdl:input message="tns:sellStockRequest" />
+            <wsdl:output message="tns:sellStockResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="dispenseVoucher">
+            <wsdl:documentation>
+                Buy a voucher for a recipient agent.
+            </wsdl:documentation>
+            <wsdl:input message="tns:dispenseVoucher" />
+            <wsdl:output message="tns:dispenseVoucherResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="getVoucher">
+            <wsdl:documentation>
+                Retrieve a voucher for a given voucher ID.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getVoucherRequest" />
+            <wsdl:output message="tns:getVoucherResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="addSchedule">
+            <wsdl:documentation>
+                Add Schedule allows a user to schedule any task to run sometime in the future.
+            </wsdl:documentation>
+            <wsdl:input message="tns:addScheduleRequest" />
+            <wsdl:output message="tns:addScheduleResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="deleteSchedule">
+            <wsdl:documentation>
+                Delete schedule allows a user to delete a schedule that they previously created in the system.
+            </wsdl:documentation>
+            <wsdl:input message="tns:deleteScheduleRequest" />
+            <wsdl:output message="tns:deleteScheduleResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="getRuleListByContextId">
+            <wsdl:documentation>
+                Get all rules belonging to a given context.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getRuleListByContextIdRequest" />
+            <wsdl:output message="tns:getRuleListByContextIdResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="coupontransfer">
+        <wsdl:documentation>
+                Transfer an amount from a Coupon
+            </wsdl:documentation>
+        	<wsdl:input message="tns:coupontransfer" />
+        	<wsdl:output message="tns:coupontransferResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="invoke">
+          <wsdl:documentation>
+            Invoke a non-financial operation on an end-point
+          </wsdl:documentation>
+          <wsdl:input message="tns:invoke" />
+          <wsdl:output message="tns:invokeResponse" />
+        </wsdl:operation>
+
+        <wsdl:operation name="getChildListByReferenceID">
+            <wsdl:documentation>
+                Get a brief list of the children of the specified agent.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getChildListByReferenceIDRequest" />
+            <wsdl:output message="tns:getChildListByReferenceIDResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="getParentListByReferenceID">
+            <wsdl:documentation>
+                Get a brief list of the parents of the specified agent.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getParentListByReferenceIDRequest" />
+            <wsdl:output message="tns:getParentListByReferenceIDResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="convert">
+            <wsdl:input message="tns:convertRequest" />
+            <wsdl:output message="tns:convertResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="queryVoucher">
+            <wsdl:documentation>Query last used voucher(s)</wsdl:documentation>
+            <wsdl:input message="tns:queryVoucherRequest" />
+            <wsdl:output message="tns:queryVoucherResponse" />
+        </wsdl:operation>
+        <wsdl:operation name="querySecret">
+            <wsdl:documentation>Query the secret word for a given agent</wsdl:documentation>
+            <wsdl:input message="tns:querySecretRequest" />
+            <wsdl:output message="tns:querySecretResponse" />
+        </wsdl:operation>
+
+        <!-- Attachment operations -->
+
+		<wsdl:operation name="createAttachment">
+			<wsdl:input message="tns:createAttachment" />
+			<wsdl:output message="tns:createAttachmentResponse" />
+		</wsdl:operation>
+		<wsdl:operation name="modifyAttachment">
+			<wsdl:input message="tns:modifyAttachment" />
+			<wsdl:output message="tns:modifyAttachmentResponse" />
+		</wsdl:operation>
+		<wsdl:operation name="deleteAttachment">
+			<wsdl:input message="tns:deleteAttachment" />
+			<wsdl:output message="tns:deleteAttachmentResponse" />
+		</wsdl:operation>
+		<wsdl:operation name="getAttachment">
+			<wsdl:input message="tns:getAttachment" />
+			<wsdl:output message="tns:getAttachmentResponse" />
+		</wsdl:operation>
+		<wsdl:operation name="getAttachmentReferencesByEntity">
+			<wsdl:input message="tns:getAttachmentReferencesByEntity" />
+			<wsdl:output message="tns:AttachmentReferencesResponse" />
+		</wsdl:operation>
+        <wsdl:operation name="getAllSchedules">
+            <wsdl:documentation>
+                Get scheduled transaction.
+            </wsdl:documentation>
+            <wsdl:input message="tns:getAllSchedules" />
+            <wsdl:output message="tns:SchedulesResponse" />
+        </wsdl:operation>
+
+        <!-- End of attachment operations -->
+
+        <!-- %PORTS_MARKER%    Do NOT remove/move/change this line in any way. It must be the last line in this section. It is being used by code generation. -->
+
+    </wsdl:portType>
+
+
+    <!--
+    **************************************
+    *     Operations binding section     *
+    **************************************
+    -->
+    <wsdl:binding name="UMarketSC" type="tns:UMarketSC">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+        <wsdl:operation name="getAllAgentGroups">
+            <soap:operation soapAction="urn:UMARKETSCWS/getAllAgentGroups" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="AgentGroupsResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAgentGroupByAgentID">
+            <soap:operation soapAction="urn:UMARKETSCWS/getAgentGroupByAgentID" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="AgentGroupsResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAgentByReference">
+            <soap:operation soapAction="urn:UMARKETSCWS/getAgentByReference" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="AgentResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAgentByReferenceID">
+            <soap:operation soapAction="urn:UMARKETSCWS/getAgentByReferenceID" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="AgentResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAccountByReferenceID">
+            <soap:operation soapAction="urn:UMARKETSCWS/getAccountByReferenceID" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="AccountsResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAccountByReferenceIDAndType">
+            <soap:operation soapAction="urn:UMARKETSCWS/getAccountByReferenceIDAndType" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="AccountResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getTransactionByID">
+            <soap:operation soapAction="urn:UMARKETSCWS/getTransactionByID" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="TransactionResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="pin">
+            <soap:operation soapAction="urn:UMARKETSCWS/pin" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="pinResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="sales">
+            <soap:operation soapAction="urn:UMARKETSCWS/sales" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="salesResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createcoupon">
+            <soap:operation soapAction="urn:UMARKETSCWS/createcoupon" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="createcouponResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="activate">
+            <soap:operation soapAction="urn:UMARKETSCWS/activate" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="activateResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="sell">
+            <soap:operation soapAction="urn:UMARKETSCWS/sell" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="sellResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="cashout">
+            <soap:operation soapAction="urn:UMARKETSCWS/cashout" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="cashoutResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="buy">
+            <soap:operation soapAction="urn:UMARKETSCWS/buy" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="buyResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="donate">
+            <soap:operation soapAction="urn:UMARKETSCWS/donate" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="donateResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="authorise">
+            <soap:operation soapAction="urn:UMARKETSCWS/authorise" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="authoriseResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="authorise2">
+            <soap:operation soapAction="urn:UMARKETSCWS/authorise2" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="authorise2Response" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="reverse">
+            <soap:operation soapAction="urn:UMARKETSCWS/reverse" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="reverseResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="login">
+            <soap:operation soapAction="urn:UMARKETSCWS/login" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="loginResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="balance">
+            <soap:operation soapAction="urn:UMARKETSCWS/balance" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="balanceResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="delete">
+            <soap:operation soapAction="urn:UMARKETSCWS/delete" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="deleteResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createsession">
+            <soap:operation soapAction="urn:UMARKETSCWS/createsession" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="createsessionResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="delschedule">
+            <soap:operation soapAction="urn:UMARKETSCWS/delschedule" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="delscheduleResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="transquery">
+            <soap:operation soapAction="urn:UMARKETSCWS/transquery" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="transqueryResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="transqueryext">
+            <soap:operation soapAction="urn:UMARKETSCWS/transqueryext" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="transqueryextResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="nextid">
+            <soap:operation soapAction="urn:UMARKETSCWS/nextid" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="nextidResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deactivate">
+            <soap:operation soapAction="urn:UMARKETSCWS/deactivate" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="deactivateResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="bankcashin">
+            <soap:operation soapAction="urn:UMARKETSCWS/bankcashin" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="bankcashinResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="confirm">
+            <soap:operation soapAction="urn:UMARKETSCWS/confirm" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="confirmResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="delchild">
+            <soap:operation soapAction="urn:UMARKETSCWS/delchild" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="delchildResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="transfer">
+            <soap:operation soapAction="urn:UMARKETSCWS/transfer" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="transferResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="cashin">
+            <soap:operation soapAction="urn:UMARKETSCWS/cashin" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="cashinResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="delparent">
+            <soap:operation soapAction="urn:UMARKETSCWS/delparent" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="delparentResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="modify">
+            <soap:operation soapAction="urn:UMARKETSCWS/modify" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="modifyResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="billpay">
+            <soap:operation soapAction="urn:UMARKETSCWS/billpay" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="billpayResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="joinparent">
+            <soap:operation soapAction="urn:UMARKETSCWS/joinparent" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="joinparentResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="changeparent">
+            <soap:operation soapAction="urn:UMARKETSCWS/changeparent" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="changeparentResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="link">
+            <soap:operation soapAction="urn:UMARKETSCWS/link" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="linkResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="stop">
+            <soap:operation soapAction="urn:UMARKETSCWS/stop" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="stopResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="joinchild">
+            <soap:operation soapAction="urn:UMARKETSCWS/joinchild" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="joinchildResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="query">
+            <soap:operation soapAction="urn:UMARKETSCWS/query" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="queryResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="billcollect">
+            <soap:operation soapAction="urn:UMARKETSCWS/billcollect" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="billcollectResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="register">
+            <soap:operation soapAction="urn:UMARKETSCWS/register" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="registerResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="bankcashout">
+            <soap:operation soapAction="urn:UMARKETSCWS/bankcashout" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="bankcashoutResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="finalizeExtTrans">
+            <soap:operation soapAction="urn:UMARKETSCWS/finalizeExtTrans" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="finalizeExtTransResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="lastTransactions">
+            <soap:operation soapAction="urn:UMARKETSCWS/lastTransactions" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="lastTransactionsResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="getAllCapSets">
+            <soap:operation soapAction="urn:UMARKETSCWS/getAllCapSets" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="CapSetsResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getCapByID">
+            <soap:operation soapAction="urn:UMARKETSCWS/getCapByID" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="GetCapResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <!--CapDetail operation-->
+        <wsdl:operation name="getAllCapDetails">
+            <soap:operation soapAction="urn:UMARKETSCWS/getAllCapDetails" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="getAllCapDetailsResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAllCapDetailByCapsetId">
+            <soap:operation soapAction="urn:UMARKETSCWS/getAllCapDetailByCapsetId" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="getAllCapDetailByCapsetIdResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getCapDetailByID">
+            <soap:operation soapAction="urn:UMARKETSCWS/getCapDetailByID" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="getCapDetailResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="addCapSet">
+            <soap:operation soapAction="urn:UMARKETSCWS/addCapSet" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="addCapSetResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="modCapSet">
+            <soap:operation soapAction="urn:UMARKETSCWS/modCapSet" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="modCapSetResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="delCapSet">
+            <soap:operation soapAction="urn:UMARKETSCWS/delCapSet" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="delCapSetResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="addCapDetail">
+            <soap:operation soapAction="urn:UMARKETSCWS/addCapDetail" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="addCapDetailResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="modCapDetail">
+            <soap:operation soapAction="urn:UMARKETSCWS/modCapDetail" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="modCapDetailResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="delCapDetail">
+            <soap:operation soapAction="urn:UMARKETSCWS/delCapDetail" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="delCapDetailResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <!--Rules-->
+        <wsdl:operation name="addRule">
+            <soap:operation soapAction="urn:UMARKETSCWS/addRule" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="addRuleResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="modRule">
+            <soap:operation soapAction="urn:UMARKETSCWS/modRule" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="modRuleResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="delRule">
+            <soap:operation soapAction="urn:UMARKETSCWS/delRule" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="delRuleResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="getAllRules">
+            <soap:operation soapAction="urn:UMARKETSCWS/getAllRules" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="getAllRulesResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="getRule">
+            <soap:operation soapAction="urn:UMARKETSCWS/getRule" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="getRuleResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="mapRule">
+            <soap:operation soapAction="urn:UMARKETSCWS/mapRule" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="mapRuleResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="unmapRule">
+            <soap:operation soapAction="urn:UMARKETSCWS/unmapRule" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="unmapRuleResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <!--Rule instances-->
+        <wsdl:operation name="getRuleInstanceList">
+            <soap:operation soapAction="urn:UMARKETSCWS/getRuleInstanceList" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="getRuleInstanceListResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getRuleInstance">
+            <soap:operation soapAction="urn:UMARKETSCWS/getRuleInstance" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="getRuleInstanceResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <!--Rule instances-->
+        <wsdl:operation name="addRuleInstance">
+            <soap:operation soapAction="urn:UMARKETSCWS/addRuleInstance" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="addRuleInstanceResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="modRuleInstance">
+            <soap:operation soapAction="urn:UMARKETSCWS/modRuleInstance" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="modRuleInstanceResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="delRuleInstance">
+            <soap:operation soapAction="urn:UMARKETSCWS/delRuleInstance" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="delRuleInstanceResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="actRuleInstance">
+            <soap:operation soapAction="urn:UMARKETSCWS/actRuleInstance" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="actRuleInstanceResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deactRuleInstance">
+            <soap:operation soapAction="urn:UMARKETSCWS/deactRuleInstance" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="deactRuleInstanceResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <!--Rule instances-->
+        <wsdl:operation name="addRuleEntity">
+            <soap:operation soapAction="urn:UMARKETSCWS/addRuleEntity" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="addRuleEntityResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="modRuleEntity">
+            <soap:operation soapAction="urn:UMARKETSCWS/modRuleEntity" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="modRuleEntityResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="delRuleEntity">
+            <soap:operation soapAction="urn:UMARKETSCWS/delRuleEntity" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="delRuleEntityResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="getRuleEntity">
+            <soap:operation soapAction="urn:UMARKETSCWS/getRuleEntity" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="getRuleEntityResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="getRuleEntityList">
+            <soap:operation soapAction="urn:UMARKETSCWS/getRuleEntityList" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="getRuleEntityListResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="getRuleEntitiesByParent">
+            <soap:operation soapAction="urn:UMARKETSCWS/getRuleEntitiesByParent" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="getRuleEntitiesByParentResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="moveRuleEntityUp">
+            <soap:operation soapAction="urn:UMARKETSCWS/moveRuleEntityUp" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="moveRuleEntityUpResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="moveRuleEntityDown">
+            <soap:operation soapAction="urn:UMARKETSCWS/moveRuleEntityDown" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="moveRuleEntityDownResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <!--Rule templates-->
+        <wsdl:operation name="getRuleTemplate">
+            <soap:operation soapAction="urn:UMARKETSCWS/getRuleTemplate" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="getRuleTemplateResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="getRuleTemplateList">
+            <soap:operation soapAction="urn:UMARKETSCWS/getRuleTemplateList" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="getRuleTemplateListResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <!-- Groups -->
+        <wsdl:operation name="createGroup">
+            <soap:operation soapAction="urn:UMARKETSCWS/createGroup" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="createGroupResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="deleteGroup">
+            <soap:operation soapAction="urn:UMARKETSCWS/deleteGroup" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="deleteGroupResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="modifyGroup">
+            <soap:operation soapAction="urn:UMARKETSCWS/modifyGroup" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="modifyGroupResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="getGroup">
+            <soap:operation soapAction="urn:UMARKETSCWS/getGroup" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="getGroupResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="getAllGroups">
+            <soap:operation soapAction="urn:UMARKETSCWS/getAllGroups" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="getAllGroupsResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="getGroupByName">
+            <soap:operation soapAction="urn:UMARKETSCWS/getGroupByName" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="getGroupByNameResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="getGroupsByType">
+            <soap:operation soapAction="urn:UMARKETSCWS/getGroupsByType" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="getGroupsByTypeResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="mapAgent">
+            <soap:operation soapAction="urn:UMARKETSCWS/mapAgent" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="mapAgentResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="unmapAgent">
+            <soap:operation soapAction="urn:UMARKETSCWS/unmapAgent" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="unmapAgentResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="createVoucher">
+            <soap:operation soapAction="urn:UMARKETSCWS/createVoucher" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="createVoucherResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="deleteVoucher">
+            <soap:operation soapAction="urn:UMARKETSCWS/deleteVoucher" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="deleteVoucherResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="resetPin">
+            <soap:operation soapAction="urn:UMARKETSCWS/resetPin" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="resetPinResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="adjustWallet">
+            <soap:operation soapAction="urn:UMARKETSCWS/adjustWallet" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="adjustWalletResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="modifyAccount">
+            <soap:operation soapAction="urn:UMARKETSCWS/modifyAccount" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="modifyAccountResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="sellStock">
+            <soap:operation soapAction="urn:UMARKETSCWS/sellStock" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="sellStockResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="dispenseVoucher">
+            <soap:operation soapAction="urn:UMARKETSCWS/dispenseVoucher" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="dispenseVoucherResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="getVoucher">
+            <soap:operation soapAction="urn:UMARKETSCWS/getVoucher" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="getVoucherResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="queryVoucher">
+            <soap:operation soapAction="urn:UMARKETSCWS/queryVoucher" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="queryVoucherResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <wsdl:operation name="addSchedule">
+            <soap:operation soapAction="urn:UMARKETSCWS/addSchedule" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="addScheduleResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteSchedule">
+            <soap:operation soapAction="urn:UMARKETSCWS/deleteSchedule" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="deleteScheduleResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getRuleListByContextId">
+            <soap:operation soapAction="urn:UMARKETSCWS/getRuleListByContextId" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="getRuleListByContextIdResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="coupontransfer">
+            <soap:operation soapAction="urn:UMARKETSCWS/coupontransfer" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="coupontransferResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+      <wsdl:operation name="invoke">
+          <soap:operation soapAction="urn:UMARKETSCWS/invoke" />
+          <wsdl:input>
+              <soap:body use="literal" parts="parameters" />
+          </wsdl:input>
+          <wsdl:output>
+              <soap:body use="literal" parts="invokeResponse" />
+          </wsdl:output>
+      </wsdl:operation>
+        <wsdl:operation name="getChildListByReferenceID">
+            <soap:operation soapAction="urn:UMARKETSCWS/getChildListByReferenceID" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="getChildListByReferenceIDResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getParentListByReferenceID">
+            <soap:operation soapAction="urn:UMARKETSCWS/getParentListByReferenceID" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="getParentListByReferenceIDResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="convert">
+            <soap:operation soapAction="urn:UMARKETSCWS/convert" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="convertResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="querySecret">
+            <soap:operation soapAction="urn:UMARKETSCWS/querySecret" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="querySecretResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <!-- Bindings for attachment operations -->
+
+		<wsdl:operation name="createAttachment">
+			<soap:operation soapAction="urn:TESTWS/createAttachment" />
+			<wsdl:input>
+				<soap:body use="literal" parts="parameters" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="createAttachmentResponse" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="modifyAttachment">
+			<soap:operation soapAction="urn:TESTWS/modifyAttachment" />
+			<wsdl:input>
+				<soap:body use="literal" parts="parameters" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="modifyAttachmentResponse" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="deleteAttachment">
+			<soap:operation soapAction="urn:TESTWS/deleteAttachment" />
+			<wsdl:input>
+				<soap:body use="literal" parts="parameters" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="deleteAttachmentResponse" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getAttachment">
+			<soap:operation soapAction="urn:TESTWS/getAttachment" />
+			<wsdl:input>
+				<soap:body use="literal" parts="parameters" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="getAttachmentResponse" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="getAttachmentReferencesByEntity">
+			<soap:operation soapAction="urn:TESTWS/getAttachmentReferencesByEntity" />
+			<wsdl:input>
+				<soap:body use="literal" parts="parameters" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="AttachmentReferencesResponse" />
+			</wsdl:output>
+		</wsdl:operation>
+        <wsdl:operation name="getAllSchedules">
+            <soap:operation soapAction="urn:UMARKETSCWS/getAllSchedules" />
+            <wsdl:input>
+                <soap:body use="literal" parts="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" parts="SchedulesResponse" />
+            </wsdl:output>
+        </wsdl:operation>
+
+        <!-- End of bindings for attachment operations -->
+
+        <!-- %MESSAGE_BINDING_MARKER%    Do NOT remove/move/change this line in any way. It must be the last line in this section. It is being used by code generation. -->
+    </wsdl:binding>
+
+    <wsdl:service name="UMarketSC">
+        <wsdl:documentation>UMarket SelfCare2 SOAP interface.</wsdl:documentation>
+        <wsdl:port name="UMarketSC" binding="tns:UMarketSC">
+            <soap:address location="http://mcommdemo01.utiba.com/services/umarketsc" />
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
