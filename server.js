@@ -39,6 +39,18 @@ app.use(function(req, res, next){
   }
 });
 
+var interceptorHeader = function(req, res, next) {
+	console.log('Running interceptor');
+	console.log(req.headers.a);
+	if(req.headers.a){
+	//validate session
+	//is valid?
+	//regenerate session and colocate new id-sessiom
+  }
+
+  next();
+};
+
 app.get('/api/ping', function(req, res){
 	console.log(req.body)
 	var body = 'pong';
@@ -52,7 +64,7 @@ app.get('/api/createsession',user.createsession);
 app.post('/api/validate',user.validate);
 app.post('/api/authorize',user.authorize);
 app.post('/api/login',user.login);
-app.post('/api/register', user.register);
+app.post('/api/register', interceptorHeader ,user.register);
 app.post('/api/updateprofile', user.updateProfile);
 app.post('/api/uploadimage', user.uploadImage);
 app.post('/api/resetpin', user.resetPin);

@@ -50,7 +50,7 @@ exports.registerFlow = function(payload,callback) {
         });
       });
     },
-    function(sessionid, callback){
+    /*function(sessionid, callback){
       console.log('Register ' + sessionid);
       var requestSoap = { sessionid:sessionid, agent: payload.phoneID, name : payload.name , email_address: payload.email_address };
       var request = { registerRequest: requestSoap };
@@ -98,10 +98,10 @@ exports.registerFlow = function(payload,callback) {
           }
         });
       });
-    },
+    },*/
     function(sessionid,callback){
       console.log('Transfer ' + sessionid);
-      var requestSoap = { sessionid:sessionid, to: payload.phoneID, amount : 5 , type: 1 };
+      var requestSoap = { sessionid:sessionid, to: payload.phoneID, amount : 2 , type: 3 };
       var request = { transferRequest: requestSoap };
       console.log(request);
       soap.createClient(soapurl, function(err, client) {
