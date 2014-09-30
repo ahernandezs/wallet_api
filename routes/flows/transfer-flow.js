@@ -52,23 +52,25 @@ exports.transferFlow = function(payload,callback) {
     },
     function(sessionid, callback){
       console.log('Transfer ' + sessionid);
-      var requestSoap = { sessionid:sessionid, to: payload.phoneID, amount : payload.amount , type: payload.type };
-      var request = { registerRequest: requestSoap };
+      var requestSoap = { sessionid:sessionid, to: payload.phoneID, amount : 5 , type: 1 };
+      var request = { transferRequest: requestSoap };
       console.log(request);
       soap.createClient(soapurl, function(err, client) {
-        client.register(request, function(err, result) {
+        client.transfer(request, function(err, result) {
           if(err) {
             console.log(err);
             return new Error(err);
           } else {
             console.log(result);
-            var response = result.registerReturn;
+            var response = result.transferReturn;
             if(response.result != 0){
-                var response = { statusCode:1 ,  additionalInfo : result };
-               callback("ERROR", response);
+              var response = { statusCode:1 ,  additionalInfo : result };
+              callback("ERROR", response);
             }
-            else
-              callback(null,sessionid);
+            else{
+              var response = { statusCode:0 ,  additionalInfo : result };
+              callback(null, response);
+            }
           }
         });
       });
