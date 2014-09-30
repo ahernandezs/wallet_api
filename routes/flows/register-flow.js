@@ -50,7 +50,7 @@ exports.registerFlow = function(payload,callback) {
         });
       });
     },
-    function(sessionid, callback){
+    /*function(sessionid, callback){
       console.log('Register ' + sessionid);
       var requestSoap = { sessionid:sessionid, agent: payload.phoneID, name : payload.name , email_address: payload.email_address };
       var request = { registerRequest: requestSoap };
@@ -94,7 +94,32 @@ exports.registerFlow = function(payload,callback) {
           } else {
             console.log(result);
             var response = { statusCode:0 ,  additionalInfo : result.resetPinReturn };
-            callback(null, response);
+            callback(null, sessionid);
+          }
+        });
+      });
+    },*/
+    function(sessionid,callback){
+      console.log('Transfer ' + sessionid);
+      var requestSoap = { sessionid:sessionid, to: payload.phoneID, amount : 2 , type: 3 };
+      var request = { transferRequest: requestSoap };
+      console.log(request);
+      soap.createClient(soapurl, function(err, client) {
+        client.transfer(request, function(err, result) {
+          if(err) {
+            console.log(err);
+            return new Error(err);
+          } else {
+            console.log(result);
+            var response = result.transferReturn;
+            if(response.result != 0){
+              var response = { statusCode:1 ,  additionalInfo : result };
+              callback("ERROR", response);
+            }
+            else{
+              var response = { statusCode:0 ,  additionalInfo : result };
+              callback(null, response);
+            }
           }
         });
       });
