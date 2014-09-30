@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var User = require('../model/user');
 var soap = require('soap');
+var BuyFlow = require('./flows/buy-flow');
 var soapurl = process.env.SOAP_URL;
 
 
@@ -74,5 +75,16 @@ exports.balance = function(req, res) {
         res.json(response);
       }
     });
+  });
+};
+
+exports.buyFlow = function(req, res){
+  BuyFlow.buyFlow(req.body,function(err,result){
+      if(err){
+        console.log('Error');
+        res.send(500)
+      }else{
+        res.json(result);
+      }
   });
 };

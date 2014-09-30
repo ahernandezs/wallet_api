@@ -72,7 +72,7 @@ exports.registerFlow = function(payload,callback) {
           }
         });
       });
-    },
+      },
     function(sessionid, callback){
       console.log('Register in Mongo ' + sessionid);
       Userquery.createUser(payload,function(err,result){
