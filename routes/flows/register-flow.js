@@ -94,30 +94,32 @@ exports.registerFlow = function(payload,callback) {
           } else {
             console.log(result);
             var response = { statusCode:0 ,  additionalInfo : result.resetPinReturn };
-            callback(null, response);
+            callback(null, sessionid);
           }
         });
       });
     },
     function(sessionid,callback){
       console.log('Transfer ' + sessionid);
-      var requestSoap = { sessionid:sessionid, to: payload.phoneID, amount : 10 , type: 1  };
-      var request = { registerRequest: requestSoap };
+      var requestSoap = { sessionid:sessionid, to: payload.phoneID, amount : 5 , type: 1 };
+      var request = { transferRequest: requestSoap };
       console.log(request);
       soap.createClient(soapurl, function(err, client) {
-        client.register(request, function(err, result) {
+        client.transfer(request, function(err, result) {
           if(err) {
             console.log(err);
             return new Error(err);
           } else {
             console.log(result);
-            var response = result.registerReturn;
+            var response = result.transferReturn;
             if(response.result != 0){
-                var response = { statusCode:1 ,  additionalInfo : result };
-               callback("ERROR", response);
+              var response = { statusCode:1 ,  additionalInfo : result };
+              callback("ERROR", response);
             }
-            else
-              callback(null,sessionid);
+            else{
+              var response = { statusCode:0 ,  additionalInfo : result };
+              callback(null, response);
+            }
           }
         });
       });
