@@ -39,6 +39,15 @@ app.use(function(req, res, next){
   }
 });
 
+var interceptorHeader = function(req, res, next) {
+	console.log('Running interceptor');
+	console.log(req.originalUrl.toString());
+	console.log(req.headers['x-auth-token']);
+	if(req.originalUrl.toString() === '/api/register')
+		console.log('Interceptor in login');
+	next();
+};
+
 app.get('/api/ping', function(req, res){
 	console.log(req.body)
 	var body = 'pong';
@@ -52,7 +61,7 @@ app.get('/api/createsession',user.createsession);
 app.post('/api/validate',user.validate);
 app.post('/api/authorize',user.authorize);
 app.post('/api/login',user.login);
-app.post('/api/register', user.register);
+app.post('/api/register', interceptorHeader ,user.register);
 app.post('/api/updateprofile', user.updateProfile);
 app.post('/api/uploadimage', user.uploadImage);
 app.post('/api/resetpin', user.resetPin);

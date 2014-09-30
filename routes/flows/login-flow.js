@@ -9,23 +9,42 @@ exports.loginFlow = function(payload,callback) {
   async.waterfall([
     function(callback){
       Userquery.confirmPin(payload.phoneID, function(err, pin) {
-        if(pin == payload.pin){
-          callback(null);
+        if(err){
+            console.log(err);
+            var response = { statusCode:1 ,  additionalInfo : err };
+            callback(err,response);
         }
-        else{
-          var response = { statusCode:1 ,  additionalInfo : 'Invalid Pin' };
-          callback(err,response);
-        }});
+        else {
+          if(pin === payload.pin)
+            callback(null);
+          else{
+            var response = { statusCode:1 ,  additionalInfo : 'INVALID PIN' };
+            callback('ERROR',response);
+          }
+        }
+      });
       },
+      function(callback){
+        console.log('Validate connection');
+        var response = null;
+        soap.createClient(soapurl, function(err, client) {
+          if(err) {
+            console.log(err);
+            var response = { statusCode:1 ,  additionalInfo : err };
+            callback(err,response);
+          }else 
+          callback(null);
+        });
+      },      
     function(callback){
       console.log('Create Session');
       var response = null;
       soap.createClient(soapurl, function(err, client) {
-        console.log(err);
-        console.log(client);
         client.createsession({}, function(err, result) {
           if(err) {
-            return new Error(err);
+            console.log(err);
+            var response = { statusCode:1 ,  additionalInfo : err };
+            callback(err,response);
           } else {
             console.log(result);
             var response = result.createsessionReturn;
@@ -46,11 +65,9 @@ exports.loginFlow = function(payload,callback) {
       console.log('Login');
       var  request = { sessionid: sessionid, initiator: payload.phoneID , pin: hashpin  };
       var request = {loginRequest: request};
-      console.log(request);
       soap.createClient(soapurl, function(err, client) {
           client.login(request, function(err, result) {
           if(err) {
-            console.log('Error' + err);
             return new Error(err);
           } else {
             var response = result.loginReturn;
@@ -60,29 +77,49 @@ exports.loginFlow = function(payload,callback) {
             else
               var response = { statusCode:1 ,  additionalInfo : response };
 
-            callback(null,response);
+            callback(null,sessionid);
           }
         });
       });
     },
-    function(sessionid, hashpin, callback){
-      console.log('Login');
-      var  request = { sessionid: sessionid, initiator: payload.phoneID , pin: hashpin  };
-      var request = {loginRequest: request};
-      console.log(request);
+    function(sessionid, callback){
+      console.log('balance e-wallet');
+      var  request = { sessionid: sessionid, type: 1  };
+      var request = {balanceRequest: request};
       soap.createClient(soapurl, function(err, client) {
-          client.login(request, function(err, result) {
+        client.balance(request, function(err, result) {
           if(err) {
-            console.log('Error' + err);
             return new Error(err);
           } else {
-            var response = result.loginReturn;
+            var response = result.balanceReturn;
             console.log(response);
-            if(response.result  === 0 )
-              var response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : response };       
+            if(response.result  === '0' )
+              var response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : response };
             else
               var response = { statusCode:1 ,  additionalInfo : response };
 
+            callback(null,sessionid,response.additionalInfo.current);
+          }
+        });
+      });
+    },
+    function(sessionid,currentMoney, callback){
+      console.log('balance Points');
+      var  request = { sessionid: sessionid, type: 3  };
+      var request = {balanceRequest: request};
+      soap.createClient(soapurl, function(err, client) {
+        client.balance(request, function(err, result) {
+          if(err) {
+            return new Error(err);
+          } else {
+            var response = result.balanceReturn;
+            console.log(response);
+            if(response.result  === '0' ) {
+              var balance = { current : currentMoney , dox : response.current  } ;
+              response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
+            }
+            else
+              var response = { statusCode:1 ,  additionalInfo : response };
             callback(null,response);
           }
         });
