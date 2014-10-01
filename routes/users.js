@@ -137,3 +137,21 @@ exports.uploadImage = function(req,res){
     res.json(result);
   });
 };
+
+exports.login2 =  function(req, res){
+  console.log('execute POST method login');
+  console.log(req.body);
+  var request = {loginRequest: req.body};
+  soap.createClient(soapurl, function(err, client) {
+    client.login(request, function(err, result) {
+        if(err) {
+          console.log(err);
+          res.send(500);
+        } else {
+          console.log(result);
+          var response = result.loginReturn;
+          res.json(response);
+        }
+    });
+  });
+};

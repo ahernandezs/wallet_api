@@ -61,6 +61,7 @@ app.get('/api/createsession',user.createsession);
 app.post('/api/validate',user.validate);
 app.post('/api/authorize',user.authorize);
 app.post('/api/login',user.login);
+app.post('/api/login2',user.login2);
 app.post('/api/register', interceptorHeader ,user.register);
 app.post('/api/updateprofile', user.updateProfile);
 app.post('/api/uploadimage', user.uploadImage);
