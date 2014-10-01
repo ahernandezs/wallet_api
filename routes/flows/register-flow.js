@@ -102,7 +102,7 @@ exports.registerFlow = function(payload,callback) {
     },
     function(sessionid,callback){
       console.log('Transfer ' + sessionid);
-      var requestSoap = { sessionid:sessionid, to: payload.phoneID, amount : 5 , type: 1 };
+      var requestSoap = { sessionid:sessionid, to: payload.phoneID, amount : 20 , type: 1 };
       var request = { transferRequest: requestSoap };
       console.log(request);
       soap.createClient(soapurl, function(err, client) {
