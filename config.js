@@ -26,4 +26,8 @@ config.doxs.payment = 500;
 config.doxs.social = 500;
 config.doxs.trivia = 100;
 
+config.conn = {};
+config.username = 'anzen_01';
+config.pin = '1234';
+
 module.exports = config;
