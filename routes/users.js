@@ -159,6 +159,7 @@ exports.login2 =  function(req, res){
 exports.getUsers = function(req, res){
   console.log('Execute GET method get users');
   Userquery.getUsers(function(err,result){
+    var result = {url_base: 'https://s3-us-west-1.amazonaws.com/amdocs-images/profile/', users: result}
     res.json(result);
   });
 }
