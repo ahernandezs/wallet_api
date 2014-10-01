@@ -52,7 +52,9 @@ exports.transferFlow = function(payload,callback) {
     },
     function(sessionid, callback){
       console.log('Transfer ' + sessionid);
-      var requestSoap = { sessionid:sessionid, to: payload.phoneID, amount : 5 , type: 1 };
+      console.log(payload);
+      console.log(payload.transferRequest.phoneID);
+      var requestSoap = { sessionid:sessionid, to: payload.transferRequest.phoneID, amount : payload.transferRequest.amount , type: payload.transferRequest.type };
       var request = { transferRequest: requestSoap };
       console.log(request);
       soap.createClient(soapurl, function(err, client) {

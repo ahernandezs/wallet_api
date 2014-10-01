@@ -10,9 +10,9 @@ exports.loginFlow = function(payload,callback) {
     function(callback){
       Userquery.confirmPin(payload.phoneID, function(err, pin) {
         if(err){
-            console.log(err);
-            var response = { statusCode:1 ,  additionalInfo : err };
-            callback(err,response);
+          console.log(err);
+          var response = { statusCode:1 ,  additionalInfo : err };
+          callback(err,response);
         }
         else {
           if(pin === payload.pin)
@@ -23,19 +23,19 @@ exports.loginFlow = function(payload,callback) {
           }
         }
       });
-      },
-      function(callback){
-        console.log('Validate connection');
-        var response = null;
-        soap.createClient(soapurl, function(err, client) {
-          if(err) {
-            console.log(err);
-            var response = { statusCode:1 ,  additionalInfo : err };
-            callback(err,response);
-          }else 
-          callback(null);
-        });
-      },      
+    },
+    function(callback){
+      console.log('Validate connection');
+      var response = null;
+      soap.createClient(soapurl, function(err, client) {
+        if(err) {
+          console.log(err);
+          var response = { statusCode:1 ,  additionalInfo : err };
+          callback(err,response);
+        }else
+        callback(null);
+      });
+    },
     function(callback){
       console.log('Create Session');
       var response = null;
@@ -66,7 +66,7 @@ exports.loginFlow = function(payload,callback) {
       var  request = { sessionid: sessionid, initiator: payload.phoneID , pin: hashpin  };
       var request = {loginRequest: request};
       soap.createClient(soapurl, function(err, client) {
-          client.login(request, function(err, result) {
+        client.login(request, function(err, result) {
           if(err) {
             return new Error(err);
           } else {
