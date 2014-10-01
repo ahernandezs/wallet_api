@@ -4,9 +4,7 @@ var crypto = require('crypto');
 var Userquery = require('../../model/queries/user-query');
 var sessionUser = require('./login-flow');
 var soapurl = process.env.SOAP_URL;
-
-var username = 'anzen_01';
-var pin  = '1234';
+var config = require('../../config.js');
 
 exports.registerFlow = function(payload,callback) {
   async.waterfall([
@@ -27,7 +25,7 @@ exports.registerFlow = function(payload,callback) {
     },
     function(sessionid, callback){
       console.log('Create hashpin');
-      var hashpin = username.toLowerCase() + pin ;
+      var hashpin = config.username.toLowerCase() + config.pin ;
       hashpin = sessionid + crypto.createHash('sha1').update(hashpin).digest('hex').toLowerCase();
       hashpin = crypto.createHash('sha1').update(hashpin).digest('hex').toUpperCase();
       console.log(hashpin);
@@ -35,7 +33,7 @@ exports.registerFlow = function(payload,callback) {
     },
     function(sessionid, hashpin, callback){
       console.log('Login');
-      var  request = { sessionid: sessionid, initiator: username, pin: hashpin  };
+      var  request = { sessionid: sessionid, initiator: config.username, pin: hashpin  };
       var request = {loginRequest: request};
       console.log(request);
       soap.createClient(soapurl, function(err, client) {
