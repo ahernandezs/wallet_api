@@ -49,6 +49,10 @@ exports.register = function(req, res){
   console.log('execute POST method register');
   console.log(req.body);
   anzenUser.registerFlow(req.body, function(err,result){
+    if(result.statusCode === 0){
+      res.setHeader('X-AUTH-TOKEN', result.sessionid);
+      delete result.sessionid;
+    }
     res.json(result);
   });
 };
@@ -131,5 +135,23 @@ exports.uploadImage = function(req,res){
   console.log(req.headers['image-profile']);
   awsS3.uploadImage2S3(req,function(err,result){
     res.json(result);
+  });
+};
+
+exports.login2 =  function(req, res){
+  console.log('execute POST method login');
+  console.log(req.body);
+  var request = {loginRequest: req.body};
+  soap.createClient(soapurl, function(err, client) {
+    client.login(request, function(err, result) {
+        if(err) {
+          console.log(err);
+          res.send(500);
+        } else {
+          console.log(result);
+          var response = result.loginReturn;
+          res.json(response);
+        }
+    });
   });
 };

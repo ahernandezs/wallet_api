@@ -61,6 +61,7 @@ app.get('/api/createsession',user.createsession);
 app.post('/api/validate',user.validate);
 app.post('/api/authorize',user.authorize);
 app.post('/api/login',user.login);
+app.post('/api/login2',user.login2);
 app.post('/api/register', interceptorHeader ,user.register);
 app.post('/api/updateprofile', user.updateProfile);
 app.post('/api/uploadimage', user.uploadImage);
@@ -82,6 +83,7 @@ app.post('/api/putdoxs', user.putDoxs);
 app.post('/api/loan', loan.updateLoan);
 app.post('/api/inventory', product.inventory);
 app.post('/api/updateinventory', product.updateInventory);
+app.post('/api/buyflow', wallet.buyFlow);
 
 app.listen( process.env.PORT  || 3000);
 console.log('Listening on port 3000');

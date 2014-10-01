@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var User = require('../model/user');
 var soap = require('soap');
+var BuyFlow = require('./flows/buy-flow');
 var soapurl = process.env.SOAP_URL;
 
 
@@ -45,15 +46,15 @@ exports.transfer =  function(req, res){
 exports.buy =  function(req, res){
   console.log('execute POST method buy');
   console.log(req.body);
-  var request = {buyRequest: req.body};
+  var request = {transferRequest: req.body};
   soap.createClient(soapurl, function(err, client) {
-    client.buy(request, function(err, result) {
+    client.transfer(request, function(err, result) {
       if(err) {
         res.send(500);
       } else {
         console.log(result);
 
-        var response = result.buyReturn;
+        var response = result.transfer;
         res.json(response);
       }
     });
@@ -74,5 +75,19 @@ exports.balance = function(req, res) {
         res.json(response);
       }
     });
+  });
+};
+
+exports.buyFlow = function(req, res){
+  console.log('execute POST method buyFlow');
+  console.log(req.headers['x-auth-token']);
+  var json = req.body;
+  json['sessionid']= req.headers['x-auth-token'];
+  BuyFlow.buyFlow(req.body,function(err,result){
+    if(result.statusCode === 0){
+      res.setHeader('X-AUTH-TOKEN', result.sessionid);
+      delete result.sessionid;
+    }
+    res.json(result);
   });
 };
