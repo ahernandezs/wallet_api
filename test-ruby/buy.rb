@@ -2,7 +2,9 @@ require 'rubygems'
 require 'rest_client'
 
 
-rest_url = 'http://localhost:3000/'
+#rest_url = 'http://localhost:3000/'
+rest_url = 'http://wallet-demo-api.herokuapp.com/'
+
 
 
 puts "Username?"

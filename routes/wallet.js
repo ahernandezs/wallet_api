@@ -80,6 +80,7 @@ exports.balance = function(req, res) {
 
 exports.buyFlow = function(req, res){
   console.log('execute POST method buyFlow');
+  console.log(req.body);
   console.log(req.headers['x-auth-token']);
   var json = req.body;
   json['sessionid']= req.headers['x-auth-token'];
