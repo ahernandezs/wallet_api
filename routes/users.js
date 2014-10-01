@@ -155,3 +155,10 @@ exports.login2 =  function(req, res){
     });
   });
 };
+
+exports.getUsers = function(req, res){
+  console.log('Execute GET method get users');
+  Userquery.getUsers(function(err,result){
+    res.json(result);
+  });
+}
