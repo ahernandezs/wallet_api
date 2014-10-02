@@ -86,6 +86,7 @@ app.post('/api/updateinventory', product.updateInventory);
 app.post('/api/buyflow', wallet.buyFlow);
 app.get('/api/users', user.getUsers);
 app.post('/api/transferFunds', wallet.transferFunds);
+app.post('/api/gift', wallet.sendGift);
 
 app.listen( process.env.PORT  || 3000);
 console.log('Listening on port 3000');
