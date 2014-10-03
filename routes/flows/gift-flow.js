@@ -20,6 +20,7 @@ exports.sendGift = function(payload,callback) {
 		function(callback){
 			var requestSoap = { sessionid:payload.sessionid, to: config.username, amount : payload.order.total , type: 1 };
 			var request = { transferRequest: requestSoap };
+			console.log(request);
 			soap.createClient(soapurl, function(err, client) {
 				client.transfer(request, function(err, result) {
 					if(err) {
@@ -36,7 +37,7 @@ exports.sendGift = function(payload,callback) {
 
 			var requestBalance = { sessionid: sessionid, type: 3 };
 			var request = { balanceRequest: requestBalance };
-			
+			console.log(request);
 			soap.createClient(soapurl, function(err, client) {
 				client.balance(request, function(err, result) {
 					if(err) {
@@ -59,14 +60,14 @@ exports.sendGift = function(payload,callback) {
 
 		function(sessionid,response, callback){
 			Orderquery.putOrder(order, function(err,result){
-				//console.log('Order saving result: '+JSON.stringify(result));
+				console.log('Order saving result: '+JSON.stringify(result));
 				callback(null,response);
 			});
 		},
 
 		function(response,callback) {
             urbanService.singlePush(notification, function(err, result) {
-                //console.log('Pushing result: '+JSON.stringify(result));
+                console.log('Pushing result: '+JSON.stringify(result));
                 callback(null,response);
             });
         },
