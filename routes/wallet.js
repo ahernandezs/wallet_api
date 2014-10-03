@@ -114,6 +114,8 @@ exports.transferFunds = function(req, res) {
 exports.sendGift = function(req, res){
   console.log('\n\nExecute POST Send Gift');
   var json = req.body;
+  console.log(json);
+  console.log(req.headers['x-auth-token']);
   json['sessionid']= req.headers['x-auth-token'];
   GiftFlow.sendGift(req.body, function(err,result){
     if(result.statusCode === 0){
