@@ -19,6 +19,10 @@ exports.singlePush = function(req, callback) {
 			"device_types" : [ "ios", "android" ]
 		};
 		payload['audience'] = deviceID;
+
+		if(req.extra)
+			payload.notification['android'] = req.extra;
+
 		console.log(payload);
 		ua.pushNotification('/api/push', payload, function(error) {
 			if (error) {
