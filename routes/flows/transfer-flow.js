@@ -5,6 +5,7 @@ var Userquery = require('../../model/queries/user-query');
 var soapurl = process.env.SOAP_URL;
 var config = require('../../config.js');
 var urbanService = require('../../services/urban-service');
+var balance = require('./balance-flow');
 
 exports.transferFlow = function(payload,callback) {
     async.waterfall([
@@ -86,9 +87,11 @@ exports.transferFlow = function(payload,callback) {
 };
 
 exports.transferFunds = function(data, callback) {
+    var payload = data.body;
+
     async.waterfall([
         function(callback) {
-            var payload = data.body;
+
             var header = data.header;
             console.log( 'Running transferFunds ' + payload.sessionid );
             console.log( payload );
@@ -109,22 +112,33 @@ exports.transferFunds = function(data, callback) {
                         } else {
                             payload.phoneID = payload.destiny;
                             delete payload.destiny;
-                            callback(null, payload);
+                            callback(null, header.sessionid);
                         }
                     }
                 });
             });
         },
-        function(data, callback) {
-            var message = 'You have received a transfer of $' + data.amount;
-            data.message = message;
+        function(sessionid, callback) {
+            var message = 'You have received a transfer of $' + payload.amount;
+            payload.message = message;
             var extraData = { current :'10' , dox:'10'};
-            data.extra = {extra : extraData} ;
-            urbanService.singlePush(data, function(err, result) {
+            payload.extra = {extra : extraData} ;
+            urbanService.singlePush(payload, function(err, result) {
                 var response = { statusCode: 0, additionalInfo: 'The transfer was successful' };
-                callback(null, response);
+                callback(null, sessionid);
             });
-        }
+        },
+        function(sessionid, callback){
+            console.log(sessionid);
+            balance.balanceFlow(sessionid, function(err, result) {
+                if(err){
+                    var response = { statusCode: 1, additionalInfo: result };
+                    callback('ERROR', response);
+                }
+                else
+                    callback(null,result);
+            });
+        },
     ], function(err, result) {
         console.log(result);
         if (err) 
