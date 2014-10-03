@@ -33,7 +33,30 @@ exports.sendGift = function(payload,callback) {
 			});
 		},
 
-		function(sessionid,callback){
+
+		function(sessionid, callback){
+			console.log('balance e-wallet');
+			var  request = { sessionid: sessionid, type: 1  };
+			var request = {balanceRequest: request};
+			soap.createClient(soapurl, function(err, client) {
+				client.balance(request, function(err, result) {
+					if(err) {
+						return new Error(err);
+					} else {
+						var response = result.balanceReturn;
+						console.log(response);
+						if(response.result  === '0' )
+							var response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : response };
+						else
+							var response = { statusCode:1 ,  additionalInfo : response };
+
+						callback(null,sessionid,response.additionalInfo.current);
+					}
+				});
+			});
+		},
+
+		function(sessionid,currentMoney, callback){
 
 			var requestBalance = { sessionid: sessionid, type: 3 };
 			var request = { balanceRequest: requestBalance };
