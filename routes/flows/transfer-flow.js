@@ -118,6 +118,8 @@ exports.transferFunds = function(data, callback) {
         function(data, callback) {
             var message = 'You have received a transfer of $' + data.amount;
             data.message = message;
+            var extraData = { current :'10' , dox:'10'};
+            data.extra = {extra : extraData} ;
             urbanService.singlePush(data, function(err, result) {
                 var response = { statusCode: 0, additionalInfo: 'The transfer was successful' };
                 callback(null, response);
