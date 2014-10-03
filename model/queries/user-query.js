@@ -94,3 +94,16 @@ exports.confirmPin = function(phoneID, callback){
     }
   });
 };
+
+exports.getUsers = function(callback){
+  User.find({}, 'phoneID name email', function (err, people) {
+    if (err) return handleError(err);
+    else if(people){
+      callback(null, people);
+    }
+    else{
+      console.log("users not found");
+      callback("USERS NOT FOUND", null);
+    }
+  });
+}

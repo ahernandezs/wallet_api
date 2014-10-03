@@ -6,6 +6,7 @@ var Userquery = require('../../model/queries/user-query');
 var urbanService = require('../../services/urban-service');
 var transferFlow = require('./transfer-flow');
 var soapurl = process.env.SOAP_URL;
+var config = require('../../config.js');
 
 exports.buyFlow = function(payload,callback) {
 
@@ -20,7 +21,7 @@ exports.buyFlow = function(payload,callback) {
 
 	async.waterfall([
 		function(callback){
-			var requestSoap = { sessionid:payload.sessionid, to:'anzen_01', amount : payload.order.total , type: 1 };
+			var requestSoap = { sessionid:payload.sessionid, to: config.username, amount : payload.order.total , type: 1 };
 			var request = { transferRequest: requestSoap };
 			console.log(request);
 			soap.createClient(soapurl, function(err, client) {
