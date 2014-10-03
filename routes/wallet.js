@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var User = require('../model/user');
 var soap = require('soap');
 var BuyFlow = require('./flows/buy-flow');
+var TransferFlow = require('./flows/transfer-flow');
 var soapurl = process.env.SOAP_URL;
 
 
@@ -91,4 +92,21 @@ exports.buyFlow = function(req, res){
     }
     res.json(result);
   });
+};
+
+exports.transferFunds = function(req, res) {
+    console.log( 'POST method transferFunds' );
+    console.log(req.body);
+    console.log( req.headers['x-auth-token'] );
+    req.headers.sessionid = req.headers['x-auth-token'];
+    var values = {};
+    values.body = req.body;
+    values.header = req.headers;
+    TransferFlow.transferFunds(values, function(err, result) {
+        if (result.statusCode === 0) {
+            res.setHeader( 'x-auth-token', result.sessionid );
+            delete result.sessionid;
+        }
+        res.json(result);
+    });
 };
