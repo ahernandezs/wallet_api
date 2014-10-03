@@ -92,7 +92,7 @@ exports.transferFunds = function(data, callback) {
             var header = data.header;
             console.log( 'Running transferFunds ' + payload.sessionid );
             console.log( payload );
-            var requestSoap = { sessionid: header.sessionid, to: payload.destiny, amount: payload.amount, type: payload.type };
+            var requestSoap = { sessionid: header.sessionid, to: payload.destiny, amount: payload.amount, type: 1 };
             var request = { transferRequest: requestSoap };
             console.log( request );
             soap.createClient(soapurl, function(err, client) {
