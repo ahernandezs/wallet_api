@@ -11,7 +11,6 @@ exports.sendGift = function(payload,callback) {
 
 	var order = payload.order;
   	order['userId'] = payload.beneficiaryId;
-    var notification = {message:'You have a gift!', phoneID: payload.beneficiaryPhoneID }
 	var id;
 	var response;
 
@@ -89,6 +88,9 @@ exports.sendGift = function(payload,callback) {
 		},
 
 		function(response,callback) {
+			var notification = {message:'You have a gift!', phoneID: payload.beneficiaryPhoneID }
+			var extraData = { current :'10' , dox:'10'};
+            notification.extra = {extra : extraData} ;
             urbanService.singlePush(notification, function(err, result) {
                 console.log('Pushing result: '+JSON.stringify(result));
                 callback(null,response);

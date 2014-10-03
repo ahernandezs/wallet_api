@@ -7,21 +7,28 @@ exports.singlePush = function(req, callback) {
 	UserQuery.findAppID(req.phoneID, function(err,result) {
 		console.log(result);
 		var deviceID = null;
-		if(result.OS === 'ANDROID')
-			deviceID = {'apid' : result.appID };
-		else
-			deviceID = {'device_token' : result.appID } ;
-
 		var payload = {
 			'notification': {
 				'alert': req.message
 			},
 			"device_types" : [ "ios", "android" ]
 		};
-		payload['audience'] = deviceID;
+		if(result.OS === 'ANDROID'){
+			deviceID = {'apid' : result.appID };
+			if(req.extra){
+				var extraPayload = {extra : req.extra}
+				payload.notification['android'] = req.extra;
+			}
+		}
+		else{
+			deviceID = {'device_token' : result.appID } ;
+			if(req.extra){
+				var extraPayload = {extra : req.extra}
+				payload.notification['ios'] = req.extra;
+			}
+		}
 
-		if(req.extra)
-			payload.notification['android'] = req.extra;
+		payload['audience'] = deviceID;
 
 		console.log(payload);
 		ua.pushNotification('/api/push', payload, function(error) {
