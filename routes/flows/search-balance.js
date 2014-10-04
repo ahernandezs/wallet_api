@@ -84,8 +84,8 @@ exports.searchFlow = function(payload,callback) {
       });
     },
     function(sessionid, hashpin, callback){
-      console.log('Login');
-      var  request = { sessionid: sessionid, reference: '354993059122455'  };
+      console.log('getAgentByReference');
+      var  request = { sessionid: sessionid, reference: '354245057924535'  };
       var request = {getAgentByReferenceRequest: request};
       soap.createClient(soapurl, function(err, client) {
         client.getAgentByReference(request, function(err, result) {
