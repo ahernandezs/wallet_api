@@ -67,7 +67,7 @@ app.post('/api/updateprofile', user.updateProfile);
 app.post('/api/uploadimage', user.uploadImage);
 app.post('/api/resetpin', user.resetPin);
 //app.post('/api/buy', wallet.buy);
-app.post('/api/balance', wallet.balance);
+app.get('/api/balance', wallet.balance);
 app.post('/api/transfer', wallet.transfer);
 app.post('/api/sell', wallet.sell);
 app.post('/api/products', product.products);

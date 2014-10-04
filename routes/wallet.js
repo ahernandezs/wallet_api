@@ -4,6 +4,7 @@ var soap = require('soap');
 var BuyFlow = require('./flows/buy-flow');
 var TransferFlow = require('./flows/transfer-flow');
 var GiftFlow = require('./flows/gift-flow');
+var balance = require('./flows/balance-flow');
 var soapurl = process.env.SOAP_URL;
 
 exports.sell =  function(req, res){
@@ -63,19 +64,14 @@ exports.buy =  function(req, res){
 };
 
 exports.balance = function(req, res) {
-  console.log('execute POST method balance');
-  console.log(req.body);
-  var request = {balanceRequest: req.body};
-  soap.createClient(soapurl, function(err, client) {
-    client.balance(request, function(err, result) {
-      if(err) {
-        res.send(500);
-      } else {
-        console.log(result);
-        var response = result.balanceReturn;
-        res.json(response);
-      }
-    });
+  console.log('execute GET method balance');
+  console.log( req.headers['x-auth-token'] );
+  balance.balanceFlow(req.headers['x-auth-token'], function(err, result) {
+    if(result.statusCode === 0){
+      res.setHeader('X-AUTH-TOKEN', result.sessionid);
+      delete result.sessionid;
+    }
+    res.json(result);
   });
 };
 

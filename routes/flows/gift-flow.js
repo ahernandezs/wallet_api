@@ -72,12 +72,10 @@ exports.sendGift = function(payload,callback) {
 						}else{
 							var response = { statusCode:1 ,  additionalInfo : response };
 						}
-						//console.log('Response to get balance points: '+JSON.stringify(result));						
 						callback(null,sessionid,response);
 					}
 				});
 			});
-		
 		},
 
 		function(sessionid,response, callback){
@@ -88,10 +86,15 @@ exports.sendGift = function(payload,callback) {
 		},
 
 		function(response,callback) {
-			var notification = {message:'You have a gift!', phoneID: payload.beneficiaryPhoneID }
-			var extraData = { current :'10' , dox:'10'};
-            notification.extra = {extra : extraData} ;
-            urbanService.singlePush(notification, function(err, result) {
+			console.log('Enviando push');
+            var message = 'You have received a coffe gift';
+            payload.message = message;
+            var extraData = { action :2};
+            payload.extra = {extra : extraData} ;
+            payload.phoneID = payload.beneficiaryPhoneID;
+            delete payload.beneficiaryPhoneID;
+            console.log(payload);
+            urbanService.singlePush(payload, function(err, result) {
                 console.log('Pushing result: '+JSON.stringify(result));
                 callback(null,response);
             });
