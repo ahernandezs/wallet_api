@@ -1,6 +1,6 @@
 var UserQuery = require('../model/queries/user-query');
 var UA = require('urban-airship');
-var ua = new UA('z6DMkdyDQJGD3wZorFFD6g', '6T6NnUa3SBqR-sjTxdjj5g', '6T6NnUa3SBqR-sjTxdjj5g');
+var ua = new UA('eHiXHtSFTYK4aaWcTAnehQ', 'nv8zr5nTS0imBwWE7a3H4Q', 'nv8zr5nTS0imBwWE7a3H4Q');
 
 exports.singlePush = function(req, callback) {
 	console.log("phoneID: " + req.phoneID);
