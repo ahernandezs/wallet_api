@@ -86,10 +86,15 @@ exports.sendGift = function(payload,callback) {
 		},
 
 		function(response,callback) {
-			var notification = {message:'You have a gift!' }
-			var extraData = { action :2};
-            notification.extra = {extra : extraData} ;
-            urbanService.singlePush(notification, function(err, result) {
+			console.log('Enviando push');
+            var message = 'You have received a coffe gift';
+            payload.message = message;
+            var extraData = { action :2};
+            payload.extra = {extra : extraData} ;
+            payload.phoneID = payload.beneficiaryPhoneID;
+            delete payload.beneficiaryPhoneID;
+            console.log(payload);
+            urbanService.singlePush(payload, function(err, result) {
                 console.log('Pushing result: '+JSON.stringify(result));
                 callback(null,response);
             });
