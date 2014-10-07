@@ -7,7 +7,7 @@ config.orders.errMsg = 'Something went wrong';
 config.orders.emptyMsg = 'There are no ' + config.orders.status + ' orders';
 
 config.loans = {};
-config.loans.status = 'NEW';
+config.loans.status = {NEW : 'NEW' ,ACCEPTED : 'ACCEPTED' , REJECTED : 'REJECTED' };
 config.loans.errMsg = 'Something went wrong';
 config.loans.emptyMsg = 'There are no ' + config.loans.status + ' loans';
 
@@ -16,6 +16,14 @@ config.products.status = 'IN STOCK';
 config.products.errMsg = 'Something went wrong';
 config.products.emptyMsg = 'There are no products ' + config.products.status;
 config.products.emptyInventory = 'The inventory is empty';
+
+config.merchants = {};
+config.merchants.errMsg = 'Something went wrong';
+config.merchants.emptyMsg = 'merchant not found ';
+
+config.S3 = {};
+config.S3.url = 'https://s3-us-west-1.amazonaws.com/amdocs-images/';
+
 
 config.doxs = {};
 config.doxs.p2p = 500;

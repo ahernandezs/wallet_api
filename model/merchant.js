@@ -7,7 +7,9 @@ var merchantSchema =  new Schema({
 	name: String ,
 	address:String,
 	latitude:Number ,
-	longitude:Number ,	
+	longitude:Number ,
+	appID: String ,
+	OS: String
 });
 
 module.exports = mongoose.model('Merchant', merchantSchema);  
