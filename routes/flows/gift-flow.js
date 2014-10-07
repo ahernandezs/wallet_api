@@ -86,7 +86,7 @@ exports.sendGift = function(payload,callback) {
 		},
 
 		function(response,callback) {
-			console.log('Enviando push');
+			console.log('sending push');
             var message = 'You have received a coffe gift';
             payload.message = message;
             var extraData = { action :2};

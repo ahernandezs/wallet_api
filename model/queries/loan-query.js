@@ -38,3 +38,17 @@ exports.updateLoan = function(loan, callback) {
         }
     });
 };
+
+exports.CreateLoan = function(loan,callback){
+  console.log("Saving Loan in MongoDB");
+  console.log(loan);
+  var loanToPersist = new Loan(loan);
+  loanToPersist.save(function (err,result) {
+    if(err)
+        callback("ERROR", { statusCode: 1,  additionalInfo: 'Error to persist loan' });
+    else{
+        console.log('Loan persisted correctly' + result._id);
+        callback(null, result._id);
+    }
+  });
+};
