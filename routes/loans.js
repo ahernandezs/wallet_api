@@ -13,8 +13,17 @@ exports.getLoans = function(req, res) {
     });
 };
 
-exports.updateLoan = function(req, res, callback) {
-
+exports.updateLoan = function(req, res) {
+    console.log('PUT method update Loan');
+    console.log(req.body);
+    console.log( req.headers['x-auth-token'] );
+    req.headers.sessionid = req.headers['x-auth-token'];
+    var payload = {};
+    payload.body = req.body;
+    payload.header = req.headers;
+    loan.updateLoanFlow(payload, function(err, result) {
+        res.json(result);
+    });
 };
 
 exports.createLoan = function(req, res) {

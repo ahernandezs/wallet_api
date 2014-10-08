@@ -22,7 +22,7 @@ config.merchants.errMsg = 'Something went wrong';
 config.merchants.emptyMsg = 'merchant not found ';
 
 config.S3 = {};
-config.S3.url = 'https://s3-us-west-1.amazonaws.com/amdocs-images/';
+config.S3.url = 'https://s3-us-west-1.amazonaws.com/amdocs-images/profile';
 
 
 config.doxs = {};

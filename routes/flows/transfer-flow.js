@@ -88,7 +88,6 @@ exports.transferFlow = function(payload,callback) {
 
 exports.transferFunds = function(data, callback) {
     var payload = data.body;
-
     async.waterfall([
         function(callback) {
 
