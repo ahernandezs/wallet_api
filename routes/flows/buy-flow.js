@@ -4,13 +4,14 @@ var crypto = require('crypto');
 var Orderquery = require('../../model/queries/order-query');
 var Userquery = require('../../model/queries/user-query');
 var urbanService = require('../../services/urban-service');
+var doxsService = require('../../services/doxs-service');
 var transferFlow = require('./transfer-flow');
 var soapurl = process.env.SOAP_URL;
 var config = require('../../config.js');
 
 exports.buyFlow = function(payload,callback) {
 
-	var transferDoxs = {phoneID:payload.phoneID,amount:200 ,type:3};
+	//var transferDoxs = {phoneID:payload.phoneID,amount:200 ,type:3};
 	var order = payload.order;
 	//var buy = {sessionid:'', target:'buy coffe', type:1, amount:payload.order.total};
 	var buy = {sessionid:'', target:'airtime', type:1, amount:5};
@@ -44,13 +45,27 @@ exports.buyFlow = function(payload,callback) {
 				});
 			});
 		},
+		/*
 		function(sessionid,callback){
 			console.log('Transfering doxs '+JSON.stringify(transferDoxs));
 			transferFlow.transferFlow({transferRequest: transferDoxs}, function(err,result){
 				console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
 				callback(null,sessionid);
 			});
+		},*/
+
+		function(sessionid,callback){
+			payload[action]="payment";
+			doxsService.saveDoxs(payload, function(err, result){
+				console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
+				if(err) {
+					return new Error(err);
+				} else {
+					callback(null,sessionid);
+				}
+			});
 		},
+
 		function(sessionid, callback){
 			console.log('balance e-wallet');
 			var  request = { sessionid: sessionid, type: 1  };
