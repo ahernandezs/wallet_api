@@ -26,6 +26,7 @@ config.S3.url = 'https://s3-us-west-1.amazonaws.com/amdocs-images/profile/';
 
 config.doxs = {};
 config.doxs.p2p = 500;
+config.doxs.gift = 500;
 config.doxs.pic = 200;
 config.doxs.checkin = 300;
 config.doxs.linking = 100;

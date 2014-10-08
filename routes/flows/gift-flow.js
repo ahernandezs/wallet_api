@@ -4,6 +4,8 @@ var crypto = require('crypto');
 var Orderquery = require('../../model/queries/order-query');
 var Userquery = require('../../model/queries/user-query');
 var urbanService = require('../../services/urban-service');
+var doxsService = require('../../services/doxs-service');
+
 var transferFlow = require('./transfer-flow');
 var soapurl = process.env.SOAP_URL;
 var config = require('../../config.js');
@@ -12,6 +14,7 @@ exports.sendGift = function(payload,callback) {
 
 	var order = payload.order;
   	order['userId'] = payload.beneficiaryId;
+	var payloadoxs = {phoneID: payload.phoneID, action: 'gift', type: 3}
 	var id;
 	var response;
 	var name;
@@ -28,7 +31,6 @@ exports.sendGift = function(payload,callback) {
 		function(callback){
 			var requestSoap = { sessionid:payload.sessionid, to: config.username, amount : payload.order.total , type: 1 };
 			var request = { transferRequest: requestSoap };
-			console.log(request);
 			soap.createClient(soapurl, function(err, client) {
 				client.transfer(request, function(err, result) {
 					if(err) {
@@ -40,7 +42,6 @@ exports.sendGift = function(payload,callback) {
 				});
 			});
 		},
-
 
 		function(sessionid, callback){
 			console.log('balance e-wallet');
@@ -87,6 +88,17 @@ exports.sendGift = function(payload,callback) {
 			});
 		},
 
+		function(sessionid, response, callback){
+			doxsService.saveDoxs(payloadoxs, function(err, result){
+				console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
+				if(err) {
+					return new Error(err);
+				} else {
+					callback(null,sessionid, response);
+				}
+			});
+		},
+
 		function(sessionid,response, callback){
 			Orderquery.putOrder(order, function(err,result){
 				console.log('Order saving result: '+JSON.stringify(result));
@@ -109,11 +121,10 @@ exports.sendGift = function(payload,callback) {
         },
 
     ], function (err, result) {
-      if(err){      
-        callback("Error! "+err,result);    
+      if(err){
+        callback("Error! "+err,result);
       }else{
-        callback(null,result);    
-      }  
+        callback(null,result);
+      }
     });
 }
-
