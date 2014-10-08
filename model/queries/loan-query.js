@@ -22,20 +22,12 @@ exports.getLoans = function(merchantID, callback) {
 };
 
 exports.updateLoan = function(loan, callback) {
-    console.log( 'Verifying loan in MongoDB' );
-    Loan.find({ '_id' : loan._id }, '_id customerImage customerName status date', function(err, loans){
-        if (err) callback('ERROR', { statusCode: 1,  message: 'Something went wrong' } );
-        else if (loans.length === 0)
-            callback('ERROR', { statusCode: 1,  message: 'Failed Update (no loan found)' } );
-        else {
-            console.log( 'updateLoan in MongoDB with ID: ' + loan._id + ". New status: " + loan.status );
-            var conditions = loan._id;
-            delete loan._id;
-            Loan.update( conditions, loan, null, function(err, result) {
-                if (err) callback('ERROR', { statusCode: 1,  message: 'Failed Update' } );
-                callback( null, { statusCode: 0 ,  additionalInfo: 'Successful Update' } );
-            });
-        }
+    console.log( 'updateLoan in MongoDB with ID: ' + loan._id + ". New status: " + loan.status );
+    var conditions = { _id : loan._id };
+    delete loan._id;
+    Loan.update( conditions, loan, null, function(err, result) {
+        if (err) callback('ERROR', { statusCode: 1,  message: 'Failed Update' } );
+        callback( null, { statusCode: 0 ,  additionalInfo: 'Successful Update' } );
     });
 };
 
@@ -51,4 +43,24 @@ exports.CreateLoan = function(loan,callback){
         callback(null, result._id);
     }
   });
+};
+
+exports.getLoan = function(loanID,callback){
+  console.log("Get Loan in MongoDB");
+  console.log(loanID);
+  Loan.find({ _id:loanID }, 'amount phoneID', function(err, loans) {
+    var response;
+    if (err) {
+        response = { statusCode: 1, additionalInfo: config.loans.errMsg };
+        console.log(response);
+        callback("ERROR: " + err.message, response);
+    } else if (loans.length === 0) {
+        response = { statusCode: 0, additionalInfo: config.loans.emptyMsg }
+        console.log(response);
+        callback(null, response);
+    } else {
+        console.log(loans[0]);
+        callback(null, loans[0]);
+    }
+   });
 };
