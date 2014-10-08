@@ -2,6 +2,7 @@ var async = require('async');
 var soap = require('soap');
 var crypto = require('crypto');
 var Orderquery = require('../../model/queries/order-query');
+var Userquery = require('../../model/queries/user-query');
 var urbanService = require('../../services/urban-service');
 var transferFlow = require('./transfer-flow');
 var soapurl = process.env.SOAP_URL;
@@ -13,8 +14,16 @@ exports.sendGift = function(payload,callback) {
   	order['userId'] = payload.beneficiaryId;
 	var id;
 	var response;
+	var name;
 
 	async.waterfall([
+
+	    function(callback){
+	      Userquery.getName(payload.phoneID, function(err, resp) {
+			name = resp;
+			callback(null);
+	      });
+	    },
 
 		function(callback){
 			var requestSoap = { sessionid:payload.sessionid, to: config.username, amount : payload.order.total , type: 1 };
@@ -87,13 +96,12 @@ exports.sendGift = function(payload,callback) {
 
 		function(response,callback) {
 			console.log('sending push');
-            var message = 'You have received a coffe gift';
+            var message = 'You have received a coffee gift!';
             payload.message = message;
-            var extraData = { action :2};
+            var extraData = { action :2, phoneID: payload.phoneID, name: name.name, avatar: config.S3.url + payload.phoneID +'.png' };
             payload.extra = {extra : extraData} ;
             payload.phoneID = payload.beneficiaryPhoneID;
             delete payload.beneficiaryPhoneID;
-            console.log(payload);
             urbanService.singlePush(payload, function(err, result) {
                 console.log('Pushing result: '+JSON.stringify(result));
                 callback(null,response);
