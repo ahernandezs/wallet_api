@@ -94,8 +94,6 @@ exports.buyFlow = function(req, res){
 
 exports.transferFunds = function(req, res) {
     console.log('POST method transferFunds' );
-    console.log(req.body);
-    console.log(req.headers['x-auth-token'] );
     req.headers.sessionid = req.headers['x-auth-token'];
     var values = {};
     values.body = req.body;

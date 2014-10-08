@@ -88,23 +88,21 @@ exports.transferFlow = function(payload,callback) {
 
 exports.transferFunds = function(data, callback) {
     var payload = data.body;
+    var transid;
     async.waterfall([
         function(callback) {
 
             var header = data.header;
-            console.log( 'Running transferFunds ' + payload.sessionid );
-            console.log( payload );
             var requestSoap = { sessionid: header.sessionid, to: payload.destiny, amount: payload.amount, type: 1 };
             var request = { transferRequest: requestSoap };
-            console.log( request );
             soap.createClient(soapurl, function(err, client) {
                 client.transfer(request, function(err, result) {
                     if (err) {
                         console.log(err);
                         return new Error(err);
                     } else {
-                        console.log(result);
                         var response = result.transferReturn;
+                        transid = response.transid;
                         if (response.result != 0) {
                             var response = { statusCode: 1, additionalInfo: result };
                             callback('ERROR', response);
@@ -120,7 +118,7 @@ exports.transferFunds = function(data, callback) {
         function(sessionid, callback) {
             var message = 'You have received a transfer of $' + payload.amount;
             payload.message = message;
-            var extraData = { action :1};
+            var extraData = { action :1, transferID: transid};
             payload.extra = {extra : extraData} ;
             urbanService.singlePush(payload, function(err, result) {
                 var response = { statusCode: 0, additionalInfo: 'The transfer was successful' };
