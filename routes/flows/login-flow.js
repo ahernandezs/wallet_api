@@ -56,6 +56,19 @@ exports.loginFlow = function(payload,callback) {
         });
       });
     },
+    function(sessionid, callback) {
+        console.log( 'Register Session' );
+        var data = {};
+        data.phoneID = payload.phoneID;
+        data.pin = payload.pin;
+        data.token = sessionid;
+        session.createSession(data, function(err, result) {
+            if (err)
+                callback('ERROR', result.message);
+            else
+                callback(null, sessionid);
+        });
+    },
     function(sessionid, callback){
       console.log('Create hashpin');
       var hashpin = payload.phoneID.toLowerCase() + payload.pin ;

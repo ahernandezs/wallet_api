@@ -16,7 +16,7 @@ exports.login =  function(req, res, callback){
         res.setHeader('X-AUTH-TOKEN', result.sessionid);
         delete result.sessionid;
       }
-      if (callback === undefined)
+      if (callback)
           res.json(result);
       else
           callback(result);
