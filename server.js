@@ -9,7 +9,7 @@ var urbanService = require('./services/urban-service');
 var fs = require('fs');
 var app = express();
 app.use(express.json());
-app.use(express.urlencoded())
+app.use(express.urlencoded());
 app.use(express.static(__dirname + '/app'));
 
 // ## CORS middleware
@@ -43,9 +43,14 @@ var interceptorHeader = function(req, res, next) {
 	console.log('Running interceptor');
 	console.log(req.originalUrl.toString());
 	console.log(req.headers['x-auth-token']);
-	if(req.originalUrl.toString() === '/api/register')
-		console.log('Interceptor in login');
-	next();
+    user.regenerate(req, res, function(err, result) {
+        if (err)
+            res.json(result);
+        else {
+            req.headers['x-auth-token'] = result;
+            next();
+        }
+    });
 };
 
 app.get('/api/ping', function(req, res){
@@ -66,10 +71,11 @@ app.post('/api/register', interceptorHeader ,user.register);
 app.post('/api/updateprofile', user.updateProfile);
 app.post('/api/uploadimage', user.uploadImage);
 app.post('/api/resetpin', user.resetPin);
-app.get('/api/balance', wallet.balance);
+//app.post('/api/buy', wallet.buy);
+//app.post('/api/balance', wallet.balance);
 app.post('/api/transfer', wallet.transfer);
 app.post('/api/sell', wallet.sell);
-app.post('/api/products', product.products);
+app.post('/api/products', interceptorHeader, product.products);
 app.get('/api/merchants',merchant.merchants);
 app.post('/api/push',urbanService.singlePush);
 app.post('/api/getorderhistory',merchant.getOrderHistory);

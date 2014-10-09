@@ -3,6 +3,9 @@ var soap = require('soap');
 var crypto = require('crypto');
 var Userquery = require('../../model/queries/user-query');
 var soapurl = process.env.SOAP_URL;
+var wallet = require('../wallet');
+var session =  require('../../model/queries/session-query');
+var user =  require('../users');
 
 
 exports.loginFlow = function(payload,callback) {
@@ -134,5 +137,63 @@ exports.loginFlow = function(payload,callback) {
       }else{
         callback(null,result);    
       }  
+    });
+};
+
+exports.regenerate = function(request, res, callback) {
+    async.waterfall([
+        function(callback) {
+            wallet.balance(request, function(err, response) {
+                if (err)
+                    callback('ERROR', response );
+                else {
+                    var result;
+                    if (response.result != 0) {
+                        result = { session: false };
+                        callback(null, result);
+                    }
+                    else {
+                        result = { session: true };
+                        callback(null, result);
+                    }
+                }
+            });
+        },
+        function(data, callback) {
+            console.log( 'is there a session?: ' + data.session );
+            if (data.session)
+                callback('STOP', { result: request.sessionid });
+            else
+                session.getCredentials(request.sessionid, function(err, result) {
+                    if (err)
+                        callback('ERROR', result);
+                    else
+                        callback(null, result.data);
+                });
+        },
+        function(info, callback) {
+            info.body = { 'phoneID' : info.phoneID, 'pin' : info.pin };
+            user.login(info, res, function(result) {
+                if (result.statusCode != 0)
+                    callback('ERROR', result.message);
+                else {
+                    info.token = result.token;
+                    callback(null, info);
+                }
+            });
+        },
+        function(info, callback) {
+            session.updateSession(request, info, function(err, result) {
+                if (err)
+                    callback('ERROR', result.message);
+                else
+                    callback(null, result.token);
+            });
+        }
+    ], function(err, result) {
+        if (err) 
+            callback(err, result);
+        else
+            callback(null, result);   
     });
 };
