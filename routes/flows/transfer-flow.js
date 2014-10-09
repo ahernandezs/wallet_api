@@ -3,6 +3,7 @@ var soap = require('soap');
 var crypto = require('crypto');
 var Userquery = require('../../model/queries/user-query');
 var messageQuery = require('../../model/queries/message-query');
+var sessionQuery = require('../../model/queries/session-query');
 var soapurl = process.env.SOAP_URL;
 var config = require('../../config.js');
 var urbanService = require('../../services/urban-service');
@@ -116,14 +117,27 @@ exports.transferFunds = function(data, callback) {
             });
         },
         function(sessionid,payload,callback){
+            console.log('Get sender in db ' +sessionid);
+            sessionQuery.getCredentials(sessionid,function(err,user){
+                console.log(user);
+                Userquery.findAppID(user.data.phoneID,function(err,result){
+                    if (err) {
+                        var response = { statusCode: 1, additionalInfo: result };
+                        callback('ERROR', response);
+                    } else {
+                        payload.additionalInfo = JSON.stringify({transferID : transid , sender: result.name ,senderImg:  config.S3.url + user.data.phoneID +'.png'});
+                        console.log(payload.extra);
+                        callback(null, sessionid,payload);
+                    }                    
+                });
+            });
+        },
+        function(sessionid,payload,callback){
             console.log('Save message in DB');
             var title = config.messages.transferMsg + payload.amount;
-            var extraData = { action :1, transferID: transid , message : payload.message };
-            payload.extra = {extra : extraData} ;
             payload.status = config.messages.status.NOREAD;
             payload.type = config.messages.type.TRANSFER;
             payload.title = title;
-            payload.extra = {transferID : transid , sender:'' ,senderImg :};
             console.log(payload);
             messageQuery.createMessage(payload, function(err, result) {
                 if (err) {
