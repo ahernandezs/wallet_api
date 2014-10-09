@@ -62,38 +62,31 @@ app.get('/api/ping', function(req, res){
 	console.log('execute GET method ping');
 });
 
-app.get('/api/createsession',user.createsession);
 app.post('/api/validate',user.validate);
-app.post('/api/authorize',user.authorize);
-app.post('/api/login',user.login);
-app.post('/api/login2',user.login2);
 app.post('/api/register', interceptorHeader ,user.register);
+app.post('/api/login',user.login);
 app.post('/api/updateprofile', user.updateProfile);
 app.post('/api/uploadimage', user.uploadImage);
-app.post('/api/resetpin', user.resetPin);
-//app.post('/api/buy', wallet.buy);
-//app.post('/api/balance', wallet.balance);
-app.post('/api/transfer', wallet.transfer);
-app.post('/api/sell', wallet.sell);
+app.post('/api/balance', wallet.balance);
 app.post('/api/products', interceptorHeader, product.products);
-app.get('/api/merchants',merchant.merchants);
-app.post('/api/push',urbanService.singlePush);
-app.post('/api/getorderhistory',merchant.getOrderHistory);
-app.put('/api/order', merchant.putOrder);
-app.post('/api/order', merchant.updateOrder)
-app.post('/api/orders', merchant.getOrders);
 app.post('/api/loans', loan.getLoans);
-app.post('/api/getdoxs', user.getDoxs);
-app.post('/api/putdoxs', user.putDoxs);
-app.put('/api/loan', loan.updateLoan);
 app.post('/api/loan', loan.createLoan);
-app.post('/api/inventory', product.inventory);
-app.post('/api/updateinventory', product.updateInventory);
 app.post('/api/buyflow', wallet.buyFlow);
 app.get('/api/users', user.getUsers);
 app.post('/api/transferFunds', wallet.transferFunds);
 app.post('/api/gift', wallet.sendGift);
 app.post('/api/senddoxs', wallet.senddoxs);
+
+//Merchant operations
+app.put('/api/order', merchant.putOrder);
+app.post('/api/order', merchant.updateOrder);
+app.post('/api/orders', merchant.getOrders);
+app.get('/api/merchants',merchant.merchants);
+app.post('/api/getorderhistory',merchant.getOrderHistory);
+app.post('/api/inventory', product.inventory);
+app.post('/api/updateinventory', product.updateInventory);
+app.put('/api/loan', loan.updateLoan);
+
 
 app.listen( process.env.PORT  || 3000);
 console.log('Listening on port 3000');
