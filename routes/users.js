@@ -7,15 +7,19 @@ var awsS3 = require('../services/aws-service');
 var soap = require('soap');
 var soapurl = process.env.SOAP_URL;
 
-exports.login =  function(req, res){
+exports.login =  function(req, res, callback){
   console.log('execute POST method login');
   console.log(req.body);
   sessionUser.loginFlow(req.body,function(err,result){
+      result.token = result.sessionid;
       if(result.statusCode === 0){
         res.setHeader('X-AUTH-TOKEN', result.sessionid);
         delete result.sessionid;
       }
-      res.json(result);
+      if (callback === undefined)
+          res.json(result);
+      else
+          callback(result);
   });
 };
 
@@ -162,4 +166,19 @@ exports.getUsers = function(req, res){
     var result = {url_base: 'https://s3-us-west-1.amazonaws.com/amdocs-images/profile/', users: result}
     res.json(result);
   });
-}
+};
+
+exports.regenerate = function(req, res, callback) {
+    console.log( 'POST method regenerate (session)' );
+    var request = {};
+    request.sessionid = req.headers['x-auth-token'];
+    request.type = 1;
+    sessionUser.regenerate(request, res, function(err, result) {
+        if (err === 'ERROR')
+            callback('ERROR', { error: result });
+        else if (err !== 'STOP')
+            callback(null, result);
+        else
+            callback(null, result);
+    });
+};
