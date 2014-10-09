@@ -4,6 +4,7 @@ var user =  require('./routes/users');
 var wallet = require('./routes/wallet');
 var product = require('./routes/products');
 var merchant = require('./routes/merchants')
+var message = require('./routes/messages')
 var loan = require('./routes/loans');
 var urbanService = require('./services/urban-service');
 var fs = require('fs');
@@ -13,8 +14,6 @@ app.use(express.urlencoded());
 app.use(express.static(__dirname + '/app'));
 
 // ## CORS middleware
-//
-// see: http://stackoverflow.com/questions/7067966/how-to-allow-cors-in-express-nodejs
 var allowCrossDomain = function(req, res, next) {
 	res.header('Access-Control-Allow-Origin', '*');
 	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
@@ -69,14 +68,15 @@ app.post('/api/updateprofile', interceptorHeader, user.updateProfile);
 app.post('/api/uploadimage', interceptorHeader, user.uploadImage);
 app.post('/api/balance', interceptorHeader, wallet.balance);
 app.post('/api/products', interceptorHeader, product.products);
-app.post('/api/loans', interceptorHeader, loan.getLoans);
-app.post('/api/loan', interceptorHeader, loan.createLoan);
-app.post('/api/buyflow', interceptorHeader, wallet.buyFlow);
-app.get('/api/users', interceptorHeader, user.getUsers);
-app.post('/api/transferFunds', interceptorHeader, wallet.transferFunds);
-app.post('/api/gift', interceptorHeader, wallet.sendGift);
-app.post('/api/senddoxs', interceptorHeader, wallet.senddoxs);
-
+app.post('/api/loans', loan.getLoans);
+app.post('/api/loan', loan.createLoan);
+app.post('/api/buyflow', wallet.buyFlow);
+app.get('/api/users', user.getUsers);
+app.post('/api/transferFunds', wallet.transferFunds);
+app.post('/api/gift', wallet.sendGift);
+app.post('/api/senddoxs', wallet.senddoxs);
+app.get('/api/messages',message.getMessages);
+app.put('/api/message',message.updateMessage);
 //Merchant operations
 app.put('/api/order', merchant.putOrder);
 app.post('/api/order', merchant.updateOrder);

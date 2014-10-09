@@ -24,6 +24,14 @@ config.merchants.emptyMsg = 'merchant not found ';
 config.S3 = {};
 config.S3.url = 'https://s3-us-west-1.amazonaws.com/amdocs-images/profile/';
 
+config.messages = {};
+config.messages.status = { READ : 'READ' ,NOREAD : 'NOREAD'};
+config.messages.type = { TRANSFER:'TRANSFER' , GIFT : 'GIFT' , BUY :'BUY' ,LOAN :'LOAN' };
+config.messages.transferMsg = 'You have received a transfer of € ';
+config.messages.giftMsg = 'You have received a coffee gift!!!';
+config.messages.loanMsg = 'You have received a loan of € ';
+config.messages.action = {TRANSFER:1 , GIFT :2 , BUY :3 ,LOAN : 4 };
+
 config.doxs = {};
 config.doxs.p2p = 500;
 config.doxs.gift = 500;

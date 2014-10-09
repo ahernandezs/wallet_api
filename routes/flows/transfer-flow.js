@@ -2,6 +2,7 @@ var async = require('async');
 var soap = require('soap');
 var crypto = require('crypto');
 var Userquery = require('../../model/queries/user-query');
+var messageQuery = require('../../model/queries/message-query');
 var soapurl = process.env.SOAP_URL;
 var config = require('../../config.js');
 var urbanService = require('../../services/urban-service');
@@ -53,7 +54,6 @@ exports.transferFlow = function(payload,callback) {
         function(sessionid, callback){
             console.log('Transfer ' + sessionid);
             console.log(payload);
-            console.log(payload.transferRequest.phoneID);
             var requestSoap = { sessionid:sessionid, to: payload.transferRequest.phoneID, amount : payload.transferRequest.amount , type: payload.transferRequest.type };
             var request = { transferRequest: requestSoap };
             console.log(request);
@@ -87,11 +87,11 @@ exports.transferFlow = function(payload,callback) {
 };
 
 exports.transferFunds = function(data, callback) {
-    var payload = data.body;
     var transid;
     async.waterfall([
         function(callback) {
-
+            console.log('Do transfer in wallet');
+            var payload = data.body;
             var header = data.header;
             var requestSoap = { sessionid: header.sessionid, to: payload.destiny, amount: payload.amount, type: 1 };
             var request = { transferRequest: requestSoap };
@@ -109,23 +109,40 @@ exports.transferFunds = function(data, callback) {
                         } else {
                             payload.phoneID = payload.destiny;
                             delete payload.destiny;
-                            callback(null, header.sessionid);
+                            callback(null, header.sessionid,payload);
                         }
                     }
                 });
             });
         },
-        function(sessionid, callback) {
-            var message = 'You have received a transfer of $' + payload.amount;
-            payload.message = message;
-            var extraData = { action :1, transferID: transid};
+        function(sessionid,payload,callback){
+            console.log('Save message in DB');
+            var title = config.messages.transferMsg + payload.amount;
+            var extraData = { action :1, transferID: transid , message : payload.message };
             payload.extra = {extra : extraData} ;
-            urbanService.singlePush(payload, function(err, result) {
+            payload.status = config.messages.status.NOREAD;
+            payload.type = config.messages.type.TRANSFER;
+            payload.title = title;
+            payload.extra = {transferID : transid , sender:'' ,senderImg :};
+            console.log(payload);
+            messageQuery.createMessage(payload, function(err, result) {
+                if (err) {
+                    var response = { statusCode: 1, additionalInfo: result };
+                    callback('ERROR', response);
+                } else {
+                    callback(null, sessionid,payload);
+                }
+            });
+        },
+        function(sessionid,message, callback) {
+            console.log('Send push notification');
+            urbanService.singlePush(message, function(err, result) {
                 var response = { statusCode: 0, additionalInfo: 'The transfer was successful' };
                 callback(null, sessionid);
             });
         },
         function(sessionid, callback){
+            console.log('Get Balance');
             console.log(sessionid);
             balance.balanceFlow(sessionid, function(err, result) {
                 if(err){
