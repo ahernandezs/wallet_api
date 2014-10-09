@@ -66,6 +66,14 @@ exports.loginFlow = function(payload,callback) {
             if (err)
                 callback('ERROR', result.message);
             else
+                callback(null, sessionid, data);
+        });
+    },
+    function(sessionid, user, callback) {
+        Userquery.updateSession(user, function(err, result) {
+            if (err)
+                callback('ERROR', result.message);
+            else
                 callback(null, sessionid);
         });
     },

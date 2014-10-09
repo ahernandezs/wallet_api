@@ -131,3 +131,14 @@ exports.getName = function(phoneID,callback){
       callback(null, person);
   });
 };
+
+exports.updateSession = function(user, callback) {
+    console.log( 'Adding timestamp to session' );
+    var now = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+    User.update( { 'phoneID' : user.phoneID }, { $set : { 'lastSession' : now } }, function(err, result) {
+        if (err)
+            callback('ERROR', { message: 'Failed updating session' });
+        else
+            callback(null, { message: 'Successful updating session' });
+    });
+};
