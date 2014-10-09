@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var messageQuery = require('../model/queries/message-query');
+var sessionQuery = require('../model/queries/session-query');
 
 exports.getMessages = function(req, res) {
     console.log('GET method getMessages');
@@ -9,14 +10,16 @@ exports.getMessages = function(req, res) {
     payload.body = req.body;
     payload.header = req.headers;
     console.log( req.body );
-    phoneID ='5FC9731BAA0C4B538A15';
-    messageQuery.getMessagesNoRead(phoneID,function(err,result) {
-        if(err) {
-            res.send(500);
-        } else {
-            console.log(result);
-            res.json(result);
-        }
+    sessionQuery.getCredentials(req.headers.sessionid ,function(err,result){
+        console.log(result);
+        messageQuery.getMessagesNoRead(result.data.phoneID,function(err,result) {
+            if(err) {
+                res.send(500);
+            } else {
+                console.log(result);
+                res.json(result);
+            }
+        });
     });
 };
 

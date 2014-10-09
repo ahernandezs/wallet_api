@@ -12,7 +12,7 @@ exports.createMessage = function(message, callback) {
 
 exports.getMessagesNoRead = function(phoneID, callback) {
     console.log( 'Getting NOREAD messages  : ' + phoneID);
-    Message.find({ 'phoneID': phoneID }, ' title type message status', function (err, msgs) {
+    Message.find({ 'phoneID': phoneID }, ' title type message status additionalInfo', function (err, msgs) {
         if (err) callback('ERROR', err);
         else if(msgs){
           callback(null, msgs);
