@@ -8,6 +8,7 @@ var soapurl = process.env.SOAP_URL;
 var config = require('../../config.js');
 var urbanService = require('../../services/urban-service');
 var balance = require('./balance-flow');
+var ReceiptQuery = require('../../model/queries/receipt-query');
 
   exports.transferFlow = function(payload,callback) {
       async.waterfall([
@@ -101,6 +102,7 @@ var balance = require('./balance-flow');
 
 exports.transferFunds = function(data, callback) {
     var transid;
+    var forReceipt = {};
     async.waterfall([
         function(callback) {
             console.log('Do transfer in wallet');
@@ -108,6 +110,7 @@ exports.transferFunds = function(data, callback) {
             var header = data.header;
             var requestSoap = { sessionid: header.sessionid, to: payload.destiny, amount: payload.amount, type: 1 };
             var request = { transferRequest: requestSoap };
+            forReceipt.payload = payload;
             soap.createClient(soapurl, function(err, client) {
                 client.transfer(request, function(err, result) {
                     if (err) {
@@ -115,6 +118,7 @@ exports.transferFunds = function(data, callback) {
                         return new Error(err);
                     } else {
                         var response = result.transferReturn;
+                        forReceipt.transferReturn = result;
                         transid = response.transid;
                         if (response.result != 0) {
                             var response = { statusCode: 1, additionalInfo: result };
@@ -132,6 +136,7 @@ exports.transferFunds = function(data, callback) {
             console.log('Get sender in db ' +sessionid);
             sessionQuery.getCredentials(sessionid,function(err,user){
                 console.log(user);
+                forReceipt.user = user;
                 Userquery.findAppID(user.data.phoneID,function(err,result){
                     if (err) {
                         var response = { statusCode: 1, additionalInfo: result };
@@ -182,11 +187,37 @@ exports.transferFunds = function(data, callback) {
                     callback(null,result);
             });
         },
+        function(balance, callback) {
+            console.log( 'Create Receipt' );
+            createReceipt(forReceipt, function(err, result) {
+                if (err)
+                    callback('ERROR', result);
+                else
+                    callback(null, balance);
+            });
+        }
     ], function(err, result) {
         console.log(result);
         if (err) 
             callback(err, result);
         else
             callback(null, result);
+    });
+};
+
+createReceipt = function(data, callback) {
+    var receipt = {};
+    receipt.emitter = data.user.data.phoneID;
+    receipt.receiver = data.payload.phoneID;
+    receipt.amount = data.payload.amount;
+    receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+    receipt.type = 'TRANSFER';
+    receipt.status = 'DELIVERED';
+    console.log(receipt);
+    ReceiptQuery.createReceipt(receipt, function(err, result) {
+        if (err)
+            callback('ERROR', result.message);
+        else
+            callback(null, result.message);
     });
 };
