@@ -90,6 +90,8 @@ app.post('/api/getorderhistory',merchant.getOrderHistory);
 app.post('/api/inventory', product.inventory);
 app.post('/api/updateinventory', product.updateInventory);
 app.get('/api/prizes', product.getPrizes);
+app.put('/api/loan', loan.updateLoan);
+app.get('/api/leaderboard',user.getLeaderboard);
 
 app.listen( process.env.PORT  || 3000);
 console.log('Listening on port 3000');
