@@ -31,5 +31,17 @@ exports.updateMessage = function(req, res) {
     payload.body = req.body;
     payload.header = req.headers;
     console.log(req.body);
+    messageQuery.updateMessage(req.body,function(err,result){
+        if(err) {
+            res.send(500);
+        } else {
+            var response = null;
+            if(result === 1)
+                var response = { statusCode: 0, additionalInfo: 'Update successful' };
+            else
+                var response = { statusCode: 1, additionalInfo: 'Update Failed' };
+            res.json(response);
+        }
+    });
 };
 
