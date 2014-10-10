@@ -183,7 +183,7 @@ exports.regenerate = function(request, res, callback) {
         function(data, callback) {
             console.log( 'is there a session?: ' + data.session );
             if (data.session)
-                callback('STOP', { result: request.sessionid });
+                callback('STOP', request.sessionid);
             else
                 session.getCredentials(request.sessionid, function(err, result) {
                     if (err)
@@ -207,8 +207,10 @@ exports.regenerate = function(request, res, callback) {
             session.updateSession(request, info, function(err, result) {
                 if (err)
                     callback('ERROR', result.message);
-                else
-                    callback(null, result.token);
+                else {
+                    var token = result.token;
+                    callback(null, token);
+                }
             });
         }
     ], function(err, result) {
