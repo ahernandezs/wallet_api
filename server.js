@@ -67,6 +67,7 @@ app.post('/api/login', user.login);
 app.post('/api/updateprofile', interceptorHeader, user.updateProfile);
 app.post('/api/uploadimage', interceptorHeader, user.uploadImage);
 app.post('/api/balance', interceptorHeader, wallet.balance);
+app.get('/api/balance', interceptorHeader, wallet.getBalance);
 app.post('/api/products', interceptorHeader, product.products);
 app.post('/api/loans', loan.getLoans);
 app.post('/api/loan', loan.createLoan);
