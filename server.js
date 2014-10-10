@@ -4,7 +4,8 @@ var user =  require('./routes/users');
 var wallet = require('./routes/wallet');
 var product = require('./routes/products');
 var merchant = require('./routes/merchants')
-var message = require('./routes/messages')
+var message = require('./routes/messages');
+var transacction = require('./routes/transacctions');
 var loan = require('./routes/loans');
 var urbanService = require('./services/urban-service');
 var fs = require('fs');
@@ -78,6 +79,8 @@ app.post('/api/gift', wallet.sendGift);
 app.post('/api/senddoxs', wallet.senddoxs);
 app.get('/api/messages',message.getMessages);
 app.put('/api/message',message.updateMessage);
+app.get('/api/transacctions',transacction.getTransacctionsHistory);
+app.get('/api/transactionsDox',transacction.getTransacctionsDox);
 //Merchant operations
 app.put('/api/order', merchant.putOrder);
 app.post('/api/order', merchant.updateOrder);
