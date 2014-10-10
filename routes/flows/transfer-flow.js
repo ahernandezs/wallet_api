@@ -154,6 +154,9 @@ exports.transferFunds = function(data, callback) {
         function(sessionid,payload,callback){
             console.log('Save message in DB');
             var title = config.messages.transferMsg + payload.amount;
+            payload.message = title;
+            var extraData = { action :1, transferID: transid , message : payload.message , additionalInfo: payload.additionalInfo };
+            payload.extra = {extra : extraData} ;
             payload.status = config.messages.status.NOTREAD;
             payload.type = config.messages.type.TRANSFER;
             payload.title = title;
