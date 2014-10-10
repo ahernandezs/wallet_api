@@ -39,3 +39,8 @@ db.loans.insert({ userId: 12345, merchantId: 2, customerImage: 'http://imgur.com
 db.loans.insert({ userId: 12345, merchantId: 3, customerImage: 'http://imgur.com/image.jpg', customerName: 'Maximo', status: 'ACCEPTED', date: '19/09/2014', phoneID : '3123312' });
 db.loans.insert({ userId: 12345, merchantId: 1, customerImage: 'http://imgur.com/image.jpg', customerName: 'Carlos', status: 'REJECTED', date: '19/09/2014', phoneID : '3123312' });
 db.loans.insert({ userId: 12345, merchantId: 2, customerImage: 'http://imgur.com/image.jpg', customerName: 'Alex', status: 'ACCEPTED', date: '19/09/2014', phoneID : '3123312' });
+// some prizes
+db.prizes.remove({});
+db.prizes.insert({ imgUrl: "https://s3-us-west-1.amazonaws.com/amdocs-images/products/black.jpg", description: "Free Black Coffee"});
+db.prizes.insert({ imgUrl: "https://s3-us-west-1.amazonaws.com/amdocs-images/products/frapuccino.jpg", description: "Free Frapuccino"});
+db.prizes.insert({ imgUrl: "https://s3-us-west-1.amazonaws.com/amdocs-images/products/latte.jpg", description: "Free Latte"});

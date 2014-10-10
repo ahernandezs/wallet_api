@@ -1,7 +1,7 @@
 var Prize = require('../prize');
 
 exports.getPrizes =  function(callback) {
-    Prize.find({}, function(err, response)  {
+    Prize.find({}, 'imgUrl description' , function(err, response)  {
         callback(null, response);
     });
 };
