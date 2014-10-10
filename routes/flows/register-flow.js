@@ -9,6 +9,18 @@ var config = require('../../config.js');
 exports.registerFlow = function(payload,callback) {
   async.waterfall([
     function(callback){
+      console.log('Validate connection');
+      var response = null;
+      soap.createClient(soapurl, function(err, client) {
+        if(err) {
+          console.log(err);
+          var response = { statusCode:1 ,  additionalInfo : err };
+          callback(err,response);
+        }else
+        callback(null);
+      });
+    },
+    function(callback){
       console.log('Create Session');
       var response = null;
       soap.createClient(soapurl, function(err, client) {

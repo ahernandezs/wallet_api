@@ -18,10 +18,12 @@ exports.loginFlow = function(payload,callback) {
           callback(err,response);
         }
         else {
-          if(pin === payload.pin)
-            callback(null);
+          if(pin === payload.pin){
+            console.log('You have been logged in');
+            callback(null);}
           else{
             var response = { statusCode:1 ,  additionalInfo : 'INVALID PIN' };
+            console.log(response);
             callback('ERROR',response);
           }
         }
