@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var Product = require('../model/product');
 var Productquery = require('../model/queries/product-query');
+var Prizequery = require('../model/queries/prize-query');
 var soap = require('soap');
 var soapurl = process.env.SOAP_URL;
 
@@ -27,3 +28,10 @@ exports.updateInventory = function(req, res) {
         res.json(result);
     });
 };
+
+exports.getPrizes = function(req, res){
+    console.log('GET method prizes');
+    Prizequery.getPrizes(function(err, result){
+        res.json(result)
+    });
+}
