@@ -12,7 +12,7 @@ exports.getMessages = function(req, res) {
     console.log( req.body );
     sessionQuery.getCredentials(req.headers.sessionid ,function(err,result){
         console.log(result);
-        messageQuery.getMessagesNoRead(result.data.phoneID,function(err,result) {
+        messageQuery.getMessages(result.data.phoneID,function(err,result) {
             if(err) {
                 res.send(500);
             } else {
