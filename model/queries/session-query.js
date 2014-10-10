@@ -3,15 +3,12 @@ var config = require('../../config.js');
 
 exports.createSession = function(session, callback) {
     console.log( 'Creating a new session in MongoDB' );
-    var newSession = new Session(session);
-    var result = newSession.save(function(err) {
-        if (err) return 1;
-        return 0;
+    Session.update( { 'phoneID': session.phoneID }, session, { upsert: true }, function(err, result) {
+        if (err)
+            callback('ERROR', { message: 'Failed registering session' } );
+        else
+            callback(null, { message: 'Success registering session' });;
     });
-    if (result === 1)
-        callback('ERROR', { message: 'Failed registering session' } );
-    else
-        callback(null, { message: 'Success registering session' });
 };
 
 exports.getCredentials = function(sessionid, callback) {
