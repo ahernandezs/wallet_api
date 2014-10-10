@@ -164,6 +164,7 @@ exports.transferFunds = function(data, callback) {
                     callback('ERROR', response);
                 }
                 else
+                    console.log('Obteniendo Balance');
                     callback(null,result);
             });
         },

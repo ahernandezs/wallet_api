@@ -52,6 +52,7 @@ exports.balanceFlow = function(sessionid,callback) {
       });
     },
     ], function (err, result) {
+      console.log('Return Balance');
       console.log(result);
       if(err){      
         callback(err,result);    
