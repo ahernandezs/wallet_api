@@ -55,7 +55,7 @@ exports.buyFlow = function(payload,callback) {
 		},*/
 
 		function(sessionid,callback){
-			payload[action]="payment";
+			payload['action']="payment";
 			doxsService.saveDoxs(payload, function(err, result){
 				console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
 				if(err) {
@@ -108,22 +108,33 @@ exports.buyFlow = function(payload,callback) {
 					}
 				});
 			});
-		/*function(callback){
+		},
+
+		function(response, callback){
 			console.log('Saving order '+JSON.stringify(order));
 			Orderquery.putOrder(order, function(err,result){
 				console.log('Order saving result: '+JSON.stringify(result)+'\n\n');
-				callback(null);
+				callback(null, result, response);
 			});
-		},*/
-		/*
-		function(callback) {
-			console.log('Pushing the order');
-            urbanService.singlePush(notification, function(err, result) {
-                console.log('Pushing result: '+JSON.stringify(result));
-                callback(null);
-            });
-        }*/
-     },
+		},
+
+		function(result, response, callback) {
+			var message = 'There is a new order!';
+			notification.message = message;
+			var extraData = { action : 3 , order : JSON.stringify(result) };
+			notification.extra = {extra : extraData} ;
+			console.log(notification);
+			urbanService.singlePush2Merchant(notification, function(err, result) {
+				if(err){
+					var response = { statusCode:1 ,  additionalInfo : result };
+					callback('ERROR',response);
+				}else{
+					var response = { statusCode:0 ,  additionalInfo : result };
+					callback(null,response);
+				}
+			});
+        },
+
     ], function (err, result) {
       console.log("Result: "+result);
       if(err){      
