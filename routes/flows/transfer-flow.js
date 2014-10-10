@@ -125,7 +125,9 @@ exports.transferFunds = function(data, callback) {
                         var response = { statusCode: 1, additionalInfo: result };
                         callback('ERROR', response);
                     } else {
-                        payload.additionalInfo = JSON.stringify({transferID : transid , sender: result.name ,senderImg:  config.S3.url + user.data.phoneID +'.png'});
+                        var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+                        payload.additionalInfo = JSON.stringify({transferID : transid , sender: result.name ,senderImg:  config.S3.url + user.data.phoneID +'.png' , date:dateTime});
+                        payload.date = dateTime;
                         console.log(payload.extra);
                         callback(null, sessionid,payload);
                     }                    
@@ -135,7 +137,7 @@ exports.transferFunds = function(data, callback) {
         function(sessionid,payload,callback){
             console.log('Save message in DB');
             var title = config.messages.transferMsg + payload.amount;
-            payload.status = config.messages.status.NOREAD;
+            payload.status = config.messages.status.NOTREAD;
             payload.type = config.messages.type.TRANSFER;
             payload.title = title;
             console.log(payload);
@@ -164,6 +166,7 @@ exports.transferFunds = function(data, callback) {
                     callback('ERROR', response);
                 }
                 else
+                    console.log('Obteniendo Balance');
                     callback(null,result);
             });
         },

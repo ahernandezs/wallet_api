@@ -1,4 +1,3 @@
-// Configuration file
 var config = {};
 
 config.orders = {};
@@ -25,11 +24,12 @@ config.S3 = {};
 config.S3.url = 'https://s3-us-west-1.amazonaws.com/amdocs-images/profile/';
 
 config.messages = {};
-config.messages.status = { READ : 'READ' ,NOREAD : 'NOREAD'};
+config.messages.status = { READ : 'READ' ,NOTREAD : 'NOTREAD'};
 config.messages.type = { TRANSFER:'TRANSFER' , GIFT : 'GIFT' , BUY :'BUY' ,LOAN :'LOAN' };
 config.messages.transferMsg = 'You have received a transfer of € ';
 config.messages.giftMsg = 'You have received a coffee gift!!!';
-config.messages.loanMsg = 'You have received a loan of € ';
+config.messages.loanRequestMsg = 'There are new request loan for € ';
+config.messages.loanRejectedMsg = 'Build up your Dox score to be elegible for a loan';
 config.messages.action = {TRANSFER:1 , GIFT :2 , BUY :3 ,LOAN : 4 };
 
 config.doxs = {};

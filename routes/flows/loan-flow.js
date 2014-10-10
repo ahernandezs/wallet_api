@@ -2,6 +2,7 @@ var async = require('async');
 var soap = require('soap');
 var loanQuery = require('../../model/queries/loan-query');
 var userQuery = require('../../model/queries/user-query');
+var messageQuery = require('../../model/queries/message-query');
 var merchantQuery = require('../../model/queries/merchant-query');
 var urbanService = require('../../services/urban-service');
 var transfer = require('./transfer-flow');
@@ -38,15 +39,14 @@ exports.createLoanFlow = function(payload,callback) {
           }
           else{
             console.log(result);
-            var notification = {};
-            notification.OS = result.OS;
-            notification.appID = result.appID;
-            console.log(notification);
-            callback(null,loan,notification);
+            loan.OS = result.OS;
+            loan.appID = result.appID;
+            console.log(loan);
+            callback(null,loan);
           }
       });
     },
-    function(loan,notification,callback){
+    function(loan,callback){
       console.log('search user by phoneID');
       userQuery.findUserByPhoneID(loan.phoneID,function(err,result){
         if(err){
@@ -56,17 +56,35 @@ exports.createLoanFlow = function(payload,callback) {
           else{
             console.log(result);
             loan.name = result.name;
-            callback(null,loan,notification);
+            loan.additionalInfo = JSON.stringify ({_id: loan._id , customerName : loan.Name , customerImage : loan.customerImage , status: loan.status , date :loan.date });
+            callback(null,loan);
           }
       });
     },
-    function(loan,notification,callback){
-      var message = 'You have received a loan of €' + loan.amount;
-      notification.message = message;
-      var extraData = { action : 3 , loan : JSON.stringify(loan) };
-      notification.extra = {extra : extraData} ;
-      console.log(notification);
-      urbanService.singlePush2Merchant(notification, function(err, result) {
+    function(loan,callback){
+      console.log('Save message in DB');
+      var title = config.messages.loanRequestMsg + loan.amount;
+      loan.status = config.messages.status.NOTREAD;
+      loan.type = config.messages.type.LOAN;
+      loan.title = title;
+      loan.message = title;
+      console.log(loan);
+      messageQuery.createMessage(loan, function(err, result) {
+        if (err) {
+          var response = { statusCode: 1, additionalInfo: result };
+          callback('ERROR', response);
+        } else {
+          callback(null, loan);
+        }
+      });
+    },
+    function(loan,callback){
+      var message = config.messages.loanRequestMsg + loan.amount;
+      loan.message = message;
+      var extraData = { action : config.messages.action.LOAN , loan : JSON.stringify(loan.additionalInfo) };
+      loan.extra = {extra : extraData} ;
+      console.log(loan);
+      urbanService.singlePush2Merchant(loan, function(err, result) {
         if(err){
           var response = { statusCode:1 ,  additionalInfo : result };
           callback('ERROR',response);
@@ -88,10 +106,10 @@ exports.createLoanFlow = function(payload,callback) {
 };
 
 exports.updateLoanFlow = function(payload,callback){
+  var loanID = payload.body._id;
   async.waterfall([
     function(callback) {
       var loan = payload.body;
-      var loanID = loan._id;
       console.log(loan);
       loan.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
       loanQuery.updateLoan(loan, function(err, result) {
@@ -100,11 +118,11 @@ exports.updateLoanFlow = function(payload,callback){
           callback('ERROR',err);
         } else if (result.statusCode === 0)
         var response = { statusCode:1 ,  additionalInfo : '' };
-        callback(null,loan,loanID);
+        callback(null,loan);
       });
     },
 
-    function(loan,loanID,callback) {
+    function(loan,callback) {
       console.log('Complement information');
       console.log(loan);
       loanQuery.getLoan(loanID, function(err, result) {
@@ -125,7 +143,7 @@ exports.updateLoanFlow = function(payload,callback){
     },
 
     function(notification,loan,callback) {
-      console.log('Do transfer for ');
+      console.log('Performing transfer');
       console.log(loan);
       var payloadTransfer = { amount : loan.amount ,  phoneID : notification.phoneID };
       var payloadTransfer = { transferRequest : payloadTransfer };
@@ -140,11 +158,38 @@ exports.updateLoanFlow = function(payload,callback){
         }
       });
     },
+    function(sessionid,loan,callback){
+      console.log('Save message in DB');
+      if(loan.status === config.loans.status.ACCEPTED){
+        console.log('ACCEPTED');
+        loan.message = 'Your loan for € ' + loan.amount + ' was accepted' ;
+        loan.title = loan.message;
+      }
+      else{
+        console.log('REJECTED');
+        loan.message = config.messages.loanRejectedMsg;
+        loan.title = 'Your loan for € ' + loan.amount + ' was rejected' ;
+      }
 
+      var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+      loan.additionalInfo = JSON.stringify({ _id : loanID , sender: 1 , status: loan.status ,date:dateTime });
+      console.log('additionalInfo ....'+loan.additionalInfo);
+      loan.status = config.messages.status.NOTREAD;
+      loan.type = config.messages.type.LOAN;
+      loan.date = dateTime;
+      console.log(loan);
+      messageQuery.createMessage(loan, function(err, result) {
+        if (err) {
+          var response = { statusCode: 1, additionalInfo: result };
+          callback('ERROR', response);
+        } else {
+          callback(null, sessionid,loan);
+        }
+      });
+    },
     function(notification,loan,callback) {
-      var message = 'Hi  your loan for €' + loan.amount + ' was ' + loan.status + '.';
-      notification.message = message;
-      var extraData = { action : 4 , loan : JSON.stringify(loan) };
+      notification.message = loan.title;
+      var extraData = { action : 4 , loan : JSON.stringify(loan.additionalInfo) };
       notification.extra = {extra : extraData} ;
       console.log(notification);
       urbanService.singlePush(notification, function(err, result) {

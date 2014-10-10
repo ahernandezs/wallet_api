@@ -8,7 +8,8 @@ var messageSchema =  new Schema({
 	type : String ,
 	message:String ,
 	status:String ,
-	additionalInfo:String
+	additionalInfo:String ,
+	date:String
 });
 
 module.exports = mongoose.model('Message', messageSchema);  

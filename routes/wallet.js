@@ -116,10 +116,10 @@ exports.transferFunds = function(req, res) {
         });
       },
 
-      function(result, callback){
+      function(resultBalance, callback){
         doxsService.saveDoxs(payloadoxs, function(err, result){
           console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
-          callback(null, result);
+          callback(null, resultBalance);
         });
       },
 

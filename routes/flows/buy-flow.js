@@ -3,6 +3,7 @@ var soap = require('soap');
 var crypto = require('crypto');
 var Orderquery = require('../../model/queries/order-query');
 var Userquery = require('../../model/queries/user-query');
+var merchantQuery = require('../../model/queries/merchant-query');
 var urbanService = require('../../services/urban-service');
 var doxsService = require('../../services/doxs-service');
 var transferFlow = require('./transfer-flow');
@@ -67,6 +68,47 @@ exports.buyFlow = function(payload,callback) {
 		},
 
 		function(sessionid, callback){
+			console.log('Saving order '+JSON.stringify(order));
+			Orderquery.putOrder(order, function(err,result){
+				console.log('Order saving result: '+JSON.stringify(result)+'\n\n');
+				callback(null, sessionid);
+			});
+		},
+
+		function(sessionid,callback){
+			console.log('search merchant by phoneID');
+			merchantQuery.getMerchanByID(1,function(err,result){
+				if(err){
+					var response = { statusCode:1 ,  additionalInfo : err };
+					callback('ERROR',response);
+				}
+				else{
+					console.log(result);
+					notification.OS = result.OS;
+					notification.appID = result.appID;
+					console.log(notification);
+					callback(null,sessionid);
+				}
+			});
+		},
+		function(sessionid,callback) {
+			var message = 'There is a new order!';
+			notification.message = message;
+			var extraData = { action : 3 , order : JSON.stringify(order) };
+			notification.extra = {extra : extraData} ;
+			console.log(notification);
+			urbanService.singlePush2Merchant(notification, function(err, result) {
+				if(err){
+					var response = { statusCode:1 ,  additionalInfo : result };
+					callback('ERROR',response);
+				}else{
+					var response = { statusCode:0 ,  additionalInfo : result };
+					callback(null,sessionid);
+				}
+			});
+        },
+
+		function(sessionid, callback){
 			console.log('balance e-wallet');
 			var  request = { sessionid: sessionid, type: 1  };
 			var request = {balanceRequest: request};
@@ -109,31 +151,6 @@ exports.buyFlow = function(payload,callback) {
 				});
 			});
 		},
-
-		function(response, callback){
-			console.log('Saving order '+JSON.stringify(order));
-			Orderquery.putOrder(order, function(err,result){
-				console.log('Order saving result: '+JSON.stringify(result)+'\n\n');
-				callback(null, result, response);
-			});
-		},
-
-		function(result, response, callback) {
-			var message = 'There is a new order!';
-			notification.message = message;
-			var extraData = { action : 3 , order : JSON.stringify(result) };
-			notification.extra = {extra : extraData} ;
-			console.log(notification);
-			urbanService.singlePush2Merchant(notification, function(err, result) {
-				if(err){
-					var response = { statusCode:1 ,  additionalInfo : result };
-					callback('ERROR',response);
-				}else{
-					var response = { statusCode:0 ,  additionalInfo : result };
-					callback(null,response);
-				}
-			});
-        },
 
     ], function (err, result) {
       console.log("Result: "+result);
