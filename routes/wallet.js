@@ -66,15 +66,20 @@ exports.buy =  function(req, res){
 };
 
 exports.balance = function(request, callback) {
-  console.log('execute GET method balance');
-  console.log( req.headers['x-auth-token'] );
-  balance.balanceFlow(req.headers['x-auth-token'], function(err, result) {
-    if(result.statusCode === 0){
-      res.setHeader('X-AUTH-TOKEN', result.sessionid);
-      delete result.sessionid;
-    }
-    res.json(result);
-  });
+    console.log('execute POST method balance');
+    var req = { balanceRequest: request };
+    console.log(request);
+    soap.createClient(soapurl, function(err, client) {
+        client.balance(req, function(err, result) {
+            if(err && result === undefined)
+                callback( 'ERROR', err.message = 'Internal Server Error' );
+            else {
+                console.log(result);
+                var response = result.balanceReturn;
+                callback(null, response);
+            }
+        });
+    });
 };
 
 exports.getBalance = function(req, res) {
