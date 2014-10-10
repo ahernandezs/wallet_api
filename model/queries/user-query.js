@@ -142,3 +142,16 @@ exports.updateSession = function(user, callback) {
             callback(null, { message: 'Successful updating session' });
     });
 };
+
+exports.getLeaderboard = function(callback){
+  User.find({}, 'phoneID name doxs', {sort: {doxs: -1}}, function (err, people) {
+    if (err) return handleError(err);
+    else if(people){
+      callback(null, people);
+    }
+    else{
+      console.log("users not found");
+      callback("USERS NOT FOUND", null);
+    }
+  });
+}
