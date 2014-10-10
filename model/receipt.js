@@ -2,12 +2,17 @@ var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
-var ReceiptSchema = new Schema({
-	order: Number ,
-	date: String,
-	product : String ,
-	total: String ,
-	dox: String;
+var receiptSchema = new Schema({
+	emitter: String,
+    receiver: String,
+    amount: String,
+    date: String,
+    dox: Number,
+    type: String,
+    status : String,
+    facebook : Number,
+    twitter : Number,
+    instagram : Number
 });
 
-module.exports = mongoose.model('Receipt', sessionSchema);
+module.exports = mongoose.model('Receipt', receiptSchema);
