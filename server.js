@@ -80,7 +80,7 @@ app.post('/api/senddoxs', wallet.senddoxs);
 app.get('/api/messages',message.getMessages);
 app.put('/api/message',message.updateMessage);
 app.get('/api/transacctions',transacction.getTransacctionsHistory);
-app.get('/api/transactionsDox',transacction.getTransacctionsDox);
+app.get('/api/transacctionsDox',transacction.getTransacctionsDox);
 //Merchant operations
 app.put('/api/order', merchant.putOrder);
 app.post('/api/order', merchant.updateOrder);
