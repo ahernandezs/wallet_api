@@ -12,3 +12,9 @@ exports.createReceipt = function(data, callback) {
     else
         callback(null, 'The receipt was created successfully');
 };
+
+exports.getReceipt = function(data, callback){
+	Receipt.find({'_id':data.id},function (err, receipt) {
+		callback(null, receipt);
+	});
+};

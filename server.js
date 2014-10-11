@@ -92,6 +92,7 @@ app.post('/api/updateinventory', product.updateInventory);
 app.get('/api/prizes', product.getPrizes);
 app.put('/api/loan', loan.updateLoan);
 app.get('/api/leaderboard',user.getLeaderboard);
+app.post('/api/receipt', wallet.getReceipt);
 
 app.listen( process.env.PORT  || 3000);
 console.log('Listening on port 3000');

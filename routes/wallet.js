@@ -7,6 +7,7 @@ var TransferFlow = require('./flows/transfer-flow');
 var GiftFlow = require('./flows/gift-flow');
 var balance = require('./flows/balance-flow');
 var doxsService = require('../services/doxs-service');
+var receipt = require('../model/queries/receipt-query');
 var soapurl = process.env.SOAP_URL;
 
 exports.sell =  function(req, res){
@@ -167,3 +168,9 @@ exports.senddoxs = function(req, res){
     res.json(result);
   });
 };
+
+exports.getReceipt = function(req, res){
+  receipt.getReceipt(req.body, function(err, result){
+    res.json(result);
+  });
+}
