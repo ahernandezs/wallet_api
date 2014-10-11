@@ -65,7 +65,7 @@ app.get('/api/ping', function(req, res){
 app.post('/api/validate',user.validate);
 app.post('/api/register', user.register);
 app.post('/api/login', user.login);
-app.post('/api/updateprofile', interceptorHeader, user.updateProfile);
+app.post('/api/updateprofile', user.updateProfile);
 app.post('/api/uploadimage', interceptorHeader, user.uploadImage);
 app.post('/api/balance', interceptorHeader, wallet.balance);
 app.get('/api/balance', interceptorHeader, wallet.getBalance);
