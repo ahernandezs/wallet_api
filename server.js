@@ -43,11 +43,13 @@ var interceptorHeader = function(req, res, next) {
 	console.log('Running interceptor');
 	console.log(req.originalUrl.toString());
 	console.log(req.headers['x-auth-token']);
+    console.log('REQ: ' + req.body );
     user.regenerate(req, res, function(err, result) {
         if (err)
             res.json(result);
         else {
             req.headers['x-auth-token'] = result;
+            console.log('deberia seguir');
             next();
         }
     });
@@ -70,19 +72,18 @@ app.post('/api/uploadimage', interceptorHeader, user.uploadImage);
 app.post('/api/balance', interceptorHeader, wallet.balance);
 app.get('/api/balance', interceptorHeader, wallet.getBalance);
 app.post('/api/products', interceptorHeader, product.products);
-app.post('/api/loans', loan.getLoans);
-app.post('/api/loan', loan.createLoan);
-app.post('/api/buyflow', wallet.buyFlow);
-app.get('/api/users', user.getUsers);
-app.post('/api/transferFunds', wallet.transferFunds);
-app.post('/api/gift', wallet.sendGift);
-app.post('/api/senddoxs', wallet.senddoxs);
-app.get('/api/messages',message.getMessages);
-app.put('/api/message',message.updateMessage);
-app.get('/api/transacctions',transacction.getTransacctionsHistory);
-app.get('/api/transacctionsDox',transacction.getTransacctionsDox);
-app.get('/api/receipts', wallet.getReceipts);
-
+app.post('/api/loans', interceptorHeader, loan.getLoans);
+app.post('/api/loan', interceptorHeader, loan.createLoan);
+app.post('/api/buyflow', interceptorHeader, wallet.buyFlow);
+app.get('/api/users', interceptorHeader, user.getUsers);
+app.post('/api/transferFunds', interceptorHeader, wallet.transferFunds);
+app.post('/api/gift', interceptorHeader, wallet.sendGift);
+app.post('/api/senddoxs', interceptorHeader, wallet.senddoxs);
+app.get('/api/messages', interceptorHeader, message.getMessages);
+app.put('/api/message', interceptorHeader,  message.updateMessage);
+app.get('/api/transacctions', interceptorHeader, transacction.getTransacctionsHistory);
+app.get('/api/transacctionsDox', interceptorHeader, transacction.getTransacctionsDox);
+app.get('/api/receipts', interceptorHeader, wallet.getReceipts);
 //Merchant operations
 app.put('/api/order', merchant.putOrder);
 app.post('/api/order', merchant.updateOrder);
