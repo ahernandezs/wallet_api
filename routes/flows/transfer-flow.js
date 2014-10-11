@@ -213,6 +213,7 @@ createReceipt = function(data, callback) {
     receipt.emitter = data.user.data.phoneID;
     receipt.receiver = data.payload.phoneID;
     receipt.amount = data.payload.amount;
+    receipt.message = "You have send a transfer of € "+ receipt.amount;
     receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
     receipt.type = 'TRANSFER';
     receipt.status = 'DELIVERED';

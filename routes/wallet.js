@@ -8,6 +8,7 @@ var GiftFlow = require('./flows/gift-flow');
 var balance = require('./flows/balance-flow');
 var doxsService = require('../services/doxs-service');
 var receipt = require('../model/queries/receipt-query');
+var sessionQuery = require('../model/queries/session-query');
 var soapurl = process.env.SOAP_URL;
 
 exports.sell =  function(req, res){
@@ -169,8 +170,18 @@ exports.senddoxs = function(req, res){
   });
 };
 
-exports.getReceipt = function(req, res){
-  receipt.getReceipt(req.body, function(err, result){
-    res.json(result);
+
+exports.getReceipts = function(req, res){
+  console.log('\n\nExecute Get receipts');
+  sessionToken = req.headers['x-auth-token'];
+  sessionQuery.getCredentials(sessionToken,function(err,credential){
+    receipt.getReceipts(credential.data.phoneID, function(err, result){
+      if(err) {
+        console.log(err);
+        res.send(500);
+      } else {
+        res.json(result);
+      }
+    });
   });
 }

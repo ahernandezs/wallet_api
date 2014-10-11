@@ -65,7 +65,7 @@ app.get('/api/ping', function(req, res){
 app.post('/api/validate',user.validate);
 app.post('/api/register', user.register);
 app.post('/api/login', user.login);
-app.post('/api/updateprofile', interceptorHeader, user.updateProfile);
+app.post('/api/updateprofile', user.updateProfile);
 app.post('/api/uploadimage', interceptorHeader, user.uploadImage);
 app.post('/api/balance', interceptorHeader, wallet.balance);
 app.get('/api/balance', interceptorHeader, wallet.getBalance);
@@ -81,6 +81,8 @@ app.get('/api/messages',message.getMessages);
 app.put('/api/message',message.updateMessage);
 app.get('/api/transacctions',transacction.getTransacctionsHistory);
 app.get('/api/transacctionsDox',transacction.getTransacctionsDox);
+app.get('/api/receipts', wallet.getReceipts);
+
 //Merchant operations
 app.put('/api/order', merchant.putOrder);
 app.post('/api/order', merchant.updateOrder);
@@ -92,7 +94,7 @@ app.post('/api/updateinventory', product.updateInventory);
 app.get('/api/prizes', product.getPrizes);
 app.put('/api/loan', loan.updateLoan);
 app.get('/api/leaderboard',user.getLeaderboard);
-app.post('/api/receipt', wallet.getReceipt);
+app.post('/api/receipt', wallet.getReceipts);
 
 app.listen( process.env.PORT  || 3000);
 console.log('Listening on port 3000');
