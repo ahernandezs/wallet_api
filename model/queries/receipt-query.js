@@ -13,8 +13,15 @@ exports.createReceipt = function(data, callback) {
         callback(null, 'The receipt was created successfully');
 };
 
-exports.getReceipt = function(data, callback){
-	Receipt.find({'_id':data.id},function (err, receipt) {
-		callback(null, receipt);
-	});
+exports.getReceipts = function(phoneID, callback){
+	Receipt.find({emitter:phoneID},function (err, receipt) {
+       if (err) callback('ERROR', err);
+       else if(receipt){
+          callback(null, receipt);
+      }
+      else{
+        console.log("receipt not found");
+          callback("receipt not found", null);
+      }
+  });
 };
