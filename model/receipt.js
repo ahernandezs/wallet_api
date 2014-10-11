@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-
 var Schema = mongoose.Schema;
 
 var receiptSchema = new Schema({
@@ -9,10 +8,10 @@ var receiptSchema = new Schema({
     date: String,
     dox: Number,
     type: String,
-    status : String,
-    facebook : Number,
-    twitter : Number,
-    instagram : Number
+    status: String,
+    facebook: Number,
+    twitter: Number,
+    instagram: Number
 });
 
 module.exports = mongoose.model('Receipt', receiptSchema);
