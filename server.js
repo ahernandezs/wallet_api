@@ -48,7 +48,6 @@ var interceptorHeader = function(req, res, next) {
             res.json(result);
         else {
             req.headers['x-auth-token'] = result;
-            console.log('deberia seguir');
             next();
         }
     });

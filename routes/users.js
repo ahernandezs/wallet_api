@@ -12,13 +12,14 @@ exports.login =  function(req, res, callback){
   console.log('execute POST method login');
   console.log(req.body);
   sessionUser.loginFlow(req.body,function(err,result){
-      result.token = result.sessionid;
+      var token = result.sessionid;
       if(result.statusCode === 0){
         res.setHeader('X-AUTH-TOKEN', result.sessionid);
         delete result.sessionid;
       }
-      if (callback)
-          res.json(result);
+      if (callback){
+          result.token = token;
+          res.json(result);}
       else
           callback(result);
   });
