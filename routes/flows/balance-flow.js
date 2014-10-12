@@ -17,7 +17,6 @@ exports.balanceFlow = function(sessionid,callback) {
             return new Error(err);
           } else {
             var response = result.balanceReturn;
-            console.log(response);
             if(response.result  === '0' )
               var response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : response };
             else
@@ -39,7 +38,6 @@ exports.balanceFlow = function(sessionid,callback) {
             return new Error(err);
           } else {
             var response = result.balanceReturn;
-            console.log(response);
             if(response.result  === '0' ) {
               var balance = { current : currentMoney , dox : response.current  } ;
               response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
@@ -53,7 +51,6 @@ exports.balanceFlow = function(sessionid,callback) {
     },
     ], function (err, result) {
       console.log('Return Balance');
-      console.log(result);
       if(err){      
         callback(err,result);    
       }else{

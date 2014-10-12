@@ -32,7 +32,6 @@ var ReceiptQuery = require('../../model/queries/receipt-query');
                     if(err) {
                         return new Error(err);
                     } else {
-                        console.log(result);
                         var response = result.createsessionReturn;
                         callback(null, response.sessionid); 
                     }
@@ -51,7 +50,6 @@ var ReceiptQuery = require('../../model/queries/receipt-query');
             console.log('Login');
             var request = { sessionid: sessionid, initiator: config.username, pin: hashpin };
             var request = {loginRequest: request};
-            console.log(request);
             soap.createClient(soapurl, function(err, client) {
                 client.login(request, function(err, result) {
                     if(err) {
@@ -59,7 +57,6 @@ var ReceiptQuery = require('../../model/queries/receipt-query');
                         return new Error(err);
                     } else {
                         var response = result.loginReturn;
-                        console.log(response);
                         callback(null,sessionid);
                     }
                 });
@@ -77,7 +74,6 @@ var ReceiptQuery = require('../../model/queries/receipt-query');
                         console.log(err);
                         return new Error(err);
                     } else {
-                        console.log(result);
                         var response = result.transferReturn;
                         if(response.result != 0){
                             var response = { statusCode:1 ,  additionalInfo : result };
@@ -91,7 +87,6 @@ var ReceiptQuery = require('../../model/queries/receipt-query');
             });
         },
     ], function (err, result) {
-        console.log(result);
         if(err){      
             callback(err,result);    
         }else{
@@ -144,7 +139,7 @@ exports.transferFunds = function(data, callback) {
                         callback('ERROR', response);
                     } else {
                         var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-                        payload.additionalInfo = JSON.stringify({transferID : transid , message : payload.message, sender: result.name ,senderImg:  config.S3.url + user.data.phoneID +'.png' , date:dateTime});
+                        payload.additionalInfo = JSON.stringify({transferID : transid , message : payload.message, sender: result.name ,senderImg:  config.S3.url + user.data.phoneID +'.png' , date:dateTime });
                         payload.date = dateTime;
                         console.log(payload.extra);
                         callback(null, sessionid,payload);
@@ -160,7 +155,6 @@ exports.transferFunds = function(data, callback) {
             payload.status = config.messages.status.NOTREAD;
             payload.type = config.messages.type.TRANSFER;
             payload.title = title;
-            console.log(payload);
             messageQuery.createMessage(payload, function(err, result) {
                 if (err) {
                     var response = { statusCode: 1, additionalInfo: result };
@@ -197,11 +191,11 @@ exports.transferFunds = function(data, callback) {
             receipt.emitter = data.user.data.phoneID;
             receipt.receiver = data.payload.phoneID;
             receipt.amount = data.payload.amount;
+            receipt.message = data.payload.message;
             receipt.title = "You have send a transfer of € "+ receipt.amount;
             receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
             receipt.type = 'TRANSFER';
             receipt.status = 'DELIVERED';
-            console.log(receipt);
             ReceiptQuery.createReceipt(receipt, function(err, result) {
                 if (err)
                     callback('ERROR', err);
@@ -210,7 +204,6 @@ exports.transferFunds = function(data, callback) {
             });
         }
     ], function(err, result) {
-        console.log(result);
         if (err) 
             callback(err, result);
         else
