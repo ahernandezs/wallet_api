@@ -13,7 +13,8 @@ var receiptSchema = new Schema({
     status: String,
     facebook: Number,
     twitter: Number,
-    instagram: Number
+    instagram: Number,
+    additionalInfo: String
 });
 
 module.exports = mongoose.model('Receipt', receiptSchema);

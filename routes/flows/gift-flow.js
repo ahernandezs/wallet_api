@@ -126,17 +126,18 @@ exports.sendGift = function(payload,callback) {
 			console.log(payload);
 			urbanService.singlePush(payload, function(err, result) {
 				console.log('Pushing result: '+JSON.stringify(result));
-				callback(null,response,payload,emitter,receiver,message);
+				callback(null,response,payload,emitter,receiver,message,additionalInfo);
 			});
 		},
 
-		function(balance,payload,emitter,receiver,message,callback) {
+		function(balance,payload,emitter,receiver,message,additionalInfo,callback) {
 			console.log( 'Create Receipt Gift' + message);
 			var receipt = {};
 			receipt.emitter = emitter;
 			receipt.receiver = receiver;
 			receipt.amount = payload.order.total;
 			receipt.message = message;
+			receipt.additionalInfo = additionalInfo;
 			receipt.title = "You have received a coffee gift!";
 			receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
 			receipt.type = 'GIFT';

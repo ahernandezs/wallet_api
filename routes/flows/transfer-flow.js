@@ -192,10 +192,12 @@ exports.transferFunds = function(data, callback) {
             receipt.receiver = data.payload.phoneID;
             receipt.amount = data.payload.amount;
             receipt.message = data.payload.message;
+            receipt.additionalInfo = data.payload.additionalInfo;
             receipt.title = "You have send a transfer of € "+ receipt.amount;
             receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
             receipt.type = 'TRANSFER';
             receipt.status = 'DELIVERED';
+            console.log(data.payload);
             ReceiptQuery.createReceipt(receipt, function(err, result) {
                 if (err)
                     callback('ERROR', err);
