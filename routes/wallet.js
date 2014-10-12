@@ -9,6 +9,7 @@ var balance = require('./flows/balance-flow');
 var doxsService = require('../services/doxs-service');
 var receipt = require('../model/queries/receipt-query');
 var sessionQuery = require('../model/queries/session-query');
+var doxInfoQuery = require('../model/queries/catalog-query');
 var soapurl = process.env.SOAP_URL;
 
 exports.sell =  function(req, res){
@@ -190,3 +191,13 @@ exports.getReceipts = function(req, res){
     });
   });
 }
+
+exports.doxInfo = function(req, res) {
+    console.log( 'GET method doxInfo' );
+    doxInfoQuery.getDoxInfo( function(err, result) {
+        if (err)
+            res.json( {statusCode : 1, message: result} );
+        else
+            res.json( {statusCode : 0, additionalInfo: result} );
+    });
+};
