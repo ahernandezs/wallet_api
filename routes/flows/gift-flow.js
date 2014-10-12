@@ -7,12 +7,14 @@ var urbanService = require('../../services/urban-service');
 var doxsService = require('../../services/doxs-service');
 var ReceiptQuery = require('../../model/queries/receipt-query');
 var transferFlow = require('./transfer-flow');
+var transacctionQuery = require('../../model/queries/transacction-query');
 var soapurl = process.env.SOAP_URL;
 var config = require('../../config.js');
 
 exports.sendGift = function(payload,callback) {
 
 	var order = payload.order;
+	var dateTime;
 	var forReceipt = {};
 	order['userId'] = payload.beneficiaryId;
 	var payloadoxs = {phoneID: payload.phoneID, action: 'gift', type: 3}
@@ -80,7 +82,8 @@ exports.sendGift = function(payload,callback) {
 					} else {
 						var response = result.balanceReturn;
 						if(response.result  === '0' ) {
-							var balance = { current : currentMoney , dox : response.current , order : Math.floor((Math.random() * (1000 - 100) + 100 )) ,  status :'IN PROGRESS' , date: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')  } ;
+							dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+							var balance = { current : currentMoney , dox : response.current , order : Math.floor((Math.random() * (1000 - 100) + 100 )) ,  status :'IN PROGRESS' , date: dateTime } ;
 							response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
 						}else{
 							var response = { statusCode:1 ,  additionalInfo : response };
@@ -139,7 +142,7 @@ exports.sendGift = function(payload,callback) {
 			receipt.message = message;
 			receipt.additionalInfo = additionalInfo;
 			receipt.title = "You have received a coffee gift!";
-			receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+			receipt.date = dateTime;
 			receipt.type = 'GIFT';
 			receipt.status = 'NEW';
 			console.log(receipt);
@@ -147,9 +150,32 @@ exports.sendGift = function(payload,callback) {
 				if (err)
 					callback('ERROR', err);
 				else
-					callback(null, balance);
+					callback(null, balance,receipt);
 			});
-		}
+		},
+
+		function(balance,receipt, callback) {
+			console.log( 'Create History transacction' );
+			var transacction = {};
+			transacction.title = 'GIFT';
+			transacction.type = 'MONEY',
+			transacction.date = dateTime;
+			transacction.amount = (-1) * receipt.amount;
+			transacction.additionalInfo = receipt.additionalInfo;
+			transacction.operation = 'GIFT';
+			transacction.phoneID = receipt.emitter;
+			Userquery.findAppID(receipt.receiver,function(err,result){
+				transacction.description ='To ' + result.name;
+				transacctionQuery.createTranssaction(transacction, function(err, result) {
+					if (err)
+						callback('ERROR', err);
+					else{
+						console.log('Creando transacction');
+						callback(null, balance);
+					}
+				});
+			});
+		},
 
 		], function (err, result) {
 			if(err){

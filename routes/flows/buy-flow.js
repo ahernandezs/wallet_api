@@ -10,11 +10,13 @@ var transferFlow = require('./transfer-flow');
 var soapurl = process.env.SOAP_URL;
 var config = require('../../config.js');
 var ReceiptQuery = require('../../model/queries/receipt-query');
+var transacctionQuery = require('../../model/queries/transacction-query');
 
 exports.buyFlow = function(payload,callback) {
 
 	//var transferDoxs = {phoneID:payload.phoneID,amount:200 ,type:3};
 	var order = payload.order;
+	var dateTime;
 	//var buy = {sessionid:'', target:'buy coffe', type:1, amount:payload.order.total};
 	var buy = {sessionid:'', target:'airtime', type:1, amount:5};
 	var balance = {sessionid:'',type:1};
@@ -147,7 +149,8 @@ exports.buyFlow = function(payload,callback) {
 						var response = result.balanceReturn;
 						console.log(response);
 						if(response.result  === '0' ) {
-							var balance = { current : currentMoney , dox : response.current , order : Math.floor((Math.random() * (1000 - 100) + 100 )) ,  status :'IN PROGRESS' , date: new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')  } ;
+							dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') ;
+							var balance = { current : currentMoney , dox : response.current , order : Math.floor((Math.random() * (1000 - 100) + 100 )) ,  status :'IN PROGRESS' , date:dateTime  } ;
 							response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
 						}
 						else
@@ -174,11 +177,32 @@ exports.buyFlow = function(payload,callback) {
 			        if (err)
 			            callback('ERROR', result.message);
 			        else{
-			            callback(null, response);
+			            callback(null, response,receipt);
 			        }
 			    });
 			
-		}
+		},
+		function(balance,receipt, callback) {
+			console.log( 'Create History transacction' );
+			var transacction = {};
+			transacction.title = 'Amdocs cafe ';
+			transacction.type = 'MONEY',
+			transacction.date = dateTime;
+			transacction.amount = (-1) * receipt.amount;
+			transacction.additionalInfo = receipt.additionalInfo;
+			transacction.operation = 'BUY';
+			transacction.phoneID = receipt.emitter;
+			transacction.description ='Order No ';
+			transacctionQuery.createTranssaction(transacction, function(err, result) {
+				if (err)
+					callback('ERROR', err);
+				else{
+					console.log('Creando transacction');
+					callback(null, balance);
+				}
+			});
+		},
+
     ], function (err, result) {
       if(err){      
         callback("Error! "+err,result);    
