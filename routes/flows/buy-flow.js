@@ -156,16 +156,29 @@ exports.buyFlow = function(payload,callback) {
 			});
 		},
 		function(response, callback) {
-			createReceipt(forReceipt.payload, function(err, result) {
-				if (err)
-					callback('ERROR', result);
-				else
-					callback(null, balance);
-			});
-			callback(null, response);
+			    console.log('Create receipt buy');
+			    data = forReceipt.payload;
+			    var receipt = {};
+			    receipt.emitter = data.phoneID;
+			    receipt.receiver = 'merchant';
+			    receipt.title = 'You have buy a coffe of € ' + data.order.total;
+			    receipt.amount = data.order.total;
+			    receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+			    receipt.type = 'BUY';
+			    receipt.status = 'IN PROGRESS';
+			    console.log(receipt);
+			    ReceiptQuery.createReceipt(receipt, function(err, result) {
+			        if (err)
+			            callback('ERROR', result.message);
+			        else{
+			        	console.log('resultado');
+			        	console.log(result);
+			            callback(null, response);
+			        }
+			    });
+			
 		}
     ], function (err, result) {
-      console.log("Result: "+result);
       if(err){      
         callback("Error! "+err,result);    
       }else{
@@ -174,21 +187,3 @@ exports.buyFlow = function(payload,callback) {
     });
 };
 
-createReceipt = function(data, callback) {
-    console.log(data);
-    var receipt = {};
-    receipt.emitter = data.phoneID;
-    receipt.receiver = 'merchant';
-    receipt.title = 'You have buy a coffe of € ' + data.order.total;
-    receipt.amount = data.order.total;
-    receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-    receipt.type = 'BUY';
-    receipt.status = 'IN PROGRESS';
-    console.log(receipt);
-    ReceiptQuery.createReceipt(receipt, function(err, result) {
-        if (err)
-            callback('ERROR', result.message);
-        else
-            callback(null, result.message);
-    });
-};

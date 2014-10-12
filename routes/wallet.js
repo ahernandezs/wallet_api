@@ -103,10 +103,15 @@ exports.buyFlow = function(req, res){
   var json = req.body;
   json['sessionid']= req.headers['x-auth-token'];
   BuyFlow.buyFlow(req.body,function(err,result){
-    if(result.statusCode === 0){
-      res.setHeader('X-AUTH-TOKEN', result.sessionid);
-      delete result.sessionid;
-    }
+    if(err) {
+      res.send(500);
+    } 
+    //else 
+      //console.log(result);
+    //else if(result.statusCode === 0){
+      //res.setHeader('X-AUTH-TOKEN', result.sessionid);
+      //delete result.sessionid;
+    //}
     res.json(result);
   });
 };

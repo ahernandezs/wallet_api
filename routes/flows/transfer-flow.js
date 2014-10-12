@@ -191,7 +191,7 @@ exports.transferFunds = function(data, callback) {
             });
         },
         function(balance, callback) {
-            console.log( 'Create Receipt' );
+            console.log( 'Create Receipt for transfer' );
             createReceipt(forReceipt, function(err, result) {
                 if (err)
                     callback('ERROR', result);
@@ -209,6 +209,7 @@ exports.transferFunds = function(data, callback) {
 };
 
 createReceipt = function(data, callback) {
+    console.log( 'Create Receipt Transfer' );
     var receipt = {};
     receipt.emitter = data.user.data.phoneID;
     receipt.receiver = data.payload.phoneID;
