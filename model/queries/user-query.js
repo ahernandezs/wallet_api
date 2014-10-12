@@ -94,11 +94,12 @@ exports.putDoxs = function(payload, callback){
 
 exports.confirmPin = function(phoneID, callback){
   console.log('Confirm Pin');
-  User.findOne({ 'phoneID': phoneID }, 'pin', function (err, person) {
+    console.log(phoneID);
+  User.findOne({ 'phoneID': phoneID }, 'pin email company', function (err, person) {
     if (err) return handleError(err);
     else if(person){
       console.log(person);
-      callback(null, person.pin);
+      callback(null, person);
     }
     else{
       console.log("user not found");
