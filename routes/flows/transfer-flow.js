@@ -32,7 +32,6 @@ var ReceiptQuery = require('../../model/queries/receipt-query');
                     if(err) {
                         return new Error(err);
                     } else {
-                        console.log(result);
                         var response = result.createsessionReturn;
                         callback(null, response.sessionid); 
                     }
@@ -51,7 +50,6 @@ var ReceiptQuery = require('../../model/queries/receipt-query');
             console.log('Login');
             var request = { sessionid: sessionid, initiator: config.username, pin: hashpin };
             var request = {loginRequest: request};
-            console.log(request);
             soap.createClient(soapurl, function(err, client) {
                 client.login(request, function(err, result) {
                     if(err) {
@@ -59,7 +57,6 @@ var ReceiptQuery = require('../../model/queries/receipt-query');
                         return new Error(err);
                     } else {
                         var response = result.loginReturn;
-                        console.log(response);
                         callback(null,sessionid);
                     }
                 });
@@ -77,7 +74,6 @@ var ReceiptQuery = require('../../model/queries/receipt-query');
                         console.log(err);
                         return new Error(err);
                     } else {
-                        console.log(result);
                         var response = result.transferReturn;
                         if(response.result != 0){
                             var response = { statusCode:1 ,  additionalInfo : result };
@@ -91,7 +87,6 @@ var ReceiptQuery = require('../../model/queries/receipt-query');
             });
         },
     ], function (err, result) {
-        console.log(result);
         if(err){      
             callback(err,result);    
         }else{
@@ -106,6 +101,7 @@ exports.transferFunds = function(data, callback) {
     async.waterfall([
         function(callback) {
             console.log('Do transfer in wallet');
+            console.log(data.body);
             var payload = data.body;
             var header = data.header;
             var requestSoap = { sessionid: header.sessionid, to: payload.destiny, amount: payload.amount, type: 1 };
@@ -143,7 +139,7 @@ exports.transferFunds = function(data, callback) {
                         callback('ERROR', response);
                     } else {
                         var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-                        payload.additionalInfo = JSON.stringify({transferID : transid , sender: result.name ,senderImg:  config.S3.url + user.data.phoneID +'.png' , date:dateTime});
+                        payload.additionalInfo = JSON.stringify({transferID : transid , message : payload.message, sender: result.name ,senderImg:  config.S3.url + user.data.phoneID +'.png' , date:dateTime });
                         payload.date = dateTime;
                         console.log(payload.extra);
                         callback(null, sessionid,payload);
@@ -154,13 +150,11 @@ exports.transferFunds = function(data, callback) {
         function(sessionid,payload,callback){
             console.log('Save message in DB');
             var title = config.messages.transferMsg + payload.amount;
-            payload.message = title;
-            var extraData = { action :1, transferID: transid , message : payload.message , additionalInfo: payload.additionalInfo };
+            var extraData = { action :1, transferID: transid , additionalInfo: payload.additionalInfo };
             payload.extra = {extra : extraData} ;
             payload.status = config.messages.status.NOTREAD;
             payload.type = config.messages.type.TRANSFER;
             payload.title = title;
-            console.log(payload);
             messageQuery.createMessage(payload, function(err, result) {
                 if (err) {
                     var response = { statusCode: 1, additionalInfo: result };
@@ -191,38 +185,28 @@ exports.transferFunds = function(data, callback) {
             });
         },
         function(balance, callback) {
-            console.log( 'Create Receipt for transfer' );
-            createReceipt(forReceipt, function(err, result) {
+            console.log( 'Create Receipt Transfer' );
+            data = forReceipt;
+            var receipt = {};
+            receipt.emitter = data.user.data.phoneID;
+            receipt.receiver = data.payload.phoneID;
+            receipt.amount = data.payload.amount;
+            receipt.message = data.payload.message;
+            receipt.title = "You have send a transfer of € "+ receipt.amount;
+            receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+            receipt.type = 'TRANSFER';
+            receipt.status = 'DELIVERED';
+            ReceiptQuery.createReceipt(receipt, function(err, result) {
                 if (err)
-                    callback('ERROR', result);
+                    callback('ERROR', err);
                 else
                     callback(null, balance);
             });
         }
     ], function(err, result) {
-        console.log(result);
         if (err) 
             callback(err, result);
         else
             callback(null, result);
-    });
-};
-
-createReceipt = function(data, callback) {
-    console.log( 'Create Receipt Transfer' );
-    var receipt = {};
-    receipt.emitter = data.user.data.phoneID;
-    receipt.receiver = data.payload.phoneID;
-    receipt.amount = data.payload.amount;
-    receipt.title = "You have send a transfer of € "+ receipt.amount;
-    receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-    receipt.type = 'TRANSFER';
-    receipt.status = 'DELIVERED';
-    console.log(receipt);
-    ReceiptQuery.createReceipt(receipt, function(err, result) {
-        if (err)
-            callback('ERROR', result.message);
-        else
-            callback(null, result.message);
     });
 };

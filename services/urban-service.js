@@ -5,7 +5,6 @@ var ua = new UA('eHiXHtSFTYK4aaWcTAnehQ', 'nv8zr5nTS0imBwWE7a3H4Q', 'nv8zr5nTS0i
 exports.singlePush = function(req, callback) {
 	console.log("phoneID: " + req.phoneID);
 	UserQuery.findAppID(req.phoneID, function(err,result) {
-		console.log(result);
 		var deviceID = null;
 		var payload = {
 			'notification': {
@@ -30,7 +29,7 @@ exports.singlePush = function(req, callback) {
 
 		payload['audience'] = deviceID;
 
-		console.log(payload);
+		console.log(JSON.stringify(payload));
 		ua.pushNotification('/api/push', payload, function(error) {
 			if (error) {
 				console.log('Error to send notification' + error);

@@ -1,9 +1,8 @@
 var Message = require('../message');
 
 exports.createMessage = function(message, callback) {
-    console.log( 'Persistmessage : ' + JSON.stringify(message));
+    console.log( 'Persistmessage ');
       var messageToPersist = new Message(message);
-      console.log('Message to persist user' + JSON.stringify(messageToPersist));
       messageToPersist.save(function (err) {
         if (err) callback("ERROR", { statusCode: 1,  additionalInfo: 'Error to persist user' });
         callback(null, { statusCode: 0 ,  additionalInfo: 'Message persisted correctly' }); ;

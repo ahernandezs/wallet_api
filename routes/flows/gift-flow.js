@@ -5,7 +5,7 @@ var Orderquery = require('../../model/queries/order-query');
 var Userquery = require('../../model/queries/user-query');
 var urbanService = require('../../services/urban-service');
 var doxsService = require('../../services/doxs-service');
-
+var ReceiptQuery = require('../../model/queries/receipt-query');
 var transferFlow = require('./transfer-flow');
 var soapurl = process.env.SOAP_URL;
 var config = require('../../config.js');
@@ -13,7 +13,8 @@ var config = require('../../config.js');
 exports.sendGift = function(payload,callback) {
 
 	var order = payload.order;
-  	order['userId'] = payload.beneficiaryId;
+	var forReceipt = {};
+	order['userId'] = payload.beneficiaryId;
 	var payloadoxs = {phoneID: payload.phoneID, action: 'gift', type: 3}
 	var id;
 	var response;
@@ -21,12 +22,14 @@ exports.sendGift = function(payload,callback) {
 
 	async.waterfall([
 
-	    function(callback){
-	      Userquery.getName(payload.phoneID, function(err, resp) {
-			name = resp;
-			callback(null);
-	      });
-	    },
+		function(callback){
+			var payloadBody= payload.body;
+			forReceipt.payload = payloadBody;
+			Userquery.getName(payload.phoneID, function(err, resp) {
+				name = resp;
+				callback(null);
+			});
+		},
 
 		function(callback){
 			var requestSoap = { sessionid:payload.sessionid, to: config.username, amount : payload.order.total , type: 1 };
@@ -108,23 +111,50 @@ exports.sendGift = function(payload,callback) {
 
 		function(response,callback) {
 			console.log('sending push');
-            var message = 'You have received a coffee gift!';
-            payload.message = message;
-            var extraData = { action :2, phoneID: payload.phoneID, name: name.name, avatar: config.S3.url + payload.phoneID +'.png' };
-            payload.extra = {extra : extraData} ;
-            payload.phoneID = payload.beneficiaryPhoneID;
-            delete payload.beneficiaryPhoneID;
-            urbanService.singlePush(payload, function(err, result) {
-                console.log('Pushing result: '+JSON.stringify(result));
-                callback(null,response);
-            });
-        },
+			var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+			var additionalInfo = JSON.stringify({ phoneID: payload.phoneID, name: name.name, avatar: config.S3.url + payload.phoneID +'.png',date:dateTime,message:payload.message});
+			console.log(additionalInfo);
+			var title = 'You have received a coffee gift!';
+			var emitter = payload.phoneID;
+			var receiver = payload.beneficiaryPhoneID;
+			var message = payload.message;
+			payload.message = title;
+			var extraData = { action :2,additionalInfo:JSON.stringify(additionalInfo)};
+			payload.extra = {extra : extraData} ;
+			payload.phoneID = payload.beneficiaryPhoneID;
+			delete payload.beneficiaryPhoneID;
+			console.log(payload);
+			urbanService.singlePush(payload, function(err, result) {
+				console.log('Pushing result: '+JSON.stringify(result));
+				callback(null,response,payload,emitter,receiver,message);
+			});
+		},
 
-    ], function (err, result) {
-      if(err){
-        callback("Error! "+err,result);
-      }else{
-        callback(null,result);
-      }
-    });
+		function(balance,payload,emitter,receiver,message,callback) {
+			console.log( 'Create Receipt Gift' + message);
+			var receipt = {};
+			receipt.emitter = emitter;
+			receipt.receiver = receiver;
+			receipt.amount = payload.order.total;
+			receipt.message = message;
+			receipt.title = "You have received a coffee gift!";
+			receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+			receipt.type = 'GIFT';
+			receipt.status = 'NEW';
+			console.log(receipt);
+			ReceiptQuery.createReceipt(receipt, function(err, result) {
+				if (err)
+					callback('ERROR', err);
+				else
+					callback(null, balance);
+			});
+		}
+
+		], function (err, result) {
+			if(err){
+				callback("Error! "+err,result);
+			}else{
+				callback(null,result);
+			}
+		});
 }
