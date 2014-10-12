@@ -5,6 +5,7 @@ var Userquery = require('../../model/queries/user-query');
 var soapurl = process.env.SOAP_URL;
 var wallet = require('../wallet');
 var session =  require('../../model/queries/session-query');
+var msgQuery =  require('../../model/queries/message-query');
 var user =  require('../users');
 
 
@@ -54,7 +55,6 @@ exports.loginFlow = function(payload,callback) {
             var response = { statusCode:1 ,  additionalInfo : err };
             callback(err,response);
           } else {
-            console.log(result);
             var response = result.createsessionReturn;
             callback(null, response.sessionid); 
           }
@@ -111,42 +111,54 @@ exports.loginFlow = function(payload,callback) {
         });
       });
     },
-    function(sessionid, callback){
+
+    function(sessionid,callback){
+      console.log('Search NotRead msgs connection');
+      var response = null;
+      msgQuery.getMessagesNoRead(payload.phoneID, function(err, result) {
+        if(err) {
+          console.log(err);
+          var response = { statusCode:1 ,  additionalInfo : err };
+          callback(err,response);
+        }else{
+          console.log(result.length);
+          callback(null,sessionid,result.length);
+        }
+      });
+    },
+
+    function(sessionid,length,callback){
       console.log('balance e-wallet');
       var request = { sessionid: sessionid, type: 1  };
       var request = {balanceRequest: request};
-      console.log(request);
       soap.createClient(soapurl, function(err, client) {
         client.balance(request, function(err, result) {
           if(err) {
             return new Error(err);
           } else {
             var response = result.balanceReturn;
-            console.log(response);
             if(response.result  === '0' )
               var response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : response };
             else
               var response = { statusCode:1 ,  additionalInfo : response };
 
-            callback(null,sessionid,response.additionalInfo.current);
+            callback(null,sessionid,response.additionalInfo.current,length);
           }
         });
       });
     },
-    function(sessionid,currentMoney, callback){
+    function(sessionid,currentMoney,length,callback){
       console.log('balance Points');
       var  request = { sessionid: sessionid, type: 3  };
       var request = {balanceRequest: request};
-      console.log(request);
       soap.createClient(soapurl, function(err, client) {
         client.balance(request, function(err, result) {
           if(err) {
             return new Error(err);
           } else {
             var response = result.balanceReturn;
-            console.log(response);
             if(response.result  === '0' ) {
-              var balance = { current : currentMoney , dox : response.current  } ;
+              var balance = { current : currentMoney , dox : response.current ,unreadMsgs :length } ;
               response = { statusCode:0 , additionalInfo : balance, userInfo : info };
             }
             else
