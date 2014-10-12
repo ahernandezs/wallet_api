@@ -7,6 +7,7 @@ var receiptSchema = new Schema({
     amount: String,
     date: String,
     dox: Number,
+    title: String ,
     message: String,
     type: String,
     status: String,

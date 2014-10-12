@@ -23,7 +23,7 @@ exports.buyFlow = function(payload,callback) {
 	var response;
     var forReceipt = {};
     forReceipt.payload = payload;
-    console.log('dataaaa!: ' + JSON.stringify(forReceipt) );
+    console.log('Runing buyFlow!: ' + JSON.stringify(forReceipt) );
 
 	async.waterfall([
 		function(callback){
@@ -155,12 +155,15 @@ exports.buyFlow = function(payload,callback) {
 				});
 			});
 		},
-        function(response, callback) {
-            createReceipt(forReceipt, function(err, result) {
-                console.log(result);
-            });
-            callback(null, response);
-        }
+		function(response, callback) {
+			createReceipt(forReceipt.payload, function(err, result) {
+				if (err)
+					callback('ERROR', result);
+				else
+					callback(null, balance);
+			});
+			callback(null, response);
+		}
     ], function (err, result) {
       console.log("Result: "+result);
       if(err){      
@@ -172,19 +175,20 @@ exports.buyFlow = function(payload,callback) {
 };
 
 createReceipt = function(data, callback) {
-    console.log('datos!: ' + data);
-    /*var receipt = {};
-    receipt.emitter = data.user.data.phoneID;
-    receipt.receiver = data.payload.phoneID;
-    receipt.amount = data.payload.amount;
+    console.log(data);
+    var receipt = {};
+    receipt.emitter = data.phoneID;
+    receipt.receiver = 'merchant';
+    receipt.title = 'You have buy a coffe of € ' + data.order.total;
+    receipt.amount = data.order.total;
     receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-    receipt.type = 'TRANSFER';
-    receipt.status = 'DELIVERED';
+    receipt.type = 'BUY';
+    receipt.status = 'IN PROGRESS';
     console.log(receipt);
     ReceiptQuery.createReceipt(receipt, function(err, result) {
         if (err)
             callback('ERROR', result.message);
         else
             callback(null, result.message);
-    });*/
+    });
 };

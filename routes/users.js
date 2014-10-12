@@ -18,9 +18,9 @@ exports.login =  function(req, res, callback){
         delete result.sessionid;
       }
       if (callback)
-          callback(result);
-      else
           res.json(result);
+      else
+          callback(result);
   });
 };
 
