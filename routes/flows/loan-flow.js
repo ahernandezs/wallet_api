@@ -54,17 +54,18 @@ exports.createLoanFlow = function(payload,callback) {
     function(loan,callback){
       console.log('search user by phoneID');
       userQuery.findUserByPhoneID(loan.phoneID,function(err,result){
-        /*if(err){
+        if(err){
             var response = { statusCode:1 ,  additionalInfo : err };
             callback('ERROR',response);
           }
           else{
+
             console.log(result);
             loan.name = result.name;
-            loan.additionalInfo = JSON.stringify ({_id: loan._id , customerName : loan.Name , customerImage : loan.customerImage , status: loan.status , date :loan.date });*/
-              forReceipt.detail = loan;
+            loan.additionalInfo = JSON.stringify ({_id: loan._id , customerName : loan.name , customerImage : loan.customerImage , status: loan.status , date :loan.date });
+            forReceipt.detail = loan;
             callback(null,loan);
-          //}
+          }
       });
     },
     function(loan,callback){
@@ -85,28 +86,43 @@ exports.createLoanFlow = function(payload,callback) {
       });
     },
     function(loan,callback){
+      loan.additionalInfo = JSON.stringify ({_id: loan._id , customerName : loan.name , customerImage : loan.customerImage , status: loan.status , date :loan.date });
       var message = config.messages.loanRequestMsg + loan.amount;
       loan.message = message;
       var extraData = { action : config.messages.action.LOAN , loan : JSON.stringify(loan.additionalInfo) };
       loan.extra = {extra : extraData} ;
       console.log(loan);
       urbanService.singlePush2Merchant(loan, function(err, result) {
-        /*if(err){
-          var response = { statusCode:1 ,  additionalInfo : result };
+        if(err){
+          var response = { statusCode:1 ,  additionalInfo : 'Error to create loan' };
           callback('ERROR',response);
         }
-        else{*/
-          var response = { statusCode:0 ,  additionalInfo : result };
+        else{
+          var response = { statusCode:0 ,  additionalInfo : 'Loan sent Successful ' };
           callback(null,response);
-        //}
+        }
       });
     },
-    function(response, callback) {
-        createReceipt(forReceipt, function(err, result) {
-           console.log(result); 
-        });
-        //callback(null, response);
-    }
+      function(response, callback) {
+        console.log( 'Create Receipt Transfer' );
+          data = forReceipt;
+          var receipt = {};
+          receipt.emitter = data.payload.phoneID;
+          receipt.receiver = 'merchant';
+          receipt.amount = data.payload.amount;
+          receipt.message = "You have send a loan of € "+ receipt.amount;
+          receipt.title = receipt.message;
+          receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+          receipt.type = 'LOAN';
+          receipt.status = 'NEW';
+          console.log(receipt);
+          ReceiptQuery.createReceipt(receipt, function(err, result) {
+            if (err)
+              callback('ERROR', result.message);
+            else
+              callback(null, response);
+          }); 
+      }
     ], function (err, result) {
       console.log(result);
       if(err){      
@@ -223,23 +239,4 @@ exports.updateLoanFlow = function(payload,callback){
         callback(null,result);    
       }  
     });
-};
-
-createReceipt = function(data, callback) {
-    console.log('data!: ' + JSON.stringify(data) );
-    /*var receipt = {};
-    receipt.emitter = data.payload.;
-    receipt.receiver = data.payload.phoneID;
-    receipt.amount = data.payload.amount;
-    receipt.message = "You have send a transfer of € "+ receipt.amount;
-    receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-    receipt.type = 'TRANSFER';
-    receipt.status = 'DELIVERED';
-    console.log(receipt);
-    ReceiptQuery.createReceipt(receipt, function(err, result) {
-        if (err)
-            callback('ERROR', result.message);
-        else
-            callback(null, result.message);
-    });*/
 };

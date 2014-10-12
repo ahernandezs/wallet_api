@@ -171,8 +171,6 @@ exports.buyFlow = function(payload,callback) {
 			        if (err)
 			            callback('ERROR', result.message);
 			        else{
-			        	console.log('resultado');
-			        	console.log(result);
 			            callback(null, response);
 			        }
 			    });
