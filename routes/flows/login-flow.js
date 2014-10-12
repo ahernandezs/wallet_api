@@ -9,19 +9,22 @@ var user =  require('../users');
 
 
 exports.loginFlow = function(payload,callback) {
+    var info = {};
   async.waterfall([
     function(callback){
-      Userquery.confirmPin(payload.phoneID, function(err, pin) {
+      Userquery.confirmPin(payload.phoneID, function(err, person) {
         if(err){
           console.log(err);
           var response = { statusCode:1 ,  additionalInfo : err };
           callback(err,response);
         }
         else {
-          if(pin === payload.pin){
+          if(person.pin === payload.pin){
             console.log('You have been logged in');
-            callback(null);}
-          else{
+            info.email = person.email;
+            info.company = person.company;
+            callback(null);
+          } else{
             var response = { statusCode:1 ,  additionalInfo : 'INVALID PIN' };
             console.log(response);
             callback('ERROR',response);
@@ -144,7 +147,7 @@ exports.loginFlow = function(payload,callback) {
             console.log(response);
             if(response.result  === '0' ) {
               var balance = { current : currentMoney , dox : response.current  } ;
-              response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
+              response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance, userInfo : info };
             }
             else
               var response = { statusCode:1 ,  additionalInfo : response };
