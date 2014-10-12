@@ -24,7 +24,7 @@ exports.getCredentials = function(sessionid, callback) {
     });
 };
 
-exports.updateMessage = function(message,callback) {
+exports.updateSession = function(session, info, callback) {
     console.log( 'Updating session in MongoDB');
     var json = {};
     json.token = info.token;

@@ -9,6 +9,7 @@ var doxsService = require('../../services/doxs-service');
 var transferFlow = require('./transfer-flow');
 var soapurl = process.env.SOAP_URL;
 var config = require('../../config.js');
+var ReceiptQuery = require('../../model/queries/receipt-query');
 
 exports.buyFlow = function(payload,callback) {
 
@@ -20,6 +21,9 @@ exports.buyFlow = function(payload,callback) {
     var notification = {message:'There is a new order!', phoneID: payload.phoneID}
 	var id;
 	var response;
+    var forReceipt = {};
+    forReceipt.payload = payload;
+    console.log('Runing buyFlow!: ' + JSON.stringify(forReceipt) );
 
 	async.waterfall([
 		function(callback){
@@ -151,14 +155,35 @@ exports.buyFlow = function(payload,callback) {
 				});
 			});
 		},
-
+		function(response, callback) {
+			    console.log('Create receipt buy');
+			    data = forReceipt.payload;
+			    var receipt = {};
+			    receipt.emitter = data.phoneID;
+			    receipt.receiver = 'merchant';
+			    receipt.title = 'You have buy a coffe of € ' + data.order.total;
+			    receipt.amount = data.order.total;
+			    receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+			    receipt.type = 'BUY';
+			    receipt.status = 'IN PROGRESS';
+			    console.log(receipt);
+			    ReceiptQuery.createReceipt(receipt, function(err, result) {
+			        if (err)
+			            callback('ERROR', result.message);
+			        else{
+			        	console.log('resultado');
+			        	console.log(result);
+			            callback(null, response);
+			        }
+			    });
+			
+		}
     ], function (err, result) {
-      console.log("Result: "+result);
       if(err){      
         callback("Error! "+err,result);    
       }else{
         callback(null,result);    
-      }  
+      }
     });
-}
+};
 
