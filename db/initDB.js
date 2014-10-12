@@ -1,6 +1,10 @@
 db = db.getSiblingDB('app28614432'); //mongo kahana.mongohq.com:10056/app28614432 -u carlos -p 123 initDB.js mongo localhost:27017/max initDB.js
-db.sessions.remove({});
-db.sessions.insert({ token: "9URRCEPIL28RW3HHKIN5", pin : "1500", phoneID : "359300054072625" });
+db.doxinfos.remove({});
+db.doxinfos.insert({ description: "Completed profile", urlImage : "https://s3-us-west-1.amazonaws.com/amdocs-images/catalog_dox/dox1.png" });
+db.doxinfos.insert({ description: "Invited friend", urlImage : "https://s3-us-west-1.amazonaws.com/amdocs-images/catalog_dox/dox1.png" });
+db.doxinfos.insert({ description: "Social Share, Twitter", urlImage : "https://s3-us-west-1.amazonaws.com/amdocs-images/catalog_dox/dox1.png" });
+db.doxinfos.insert({ description: "Linked account, LinkedIn", urlImage : "https://s3-us-west-1.amazonaws.com/amdocs-images/catalog_dox/dox1.png" });
+db.doxinfos.insert({ description: "Social Share, Instagram", urlImage : "https://s3-us-west-1.amazonaws.com/amdocs-images/catalog_dox/dox1.png" });
 db.merchants.remove({});
 db.merchants.insert({ id: 1, name : "amdocs Cafe 1" ,address: "Av. Mariano Escobedo esquina Lago Alberto Colonia polanco " , latitude:19.440833 , longitude:-99.185 ,appID :'29d00370-7c27-4658-8de7-90f19fcce9c4',OS:'ANDROID',distance:'5Km',schedule:'9am - 5pm',imgUrl:'' });
 db.merchants.insert({ id: 2, name : "amdocs Cafe 2" ,address: "Av. Universidad #1000, Col. Santa Cruz Atoya " , latitude:19.366944 , longitude:-99.16527 ,appID :'',OS:'',distance:'',schedule:'',imgUrl:'' });
