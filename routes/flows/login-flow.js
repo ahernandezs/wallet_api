@@ -24,6 +24,7 @@ exports.loginFlow = function(payload,callback) {
             console.log('You have been logged in');
             info.email = person.email;
             info.company = person.company;
+            info.name = person.name;
             callback(null);
           } else{
             var response = { statusCode:1 ,  additionalInfo : 'INVALID PIN' };
@@ -159,7 +160,7 @@ exports.loginFlow = function(payload,callback) {
             var response = result.balanceReturn;
             if(response.result  === '0' ) {
               var balance = { current : currentMoney , dox : response.current ,unreadMsgs :length } ;
-              response = { statusCode:0 , additionalInfo : balance, userInfo : info };
+              response = { statusCode: 0, sessionid : sessionid, additionalInfo : balance, userInfo : info };
             }
             else
               var response = { statusCode:1 ,  additionalInfo : response };
