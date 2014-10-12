@@ -13,6 +13,36 @@ var ReceiptQuery = require('../../model/queries/receipt-query');
 exports.createLoanFlow = function(payload,callback) {
     var forReceipt = {};
   async.waterfall([
+    function(callback) {
+        console.log( 'Find loans for this user' );
+        loanQuery.findUserLoans(payload.body.phoneID, function(err, result) {
+            console.log(result);
+           if (err)
+               callback('ERROR', { statusCode : 1, additionalInfo : result.message });
+            else
+                callback(null, payload.header['x-auth-token']);
+        });
+    },
+    function(sessionid, callback) {
+        console.log( 'Getting balance for this user' );
+        var request = { sessionid: sessionid, type: 1  };
+        var request = {balanceRequest: request};
+        soap.createClient(soapurl, function(err, client) {
+            client.balance(request, function(err, result) {
+                if(err) {
+                    return new Error(err);
+                } else {
+                    var response = result.balanceReturn;
+                    console.log(JSON.stringify(response));
+                    if(response.result  === '0' && response.current === '0')
+                        callback(null);
+                    else
+                        var response = { statusCode: 1 , additionalInfo : 'You can not request a loan' };
+                    callback('ERROR', response);
+                }
+            });
+        });
+    },
     function( callback){
       console.log('saving loan in DB');
       var loan = payload.body;
