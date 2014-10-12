@@ -9,7 +9,10 @@ var merchantSchema =  new Schema({
 	latitude:Number ,
 	longitude:Number ,
 	appID: String ,
-	OS: String
+	OS: String ,
+	distance: String ,
+	schedule: String ,
+	imgUrl: String
 });
 
 module.exports = mongoose.model('Merchant', merchantSchema);  

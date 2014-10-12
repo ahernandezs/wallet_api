@@ -2,9 +2,9 @@ db = db.getSiblingDB('app28614432'); //mongo kahana.mongohq.com:10056/app2861443
 db.sessions.remove({});
 db.sessions.insert({ token: "9URRCEPIL28RW3HHKIN5", pin : "1500", phoneID : "359300054072625" });
 db.merchants.remove({});
-db.merchants.insert({ id: 1, name : "amdocs Cafe 1" ,address: "Av. Mariano Escobedo esquina Lago Alberto Colonia polanco " , latitude:19.440833 , longitude:-99.185  });
-db.merchants.insert({ id: 2, name : "amdocs Cafe 2" ,address: "Av. Universidad #1000, Col. Santa Cruz Atoya " , latitude:19.366944 , longitude:-99.16527  });
-db.merchants.insert({ id: 3, name : "amdocs Cafe 3" ,address: "Parroquia No. 194. Col. Del Valle" , latitude:19.371944 , longitude:-99.178333 });
+db.merchants.insert({ id: 1, name : "amdocs Cafe 1" ,address: "Av. Mariano Escobedo esquina Lago Alberto Colonia polanco " , latitude:19.440833 , longitude:-99.185 ,appID :'29d00370-7c27-4658-8de7-90f19fcce9c4',OS:'ANDROID',distance:'5Km',schedule:'9am - 5pm',imgUrl:'' });
+db.merchants.insert({ id: 2, name : "amdocs Cafe 2" ,address: "Av. Universidad #1000, Col. Santa Cruz Atoya " , latitude:19.366944 , longitude:-99.16527 ,appID :'',OS:'',distance:'',schedule:'',imgUrl:'' });
+db.merchants.insert({ id: 3, name : "amdocs Cafe 3" ,address: "Parroquia No. 194. Col. Del Valle" , latitude:19.371944 , longitude:-99.178333,appID :'',OS:'',distance:'',schedule:'',imgUrl:'' });
 db.products.remove({});
 // supported status for products: IN STOCK, OUT STOCK
 db.products.insert({ merchantId: 1, name : "Black Cofee", description : "", "url":"https://s3-us-west-1.amazonaws.com/amdocs-images/products/black.jpg", cost : 5.00, status: "IN STOCK" });
@@ -52,3 +52,4 @@ db.transacctions.insert({ title:'Invited friend' , type: 'DOX' , date:'2014-10-1
 db.transacctions.insert({ title:'Social share, Twitter' , type: 'DOX' , date:'2014-10-10 09:26:47' , amount:200 , description:'Reference No 1981', additionalInfo:'', operation:'3' , phoneID : '3123312'});
 db.transacctions.insert({ title:'Linked account,LinkedIn' , type: 'DOX' , date:'2014-10-10 10:26:47' , amount:100, description:'To Eduardo Acevedo', additionalInfo:'', operation:'4', phoneID : '3123312' });
 db.transacctions.insert({ title:'Social Share, Instagram' , type: 'DOX' , date:'2014-10-10 10:26:47' , amount:200 , description:'From Rocio Morales', additionalInfo:'', operation:'5', phoneID : '3123312' });
+
