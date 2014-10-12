@@ -9,6 +9,7 @@ var config = require('../../config.js');
 var urbanService = require('../../services/urban-service');
 var balance = require('./balance-flow');
 var ReceiptQuery = require('../../model/queries/receipt-query');
+var transacctionQuery = require('../../model/queries/transacction-query');
 
   exports.transferFlow = function(payload,callback) {
       async.waterfall([
@@ -98,6 +99,7 @@ var ReceiptQuery = require('../../model/queries/receipt-query');
 exports.transferFunds = function(data, callback) {
     var transid;
     var forReceipt = {};
+    var dateTime;
     async.waterfall([
         function(callback) {
             console.log('Do transfer in wallet');
@@ -138,7 +140,7 @@ exports.transferFunds = function(data, callback) {
                         var response = { statusCode: 1, additionalInfo: result };
                         callback('ERROR', response);
                     } else {
-                        var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+                        dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
                         payload.additionalInfo = JSON.stringify({transferID : transid , message : payload.message, sender: result.name ,senderImg:  config.S3.url + user.data.phoneID +'.png' , date:dateTime });
                         payload.date = dateTime;
                         console.log(payload.extra);
@@ -194,7 +196,7 @@ exports.transferFunds = function(data, callback) {
             receipt.message = data.payload.message;
             receipt.additionalInfo = data.payload.additionalInfo;
             receipt.title = "You have send a transfer of € "+ receipt.amount;
-            receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+            receipt.date = dateTime;
             receipt.type = 'TRANSFER';
             receipt.status = 'DELIVERED';
             console.log(data.payload);
@@ -202,9 +204,32 @@ exports.transferFunds = function(data, callback) {
                 if (err)
                     callback('ERROR', err);
                 else
-                    callback(null, balance);
+                    callback(null, balance,receipt);
             });
-        }
+        },
+        function(balance,receipt, callback) {
+            console.log( 'Create History transacction' );
+            var transacction = {};
+            transacction.title = 'Transfer Fund ';
+            transacction.type = 'MONEY',
+            transacction.date = dateTime;
+            transacction.amount = (-1) * receipt.amount;
+            transacction.additionalInfo = receipt.additionalInfo;
+            transacction.operation = 'TRANSFER';
+            transacction.phoneID = receipt.emitter;
+            Userquery.findAppID(receipt.receiver,function(err,result){
+                transacction.description ='To ' + result.name;
+                transacctionQuery.createTranssaction(transacction, function(err, result) {
+                    if (err)
+                        callback('ERROR', err);
+                    else{
+                        console.log('Creando transacction');
+                        callback(null, balance);
+                    }
+                });
+            });
+        },
+
     ], function(err, result) {
         if (err) 
             callback(err, result);

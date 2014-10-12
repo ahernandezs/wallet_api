@@ -38,3 +38,17 @@ exports.getTransacctionsDox = function(sessionid, callback) {
         }
     });
 };
+
+exports.createTranssaction = function(data, callback) {
+    console.log('Save transacction');
+    var newTransacction = new transacction(data);
+    console.log(newTransacction);
+    var result = newTransacction.save(function(err) {
+        if (err) return 1;
+        return 0;
+    });
+    if (result === 1)
+        callback('ERROR', 'The transacction could not be created');
+    else
+        callback(null, 'The Transacction was created successfully');
+};

@@ -263,6 +263,29 @@ exports.updateLoanFlow = function(payload,callback){
           callback(null,response);
         }
       });
+
+     /* function(balance,receipt, callback) {
+        console.log( 'Create History transacction' );
+        var transacction = {};
+        transacction.title = 'Transfer Fund ';
+        transacction.type = 'MONEY',
+        transacction.date = dateTime;
+        transacction.amount = (-1) * receipt.amount;
+        transacction.additionalInfo = receipt.additionalInfo;
+        transacction.operation = 'LOAN';
+        transacction.phoneID = receipt.emitter;
+        Userquery.findAppID(receipt.receiver,function(err,result){
+          transacction.description ='To ' + result.name;
+          transacctionQuery.createTranssaction(transacction, function(err, result) {
+            if (err)
+              callback('ERROR', err);
+            else{
+              console.log('Creando transacction');
+              callback(null, balance);
+            }
+          });
+        });
+      },*/
     }
     ],  function (err, result) {
       console.log(result);

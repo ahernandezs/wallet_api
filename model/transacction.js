@@ -10,7 +10,7 @@ var transacctionSchema =  new Schema({
 	description : String,
 	additionalInfo : String,
 	operation:String ,
-	phoneId:String,
+	phoneID:String,
 });
 
 module.exports = mongoose.model('Transacction', transacctionSchema);
