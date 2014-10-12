@@ -22,6 +22,7 @@ exports.buyFlow = function(payload,callback) {
 	var id;
 	var response;
     var forReceipt = {};
+    var additionalInfo;
     forReceipt.payload = payload;
     console.log('Runing buyFlow!: ' + JSON.stringify(forReceipt) );
 
@@ -99,6 +100,7 @@ exports.buyFlow = function(payload,callback) {
 			var message = 'There is a new order!';
 			notification.message = message;
 			var extraData = { action : 3 , order : JSON.stringify(order) };
+			additionalInfo = extraData.order;
 			notification.extra = {extra : extraData} ;
 			console.log(notification);
 			urbanService.singlePush2Merchant(notification, function(err, result) {
@@ -162,6 +164,7 @@ exports.buyFlow = function(payload,callback) {
 			    receipt.emitter = data.phoneID;
 			    receipt.receiver = 'merchant';
 			    receipt.title = 'You have bought a coffe of € ' + data.order.total;
+			    receipt.additionalInfo = additionalInfo;
 			    receipt.amount = data.order.total;
 			    receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
 			    receipt.type = 'BUY';

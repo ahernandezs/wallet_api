@@ -11,7 +11,8 @@ var soapurl = process.env.SOAP_URL;
 var ReceiptQuery = require('../../model/queries/receipt-query');
 
 exports.createLoanFlow = function(payload,callback) {
-    var forReceipt = {};
+  var forReceipt = {};
+  var additionalInfo;
   async.waterfall([
     function(callback) {
         console.log( 'Find loans for this user' );
@@ -23,7 +24,7 @@ exports.createLoanFlow = function(payload,callback) {
                 callback(null, payload.header['x-auth-token']);
         });
     },
-    function(sessionid, callback) {
+ /*   function(sessionid, callback) {
         console.log( 'Getting balance for this user' );
         var request = { sessionid: sessionid, type: 1  };
         var request = {balanceRequest: request};
@@ -42,8 +43,8 @@ exports.createLoanFlow = function(payload,callback) {
                 }
             });
         });
-    },
-    function( callback){
+    },*/
+    function(sessionid,callback){
       console.log('saving loan in DB');
       var loan = payload.body;
       var merchantID = loan.merchantID;
@@ -120,6 +121,7 @@ exports.createLoanFlow = function(payload,callback) {
       var message = config.messages.loanRequestMsg + loan.amount;
       loan.message = message;
       var extraData = { action : config.messages.action.LOAN , loan : JSON.stringify(loan.additionalInfo) };
+      additionalInfo = extraData.loan;
       loan.extra = {extra : extraData} ;
       console.log(loan);
       urbanService.singlePush2Merchant(loan, function(err, result) {
@@ -141,6 +143,7 @@ exports.createLoanFlow = function(payload,callback) {
           receipt.receiver = 'merchant';
           receipt.amount = data.payload.amount;
           receipt.message = "You have send a loan of € "+ receipt.amount;
+          receipt.additionalInfo = additionalInfo;
           receipt.title = receipt.message;
           receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
           receipt.type = 'LOAN';
