@@ -13,6 +13,9 @@ var ReceiptQuery = require('../../model/queries/receipt-query');
 exports.createLoanFlow = function(payload,callback) {
     var forReceipt = {};
   async.waterfall([
+    function(callback) {
+        console.log( 'Find loans for this user' );  
+    },
     function( callback){
       console.log('saving loan in DB');
       var loan = payload.body;
