@@ -147,7 +147,7 @@ exports.loginFlow = function(payload,callback) {
             console.log(response);
             if(response.result  === '0' ) {
               var balance = { current : currentMoney , dox : response.current  } ;
-              response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance, userInfo : info };
+              response = { statusCode:0 , additionalInfo : balance, userInfo : info };
             }
             else
               var response = { statusCode:1 ,  additionalInfo : response };
