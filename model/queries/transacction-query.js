@@ -1,8 +1,8 @@
 var transacction = require('../transacction');
 
-exports.getTransacctions = function(phoneID, callback) {
+exports.getTransacctions = function(phoneIDToSearch, callback) {
     console.log( 'Get Transacctions' );
-    transacction.find({type:'MONEY'}, 'title description amount date', function(err, transacction)  {
+    transacction.find({phoneID:phoneIDToSearch, type:'MONEY'}, 'title description amount date',{sort: {date: 1}}, function(err, transacction)  {
         var response;
         if (err) {
             response = { statusCode: 1, additionalInfo: err };
