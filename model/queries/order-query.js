@@ -18,12 +18,12 @@ exports.putOrder = function(order,callback){
 	Order.findOne().sort('-orderId').exec( function(err, doc) {
 		var newOrder = new Order(order);
 		newOrder['orderId'] = doc==null ? 1000 : doc.orderId+1 ;
-		newOrder.save(function (err) {
+		newOrder.save(function (err,result) {
 			if (err){
 		        console.log(err);
 				callback("ERROR", { statusCode: 1 ,  additionalInfo: 'Order failed' });
 			}else{
-				callback(null, { statusCode: 0 ,  additionalInfo: 'Order success' });
+				callback(null, { statusCode: 0 ,  additionalInfo: 'Order success', order:result.orderId });
 			}
 		});
 	});

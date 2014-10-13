@@ -10,6 +10,7 @@ var urbanService = require('../../services/urban-service');
 var balance = require('./balance-flow');
 var ReceiptQuery = require('../../model/queries/receipt-query');
 var transacctionQuery = require('../../model/queries/transacction-query');
+var doxsService = require('../../services/doxs-service');
 
   exports.transferFlow = function(payload,callback) {
       async.waterfall([
@@ -131,6 +132,26 @@ exports.transferFunds = function(data, callback) {
             });
         },
         function(sessionid,payload,callback){
+            var requestSoap = { sessionid:sessionid, to: config.username, amount : config.doxs.p2p , type: 3 };
+            var request = { transferRequest: requestSoap };
+            soap.createClient(soapurl, function(err, client) {
+                client.transfer(request, function(err, result) {
+                    if(err) {
+                        console.log(err);
+                        return new Error(err);
+                    } else {
+                        var response = result.transferReturn;
+                        if(response.result != 0){
+                            var response = { statusCode:1 ,  additionalInfo : result };
+                            callback("ERROR", response);
+                        }
+                        else
+                            callback(null,sessionid,payload);
+                    }
+                });
+            });
+        },
+        function(sessionid,payload,callback){
             console.log('Get sender in db ' +sessionid);
             sessionQuery.getCredentials(sessionid,function(err,user){
                 console.log(user);
@@ -217,19 +238,41 @@ exports.transferFunds = function(data, callback) {
             transacction.additionalInfo = receipt.additionalInfo;
             transacction.operation = 'TRANSFER';
             transacction.phoneID = receipt.emitter;
+            console.log('receiver' + receipt.receiver);
             Userquery.findAppID(receipt.receiver,function(err,result){
                 transacction.description ='To ' + result.name;
                 transacctionQuery.createTranssaction(transacction, function(err, result) {
                     if (err)
                         callback('ERROR', err);
                     else{
-                        console.log('Creando transacction');
+                        console.log('Transacction Created');
+                        callback(null, balance,receipt);
+                    }
+                });
+            });
+        },
+        function(balance,receipt, callback) {
+            console.log( 'Create  transacction gift' );
+            var transacction = {};
+            transacction.title = 'Transfer Fund ';
+            transacction.type = 'DOX',
+            transacction.date = dateTime;
+            transacction.amount = config.doxs.p2p;
+            transacction.additionalInfo = receipt.additionalInfo;
+            transacction.operation = 'TRANSFER';
+            transacction.phoneID = receipt.emitter;
+            Userquery.findAppID(receipt.receiver,function(err,result){
+                transacction.description ='To ' + result.name;
+                transacctionQuery.createTranssaction(transacction, function(err, result) {
+                    if (err)
+                        callback('ERROR', err);
+                    else{
+                        console.log('Transacction Created');
                         callback(null, balance);
                     }
                 });
             });
         },
-
     ], function(err, result) {
         if (err) 
             callback(err, result);

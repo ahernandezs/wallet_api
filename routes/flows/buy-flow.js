@@ -21,25 +21,22 @@ exports.buyFlow = function(payload,callback) {
 	var buy = {sessionid:'', target:'airtime', type:1, amount:5};
 	var balance = {sessionid:'',type:1};
     var notification = {message:'There is a new order!', phoneID: payload.phoneID}
-	var id;
+	var orderID;
 	var response;
     var forReceipt = {};
     var additionalInfo;
     forReceipt.payload = payload;
-    console.log('Runing buyFlow!: ' + JSON.stringify(forReceipt) );
 
 	async.waterfall([
 		function(callback){
 			var requestSoap = { sessionid:payload.sessionid, to: config.username, amount : payload.order.total , type: 1 };
 			var request = { transferRequest: requestSoap };
-			console.log(request);
-			soap.createClient(soapurl, function(err, client) {
+				soap.createClient(soapurl, function(err, client) {
 				client.transfer(request, function(err, result) {
 					if(err) {
 						console.log(err);
 						return new Error(err);
 					} else {
-						console.log(result);
 						var response = result.transferReturn;
 						if(response.result != 0){
 							var response = { statusCode:1 ,  additionalInfo : result };
@@ -61,9 +58,8 @@ exports.buyFlow = function(payload,callback) {
 				callback(null,sessionid);
 			});
 		},*/
-
 		function(sessionid,callback){
-			payload['action']="payment";
+			payload['action']='payment';
 			doxsService.saveDoxs(payload, function(err, result){
 				console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
 				if(err) {
@@ -77,6 +73,7 @@ exports.buyFlow = function(payload,callback) {
 		function(sessionid, callback){
 			console.log('Saving order '+JSON.stringify(order));
 			Orderquery.putOrder(order, function(err,result){
+				orderID = result.order;
 				console.log('Order saving result: '+JSON.stringify(result)+'\n\n');
 				callback(null, sessionid);
 			});
@@ -90,10 +87,8 @@ exports.buyFlow = function(payload,callback) {
 					callback('ERROR',response);
 				}
 				else{
-					console.log(result);
 					notification.OS = result.OS;
 					notification.appID = result.appID;
-					console.log(notification);
 					callback(null,sessionid);
 				}
 			});
@@ -104,7 +99,6 @@ exports.buyFlow = function(payload,callback) {
 			var extraData = { action : 3 , order : JSON.stringify(order) };
 			additionalInfo = extraData.order;
 			notification.extra = {extra : extraData} ;
-			console.log(notification);
 			urbanService.singlePush2Merchant(notification, function(err, result) {
 				if(err){
 					var response = { statusCode:1 ,  additionalInfo : result };
@@ -126,7 +120,6 @@ exports.buyFlow = function(payload,callback) {
 						return new Error(err);
 					} else {
 						var response = result.balanceReturn;
-						console.log(response);
 						if(response.result  === '0' )
 							var response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : response };
 						else
@@ -147,10 +140,9 @@ exports.buyFlow = function(payload,callback) {
 						return new Error(err);
 					} else {
 						var response = result.balanceReturn;
-						console.log(response);
 						if(response.result  === '0' ) {
 							dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') ;
-							var balance = { current : currentMoney , dox : response.current , order : Math.floor((Math.random() * (1000 - 100) + 100 )) ,  status :'IN PROGRESS' , date:dateTime  } ;
+							var balance = { current : currentMoney , dox : response.current , order : orderID ,  status :'IN PROGRESS' , date:dateTime  } ;
 							response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
 						}
 						else
@@ -172,7 +164,6 @@ exports.buyFlow = function(payload,callback) {
 			    receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
 			    receipt.type = 'BUY';
 			    receipt.status = 'IN PROGRESS';
-			    console.log(receipt);
 			    ReceiptQuery.createReceipt(receipt, function(err, result) {
 			        if (err)
 			            callback('ERROR', result.message);
@@ -183,7 +174,7 @@ exports.buyFlow = function(payload,callback) {
 			
 		},
 		function(balance,receipt, callback) {
-			console.log( 'Create History transacction' );
+			console.log( 'Create  transacction money' );
 			var transacction = {};
 			transacction.title = 'Amdocs cafe ';
 			transacction.type = 'MONEY',
@@ -192,12 +183,29 @@ exports.buyFlow = function(payload,callback) {
 			transacction.additionalInfo = receipt.additionalInfo;
 			transacction.operation = 'BUY';
 			transacction.phoneID = receipt.emitter;
-			transacction.description ='Order No ';
+			transacction.description ='Order No '+ orderID;
+			transacctionQuery.createTranssaction(transacction, function(err, result) {
+				if (err)
+					console.log('Error to create transacction');
+				else{
+					console.log(result);
+				}
+			});
+			console.log( 'Create  transacction DOX' );
+			var transacction = {};
+			transacction.title = 'Amdocs cafe ';
+			transacction.type = 'DOX',
+			transacction.date = dateTime;
+			transacction.amount = config.doxs.p2p;
+			transacction.additionalInfo = receipt.additionalInfo;
+			transacction.operation = 'BUY';
+			transacction.phoneID = receipt.emitter;
+			transacction.description ='Order No '+ orderID;
 			transacctionQuery.createTranssaction(transacction, function(err, result) {
 				if (err)
 					callback('ERROR', err);
 				else{
-					console.log('Creando transacction');
+					console.log(result);
 					callback(null, balance);
 				}
 			});

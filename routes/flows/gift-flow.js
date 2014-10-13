@@ -71,7 +71,6 @@ exports.sendGift = function(payload,callback) {
 		},
 
 		function(sessionid,currentMoney, callback){
-
 			var requestBalance = { sessionid: sessionid, type: 3 };
 			var request = { balanceRequest: requestBalance };
 			console.log(request);
@@ -155,7 +154,8 @@ exports.sendGift = function(payload,callback) {
 		},
 
 		function(balance,receipt, callback) {
-			console.log( 'Create History transacction' );
+			console.log( 'Create  transacction Money' );
+			var receiver;
 			var transacction = {};
 			transacction.title = 'GIFT';
 			transacction.type = 'MONEY',
@@ -166,12 +166,29 @@ exports.sendGift = function(payload,callback) {
 			transacction.phoneID = receipt.emitter;
 			Userquery.findAppID(receipt.receiver,function(err,result){
 				transacction.description ='To ' + result.name;
+				receiver = result.name;
 				transacctionQuery.createTranssaction(transacction, function(err, result) {
 					if (err)
-						callback('ERROR', err);
+						console.log('Error to create transacction');
 					else{
-						console.log('Creando transacction');
-						callback(null, balance);
+						console.log( 'Create  transacction DOX' );
+						var transacction = {};
+						transacction.title = 'GIFT';
+						transacction.type = 'DOX',
+						transacction.date = dateTime;
+						transacction.amount = config.doxs.gift;
+						transacction.additionalInfo = receipt.additionalInfo;
+						transacction.operation = 'GIFT';
+						transacction.phoneID = receipt.emitter;
+						transacction.description ='To ' + receiver;
+						transacctionQuery.createTranssaction(transacction, function(err, result) {
+							if (err)
+								callback('ERROR', err);
+							else{
+								console.log(result);
+								callback(null, balance);
+							}
+						});
 					}
 				});
 			});

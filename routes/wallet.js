@@ -77,7 +77,6 @@ exports.balance = function(request, callback) {
             if(err && result === undefined)
                 callback( 'ERROR', err.message = 'Internal Server Error' );
             else {
-                console.log(result);
                 var response = result.balanceReturn;
                 callback(null, response);
             }
@@ -99,7 +98,6 @@ exports.getBalance = function(req, res) {
 
 exports.buyFlow = function(req, res){
   console.log('execute POST method buyFlow');
-  console.log(req.body);
   console.log(req.headers['x-auth-token']);
   var json = req.body;
   json['sessionid']= req.headers['x-auth-token'];
@@ -135,13 +133,12 @@ exports.transferFunds = function(req, res) {
             callback(null, result);
         });
       },
-
-      function(resultBalance, callback){
+      /*function(resultBalance, callback){
         doxsService.saveDoxs(payloadoxs, function(err, result){
           console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
           callback(null, resultBalance);
         });
-      },
+      },*/
 
     ], function (err, result) {
       if(err){
