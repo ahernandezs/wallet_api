@@ -11,7 +11,7 @@ exports.createMessage = function(message, callback) {
 
 exports.getMessages = function(phoneID, callback) {
     console.log( 'Getting NOREAD messages  : ' + phoneID);
-    Message.find({ 'phoneID': phoneID }, ' title type message status additionalInfo', function (err, msgs) {
+    Message.find({ 'phoneID': phoneID }, ' title type message status additionalInfo date',{sort: {date: -1}}, function (err, msgs) {
         if (err) callback('ERROR', err);
         else if(msgs){
           callback(null, msgs);
@@ -41,7 +41,7 @@ exports.updateMessage = function(message,callback){
 
 exports.getMessagesNoRead = function(phoneID, callback) {
     console.log( 'Getting NOREAD messages  : ' + phoneID);
-    Message.find({ 'phoneID': phoneID , 'status' :'NOTREAD' }, ' title type message status additionalInfo', function (err, msgs) {
+    Message.find({ 'phoneID': phoneID , 'status' :'NOTREAD' }, ' title type message status additionalInfo date', function (err, msgs) {
         if (err) callback('ERROR', err);
         else if(msgs){
           callback(null, msgs);

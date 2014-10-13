@@ -23,7 +23,7 @@ exports.getTransacctions = function(phoneIDToSearch, callback) {
 
 exports.getTransacctionsDox = function(phoneIDToSearch, callback) {
     console.log( 'Get Transacctions DOX' );
-    transacction.find({phoneID:phoneIDToSearch, type:'DOX'}, 'title description amount date',{sort: {date: 1}}, function(err, transacction)  {
+    transacction.find({phoneID:phoneIDToSearch, type:'DOX'}, 'title description amount date',{sort: {date: -1}}, function(err, transacction)  {
         var response;
         if (err) {
             response = { statusCode: 1, additionalInfo: err };
