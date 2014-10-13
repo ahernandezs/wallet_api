@@ -200,3 +200,13 @@ exports.doxInfo = function(req, res) {
             res.json( {statusCode : 0, additionalInfo: result} );
     });
 };
+
+exports.updateReceipt = function(req, res){
+    console.log('PUT method updateReceipt');
+    receipt.updateReceipt(req.body, function(err, result){
+        if (err)
+            res.json( {statusCode : 1, message: result} );
+        else
+            res.json( {statusCode : 0, additionalInfo: result} );
+    });
+}
