@@ -18,7 +18,7 @@ exports.getCredentials = function(sessionid, callback) {
             callback( 'ERROR', { message: 'Something went wrong' } );
             console.log(err.message);
         } else if (credentials === null)
-            callback( 'ERROR', { message: 'No credentials for that token' } );
+            callback( 'ERROR', { statusCode : 1, message: 'No credentials for that token' } );
         else
             callback(null, { data: credentials });
     });

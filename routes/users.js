@@ -17,11 +17,12 @@ exports.login =  function(req, res, callback){
         res.setHeader('X-AUTH-TOKEN', result.sessionid);
         delete result.sessionid;
       }
-      if (callback){
+      if (req.body.continue === undefined)
+          res.json(result);
+      else {
           result.token = token;
-          res.json(result);}
-      else
           callback(result);
+      }
   });
 };
 
@@ -176,9 +177,10 @@ exports.regenerate = function(req, res, callback) {
     request.sessionid = req.headers['x-auth-token'];
     request.type = 1;
     sessionUser.regenerate(request, res, function(err, result) {
-        if (err === 'ERROR')
-            callback('ERROR', { error: result });
-        else if (err !== 'STOP')
+        if (err === 'ERROR') {
+            console.log(result);
+            callback('ERROR', result);
+        } else if (err !== 'STOP')
             callback(null, result);
         else
             callback(null, result);

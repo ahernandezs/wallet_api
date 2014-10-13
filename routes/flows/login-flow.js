@@ -211,7 +211,7 @@ exports.regenerate = function(request, res, callback) {
                 });
         },
         function(info, callback) {
-            info.body = { 'phoneID' : info.phoneID, 'pin' : info.pin };
+            info.body = { 'phoneID' : info.phoneID, 'pin' : info.pin, 'continue' : true };
             user.login(info, res, function(result) {
                 if (result.statusCode != 0)
                     callback('ERROR', result.message);
