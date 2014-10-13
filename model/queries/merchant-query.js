@@ -8,14 +8,11 @@ exports.getMerchanByID = function(merchantID, callback) {
         if (err) {
             response = { statusCode: 1, additionalInfo: config.merchants.errMsg };
             callback("ERROR: " + err.message, response);
-            console.log(err.message);
         } else if (merchant.length === 0) {
             response = { statusCode: 0, additionalInfo: config.merchants.emptyMsg }
             callback(null, response);
-            console.log(config.loans.emptyMsg);
         } else {
             console.log('return merchant');
-            console.log(merchant);
             callback(null, merchant[0]);
         }
     });

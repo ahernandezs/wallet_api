@@ -28,8 +28,6 @@ exports.singlePush = function(req, callback) {
 		}
 
 		payload['audience'] = deviceID;
-
-		console.log(JSON.stringify(payload));
 		ua.pushNotification('/api/push', payload, function(error) {
 			if (error) {
 				console.log('Error to send notification' + error);

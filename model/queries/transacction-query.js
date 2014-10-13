@@ -21,9 +21,9 @@ exports.getTransacctions = function(phoneIDToSearch, callback) {
     });
 };
 
-exports.getTransacctionsDox = function(sessionid, callback) {
+exports.getTransacctionsDox = function(phoneIDToSearch, callback) {
     console.log( 'Get Transacctions DOX' );
-    transacction.find({type:'DOX'}, 'title amount date', function(err, transacction)  {
+    transacction.find({phoneID:phoneIDToSearch, type:'DOX'}, 'title description amount date',{sort: {date: 1}}, function(err, transacction)  {
         var response;
         if (err) {
             response = { statusCode: 1, additionalInfo: err };
@@ -42,7 +42,6 @@ exports.getTransacctionsDox = function(sessionid, callback) {
 exports.createTranssaction = function(data, callback) {
     console.log('Save transacction');
     var newTransacction = new transacction(data);
-    console.log(newTransacction);
     var result = newTransacction.save(function(err) {
         if (err) return 1;
         return 0;
