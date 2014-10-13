@@ -76,7 +76,7 @@ app.post('/api/buyflow', interceptorHeader, wallet.buyFlow);
 app.get('/api/users', interceptorHeader, user.getUsers);
 app.post('/api/transferFunds', interceptorHeader, wallet.transferFunds);
 app.post('/api/gift', interceptorHeader, wallet.sendGift);
-app.post('/api/senddoxs', interceptorHeader, wallet.senddoxs);
+app.post('/api/activity', interceptorHeader, wallet.activity);
 app.get('/api/messages', interceptorHeader, message.getMessages);
 app.put('/api/message', interceptorHeader,  message.updateMessage);
 app.get('/api/transacctions', interceptorHeader, transacction.getTransacctionsHistory);
