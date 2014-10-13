@@ -32,6 +32,8 @@ config.messages.loanRequestMsg = 'There are new request loan for € ';
 config.messages.loanRejectedMsg = 'Build up your Dox score to be elegible for a loan';
 config.messages.action = {TRANSFER:1 , GIFT :2 , BUY :3 ,LOAN : 4 };
 
+config.messages.twitter = 'I just bought a coffee !!!!'
+config.messages.facebook ={ name:'I just bought a coffee', caption:'I just bought a coffee', description:'I just bought a coffee', link:'I just bought a coffee',picture:'I just bought a coffee'};
 config.doxs = {};
 config.doxs.p2p = 500;
 config.doxs.gift = 500;

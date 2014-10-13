@@ -50,14 +50,7 @@ exports.buyFlow = function(payload,callback) {
 				});
 			});
 		},
-		/*
-		function(sessionid,callback){
-			console.log('Transfering doxs '+JSON.stringify(transferDoxs));
-			transferFlow.transferFlow({transferRequest: transferDoxs}, function(err,result){
-				console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
-				callback(null,sessionid);
-			});
-		},*/
+
 		function(sessionid,callback){
 			payload['action']='payment';
 			doxsService.saveDoxs(payload, function(err, result){
@@ -142,7 +135,7 @@ exports.buyFlow = function(payload,callback) {
 						var response = result.balanceReturn;
 						if(response.result  === '0' ) {
 							dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') ;
-							var balance = { current : currentMoney , dox : response.current , order : orderID ,  status :'IN PROGRESS' , date:dateTime  } ;
+							var balance = { current : currentMoney , dox : response.current , order : orderID ,  status :'IN PROGRESS' , date:dateTime ,twitter:config.messages.twitter, facebook:config.messages.facebook  } ;
 							response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
 						}
 						else
