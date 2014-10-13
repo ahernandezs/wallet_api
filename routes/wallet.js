@@ -164,8 +164,8 @@ exports.sendGift = function(req, res){
   })
 };
 
-exports.senddoxs = function(req, res){
-  console.log('\n\nExecute POST Send Gift');
+exports.activity = function(req, res){
+  console.log('\n\nExecute POST activity');
   console.log(JSON.stringify(req.body));
   doxsService.saveDoxs(req.body, function(err, result){
     console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
