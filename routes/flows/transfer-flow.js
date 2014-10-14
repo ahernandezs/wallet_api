@@ -205,7 +205,7 @@ exports.transferFunds = function(data, callback) {
                 else
                     console.log('Obteniendo Balance');
                     result.additionalInfo.doxAdded = config.doxs.p2p;
-                    console.log(result.additionalInfo.);
+                    console.log(result.additionalInfo);
                     callback(null,result);
             });
         },
