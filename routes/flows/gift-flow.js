@@ -119,7 +119,30 @@ exports.sendGift = function(payload,callback) {
 				}
 			});
 		},
-
+		function(sessionid,response, callback){
+			Orderquery.putOrder(order, function(err,result){
+				console.log('Order saving result: '+JSON.stringify(result));
+				callback(null, sessionid, response);
+			});
+		},
+        function(sessionid, payload, callback){
+            console.log('Save message in DB');
+            console.log(JSON.stringify(payload));
+            var title = config.messages.giftMsg + payload.amount;
+            var extraData = { action :1, giftID: transid , additionalInfo: payload.additionalInfo };
+            payload.extra = {extra : extraData} ;
+            payload.status = config.messages.status.NOTREAD;
+            payload.type = config.messages.type.TRANSFER;
+            payload.title = title;
+            messageQuery.createMessage(payload, function(err, result) {
+                if (err) {
+                    var response = { statusCode: 1, additionalInfo: result };
+                    callback('ERROR', response);
+                } else {
+                    callback(null, sessionid,payload);
+                }
+            });
+        },
 		function(response,callback) {
 			console.log('sending push');
 			var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
