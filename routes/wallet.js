@@ -178,6 +178,7 @@ exports.getReceipts = function(req, res){
   console.log('\n\nExecute Get receipts');
   sessionToken = req.headers['x-auth-token'];
   sessionQuery.getCredentials(sessionToken,function(err,credential){
+    console.log(credential);
     receipt.getReceipts(credential.data.phoneID, function(err, result){
       if(err) {
         console.log(err);
