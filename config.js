@@ -44,6 +44,9 @@ config.doxs.payment = 500;
 config.doxs.social = 500;
 config.doxs.trivia = 100;
 
+config.prizes = {};
+config.prizes.top = 1;
+
 config.conn = {};
 config.username = 'anzen_01';
 config.pin = '1234';
