@@ -14,9 +14,15 @@ exports.getTransacctionsHistory = function(req,res){
         if(err) {
           res.send(500);
         } else {
-          var response = { total: result.length , date : result[0].date , transacctions: result };
-          console.log(response);
-          res.json(response);
+          if(result && result[0] ){
+            var response = { total: result.length , date : result[0].date , transacctions: result };
+            console.log(response);
+            res.json(response);
+          }else{
+            var empty = [];
+            result.additionalInfo = empty;
+            res.json(result);
+          }
         }
       });
     }
@@ -32,13 +38,19 @@ exports.getTransacctionsDox = function(req,res){
       var response = { statusCode: 1, additionalInfo: result.message };
       res.json(response);
     }else{
-      transacctionQuery.getTransacctionsDox(result.data.phoneID,function(err,result){
+      transacctionQuery.getTransacctions(result.data.phoneID,function(err,result){
         if(err) {
           res.send(500);
         } else {
-          var response = { total: result.length , date : result[0].date , transacctions: result };
-          console.log(response);
-          res.json(response);
+          if(result && result[0] ){ 
+            var response = { total: result.length , date : result[0].date , transacctions: result };
+            console.log(response);
+            res.json(response);
+          }else{
+            var empty = [];
+            result.additionalInfo = empty;
+            res.json(result);
+          }
         }
       });
     }

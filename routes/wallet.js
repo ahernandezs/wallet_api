@@ -184,7 +184,8 @@ exports.getReceipts = function(req, res){
         console.log(err);
         res.send(500);
       } else {
-        res.json(result);
+          var response = { statusCode: 0, additionalInfo: result };
+          res.json(response);
       }
     });
   });
