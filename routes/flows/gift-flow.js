@@ -124,7 +124,7 @@ exports.sendGift = function(payload,callback) {
 			var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
 			var additionalInfo = JSON.stringify({ phoneID: payload.phoneID, name: name.name, avatar: config.S3.url + payload.phoneID +'.png',date:dateTime,message:payload.message});
 			console.log(additionalInfo);
-			var title = 'You have received a coffee gift!';
+			var title = 'You have sent a coffee gift!';
 			var emitter = payload.phoneID;
 			var receiver = payload.beneficiaryPhoneID;
 			var message = payload.message;
