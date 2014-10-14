@@ -111,6 +111,7 @@ exports.transferFunds = function(data, callback) {
             var requestSoap = { sessionid: header.sessionid, to: payload.destiny, amount: payload.amount, type: 1 };
             var request = { transferRequest: requestSoap };
             forReceipt.payload = payload;
+            console.log(request);
             soap.createClient(soapurl, function(err, client) {
                 client.transfer(request, function(err, result) {
                     if (err) {
@@ -128,26 +129,6 @@ exports.transferFunds = function(data, callback) {
                             delete payload.destiny;
                             callback(null, header.sessionid,payload);
                         }
-                    }
-                });
-            });
-        },
-        function(sessionid,payload,callback){
-            var requestSoap = { sessionid:sessionid, to: config.username, amount : config.doxs.p2p , type: 3 };
-            var request = { transferRequest: requestSoap };
-            soap.createClient(soapurl, function(err, client) {
-                client.transfer(request, function(err, result) {
-                    if(err) {
-                        console.log(err);
-                        return new Error(err);
-                    } else {
-                        var response = result.transferReturn;
-                        if(response.result != 0){
-                            var response = { statusCode:1 ,  additionalInfo : result };
-                            callback("ERROR", response);
-                        }
-                        else
-                            callback(null,sessionid,payload);
                     }
                 });
             });
@@ -180,6 +161,7 @@ exports.transferFunds = function(data, callback) {
                 });
             });
         },
+        
         function(sessionid,payload,callback){
             console.log('Save message in DB');
             var title = config.messages.transferMsg + payload.amount;
