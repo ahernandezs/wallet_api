@@ -63,15 +63,16 @@ exports.buyFlow = function(payload,callback) {
 			});
 		},
 
-		function(sessionid, response, callback){
+		function(sessionid, callback){
 			var updateDoxs = {phoneID: payload.phoneID, operation: 'payment'};
 			console.log('Saving doxs in mongo');
 			Userquery.putDoxs(updateDoxs, function(err,result){
-				callback(null,sessionid, response);
+				console.log(sessionid);
+				callback(null,sessionid);
 			});
 		},
 
-		function(sessionid, callback){
+		function(sessionid,callback){
 			console.log('Saving order '+JSON.stringify(order));
 			Orderquery.putOrder(order, function(err,result){
 				orderID = result.order;
@@ -143,7 +144,7 @@ exports.buyFlow = function(payload,callback) {
 						var response = result.balanceReturn;
 						if(response.result  === '0' ) {
 							dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') ;
-							var balance = { current : currentMoney , dox : response.current , order : orderID ,  status :'IN PROGRESS' , date:dateTime ,twitter:config.messages.twitter, facebook:config.messages.facebook  } ;
+							var balance = { current : currentMoney , dox : response.current , doxAdded:config.doxs.p2p , order : orderID ,  status :'IN PROGRESS' , date:dateTime ,twitter:config.messages.twitter, facebook:config.messages.facebook  } ;
 							response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
 						}
 						else

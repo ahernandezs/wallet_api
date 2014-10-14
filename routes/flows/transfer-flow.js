@@ -182,6 +182,7 @@ exports.transferFunds = function(data, callback) {
                     var response = { statusCode: 1, additionalInfo: result };
                     callback('ERROR', response);
                 } else {
+                    payload.message = title;
                     callback(null, sessionid,payload);
                 }
             });
@@ -203,6 +204,7 @@ exports.transferFunds = function(data, callback) {
                 }
                 else
                     console.log('Obteniendo Balance');
+                    console.log(result);
                     callback(null,result);
             });
         },
