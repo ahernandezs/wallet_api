@@ -63,17 +63,16 @@ exports.buyFlow = function(payload,callback) {
 			});
 		},
 
-		function(sessionid, response, callback){
+		function(sessionid, callback){
 			var updateDoxs = {phoneID: payload.phoneID, operation: 'payment'};
 			console.log('Saving doxs in mongo');
 			Userquery.putDoxs(updateDoxs, function(err,result){
 				console.log(sessionid);
-				console.log(response);
-				callback(null,sessionid, response);
+				callback(null,sessionid);
 			});
 		},
 
-		function(sessionid,response,callback){
+		function(sessionid,callback){
 			console.log('Saving order '+JSON.stringify(order));
 			Orderquery.putOrder(order, function(err,result){
 				orderID = result.order;
