@@ -15,7 +15,7 @@ exports.getTransacctionsHistory = function(req,res){
           res.send(500);
         } else {
           if(result && result[0] ){
-            var response = { total: result.length , date : result[0].date , transacctions: result };
+            var response = { statusCode: 0, additionalInfo: result };
             console.log(response);
             res.json(response);
           }else{
@@ -43,7 +43,7 @@ exports.getTransacctionsDox = function(req,res){
           res.send(500);
         } else {
           if(result && result[0] ){ 
-            var response = { total: result.length , date : result[0].date , transacctions: result };
+            var response = { statusCode: 0, additionalInfo: result };
             console.log(response);
             res.json(response);
           }else{
