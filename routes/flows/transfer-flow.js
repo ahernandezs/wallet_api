@@ -101,6 +101,7 @@ exports.transferFunds = function(data, callback) {
     var transid;
     var forReceipt = {};
     var dateTime;
+
     async.waterfall([
         function(callback) {
             console.log('Do transfer in wallet');
@@ -110,6 +111,7 @@ exports.transferFunds = function(data, callback) {
             var requestSoap = { sessionid: header.sessionid, to: payload.destiny, amount: payload.amount, type: 1 };
             var request = { transferRequest: requestSoap };
             forReceipt.payload = payload;
+            console.log(request);
             soap.createClient(soapurl, function(err, client) {
                 client.transfer(request, function(err, result) {
                     if (err) {
@@ -131,45 +133,35 @@ exports.transferFunds = function(data, callback) {
                 });
             });
         },
-        function(sessionid,payload,callback){
-            var requestSoap = { sessionid:sessionid, to: config.username, amount : config.doxs.p2p , type: 3 };
-            var request = { transferRequest: requestSoap };
-            soap.createClient(soapurl, function(err, client) {
-                client.transfer(request, function(err, result) {
-                    if(err) {
-                        console.log(err);
-                        return new Error(err);
-                    } else {
-                        var response = result.transferReturn;
-                        if(response.result != 0){
-                            var response = { statusCode:1 ,  additionalInfo : result };
-                            callback("ERROR", response);
-                        }
-                        else
-                            callback(null,sessionid,payload);
-                    }
-                });
-            });
-        },
+
         function(sessionid,payload,callback){
             console.log('Get sender in db ' +sessionid);
             sessionQuery.getCredentials(sessionid,function(err,user){
                 console.log(user);
                 forReceipt.user = user;
-                Userquery.findAppID(user.data.phoneID,function(err,result){
-                    if (err) {
-                        var response = { statusCode: 1, additionalInfo: result };
-                        callback('ERROR', response);
+                var payloadoxs = {phoneID: user.data.phoneID, action: 'gift', type: 3}
+                doxsService.saveDoxs(payloadoxs, function(err, result){
+                    if(err) {
+                        console.log('ERROR'+ response);
                     } else {
-                        dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-                        payload.additionalInfo = JSON.stringify({transferID : transid , message : payload.message, sender: result.name ,senderImg:  config.S3.url + user.data.phoneID +'.png' , date:dateTime });
-                        payload.date = dateTime;
-                        console.log(payload.extra);
-                        callback(null, sessionid,payload);
-                    }                    
+                        console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
+                        Userquery.findAppID(user.data.phoneID,function(err,result){
+                            if (err) {
+                                var response = { statusCode: 1, additionalInfo: result };
+                                callback('ERROR', response);
+                            } else {
+                                dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+                                payload.additionalInfo = JSON.stringify({transferID : transid , message : payload.message, sender: result.name ,senderImg:  config.S3.url + user.data.phoneID +'.png' , date:dateTime });
+                                payload.date = dateTime;
+                                console.log(payload.extra);
+                                callback(null, sessionid,payload);
+                            }                    
+                        });
+                    }
                 });
             });
         },
+        
         function(sessionid,payload,callback){
             console.log('Save message in DB');
             var title = config.messages.transferMsg + payload.amount;
