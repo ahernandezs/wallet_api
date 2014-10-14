@@ -31,7 +31,7 @@ exports.updateInventory = function(req, res) {
 
 exports.getPrizes = function(req, res){
     console.log('GET method prizes');
-    Prizequery.getPrizes(function(err, result){
+    Prizequery.getPrizes(parseInt(req.query.top), function(err, result){
         res.json(result)
     });
 }
