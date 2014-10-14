@@ -204,7 +204,8 @@ exports.transferFunds = function(data, callback) {
                 }
                 else
                     console.log('Obteniendo Balance');
-                    console.log(result);
+                    result.additionalInfo.doxAdded = config.doxs.p2p;
+                    console.log(result.additionalInfo);
                     callback(null,result);
             });
         },
