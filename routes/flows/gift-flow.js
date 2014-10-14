@@ -104,6 +104,14 @@ exports.sendGift = function(payload,callback) {
 			});
 		},
 
+		function(sessionid, response, callback){
+			var updateDoxs = {phoneID: payload.phoneID, operation: 'gift'};
+			console.log('Saving doxs in mongo');
+			Userquery.putDoxs(updateDoxs, function(err,result){
+				callback(null,sessionid, response);
+			});
+		},
+
 		function(sessionid,response, callback){
 			Orderquery.putOrder(order, function(err,result){
 				console.log('Order saving result: '+JSON.stringify(result));

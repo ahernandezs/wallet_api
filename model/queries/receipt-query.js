@@ -27,3 +27,25 @@ exports.getReceipts = function(phoneID, callback){
       }
   });
 };
+
+exports.updateReceipt = function(payload,callback){
+  var conditions = {_id: payload.id};
+  var payload;
+
+  if(payload.operation.toLowerCase() == 'twitter')
+    payload = {twitter: 1}
+  else if(payload.operation.toLowerCase() == 'facebook')
+    payload = {facebook: 1}
+  else if(payload.operation.toLowerCase() == 'instagram')
+    payload = {instagram: 1}
+
+  Receipt.update(conditions, payload, null, function(err, result) {
+    callback(null, result);
+  });
+};
+
+exports.getIdPhone = function(payload,callback){
+  Receipt.findOne({_id: payload.id},'emitter',function (err, result) {
+    callback(null, result.emitter)
+  });
+};
