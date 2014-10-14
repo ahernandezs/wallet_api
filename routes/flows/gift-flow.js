@@ -8,6 +8,7 @@ var doxsService = require('../../services/doxs-service');
 var ReceiptQuery = require('../../model/queries/receipt-query');
 var transferFlow = require('./transfer-flow');
 var transacctionQuery = require('../../model/queries/transacction-query');
+var messageQuery = require('../../model/queries/message-query');
 var soapurl = process.env.SOAP_URL;
 var config = require('../../config.js');
 
@@ -23,7 +24,6 @@ exports.sendGift = function(payload,callback) {
 	var name;
 
 	async.waterfall([
-
 		function(callback){
 			var payloadBody= payload.body;
 			forReceipt.payload = payloadBody;
@@ -32,7 +32,6 @@ exports.sendGift = function(payload,callback) {
 				callback(null);
 			});
 		},
-
 		function(callback){
 			var requestSoap = { sessionid:payload.sessionid, to: config.username, amount : payload.order.total , type: 1 };
 			var request = { transferRequest: requestSoap };
@@ -47,7 +46,6 @@ exports.sendGift = function(payload,callback) {
 				});
 			});
 		},
-
 		function(sessionid, callback){
 			console.log('balance e-wallet');
 			var  request = { sessionid: sessionid, type: 1  };
@@ -69,8 +67,8 @@ exports.sendGift = function(payload,callback) {
 				});
 			});
 		},
-
 		function(sessionid,currentMoney, callback){
+            console.log("se ahce el orden");
 			Orderquery.putOrder(order, function(err,result){
 				orderID = result.order;
 				console.log('Order saving result: '+JSON.stringify(result));
@@ -108,18 +106,46 @@ exports.sendGift = function(payload,callback) {
 				callback(null,sessionid, response);
 			});
 		},
-
 		function(sessionid, response, callback){
 			doxsService.saveDoxs(payloadoxs, function(err, result){
 				console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
 				if(err) {
 					return new Error(err);
 				} else {
-					callback(null,response);
+					callback(null, sessionid, response);
 				}
 			});
 		},
-
+        function(sessionid, response, callback){
+            Userquery.getIdByPhoneID(payload.phoneID,function(err,result){
+                var id = result._id;
+                callback(null,sessionid,response,id);    
+            });
+        },
+		function(sessionid,response, id, callback){
+			Orderquery.putOrder(order, function(err,result){
+				console.log('Order saving result: '+JSON.stringify(result));
+				callback(null, sessionid, response, result);
+			});
+		},
+        function(sessionid, response, result, callback){
+            console.log('Save message in DB');
+            console.log(JSON.stringify(payload));
+            var title = config.messages.giftMsg;
+            var extraData = { action :1, giftID: result.order , additionalInfo: payload.additionalInfo };
+            payload.extra = {extra : extraData} ;
+            payload.status = config.messages.status.NOTREAD;
+            payload.type = config.messages.type.TRANSFER;
+            payload.title = title;
+            messageQuery.createMessage(payload, function(err, result) {
+                if (err) {
+                    var response = { statusCode: 1, additionalInfo: result };
+                    callback('ERROR', response);
+                } else {
+                    callback(null, payload);
+                }
+            });
+        },
 		function(response,callback) {
 			console.log('sending push');
 			var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
@@ -140,7 +166,6 @@ exports.sendGift = function(payload,callback) {
 				callback(null,response,payload,emitter,receiver,message,additionalInfo);
 			});
 		},
-
 		function(balance,payload,emitter,receiver,message,additionalInfo,callback) {
 			console.log( 'Create Receipt Gift' + message);
 			var receipt = {};

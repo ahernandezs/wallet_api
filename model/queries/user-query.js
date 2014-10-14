@@ -66,6 +66,18 @@ exports.findUserByPhoneID = function(phoneID,callback){
   });
 };
 
+exports.getIdByPhoneID = function(phoneID,callback){
+  console.log('Search user in mongoDB');
+  console.log(phoneID);
+  User.findOne({ 'phoneID': phoneID }, '_id', function (err, person) {
+    if (err) return handleError(err);
+    else if(!person)
+      callback("ERROR", { statusCode: 0 ,  additionalInfo: 'User not  Found' });
+    else
+      callback(null, person);
+  });
+};
+
 exports.getDoxs = function(phoneID, callback){
   User.findOne({ 'phoneID': phoneID }, 'doxs', function (err, person) {
     if (err) return handleError(err);

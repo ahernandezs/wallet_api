@@ -1,4 +1,4 @@
-db = db.getSiblingDB('app28614432'); //mongo kahana.mongohq.com:10056/app28614432 -u carlos -p 123 initDB.js mongo localhost:27017/max initDB.js
+db = db.getSiblingDB('amdocs'); //mongo kahana.mongohq.com:10056/app28614432 -u carlos -p 123 initDB.js mongo localhost:27017/max initDB.js
 db.doxinfos.remove({});
 db.doxinfos.insert({ description: "Completed profile", urlImage : "https://s3-us-west-1.amazonaws.com/amdocs-images/catalog_dox/dox1.png" });
 db.doxinfos.insert({ description: "Invited friend", urlImage : "https://s3-us-west-1.amazonaws.com/amdocs-images/catalog_dox/dox1.png" });
