@@ -158,6 +158,13 @@ exports.sendGift = function(req, res){
   console.log(req.headers['x-auth-token']);
   json['sessionid']= req.headers['x-auth-token'];
   GiftFlow.sendGift(req.body, function(err,result){
+    if(err) {
+      console.log('Error');
+      console.log(err);
+      res.send(500);
+    }
+    console.log('Finish Gift');
+    console.log(result);
     if(result.statusCode === 0){
       res.setHeader('X-AUTH-TOKEN', result.sessionid);
       delete result.sessionid;
