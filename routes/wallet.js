@@ -10,7 +10,9 @@ var doxsService = require('../services/doxs-service');
 var receipt = require('../model/queries/receipt-query');
 var sessionQuery = require('../model/queries/session-query');
 var doxInfoQuery = require('../model/queries/catalog-query');
+var Userquery = require('../model/queries/user-query');
 var soapurl = process.env.SOAP_URL;
+var config = require('../config.js');
 
 exports.sell =  function(req, res){
   console.log('execute POST method sell');
@@ -203,10 +205,54 @@ exports.doxInfo = function(req, res) {
 
 exports.updateReceipt = function(req, res){
     console.log('PUT method updateReceipt');
-    receipt.updateReceipt(req.body, function(err, result){
-        if (err)
-            res.json( {statusCode : 1, message: result} );
-        else
-            res.json( {statusCode : 0, additionalInfo: result} );
+
+    async.waterfall([
+
+      //getting the idPhone with the receipt's id
+      function(callback){
+        receipt.getIdPhone(req.body, function(err, response){
+            console.log('phone id: '+response);
+            var phoneId = response
+            callback(null, phoneId);
+        });
+      },
+
+      //transfer doxs
+      function(phoneId, callback){
+        var payloadoxs = {phoneID: phoneId, action: req.body.operation, type: 3}
+        console.log(payloadoxs);
+        doxsService.saveDoxs(payloadoxs, function(err, result){
+          console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
+          if(err) {
+            return new Error(err);
+          } else {
+            callback(null, phoneId);
+          }
+        });
+      },
+
+      //saving doxs in mongo
+      function(phoneId, callback){
+        var updateDoxs = {phoneID: phoneId, operation: req.operation};
+        Userquery.putDoxs(updateDoxs, function(err,result){
+          callback(null,phoneId);
+        });
+      },
+
+      //change status of receipt
+      function(res, callback){
+        receipt.updateReceipt(req.body, function(err, result){
+            console.log(result);
+            callback(null, result);
+        });
+      },
+
+    ], function (err, result) {
+      if(err){
+        callback("Error! "+err,result);
+      }else{
+        res.json(result);
+      }
     });
+
 }

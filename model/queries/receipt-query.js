@@ -42,5 +42,10 @@ exports.updateReceipt = function(payload,callback){
   Receipt.update(conditions, payload, null, function(err, result) {
     callback(null, result);
   });
+};
 
+exports.getIdPhone = function(payload,callback){
+  Receipt.findOne({_id: payload.id},'emitter',function (err, result) {
+    callback(null, result.emitter)
+  });
 };

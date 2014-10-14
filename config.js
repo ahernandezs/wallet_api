@@ -43,6 +43,9 @@ config.doxs.linking = 100;
 config.doxs.payment = 500;
 config.doxs.social = 500;
 config.doxs.trivia = 100;
+config.doxs.twitter = 500;
+config.doxs.facebook = 500;
+config.doxs.instagram = 500;
 
 config.prizes = {};
 config.prizes.top = 1;
