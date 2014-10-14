@@ -109,7 +109,7 @@ exports.confirmPin = function(phoneID, callback){
 };
 
 exports.getUsers = function(callback){
-  User.find({}, 'phoneID name email', function (err, people) {
+  User.find({}, 'phoneID name email lastSession', { sort : { lastSession : -1 }}, function (err, people) {
     if (err) return handleError(err);
     else if(people){
       callback(null, people);
