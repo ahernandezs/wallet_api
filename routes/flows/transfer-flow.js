@@ -101,6 +101,7 @@ exports.transferFunds = function(data, callback) {
     var transid;
     var forReceipt = {};
     var dateTime;
+
     async.waterfall([
         function(callback) {
             console.log('Do transfer in wallet');
@@ -151,22 +152,31 @@ exports.transferFunds = function(data, callback) {
                 });
             });
         },
+
         function(sessionid,payload,callback){
             console.log('Get sender in db ' +sessionid);
             sessionQuery.getCredentials(sessionid,function(err,user){
                 console.log(user);
                 forReceipt.user = user;
-                Userquery.findAppID(user.data.phoneID,function(err,result){
-                    if (err) {
-                        var response = { statusCode: 1, additionalInfo: result };
-                        callback('ERROR', response);
+                var payloadoxs = {phoneID: user.data.phoneID, action: 'gift', type: 3}
+                doxsService.saveDoxs(payloadoxs, function(err, result){
+                    if(err) {
+                        console.log('ERROR'+ response);
                     } else {
-                        dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-                        payload.additionalInfo = JSON.stringify({transferID : transid , message : payload.message, sender: result.name ,senderImg:  config.S3.url + user.data.phoneID +'.png' , date:dateTime });
-                        payload.date = dateTime;
-                        console.log(payload.extra);
-                        callback(null, sessionid,payload);
-                    }                    
+                        console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
+                        Userquery.findAppID(user.data.phoneID,function(err,result){
+                            if (err) {
+                                var response = { statusCode: 1, additionalInfo: result };
+                                callback('ERROR', response);
+                            } else {
+                                dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+                                payload.additionalInfo = JSON.stringify({transferID : transid , message : payload.message, sender: result.name ,senderImg:  config.S3.url + user.data.phoneID +'.png' , date:dateTime });
+                                payload.date = dateTime;
+                                console.log(payload.extra);
+                                callback(null, sessionid,payload);
+                            }                    
+                        });
+                    }
                 });
             });
         },

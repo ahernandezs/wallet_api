@@ -34,6 +34,17 @@ exports.sendGift = function(payload,callback) {
 		},
 
 		function(callback){
+			doxsService.saveDoxs(payloadoxs, function(err, result){
+				console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
+				if(err) {
+					return new Error(err);
+				} else {
+					callback(null);
+				}
+			});
+		},
+
+		function(callback){
 			var requestSoap = { sessionid:payload.sessionid, to: config.username, amount : payload.order.total , type: 1 };
 			var request = { transferRequest: requestSoap };
 			soap.createClient(soapurl, function(err, client) {
@@ -90,17 +101,6 @@ exports.sendGift = function(payload,callback) {
 						callback(null,sessionid,response);
 					}
 				});
-			});
-		},
-
-		function(sessionid, response, callback){
-			doxsService.saveDoxs(payloadoxs, function(err, result){
-				console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
-				if(err) {
-					return new Error(err);
-				} else {
-					callback(null,sessionid, response);
-				}
 			});
 		},
 
