@@ -144,7 +144,7 @@ exports.buyFlow = function(payload,callback) {
 						var response = result.balanceReturn;
 						if(response.result  === '0' ) {
 							dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') ;
-							var balance = { current : currentMoney , dox : response.current , doxAdded:config.dox.p2p , order : orderID ,  status :'IN PROGRESS' , date:dateTime ,twitter:config.messages.twitter, facebook:config.messages.facebook  } ;
+							var balance = { current : currentMoney , dox : response.current , doxAdded:config.doxs.p2p , order : orderID ,  status :'IN PROGRESS' , date:dateTime ,twitter:config.messages.twitter, facebook:config.messages.facebook  } ;
 							response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
 						}
 						else

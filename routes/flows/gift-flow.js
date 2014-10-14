@@ -74,7 +74,7 @@ exports.sendGift = function(payload,callback) {
 			Orderquery.putOrder(order, function(err,result){
 				orderID = result.order;
 				console.log('Order saving result: '+JSON.stringify(result));
-				callback(null,sessinid,currentMoney);
+				callback(null,sessionid,currentMoney);
 			});
 		},
 
