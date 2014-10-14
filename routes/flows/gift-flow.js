@@ -71,6 +71,14 @@ exports.sendGift = function(payload,callback) {
 		},
 
 		function(sessionid,currentMoney, callback){
+			Orderquery.putOrder(order, function(err,result){
+				orderID = result.order;
+				console.log('Order saving result: '+JSON.stringify(result));
+				callback(null,sessinid,currentMoney);
+			});
+		},
+
+		function(sessionid,currentMoney, callback){
 			var requestBalance = { sessionid: sessionid, type: 3 };
 			var request = { balanceRequest: requestBalance };
 			console.log(request);
@@ -82,7 +90,7 @@ exports.sendGift = function(payload,callback) {
 						var response = result.balanceReturn;
 						if(response.result  === '0' ) {
 							dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-							var balance = { current : currentMoney , dox : response.current , order : Math.floor((Math.random() * (1000 - 100) + 100 )) ,  status :'IN PROGRESS' , date: dateTime } ;
+							var balance = { current : currentMoney , dox : response.current , doxAdded:config.dox.gift,  order : orderID ,  status :'IN PROGRESS' , date: dateTime } ;
 							response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
 						}else{
 							var response = { statusCode:1 ,  additionalInfo : response };
@@ -107,15 +115,8 @@ exports.sendGift = function(payload,callback) {
 				if(err) {
 					return new Error(err);
 				} else {
-					callback(null,sessionid, response);
+					callback(null,response);
 				}
-			});
-		},
-
-		function(sessionid,response, callback){
-			Orderquery.putOrder(order, function(err,result){
-				console.log('Order saving result: '+JSON.stringify(result));
-				callback(null,response);
 			});
 		},
 

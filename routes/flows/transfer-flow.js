@@ -203,6 +203,7 @@ exports.transferFunds = function(data, callback) {
                 }
                 else
                     console.log('Obteniendo Balance');
+                    console.log(result);
                     callback(null,result);
             });
         },
