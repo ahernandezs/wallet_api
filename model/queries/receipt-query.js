@@ -49,3 +49,11 @@ exports.getIdPhone = function(payload,callback){
     callback(null, result.emitter)
   });
 };
+
+exports.updateReceiptStatus = function(payload,callback){
+  var conditions = {_id: payload.id};
+  var payload = {status: payload.status};
+  Receipt.update(conditions, payload, null, function(err, result) {
+    callback(null, result);
+  });
+};
