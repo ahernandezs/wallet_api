@@ -38,7 +38,7 @@ exports.getTransacctionsDox = function(req,res){
       var response = { statusCode: 1, additionalInfo: result.message };
       res.json(response);
     }else{
-      transacctionQuery.getTransacctions(result.data.phoneID,function(err,result){
+      transacctionQuery.getTransacctionsDox(result.data.phoneID,function(err,result){
         if(err) {
           res.send(500);
         } else {
