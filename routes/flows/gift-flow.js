@@ -25,6 +25,7 @@ exports.sendGift = function(payload,callback) {
 
 	async.waterfall([
 		function(callback){
+			dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
 			var payloadBody= payload.body;
 			forReceipt.payload = payloadBody;
 			Userquery.getName(payload.phoneID, function(err, resp) {
@@ -68,8 +69,7 @@ exports.sendGift = function(payload,callback) {
 			});
 		},
 		function(sessionid,currentMoney, callback){
-            console.log("se ahce el orden");
-			Orderquery.putOrder(order, function(err,result){
+				Orderquery.putOrder(order, function(err,result){
 				orderID = result.order;
 				console.log('Order saving result: '+JSON.stringify(result));
 				callback(null,sessionid,currentMoney);
@@ -130,40 +130,39 @@ exports.sendGift = function(payload,callback) {
 		},
         function(sessionid, response, result, callback){
             console.log('Save message in DB');
-            console.log(JSON.stringify(payload));
             var title = config.messages.giftMsg;
             var extraData = { action :1, giftID: result.order , additionalInfo: payload.additionalInfo };
             payload.extra = {extra : extraData} ;
             payload.status = config.messages.status.NOTREAD;
-            payload.type = config.messages.type.TRANSFER;
+            payload.type = config.messages.type.GIFT;
             payload.title = title;
+            payload.date = dateTime;
+            payload.additionalInfo = JSON.stringify( { phoneID: payload.phoneID, name: name.name, avatar: config.S3.url + payload.phoneID +'.png', order:orderID, date:dateTime,message:payload.message});
+            console.log('After'+JSON.stringify(payload));
             messageQuery.createMessage(payload, function(err, result) {
                 if (err) {
-                    var response = { statusCode: 1, additionalInfo: result };
-                    callback('ERROR', response);
+                    callback('ERROR', { statusCode: 1, additionalInfo: result });
                 } else {
-                    callback(null, payload);
+                    callback(null, response);
                 }
             });
         },
 		function(response,callback) {
 			console.log('sending push');
-			var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-			var additionalInfo = { phoneID: payload.phoneID, name: name.name, avatar: config.S3.url + payload.phoneID +'.png',date:dateTime,message:payload.message};
-			console.log(additionalInfo);
+			//var additionalInfo = { phoneID: payload.phoneID, name: name.name, avatar: config.S3.url + payload.phoneID +'.png', order:orderID, date:dateTime,message:payload.message};
+			//console.log(additionalInfo);
 			var title = 'You have received a coffee gift!';
 			var emitter = payload.phoneID;
 			var receiver = payload.beneficiaryPhoneID;
 			var message = payload.message;
 			payload.message = title;
-			var extraData = { action :2,additionalInfo:JSON.stringify(additionalInfo)};
+			var extraData = { action :2,additionalInfo:JSON.stringify(payload.additionalInfo)};
 			payload.extra = {extra : extraData} ;
 			payload.phoneID = payload.beneficiaryPhoneID;
 			delete payload.beneficiaryPhoneID;
 			console.log(payload);
 			urbanService.singlePush(payload, function(err, result) {
-				console.log('Pushing result: '+JSON.stringify(result));
-				callback(null,response,payload,emitter,receiver,message,additionalInfo);
+				callback(null,response,payload,emitter,receiver,message,payload.additionalInfo);
 			});
 		},
 		function(balance,payload,emitter,receiver,message,additionalInfo,callback) {
@@ -232,6 +231,8 @@ exports.sendGift = function(payload,callback) {
 			if(err){
 				callback("Error! "+err,result);
 			}else{
+				console.log('waterfall');
+				console.log(result);
 				callback(null,result);
 			}
 		});

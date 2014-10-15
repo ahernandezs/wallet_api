@@ -16,8 +16,15 @@ exports.getMessages = function(req, res) {
             if(err) {
                 res.send(500);
             } else {
-                console.log(result);
-                res.json(result);
+                  if(result && result[0] ){
+                    var response = { statusCode: 0, additionalInfo: result };
+                    console.log(response);
+                    res.json(response);
+                  }else{
+                    var empty = [];
+                    var response = { statusCode: 0, additionalInfo: result };
+                    res.json(response);
+                  }
             }
         });
     });

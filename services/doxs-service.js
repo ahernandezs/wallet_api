@@ -1,4 +1,3 @@
-var async = require('async');
 var soap = require('soap');
 var transferFlow = require('../routes/flows/transfer-flow');
 var config = require('../config.js');

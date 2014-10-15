@@ -14,6 +14,7 @@ exports.getMessages = function(phoneID, callback) {
     Message.find({ 'phoneID': phoneID }, ' title type message status additionalInfo date',{sort: {date: -1}}, function (err, msgs) {
         if (err) callback('ERROR', err);
         else if(msgs){
+          console.log(msgs);
           callback(null, msgs);
       }
       else{
