@@ -138,8 +138,11 @@ exports.sendGift = function(payload,callback) {
             payload.title = title;
             payload.date = dateTime;
             payload.additionalInfo = JSON.stringify( { phoneID: payload.phoneID, name: name.name, avatar: config.S3.url + payload.phoneID +'.png', order:orderID, date:dateTime,message:payload.message});
-            console.log('After'+JSON.stringify(payload));
-            messageQuery.createMessage(payload, function(err, result) {
+
+            var payloadMessage = payload;
+            payloadMessage.phoneID = payload.beneficiaryPhoneID;
+
+            messageQuery.createMessage(payloadMessage, function(err, result) {
                 if (err) {
                     callback('ERROR', { statusCode: 1, additionalInfo: result });
                 } else {
