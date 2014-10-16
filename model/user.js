@@ -15,7 +15,8 @@ var userSchema = new Schema({
 	doxs:Number ,
 	OS : String,
     lastSession : String,
-    environment :String
+    environment :String ,
+    profileCompleted : Number
 });
 
 module.exports = mongoose.model('User', userSchema);

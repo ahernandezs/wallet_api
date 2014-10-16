@@ -85,6 +85,7 @@ exports.registerFlow = function(payload,callback) {
       });
       },
     function(sessionid, callback){
+      payload.profileCompleted = 0;
       console.log('Register in Mongo ' + sessionid);
       Userquery.createUser(payload,function(err,result){
           if (err) return handleError(err);

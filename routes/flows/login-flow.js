@@ -25,6 +25,7 @@ exports.loginFlow = function(payload,callback) {
             info.email = person.email;
             info.company = person.company;
             info.name = person.name;
+            info.profileCompleted = person.profileCompleted;
             callback(null);
           } else{
             var response = { statusCode:1 ,  additionalInfo : 'INVALID PIN' };
