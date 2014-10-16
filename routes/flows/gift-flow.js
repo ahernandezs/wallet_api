@@ -138,7 +138,27 @@ exports.sendGift = function(payload,callback) {
             payload.type = config.messages.type.GIFT;
             payload.title = title;
             payload.date = dateTime;
-            payload.additionalInfo = JSON.stringify( { phoneID: payload.phoneID, name: name.name, avatar: config.S3.url + payload.phoneID +'.png', order:orderID, date:dateTime,message:payload.message});
+            payload.additionalInfo = JSON.stringify( {
+											phoneID: payload.phoneID,
+											date: dateTime,
+											name: name.name,
+											avatar: config.S3.url + payload.phoneID +'.png',
+											message: payload.message
+											product : "https://s3-us-west-1.amazonaws.com/amdocs-images/products/frapuccino.jpg",
+											order: orderID,
+											status: config.messages.status.NOTREAD,
+											facebook:{
+												caption: "I just bought a coffee",
+												description : "I just bought a coffee",
+												link: "http://goo.gl/IRbh4z",
+												name: "I just bought a coffee",
+												picture: "https://s3-us-west-1.amazonaws.com/amdocs-images/products/black.jpg",
+											},
+											twitter:{
+												message: "I just bought a coffee !!!!",
+												url: "http://goo.gl/IRbh4z",
+											},
+										});
 
             var payloadMessage = payload;
             payloadMessage.phoneID = payload.beneficiaryPhoneID;
