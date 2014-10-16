@@ -231,7 +231,7 @@ exports.transferFunds = function(data, callback) {
             });
         },
         function(balance,receipt, callback) {
-            console.log( 'Create History transacction' );
+            console.log( 'Create History transaction for emitter' );
             var transacction = {};
             transacction.title = 'Transfer Fund ';
             transacction.type = 'MONEY',
@@ -270,11 +270,33 @@ exports.transferFunds = function(data, callback) {
                         callback('ERROR', err);
                     else{
                         console.log('Transacction Created');
-                        callback(null, balance);
+                        callback(null, balance, receipt);
                     }
                 });
             });
         },
+        function(balance, receipt) {
+            console.log( 'Create History transaction for receiver' );
+            var transaction = {};
+            transaction.title = 'Transfer Fund';
+            transaction.type = 'MONEY';
+            transaction.date = dateTime;
+            transaction.amount = receipt.amount;
+            transaction.additionalInfo = receipt.additionalInfo;
+            transaction.operation = 'TRANSFER';
+            transaction.phoneID = receipt.receiver;
+            Userquery.findAppID(receipt.emitter, function(err, result) {
+                transaction.description = 'From ' + result.name;
+                transacctionQuery.createTranssaction(transaction, function(err, result) {
+                    if (err)
+                        callback('ERROR', err);
+                    else {
+                        console.log( 'Transaction created for receiver' );
+                        callback(null, balance);
+                    }
+                });
+            });
+        }
     ], function(err, result) {
         if (err) 
             callback(err, result);
