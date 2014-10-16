@@ -13,7 +13,6 @@ var soapurl = process.env.SOAP_URL;
 var config = require('../../config.js');
 
 exports.sendGift = function(payload,callback) {
-
 	var order = payload.order;
 	var dateTime;
 	var forReceipt = {};
@@ -22,6 +21,8 @@ exports.sendGift = function(payload,callback) {
 	var id;
 	var response;
 	var name;
+    var emitter = payload.phoneID;
+    var receiver = payload.beneficiaryPhoneID;
 
 	async.waterfall([
 		function(callback){
@@ -155,15 +156,12 @@ exports.sendGift = function(payload,callback) {
 			//var additionalInfo = { phoneID: payload.phoneID, name: name.name, avatar: config.S3.url + payload.phoneID +'.png', order:orderID, date:dateTime,message:payload.message};
 			//console.log(additionalInfo);
 			var title = 'You have received a coffee gift!';
-			var emitter = payload.phoneID;
-			var receiver = payload.beneficiaryPhoneID;
 			var message = payload.message;
 			payload.message = title;
 			var extraData = { action :2,additionalInfo:JSON.stringify(payload.additionalInfo)};
 			payload.extra = {extra : extraData} ;
 			payload.phoneID = payload.beneficiaryPhoneID;
 			delete payload.beneficiaryPhoneID;
-			console.log(payload);
 			urbanService.singlePush(payload, function(err, result) {
 				callback(null,response,payload,emitter,receiver,message,payload.additionalInfo);
 			});
@@ -199,7 +197,7 @@ exports.sendGift = function(payload,callback) {
 			transacction.amount = (-1) * receipt.amount;
 			transacction.additionalInfo = receipt.additionalInfo;
 			transacction.operation = 'GIFT';
-			transacction.phoneID = receipt.emitter;
+			transacction.phoneID = emitter;
 			Userquery.findAppID(receipt.receiver,function(err,result){
 				transacction.description ='To ' + result.name;
 				receiver = result.name;
@@ -215,21 +213,42 @@ exports.sendGift = function(payload,callback) {
 						transacction.amount = config.doxs.gift;
 						transacction.additionalInfo = receipt.additionalInfo;
 						transacction.operation = 'GIFT';
-						transacction.phoneID = receipt.emitter;
+						transacction.phoneID = emitter;
 						transacction.description ='To ' + receiver;
 						transacctionQuery.createTranssaction(transacction, function(err, result) {
 							if (err)
 								callback('ERROR', err);
 							else{
 								console.log(result);
-								callback(null, balance);
+								callback(null, balance, receipt);
 							}
 						});
 					}
 				});
 			});
 		},
-
+        function(balance,receipt, callback) {
+			console.log( 'Create transaction for receiver' );
+			var transacction = {};
+			transacction.title = 'GIFT';
+			transacction.type = 'MONEY',
+			transacction.date = dateTime;
+			transacction.amount = receipt.amount;
+			transacction.additionalInfo = receipt.additionalInfo;
+			transacction.operation = 'GIFT';
+			transacction.phoneID = receiver;
+			Userquery.findAppID(emitter,function(err,result){
+				transacction.description ='From ' + result.name;
+				transacctionQuery.createTranssaction(transacction, function(err, result) {
+					if (err)
+						console.log('Error to create transacction');
+					else{
+						console.log( 'Created transaction' );
+                        callback(null, balance);
+					}
+				});
+			});
+		}
 		], function (err, result) {
 			if(err){
 				callback("Error! "+err,result);
