@@ -1,6 +1,5 @@
-var mongoose = require('mongoose');
-var Product = require('../model/merchant');
 var Orderquery = require('../model/queries/order-query');
+var merchantQuery = require('../model/queries/order-query');
 var soap = require('soap');
 var soapurl = process.env.SOAP_URL;
 
@@ -39,9 +38,22 @@ exports.updateOrder = function(req, res){
 };
 
 exports.getOrders = function(req, res) {
-    console.log( 'POST method getOrders' );
+    console.log( 'execute POST method getOrders' );
     console.log( req.body );
     Orderquery.getOrders(req.body.merchantID, function(err, result) {
         res.json(result);
     });
+};
+
+exports.register = function(req, res) {
+  console.log( 'execute POST method updateMerchant' );
+  console.log( req.body );
+  merchantQuery.update(req , function(err,result){
+    if(err) {
+      res.send(500);
+    } else {
+      console.log(result);
+      res.json(result);
+    }
+  });
 };
