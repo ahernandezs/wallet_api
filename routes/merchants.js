@@ -1,5 +1,5 @@
 var Orderquery = require('../model/queries/order-query');
-var merchantQuery = require('../model/queries/order-query');
+var merchantQuery = require('../model/queries/merchant-query');
 var soap = require('soap');
 var soapurl = process.env.SOAP_URL;
 
@@ -48,7 +48,7 @@ exports.getOrders = function(req, res) {
 exports.register = function(req, res) {
   console.log( 'execute POST method updateMerchant' );
   console.log( req.body );
-  merchantQuery.update(req , function(err,result){
+  merchantQuery.updateMerchanByID(req.body , function(err,result){
     if(err) {
       res.send(500);
     } else {
