@@ -1,5 +1,6 @@
 var UserQuery = require('../model/queries/user-query');
 var UA = require('urban-airship');
+console.log('CREANDO SERVICIO DE NOTIFICACIÓN');
 var ua = new UA('eHiXHtSFTYK4aaWcTAnehQ', 'nv8zr5nTS0imBwWE7a3H4Q', 'nv8zr5nTS0imBwWE7a3H4Q');
 
 exports.singlePush = function(req, callback) {
