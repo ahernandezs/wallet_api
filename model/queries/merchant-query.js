@@ -23,7 +23,7 @@ exports.updateMerchanByID = function(payload, callback) {
     var conditions ={ id : payload.id};
     var payload = payload;
     Merchant.update(conditions, payload, null, function(err, result) {
-        if (err) callback("ERROR", { statusCode: 1,  message: 'Update Fail' });
-        callback(null, { statusCode: 0 ,  additionalInfo: result });
+        if (err) callback("ERROR", { statusCode: 1,  message: 'register failed' });
+        callback(null, { statusCode: 0 ,  additionalInfo: 'register succesful' });
     });
 };
