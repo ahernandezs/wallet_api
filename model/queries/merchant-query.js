@@ -17,3 +17,13 @@ exports.getMerchanByID = function(merchantID, callback) {
         }
     });
 };
+
+exports.updateMerchanByID = function(payload, callback) {
+    console.log( 'Update Merchan with ID: ' + payload.id);
+    var conditions ={ id : payload.id};
+    var payload = payload;
+    Merchant.update(conditions, payload, null, function(err, result) {
+        if (err) callback("ERROR", { statusCode: 1,  message: 'Update Fail' });
+        callback(null, { statusCode: 0 ,  additionalInfo: result });
+    });
+};

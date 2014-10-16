@@ -64,6 +64,7 @@ app.get('/api/ping', function(req, res){
 
 app.post('/api/validate',user.validate);
 app.post('/api/register', user.register);
+app.post('/api/registerMerchant',merchant.register);
 app.post('/api/login', user.login);
 app.post('/api/updateprofile', user.updateProfile);
 app.post('/api/uploadimage', interceptorHeader, user.uploadImage);
