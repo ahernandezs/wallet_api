@@ -1,5 +1,9 @@
+var async = require('async');
 var User = require('../user');
 var config = require('../../config.js');
+var balance = require('../../routes/flows/balance-flow');
+var transfer = require('../../routes/flows/transfer-flow');
+var doxsService = require('../../services/doxs-service');
 
 exports.validateUser = function(phoneID,callback){
 	console.log('Search user in mongoDB');
@@ -26,19 +30,59 @@ exports.createUser = function(user,callback){
   console.log('User to persist user' + userToPersist);
   userToPersist.save(function (err) {
     if (err) callback("ERROR", { statusCode: 1,  additionalInfo: 'Error to register user' });
-	  callback(null, { statusCode: 0 ,  additionalInfo: 'User registered correctly' }); ;
+    callback(null, { statusCode: 0 ,  additionalInfo: 'User registered correctly' });
   });
 };
 
+
 exports.updateUser = function(payload,callback){
-  var conditions = { 'phoneID': payload.phoneID }
-  var propPhoneID = 'phoneID';
-  delete payload[propPhoneID];
-  var update = payload ;
-  console.log(payload);
-  User.update(conditions, payload, null, function(err, result) {
-    if (err) callback("ERROR", { statusCode: 1,  message: 'Update Fail' });
-    callback(null, { statusCode: 0 ,  additionalInfo: result });
+
+  async.waterfall([
+
+    function(callback){
+      var conditions = { 'phoneID': payload.phoneID }
+      User.update(conditions, payload, null, function(err, result) {
+        callback(null);
+      });
+    },
+
+    function(callback){
+      var updateDoxs = {phoneID: payload.phoneID, operation: 'profile'};
+      putDoxs(updateDoxs, function(err,result){
+        callback(null);
+      });
+    },
+
+    function(callback){
+      var payloadoxs = {phoneID: payload.phoneID, action: 'profile', type: 3}
+      doxsService.saveDoxs(payloadoxs, function(err, result){
+        if(err) {
+          return new Error(err);
+        } else {
+          callback(null);
+        }
+      });
+    },
+
+    function(callback){
+      balance.balanceFlow(payload.sessionid, function(err, result) {
+        if(err){
+          var response = { statusCode: 1, additionalInfo: result };
+          callback('ERROR', response);
+        }
+        else
+          result.additionalInfo.doxAdded = config.doxs.profile;
+          callback(null,result);
+      });
+    },
+
+  ], function (err, result) {
+    console.log('Return Update User');
+    if(err){      
+      callback(err,result);    
+    }else{
+      callback(null,result);    
+    }  
   });
 };
 
@@ -88,7 +132,7 @@ exports.getDoxs = function(phoneID, callback){
   });
 };
 
-exports.putDoxs = function(payload, callback){
+var putDoxs = exports.putDoxs = function(payload, callback){
 
   var puntos = config.doxs[payload.operation];
   var query = { 'phoneID': payload.phoneID };

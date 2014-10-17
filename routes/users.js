@@ -66,7 +66,7 @@ exports.register = function(req, res){
 
 exports.updateProfile = function(req, res){
   console.log('execute POST method updateProfile');
-  console.log(req.body);
+  req.body.sessionid = req.headers['x-auth-token'];
   Userquery.updateUser(req.body, function(err,result){
     res.json(result);
   });
