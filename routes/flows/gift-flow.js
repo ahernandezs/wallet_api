@@ -232,13 +232,13 @@ exports.sendGift = function(payload,callback) {
 								callback('ERROR', err);
 							else{
 								console.log(result);
-								callback(null, balance, receipt);
+								callback(null, balance);
 							}
 						});
 					}
 				});
 			});
-		},
+		},/*
         function(balance,receipt, callback) {
 			console.log( 'Create transaction for receiver' );
 			var transacction = {};
@@ -260,7 +260,7 @@ exports.sendGift = function(payload,callback) {
 					}
 				});
 			});
-		}
+		}*/
 		], function (err, result) {
 			if(err){
 				callback("Error! "+err,result);
