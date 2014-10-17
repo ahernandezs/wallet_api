@@ -30,7 +30,7 @@ exports.createUser = function(user,callback){
   console.log('User to persist user' + userToPersist);
   userToPersist.save(function (err) {
     if (err) callback("ERROR", { statusCode: 1,  additionalInfo: 'Error to register user' });
-  	  callback(null, { statusCode: 0 ,  additionalInfo: 'User registered correctly' }); ;
+    callback(null, { statusCode: 0 ,  additionalInfo: 'User registered correctly' });
   });
 };
 
@@ -132,7 +132,6 @@ exports.getDoxs = function(phoneID, callback){
   });
 };
 
-
 var putDoxs = exports.putDoxs = function(payload, callback){
 
   var puntos = config.doxs[payload.operation];
@@ -148,7 +147,6 @@ var putDoxs = exports.putDoxs = function(payload, callback){
       callback(null, person.doxs);
   });
 };
-
 
 exports.confirmPin = function(phoneID, callback){
   console.log('Confirm Pin');
