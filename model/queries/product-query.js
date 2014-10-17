@@ -66,3 +66,23 @@ exports.updateInventory = function(product, callback) {
         }
     });
 };
+
+exports.getProduct =  function(name, callback) {
+    console.log( 'getProduct from MongoDB with status: ' + name );
+    Product.find({ 'name': name }, 'url', function(err, products)  {
+        var response;
+        if (err) {
+            response = { statusCode: 1, additionalInfo: config.products.errMsg };
+            callback("ERROR: " + err.message, response);
+            console.log(err.message);
+        } else if (products.length === 0) {
+            response = { statusCode: 0, additionalInfo: config.products.emptyMsg };
+            callback(null, response);
+            console.log(config.products.emptyMsg);
+        } else {
+            response = { statusCode: 0, additionalInfo: products };
+            callback(null, products[0]);
+            console.log(products[0].url);
+        }
+    });
+};

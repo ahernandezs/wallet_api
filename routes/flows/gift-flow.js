@@ -144,12 +144,11 @@ exports.sendGift = function(payload,callback) {
 											name: name.name,
 											avatar: config.S3.url + payload.phoneID +'.png',
 											message: payload.message,
-											product : "https://s3-us-west-1.amazonaws.com/amdocs-images/products/frapuccino.jpg",
+											product : payload.order.products[0].name,
 											order: orderID,
-											status: config.messages.status.NOTREAD,
+											status: config.orders.status.IN_PROGESS,
 											facebook:config.messages.facebook,
 											twitter:config.messages.twitter,
-											product : "https://s3-us-west-1.amazonaws.com/amdocs-images/products/frapuccino.jpg"
 										});
 
             var payloadMessage = payload;
