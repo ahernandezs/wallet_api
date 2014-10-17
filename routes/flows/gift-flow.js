@@ -147,17 +147,9 @@ exports.sendGift = function(payload,callback) {
 											product : "https://s3-us-west-1.amazonaws.com/amdocs-images/products/frapuccino.jpg",
 											order: orderID,
 											status: config.messages.status.NOTREAD,
-											facebook:{
-												caption: "I just bought a coffee",
-												description : "I just bought a coffee",
-												link: "http://goo.gl/IRbh4z",
-												name: "I just bought a coffee",
-												picture: "https://s3-us-west-1.amazonaws.com/amdocs-images/products/black.jpg"
-											},
-											twitter:{
-												message: "I just bought a coffee !!!!",
-												url: "http://goo.gl/IRbh4z"
-											}
+											facebook:config.messages.facebook,
+											twitter:config.messages.twitter,
+											product : "https://s3-us-west-1.amazonaws.com/amdocs-images/products/frapuccino.jpg"
 										});
 
             var payloadMessage = payload;
