@@ -167,10 +167,11 @@ exports.buyFlow = function(payload,callback) {
 								order: orderID,
 								status:'IN PROGRESS',
 								date:dateTime,
-								twitter:config.messages.twitter,
+								twitter:config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')),
 								facebook:config.messages.facebook,
 								product : imageProduct
 							};
+							console.log(config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')));
 							response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
 						}
 						else
