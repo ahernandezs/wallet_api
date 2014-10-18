@@ -7,7 +7,7 @@ exports.createSession = function(session, callback) {
         if (err)
             callback('ERROR', { message: 'Failed registering session' } );
         else
-            callback(null, { message: 'Success registering session' });;
+            callback(null, { message: 'Success registering session' });
     });
 };
 
@@ -41,3 +41,9 @@ exports.updateSession = function(session, info, callback) {
         }
     });
 };
+
+exports.getSessions = function(callback){
+    Session.find({}, function(err, res){
+        callback(null, res.length);
+    });
+}

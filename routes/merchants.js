@@ -5,14 +5,10 @@ var soap = require('soap');
 var soapurl = process.env.SOAP_URL;
 
 exports.merchants =  function(req, res){
-  console.log('execute GET method merchants');
-  console.log(req.body);
-    merchant.find(function(err,data){
-        console.log(data);
-        if(err)
-             res.send(err);
-        res.json(data);
-    });
+  console.log('execute GET method merchants!');
+  merchantQuery.getMerchands(function(err, result){
+    res.json(result);
+  })
 };
 
 exports.getOrderHistory = function(req,res){
@@ -20,7 +16,6 @@ exports.getOrderHistory = function(req,res){
 	Orderquery.validateOrders(req.body.userID, function(err,result){
 		res.json(result);
 	});
-	console.log(req.body);
 };
 
 exports.putOrder = function(req,res){

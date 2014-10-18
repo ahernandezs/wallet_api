@@ -12,7 +12,9 @@ var merchantSchema =  new Schema({
 	OS: String ,
 	distance: String ,
 	schedule: String ,
-	imgUrl: String
+	imgUrl: String,
+	usersConnected:Number,
+	open: String
 });
 
 module.exports = mongoose.model('Merchant', merchantSchema);  
