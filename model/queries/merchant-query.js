@@ -15,7 +15,6 @@ exports.getMerchanByID = function(merchantID, callback) {
             response = { statusCode: 0, additionalInfo: config.merchants.emptyMsg }
             callback(null, response);
         } else {
-            console.log('return merchant');
             callback(null, merchant[0]);
         }
     });

@@ -142,7 +142,7 @@ exports.buyFlow = function(payload,callback) {
 					var response = { statusCode:1 ,  additionalInfo : result };
 					callback('ERROR',response);
 				}else{
-					imageProduct = result;
+					imageProduct = result.url;
 					callback(null,sessionid,currentMoney);
 				}
 			});
