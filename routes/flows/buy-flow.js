@@ -158,6 +158,8 @@ exports.buyFlow = function(payload,callback) {
 						return new Error(err);
 					} else {
 						var response = result.balanceReturn;
+						var twitterMsg = config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''));
+						config.messages.twitter.message = twitterMsg;
 						if(response.result  === '0' ) {
 							dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') ;
 							var balance = {
@@ -167,7 +169,7 @@ exports.buyFlow = function(payload,callback) {
 								order: orderID,
 								status:'IN PROGRESS',
 								date:dateTime,
-								twitter:config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')),
+								twitter: config.messages.twitter,
 								facebook:config.messages.facebook,
 								product : imageProduct
 							};
