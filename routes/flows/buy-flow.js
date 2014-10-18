@@ -137,7 +137,7 @@ exports.buyFlow = function(payload,callback) {
 
 		function(sessionid,currentMoney ,callback){
 			console.log('Get product image');
-			productQuery.find(payload.order.products[0].name ,function(err,result){
+			productQuery.getProduct(payload.order.products[0].name ,function(err,result){
 				if(err){
 					var response = { statusCode:1 ,  additionalInfo : result };
 					callback('ERROR',response);
