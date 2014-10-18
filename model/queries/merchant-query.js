@@ -45,7 +45,7 @@ exports.getMerchands = function(callback){
         });
       },
       function(data, callback){
-        dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+        dateTime = new Date().getHours();
 
         console.log(dateTime);
         data[0].open = 1;
