@@ -138,6 +138,8 @@ exports.sendGift = function(payload,callback) {
             payload.type = config.messages.type.GIFT;
             payload.title = title;
             payload.date = dateTime;
+            var twitterMsg = config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''));
+			config.messages.twitter.message = twitterMsg;
             payload.additionalInfo = JSON.stringify( {
 											phoneID: payload.phoneID,
 											date: dateTime,
@@ -146,7 +148,9 @@ exports.sendGift = function(payload,callback) {
 											message: payload.message,
 											product : payload.order.products[0].name,
 											order: orderID,
-											status: config.orders.status.IN_PROGESS,
+											amount :payload.order.total,
+											status: config.orders.status.NEW,
+											doxAdded : 500 ,
 											facebook:config.messages.facebook,
 											twitter:config.messages.twitter,
 										});
