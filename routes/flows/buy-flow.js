@@ -2,6 +2,7 @@ var async = require('async');
 var soap = require('soap');
 var crypto = require('crypto');
 var Orderquery = require('../../model/queries/order-query');
+var productQuery = require('../../model/queries/product-query');
 var Userquery = require('../../model/queries/user-query');
 var merchantQuery = require('../../model/queries/merchant-query');
 var urbanService = require('../../services/urban-service');
@@ -25,6 +26,7 @@ exports.buyFlow = function(payload,callback) {
 	var response;
     var forReceipt = {};
     var additionalInfo;
+    var imageProduct;
     forReceipt.payload = payload;
 
 	async.waterfall([
@@ -132,6 +134,20 @@ exports.buyFlow = function(payload,callback) {
 				});
 			});
 		},
+
+		function(sessionid,currentMoney ,callback){
+			console.log('Get product image');
+			productQuery.find(payload.order.products[0].name ,function(err,result){
+				if(err){
+					var response = { statusCode:1 ,  additionalInfo : result };
+					callback('ERROR',response);
+				}else{
+					imageProduct = result;
+					callback(null,sessionid,currentMoney);
+				}
+			});
+		},
+
 		function(sessionid,currentMoney, callback){
 			console.log('balance Points');
 			var  request = { sessionid: sessionid, type: 3  };
@@ -153,7 +169,7 @@ exports.buyFlow = function(payload,callback) {
 								date:dateTime,
 								twitter:config.messages.twitter,
 								facebook:config.messages.facebook,
-								 product : "https://s3-us-west-1.amazonaws.com/amdocs-images/products/frapuccino.jpg"
+								product : imageProduct
 							};
 							response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
 						}
@@ -171,7 +187,7 @@ exports.buyFlow = function(payload,callback) {
 			    receipt.emitter = data.phoneID;
 			    receipt.receiver = 'merchant';
 			    receipt.title = 'You have bought a coffee of € ' + data.order.total;
-			    receipt.additionalInfo = additionalInfo;
+			    receipt.additionalInfo = JSON.stringify(response.additionalInfo);
 			    receipt.amount = data.order.total;
 			    receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
 			    receipt.type = 'BUY';

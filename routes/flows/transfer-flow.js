@@ -100,6 +100,9 @@ var doxsService = require('../../services/doxs-service');
 exports.transferFunds = function(data, callback) {
     var transid;
     var forReceipt = {};
+    var receiptName;
+    var additionalInfoReceiver;
+    var receiptAvatar;
     var dateTime;
 
     async.waterfall([
@@ -141,6 +144,22 @@ exports.transferFunds = function(data, callback) {
                 callback(null,sessionid,payload);
             });
         },
+
+        function(sessionid,payload,callback){
+            console.log('Get receiver in db ' +sessionid);
+            Userquery.getName(payload.phoneID,function(err,user){
+                if (err) {
+                    var response = { statusCode: 1, additionalInfo: err };
+                    callback('ERROR', response);
+                } else {
+                    receipt = user.name ;
+                    receiptAvatar = config.S3.url + payload.phoneID +'.png'
+                    callback(null, sessionid,payload);
+                }  
+
+            });
+        },
+
         function(sessionid,payload,callback){
             console.log('Get sender in db ' +sessionid);
             sessionQuery.getCredentials(sessionid,function(err,user){
@@ -158,7 +177,8 @@ exports.transferFunds = function(data, callback) {
                                 callback('ERROR', response);
                             } else {
                                 dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-                                payload.additionalInfo = JSON.stringify({transferID : transid , message : payload.message, sender: result.name ,senderImg:  config.S3.url + user.data.phoneID +'.png' , date:dateTime });
+                                additionalInfoReceiver = JSON.stringify({transferID : transid , message : payload.message,amount: payload.amount , doxAdded : config.doxs.p2p  ,name: result.name ,avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime });
+                                payload.additionalInfo = JSON.stringify({transferID : transid , message : payload.message,amount: payload.amount , doxAdded : config.doxs.p2p  ,name: receipt ,avatar: receiptAvatar , date:dateTime });
                                 payload.date = dateTime;
                                 console.log(payload.extra);
                                 callback(null, sessionid,payload);
@@ -291,7 +311,7 @@ exports.transferFunds = function(data, callback) {
             transaction.type = 'MONEY';
             transaction.date = dateTime;
             transaction.amount = receipt.amount;
-            transaction.additionalInfo = receipt.additionalInfo;
+            transaction.additionalInfo = additionalInfoReceiver;
             transaction.operation = 'TRANSFER';
             transaction.phoneID = receipt.receiver;
             Userquery.findAppID(receipt.emitter, function(err, result) {
