@@ -160,6 +160,7 @@ exports.buyFlow = function(payload,callback) {
 						var response = result.balanceReturn;
 						var twitterMsg = config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''));
 						config.messages.twitter.message = twitterMsg;
+						config.messages.facebook.description = twitterMsg;
 						if(response.result  === '0' ) {
 							dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') ;
 							var balance = {
