@@ -1,7 +1,9 @@
 var UserQuery = require('../model/queries/user-query');
 var UA = require('urban-airship');
-console.log('CREANDO SERVICIO DE NOTIFICACIÓN');
+var merchantQuery = require('../model/queries/merchant-query');
+var config = require('../config.js');
 var ua = new UA('eHiXHtSFTYK4aaWcTAnehQ', 'nv8zr5nTS0imBwWE7a3H4Q', 'nv8zr5nTS0imBwWE7a3H4Q');
+var uaStore = new UA('4RZ6Xlf7Q7i8fqeag8Bh6g', 'QHgOFp6uQjaAFPi11qqYGw', 'QHgOFp6uQjaAFPi11qqYGw');
 
 exports.singlePush = function(req, callback) {
 	console.log("phoneID: " + req.phoneID);
@@ -30,17 +32,32 @@ exports.singlePush = function(req, callback) {
 
 		payload['audience'] = deviceID;
 		console.log(payload);
-		ua.pushNotification('/api/push', payload, function(error) {
-			if (error) {
-				console.log('Error to send notification' + error);
-				var response =  { statusCode: 1 ,  message: 'Error to send notification' };
-				callback("ERROR", response);
-			} else {
-				console.log('Notification sent correctly');
-				var response = { statusCode: 0 ,  message: 'Notification sent correctly' };
-				callback(null, response);
-			}
-		});
+		if(result.environment && (result.environment === config.environment)){
+			uaStore.pushNotification('/api/push', payload, function(error) {
+				if (error) {
+					console.log('Error to send notification' + error);
+					var response =  { statusCode: 1 ,  message: 'Error to send notification' };
+					callback("ERROR", response);
+				} else {
+					console.log('Notification sent correctly');
+					var response = { statusCode: 0 ,  message: 'Notification sent correctly' };
+					callback(null, response);
+				}
+			});
+		}
+		else{
+			ua.pushNotification('/api/push', payload, function(error) {
+				if (error) {
+					console.log('Error to send notification' + error);
+					var response =  { statusCode: 1 ,  message: 'Error to send notification' };
+					callback("ERROR", response);
+				} else {
+					console.log('Notification sent correctly');
+					var response = { statusCode: 0 ,  message: 'Notification sent correctly' };
+					callback(null, response);
+				}
+			});
+		}
 	});
 };
 
@@ -72,16 +89,32 @@ exports.singlePush2Merchant = function(req, callback) {
 	payload['audience'] = deviceID;
 
 	console.log(payload);
-	ua.pushNotification('/api/push', payload, function(error) {
-		if (error) {
-			console.log('Error to send notification' + error);
-			var response =  { statusCode: 1 ,  message: 'Error to send notification' };
-			callback("ERROR", response);
-		} else {
-			console.log('Notification sent correctly');
-			var response = { statusCode: 0 ,  message: 'Notification sent correctly' };
-			callback(null, response);
+	merchantQuery.getMerchanByAppID(req.appID,function(err,result) {
+		if(result.environment && (result.environment === config.environment)){
+			uaStore.pushNotification('/api/push', payload, function(error) {
+				if (error) {
+					console.log('Error to send notification' + error);
+					var response =  { statusCode: 1 ,  message: 'Error to send notification' };
+					callback("ERROR", response);
+				} else {
+					console.log('Notification sent correctly');
+					var response = { statusCode: 0 ,  message: 'Notification sent correctly' };
+					callback(null, response);
+				}
+			});
+		}
+		else{
+			ua.pushNotification('/api/push', payload, function(error) {
+				if (error) {
+					console.log('Error to send notification' + error);
+					var response =  { statusCode: 1 ,  message: 'Error to send notification' };
+					callback("ERROR", response);
+				} else {
+					console.log('Notification sent correctly');
+					var response = { statusCode: 0 ,  message: 'Notification sent correctly' };
+					callback(null, response);
+				}
+			});
 		}
 	});
-
 };
