@@ -14,6 +14,7 @@ var merchantSchema =  new Schema({
 	schedule: String ,
 	imgUrl: String,
 	usersConnected:Number,
+	environment : String,
 	open: String
 });
 
