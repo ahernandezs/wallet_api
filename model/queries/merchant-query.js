@@ -20,6 +20,23 @@ exports.getMerchanByID = function(merchantID, callback) {
     });
 };
 
+exports.getMerchanByAppID = function(appID, callback) {
+    console.log( 'Get Merchan By AppID: ' + appID);
+    Merchant.find({ 'appID': appID }, 'appID OS environment', function(err, merchant)  {
+        var response;
+        if (err) {
+            response = { statusCode: 1, additionalInfo: config.merchants.errMsg };
+            callback("ERROR: " + err.message, response);
+        } else if (merchant.length === 0) {
+            response = { statusCode: 0, additionalInfo: config.merchants.emptyMsg }
+            callback(null, response);
+        } else {
+            callback(null, merchant[0]);
+        }
+    });
+};
+
+
 exports.updateMerchanByID = function(payload, callback) {
     console.log( 'Update Merchan with ID: ' + payload.id);
     var conditions ={ id : payload.id};
