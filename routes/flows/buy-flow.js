@@ -137,12 +137,12 @@ exports.buyFlow = function(payload,callback) {
 
 		function(sessionid,currentMoney ,callback){
 			console.log('Get product image');
-			productQuery.find(payload.order.products[0].name ,function(err,result){
+			productQuery.getProduct(payload.order.products[0].name ,function(err,result){
 				if(err){
 					var response = { statusCode:1 ,  additionalInfo : result };
 					callback('ERROR',response);
 				}else{
-					imageProduct = result;
+					imageProduct = result.url;
 					callback(null,sessionid,currentMoney);
 				}
 			});
@@ -158,6 +158,9 @@ exports.buyFlow = function(payload,callback) {
 						return new Error(err);
 					} else {
 						var response = result.balanceReturn;
+						var twitterMsg = config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''));
+						config.messages.twitter.message = twitterMsg;
+						config.messages.facebook.description = twitterMsg;
 						if(response.result  === '0' ) {
 							dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') ;
 							var balance = {
@@ -167,10 +170,11 @@ exports.buyFlow = function(payload,callback) {
 								order: orderID,
 								status:'IN PROGRESS',
 								date:dateTime,
-								twitter:config.messages.twitter,
+								twitter: config.messages.twitter,
 								facebook:config.messages.facebook,
 								product : imageProduct
 							};
+							console.log(config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')));
 							response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
 						}
 						else

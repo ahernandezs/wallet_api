@@ -86,8 +86,8 @@ app.get('/api/receipts', interceptorHeader, wallet.getReceipts);
 app.put('/api/receipt', wallet.updateReceipt);
 app.get('/api/doxInfo', interceptorHeader, wallet.doxInfo);
 //Merchant operations
-app.put('/api/order', merchant.putOrder);
-app.post('/api/order', merchant.updateOrder);
+//app.put('/api/order', merchant.putOrder);
+app.put('/api/order', merchant.updateOrder);
 app.post('/api/orders', merchant.getOrders);
 app.get('/api/merchants',merchant.merchants);
 app.post('/api/getorderhistory',merchant.getOrderHistory);
