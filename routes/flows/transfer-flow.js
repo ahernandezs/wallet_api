@@ -153,8 +153,10 @@ exports.transferFunds = function(data, callback) {
                     var response = { statusCode: 1, additionalInfo: err };
                     callback('ERROR', response);
                 } else {
-                    receipt = user.name ;
-                    receiptAvatar = config.S3.url + payload.phoneID +'.png'
+                    receipt = user.name;
+                    console.log('this is the name: ' + receipt);
+                    receiptAvatar = config.S3.url + payload.phoneID +'.png';
+                    console.log('photo: ' + receiptAvatar);
                     callback(null, sessionid,payload);
                 }  
 
@@ -178,7 +180,7 @@ exports.transferFunds = function(data, callback) {
                                 callback('ERROR', response);
                             } else {
                                 dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-                                additionalInfoReceiver = JSON.stringify({transferID : transid , message : payload.message,amount: payload.amount , doxAdded : config.doxs.p2p  ,name: result.name ,avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime });
+                                additionalInfoReceiver = JSON.stringify({transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime });
                                 payload.additionalInfo = JSON.stringify({transferID : transid , message : payload.message,amount: payload.amount , doxAdded : config.doxs.p2p  ,name: receipt ,avatar: receiptAvatar , date:dateTime });
                                 payload.date = dateTime;
                                 console.log(payload.extra);
@@ -192,22 +194,25 @@ exports.transferFunds = function(data, callback) {
         
         function(sessionid,payload,callback){
             console.log('Save message in DB');
+            var message = {};
             var title = config.messages.transferMsg + payload.amount;
             var extraData = {
                 action: 1,
                 transferID: transid,
-                additionalInfo: payload.additionalInfo,
+                additionalInfo: additionalInfoReceiver,
                 amount: payload.amount,
                 message: payload.message,
                 avatar : payload.additionalInfo.senderImg,
                 name: payload.additionalInfo.senders
             };
 
-            payload.extra = {extra : extraData} ;
-            payload.status = config.messages.status.NOTREAD;
-            payload.type = config.messages.type.TRANSFER;
-            payload.title = title;
-            messageQuery.createMessage(payload, function(err, result) {
+            message = extraData;
+            message.status = config.messages.status.NOTREAD;
+            message.type = config.messages.type.TRANSFER;
+            message.title = title;
+            message.phoneID = payload.phoneID;
+            message.date = dateTime;
+            messageQuery.createMessage(message, function(err, result) {
                 if (err) {
                     var response = { statusCode: 1, additionalInfo: result };
                     callback('ERROR', response);
@@ -323,11 +328,11 @@ exports.transferFunds = function(data, callback) {
                         callback('ERROR', err);
                     else {
                         console.log( 'Transaction created for receiver' );
-                        balance.title = 'You have sent a transfer';
+                        /*balance.title = 'You have sent a transfer';
                         balance.additionalInfo.date = dateTime;
                         balance.additionalInfo.amount = receipt.amount;
                         balance.additionalInfo.name = forReturn.name;
-                        balance.type = 'TRANSFER';
+                        balance.type = 'TRANSFER';*/
                         callback(null, balance);
                     }
                 });
