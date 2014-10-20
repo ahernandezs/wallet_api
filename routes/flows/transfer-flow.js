@@ -251,7 +251,7 @@ exports.transferFunds = function(data, callback) {
             receipt.amount = data.payload.amount;
             receipt.message = data.payload.message;
             receipt.additionalInfo = data.payload.additionalInfo;
-            receipt.title = "You have sent a transfer of € "+ receipt.amount;
+            receipt.title = 'You have sent a Transfer of € '+ receipt.amount;
             receipt.date = dateTime;
             receipt.type = 'TRANSFER';
             receipt.status = 'DELIVERED';
@@ -263,6 +263,29 @@ exports.transferFunds = function(data, callback) {
                     callback(null, balance,receipt);
             });
         },
+
+        function(balance,receipt, callback) {
+            console.log( 'Create Receipt Transfer receiver' );
+            data = forReceipt;
+            var receipt = {};
+            receipt.emitter = data.payload.phoneID;
+            receipt.receiver = data.user.data.phoneID;
+            receipt.amount = data.payload.amount;
+            receipt.message = data.payload.message;
+            receipt.additionalInfo = data.payload.additionalInfo;
+            receipt.title = "You have received a Transfer of € "+ receipt.amount;
+            receipt.date = dateTime;
+            receipt.type = 'TRANSFER';
+            receipt.status = 'DELIVERED';
+            console.log(data.payload);
+            ReceiptQuery.createReceipt(receipt, function(err, result) {
+                if (err)
+                    callback('ERROR', err);
+                else
+                    callback(null, balance,receipt);
+            });
+        },
+
         function(balance,receipt, callback) {
             console.log( 'Create History transaction for emitter' );
             var transacction = {};
@@ -287,7 +310,7 @@ exports.transferFunds = function(data, callback) {
             });
         },
         function(balance,receipt, callback) {
-            console.log( 'Create  transacction gift' );
+            console.log( 'Create  transacction DOX' );
             var transacction = {};
             transacction.title = 'Transfer Fund ';
             transacction.type = 'DOX',
@@ -326,7 +349,7 @@ exports.transferFunds = function(data, callback) {
                         callback('ERROR', err);
                     else {
                         console.log( 'Transaction created for receiver' );
-                        balance.title = 'You have sent a transfer';
+                        balance.title = 'You have received a Transfer';
                         balance.additionalInfo.date = dateTime;
                         balance.additionalInfo.amount = receipt.amount;
                         balance.additionalInfo.name = forReturn.name;
