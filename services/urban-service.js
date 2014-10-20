@@ -32,7 +32,7 @@ exports.singlePush = function(req, callback) {
 
 		payload['audience'] = deviceID;
 		console.log(payload);
-		if(result.environment && (result.environment === config.environment)){
+		if(result.environment && (result.environment === 'PRODUCTION')){
 			uaStore.pushNotification('/api/push', payload, function(error) {
 				if (error) {
 					console.log('Error to send notification' + error);
@@ -90,7 +90,7 @@ exports.singlePush2Merchant = function(req, callback) {
 
 	console.log(payload);
 	merchantQuery.getMerchanByAppID(req.appID,function(err,result) {
-		if(result.environment && (result.environment === config.environment)){
+		if(result.environment && (result.environment === 'PRODUCTION')){
 			uaStore.pushNotification('/api/push', payload, function(error) {
 				if (error) {
 					console.log('Error to send notification' + error);
