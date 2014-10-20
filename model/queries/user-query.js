@@ -4,6 +4,7 @@ var config = require('../../config.js');
 var balance = require('../../routes/flows/balance-flow');
 var transfer = require('../../routes/flows/transfer-flow');
 var doxsService = require('../../services/doxs-service');
+var transacctionQuery = require('../../model/queries/transacction-query');
 
 exports.validateUser = function(phoneID,callback){
 	console.log('Search user in mongoDB');
@@ -62,6 +63,22 @@ exports.updateUser = function(payload,callback){
           callback(null);
         }
       });
+    },
+
+    function(callback){
+      if(payload.profileCompleted=="1"){
+        var transacction = {};
+        transacction.title = 'Update Profile';
+        transacction.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+        transacction.type = 'DOX',
+        transacction.amount = config.doxs.profile;
+        transacction.description = 'You had earned some doxs points for completing your profile!'
+        transacction.operation = 'Update profile';
+        transacction.phoneID = payload.phoneID;
+        transacctionQuery.createTranssaction(transacction, function(err, result) {
+          callback(null);
+        });
+      }
     },
 
     function(callback){
