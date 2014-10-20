@@ -154,9 +154,7 @@ exports.transferFunds = function(data, callback) {
                     callback('ERROR', response);
                 } else {
                     receipt = user.name;
-                    console.log('this is the name: ' + receipt);
                     receiptAvatar = config.S3.url + payload.phoneID +'.png';
-                    console.log('photo: ' + receiptAvatar);
                     callback(null, sessionid,payload);
                 }  
 
@@ -328,11 +326,14 @@ exports.transferFunds = function(data, callback) {
                         callback('ERROR', err);
                     else {
                         console.log( 'Transaction created for receiver' );
-                        /*balance.title = 'You have sent a transfer';
+                        balance.title = 'You have sent a transfer';
                         balance.additionalInfo.date = dateTime;
                         balance.additionalInfo.amount = receipt.amount;
                         balance.additionalInfo.name = forReturn.name;
-                        balance.type = 'TRANSFER';*/
+                        balance.type = 'TRANSFER';
+                        balance.date = dateTime;
+                        balance.additionalInfo.avatar = receiptAvatar;
+                        balance._id = transid;
                         callback(null, balance);
                     }
                 });
