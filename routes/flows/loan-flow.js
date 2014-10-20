@@ -24,7 +24,7 @@ exports.createLoanFlow = function(payload,callback) {
                 callback(null, payload.header['x-auth-token']);
         });
     },
- /*   function(sessionid, callback) {
+    function(sessionid, callback) {
         console.log( 'Getting balance for this user' );
         var request = { sessionid: sessionid, type: 1  };
         var request = {balanceRequest: request};
@@ -38,12 +38,12 @@ exports.createLoanFlow = function(payload,callback) {
                     if(response.result  === '0' && response.current === '0')
                         callback(null);
                     else
-                        var response = { statusCode: 1 , additionalInfo : 'You can not request a loan' };
+                        var response = { statusCode: 1 , additionalInfo : 'You can not request a new loan' };
                     callback('ERROR', response);
                 }
             });
         });
-    },*/
+    },
     function(sessionid,callback){
       console.log('saving loan in DB');
       var loan = payload.body;

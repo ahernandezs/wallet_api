@@ -104,6 +104,7 @@ exports.transferFunds = function(data, callback) {
     var additionalInfoReceiver;
     var receiptAvatar;
     var dateTime;
+    var forReturn = {};
 
     async.waterfall([
         function(callback) {
@@ -294,6 +295,7 @@ exports.transferFunds = function(data, callback) {
             transacction.phoneID = receipt.emitter;
             Userquery.findAppID(receipt.receiver,function(err,result){
                 transacction.description ='To ' + result.name;
+                forReturn.name = result.name;
                 transacctionQuery.createTranssaction(transacction, function(err, result) {
                     if (err)
                         callback('ERROR', err);
@@ -321,6 +323,11 @@ exports.transferFunds = function(data, callback) {
                         callback('ERROR', err);
                     else {
                         console.log( 'Transaction created for receiver' );
+                        balance.title = 'You have sent a transfer';
+                        balance.additionalInfo.date = dateTime;
+                        balance.additionalInfo.amount = receipt.amount;
+                        balance.additionalInfo.name = forReturn.name;
+                        balance.type = 'TRANSFER';
                         callback(null, balance);
                     }
                 });
