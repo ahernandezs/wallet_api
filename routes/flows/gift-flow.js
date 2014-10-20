@@ -233,8 +233,9 @@ exports.sendGift = function(payload,callback) {
 						transacctionQuery.createTranssaction(transacction, function(err, result) {
 							if (err)
 								callback('ERROR', err);
-							else{
-								console.log(result);
+							else {
+								balance.date = dateTime;
+                                balance.type = 'GIFT';
 								callback(null, balance);
 							}
 						});
