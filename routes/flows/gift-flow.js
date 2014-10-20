@@ -126,6 +126,7 @@ exports.sendGift = function(payload,callback) {
 		function(sessionid,response, id, callback){
 			Orderquery.putOrder(order, function(err,result){
 				console.log('Order saving result: '+JSON.stringify(result));
+                forReceipt.orderID = result.order;
 				callback(null, sessionid, response, result);
 			});
 		},
@@ -233,37 +234,23 @@ exports.sendGift = function(payload,callback) {
 						transacctionQuery.createTranssaction(transacction, function(err, result) {
 							if (err)
 								callback('ERROR', err);
-							else{
-								console.log(result);
+							else {
+								balance.date = dateTime;
+                                balance.type = 'GIFT';
+                                balance._id = balance.additionalInfo.order;
+                                balance.additionalInfo.avatar = config.S3.url + emitter +'.png';
+                                balance.additionalInfo.name = receiver;
+                                balance.additionalInfo.amount = receipt.amount;
+                                balance.title = 'You have sent a gift';
+                                balance.additionalInfo.product = payload.order.products[0].name;
+                                balance._id = forReceipt.orderID;
 								callback(null, balance);
 							}
 						});
 					}
 				});
 			});
-		},/*
-        function(balance,receipt, callback) {
-			console.log( 'Create transaction for receiver' );
-			var transacction = {};
-			transacction.title = 'GIFT';
-			transacction.type = 'MONEY',
-			transacction.date = dateTime;
-			transacction.amount = receipt.amount;
-			transacction.additionalInfo = receipt.additionalInfo;
-			transacction.operation = 'GIFT';
-			transacction.phoneID = receiver;
-			Userquery.findAppID(emitter,function(err,result){
-				transacction.description ='From ' + result.name;
-				transacctionQuery.createTranssaction(transacction, function(err, result) {
-					if (err)
-						console.log('Error to create transacction');
-					else{
-						console.log( 'Created transaction' );
-                        callback(null, balance);
-					}
-				});
-			});
-		}*/
+		}
 		], function (err, result) {
 			if(err){
 				callback("Error! "+err,result);
