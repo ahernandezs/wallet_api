@@ -183,7 +183,7 @@ exports.sendGift = function(payload,callback) {
 			});
 		},
 		function(balance,payload,emitter,receiver,message,additionalInfo,callback) {
-			console.log( 'Create Receipt Gift' + message);
+			console.log( 'Create Receipt Gift for sender: ' + message);
 			var receipt = {};
 			receipt.emitter = emitter;
 			receipt.receiver = receiver;
@@ -199,10 +199,30 @@ exports.sendGift = function(payload,callback) {
 				if (err)
 					callback('ERROR', err);
 				else
-					callback(null, balance,receipt);
+					callback(null, balance,receipt, message, additionalInfo);
 			});
 		},
-
+        function(balance, receipt, message, additionalInfo, callback) {
+            console.log( 'Create second receipt, this one for the receiver' );
+            var newReceipt = {};
+            newReceipt.emitter = receiver;
+            newReceipt.receiver = emitter;
+            newReceipt.amount = payload.order.total;
+            newReceipt.message = message;
+            var temp = JSON.parse(additionalInfo);
+            delete temp.doxAdded;
+            newReceipt.additionalInfo = JSON.stringify(temp);
+            newReceipt.title = 'You have received a gift!';
+            newReceipt.date = dateTime;
+            newReceipt.type = 'GIFT';
+            newReceipt.status = 'NEW';
+            ReceiptQuery.createReceipt(newReceipt, function(err, result) {
+               if (err)
+                   callback('ERROR', errr);
+                else
+                    callback(null, balance, receipt);
+            });
+        },
 		function(balance,receipt, callback) {
 			console.log( 'Create  transacction Money' );
 			var receiver;

@@ -36,7 +36,7 @@ exports.createLoanFlow = function(payload,callback) {
                 } else {
                     var response = result.balanceReturn;
                     console.log(JSON.stringify(response));
-                    if(response.result  === '0')// && response.current === '0'
+                    if(response.result  === '0' && response.current === '0')
                         callback(null);
                     else {
                         var response = { statusCode: 1 , additionalInfo : 'You can not request a new loan' };
@@ -137,7 +137,7 @@ exports.createLoanFlow = function(payload,callback) {
       });
     },
       function(response, callback) {
-        console.log( 'Create Receipt Transfer | almost over!' );
+        console.log( 'Create Receipt Transfer' );
           data = forReceipt;
           var receipt = {};
           receipt.emitter = data.payload.phoneID;
