@@ -102,6 +102,7 @@ exports.transferFunds = function(data, callback) {
     var forReceipt = {};
     var receiptName;
     var additionalInfoReceiver;
+    var beneficiaryName;
     var receiptAvatar;
     var dateTime;
     var forReturn = {};
@@ -154,6 +155,7 @@ exports.transferFunds = function(data, callback) {
                     callback('ERROR', response);
                 } else {
                     receipt = user.name;
+                    beneficiaryName = user.name;
                     receiptAvatar = config.S3.url + payload.phoneID +'.png';
                     callback(null, sessionid,payload);
                 }  
@@ -349,10 +351,10 @@ exports.transferFunds = function(data, callback) {
                         callback('ERROR', err);
                     else {
                         console.log( 'Transaction created for receiver' );
-                        balance.title = 'You have received a Transfer';
+                        balance.title = config.messages.transferMsg + beneficiaryName;
                         balance.additionalInfo.date = dateTime;
                         balance.additionalInfo.amount = receipt.amount;
-                        balance.additionalInfo.name = forReturn.name;
+                        balance.additionalInfo.name = beneficiaryName;
                         balance.type = 'TRANSFER';
                         balance.date = dateTime;
                         balance.additionalInfo.avatar = receiptAvatar;
