@@ -291,15 +291,14 @@ exports.transferFunds = function(data, callback) {
         function(balance,receipt, callback) {
             console.log( 'Create History transaction for emitter' );
             var transacction = {};
-            transacction.title = 'Transfer Fund ';
+            transacction.title = 'Transfer Fund';
             transacction.type = 'MONEY',
             transacction.date = dateTime;
             transacction.amount = (-1) * receipt.amount;
             transacction.additionalInfo = receipt.additionalInfo;
             transacction.operation = 'TRANSFER';
-            transacction.phoneID = receipt.emitter;
-            console.log('receiver' + receipt.receiver);
-            Userquery.findAppID(receipt.receiver,function(err,result){
+            transacction.phoneID = receipt.receiver;
+            Userquery.findAppID(receipt.emitter,function(err,result){
                 transacction.description ='To ' + result.name;
                 transacctionQuery.createTranssaction(transacction, function(err, result) {
                     if (err)
@@ -311,17 +310,18 @@ exports.transferFunds = function(data, callback) {
                 });
             });
         },
+
         function(balance,receipt, callback) {
             console.log( 'Create  transacction DOX' );
             var transacction = {};
-            transacction.title = 'Transfer Fund ';
+            transacction.title = 'Transfer Fund';
             transacction.type = 'DOX',
             transacction.date = dateTime;
             transacction.amount = config.doxs.p2p;
             transacction.additionalInfo = receipt.additionalInfo;
             transacction.operation = 'TRANSFER';
-            transacction.phoneID = receipt.emitter;
-            Userquery.findAppID(receipt.receiver,function(err,result){
+            transacction.phoneID = receipt.receiver;
+            Userquery.findAppID(receipt.emitter,function(err,result){
                 transacction.description ='To ' + result.name;
                 forReturn.name = result.name;
                 transacctionQuery.createTranssaction(transacction, function(err, result) {
@@ -343,8 +343,8 @@ exports.transferFunds = function(data, callback) {
             transaction.amount = receipt.amount;
             transaction.additionalInfo = additionalInfoReceiver;
             transaction.operation = 'TRANSFER';
-            transaction.phoneID = receipt.receiver;
-            Userquery.findAppID(receipt.emitter, function(err, result) {
+            transaction.phoneID = receipt.emitter;
+            Userquery.findAppID(receipt.receiver, function(err, result) {
                 transaction.description = 'From ' + result.name;
                 transacctionQuery.createTranssaction(transaction, function(err, result) {
                     if (err)
