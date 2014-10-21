@@ -12,6 +12,7 @@ var ReceiptQuery = require('../../model/queries/receipt-query');
 
 exports.createLoanFlow = function(payload,callback) {
   var forReceipt = {};
+    var forResult = {};
   var additionalInfo;
   async.waterfall([
     function(callback) {
@@ -35,16 +36,17 @@ exports.createLoanFlow = function(payload,callback) {
                 } else {
                     var response = result.balanceReturn;
                     console.log(JSON.stringify(response));
-                    if(response.result  === '0' && response.current === '0')
+                    if(response.result  === '0')// && response.current === '0'
                         callback(null);
-                    else
+                    else {
                         var response = { statusCode: 1 , additionalInfo : 'You can not request a new loan' };
-                    callback('ERROR', response);
+                        callback('ERROR', response);
+                    }
                 }
             });
         });
     },
-    function(sessionid,callback){
+    function(callback){
       console.log('saving loan in DB');
       var loan = payload.body;
       var merchantID = loan.merchantID;
@@ -53,15 +55,13 @@ exports.createLoanFlow = function(payload,callback) {
       loan.customerImage = config.S3.url + loan.phoneID +'.png';
       console.log(loan);
       forReceipt.payload = payload.body;
-        console.log('payload!: ' + JSON.stringify(forReceipt.payload));
       loanQuery.CreateLoan(loan, function(err,result){
-        if(err){
+        if(err) {
           var response = { statusCode:1 ,  additionalInfo : err };
           callback("ERROR", response);
-        }
-        else{
+        } else{
           loan._id = result;
-          callback(null,loan,merchantID);
+          callback(null, loan, merchantID);
         }
       });
     },
@@ -118,6 +118,7 @@ exports.createLoanFlow = function(payload,callback) {
     },
     function(loan,callback){
       loan.additionalInfo = JSON.stringify ({_id: loan._id , customerName : loan.name , customerImage : loan.customerImage , status: loan.status , date :loan.date });
+        forResult._id = loan._id;
       var message = config.messages.loanRequestMsg + loan.amount;
       loan.message = message;
       var extraData = { action : config.messages.action.LOAN , loan : JSON.stringify(loan.additionalInfo) };
@@ -136,7 +137,7 @@ exports.createLoanFlow = function(payload,callback) {
       });
     },
       function(response, callback) {
-        console.log( 'Create Receipt Transfer' );
+        console.log( 'Create Receipt Transfer | almost over!' );
           data = forReceipt;
           var receipt = {};
           receipt.emitter = data.payload.phoneID;
@@ -148,12 +149,21 @@ exports.createLoanFlow = function(payload,callback) {
           receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
           receipt.type = 'LOAN';
           receipt.status = 'NEW';
-          console.log(receipt);
           ReceiptQuery.createReceipt(receipt, function(err, result) {
             if (err)
               callback('ERROR', result.message);
-            else
-              callback(null, response);
+            else {
+                forResult.type = 'LOAN';
+                forResult.title = 'You have requested a loan';
+                forResult.date = receipt.date;
+                forResult.additionalInfo = {};
+                forResult.additionalInfo.date = receipt.date;
+                forResult.additionalInfo.message =  '';
+                forResult.additionalInfo.status = receipt.status;
+                forResult.additionalInfo.amount = receipt.amount;
+                console.log( 'response: ' + JSON.stringify(forResult) );
+              callback(null, forResult);
+            }
           }); 
       }
     ], function (err, result) {
