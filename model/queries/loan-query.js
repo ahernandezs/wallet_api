@@ -39,7 +39,7 @@ exports.CreateLoan = function(loan,callback){
     if(err)
         callback("ERROR", { statusCode: 1,  additionalInfo: 'Error to persist loan' });
     else{
-        console.log('Loan persisted correctly' + result._id);
+        console.log('Loan persisted correctly ' + result._id);
         callback(null, result._id);
     }
   });
