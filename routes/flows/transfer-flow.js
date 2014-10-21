@@ -351,7 +351,7 @@ exports.transferFunds = function(data, callback) {
                         callback('ERROR', err);
                     else {
                         console.log( 'Transaction created for receiver' );
-                        balance.title = 'You had send a Transfer';
+                        balance.title = config.messages.transferMsg + beneficiaryName;
                         balance.additionalInfo.date = dateTime;
                         balance.additionalInfo.amount = receipt.amount;
                         balance.additionalInfo.name = beneficiaryName;
