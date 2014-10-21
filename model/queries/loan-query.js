@@ -3,7 +3,7 @@ var config = require('../../config.js');
 
 exports.getLoans = function(merchantID, callback) {
     console.log( 'getLoans from MongoDB with status: ' + config.loans.status );
-    Loan.find({ 'merchantId': merchantID , 'status': config.loans.status.NEW }, '_id customerImage customerName status date', function(err, loans)  {
+    Loan.find({ 'merchantID': merchantID , 'status': config.loans.status.NEW }, '_id customerImage customerName status date', function(err, loans)  {
         var response;
         if (err) {
             response = { statusCode: 1, additionalInfo: config.loans.errMsg };
