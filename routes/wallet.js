@@ -10,6 +10,7 @@ var doxsService = require('../services/doxs-service');
 var receipt = require('../model/queries/receipt-query');
 var sessionQuery = require('../model/queries/session-query');
 var doxInfoQuery = require('../model/queries/catalog-query');
+var transacctionQuery = require('../model/queries/transacction-query');
 var Userquery = require('../model/queries/user-query');
 var soapurl = process.env.SOAP_URL;
 var config = require('../config.js');
@@ -176,10 +177,56 @@ exports.sendGift = function(req, res){
 exports.activity = function(req, res){
   console.log('\n\nExecute POST activity');
   console.log(JSON.stringify(req.body));
-  doxsService.saveDoxs(req.body, function(err, result){
-    console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
-    res.json(result);
+
+  var payload = req.body;
+  var sessionid= req.headers['x-auth-token'];
+
+  async.waterfall([
+
+    function(callback){
+      var result;
+      doxsService.saveDoxs(req.body, function(err, result){
+        callback(null, result);
+      });
+    },
+
+    function(result, callback){
+      var transacction = {};
+      transacction.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+      transacction.type = 'DOX',
+      transacction.description = 'You had earned some doxs points for your social activity!'
+      transacction.operation = payload.action + ' - ' + payload.socialNetwork;
+      transacction.title =  payload.action + ' - ' + payload.socialNetwork;
+      transacction.amount = payload.action == 'LINK' ? config.doxs.linking : config.doxs.social;
+      sessionQuery.getCredentials(sessionid,function(err,user){
+        transacction.phoneID = user.data.phoneID;
+        transacctionQuery.createTranssaction(transacction, function(err, result) {
+          callback(null, result);
+        });
+      });
+    },
+
+    function(result, callback){
+      if(payload.action == "SHARED"){
+        var carga = {};
+        carga.id = payload.receiptid;
+        carga.operation = payload.socialNetwork;
+        receipt.updateReceipt(carga, function(err, result){
+          callback(null, result);
+        });
+      }else{
+        callback(null, result);
+      }
+    },
+
+  ], function (err, result) {
+    if(err){
+      callback("Error! "+err,result);
+    }else{
+      res.json(result);
+    }
   });
+
 };
 
 
