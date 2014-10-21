@@ -46,27 +46,8 @@ exports.updateUser = function(payload,callback){
         callback(null);
       });
     },
-
     function(callback){
-      var updateDoxs = {phoneID: payload.phoneID, operation: 'profile'};
-      putDoxs(updateDoxs, function(err,result){
-        callback(null);
-      });
-    },
-
-    function(callback){
-      var payloadoxs = {phoneID: payload.phoneID, action: 'profile', type: 3}
-      doxsService.saveDoxs(payloadoxs, function(err, result){
-        if(err) {
-          return new Error(err);
-        } else {
-          callback(null);
-        }
-      });
-    },
-
-    function(callback){
-      if(payload.profileCompleted=="1"){
+      if(payload.profileCompleted === 1){
         var transacction = {};
         transacction.title = 'Update Profile';
         transacction.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
@@ -76,20 +57,33 @@ exports.updateUser = function(payload,callback){
         transacction.operation = 'Update profile';
         transacction.phoneID = payload.phoneID;
         transacctionQuery.createTranssaction(transacction, function(err, result) {
-          callback(null);
+          var updateDoxs = {phoneID: payload.phoneID, operation: 'profile'};
+          putDoxs(updateDoxs, function(err,result){
+            var payloadoxs = {phoneID: payload.phoneID, action: 'profile', type: 3}
+            doxsService.saveDoxs(payloadoxs, function(err, result){
+              if(err) {
+                return new Error(err);
+              } else {
+                callback(null);
+              }
+            });
+          });
         });
-      }
+      }else
+        callback(null);
     },
-
     function(callback){
+      console.log(payload.sessionid);
       balance.balanceFlow(payload.sessionid, function(err, result) {
         if(err){
           var response = { statusCode: 1, additionalInfo: result };
           callback('ERROR', response);
         }
-        else
+        else{
+          console.log(result);
           result.additionalInfo.doxAdded = config.doxs.profile;
           callback(null,result);
+        }
       });
     },
 

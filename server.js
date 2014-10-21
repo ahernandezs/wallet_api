@@ -71,7 +71,6 @@ app.post('/api/updateprofile', user.updateProfile);
 app.post('/api/uploadimage', interceptorHeader, user.uploadImage);
 app.post('/api/balance', interceptorHeader, wallet.balance);
 app.get('/api/balance', interceptorHeader, wallet.getBalance);
-app.post('/api/loans', interceptorHeader, loan.getLoans);
 app.post('/api/loan', interceptorHeader, loan.createLoan);
 app.post('/api/buyflow', interceptorHeader, wallet.buyFlow);
 app.get('/api/users', interceptorHeader, user.getUsers);
@@ -88,6 +87,7 @@ app.get('/api/doxInfo', interceptorHeader, wallet.doxInfo);
 //Merchant operations
 //app.put('/api/order', merchant.putOrder);
 app.put('/api/order', merchant.updateOrder);
+app.post('/api/loans', loan.getLoans);
 app.post('/api/orders', merchant.getOrders);
 app.get('/api/merchants',merchant.merchants);
 app.post('/api/getorderhistory',merchant.getOrderHistory);
