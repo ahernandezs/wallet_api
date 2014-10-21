@@ -64,13 +64,13 @@ app.get('/api/ping', function(req, res){
 
 app.post('/api/validate',user.validate);
 app.post('/api/register', user.register);
+app.post('/api/products', product.products);
 app.post('/api/registerMerchant',merchant.register);
 app.post('/api/login', user.login);
 app.post('/api/updateprofile', user.updateProfile);
 app.post('/api/uploadimage', interceptorHeader, user.uploadImage);
 app.post('/api/balance', interceptorHeader, wallet.balance);
 app.get('/api/balance', interceptorHeader, wallet.getBalance);
-app.post('/api/products', interceptorHeader, product.products);
 app.post('/api/loans', interceptorHeader, loan.getLoans);
 app.post('/api/loan', interceptorHeader, loan.createLoan);
 app.post('/api/buyflow', interceptorHeader, wallet.buyFlow);
