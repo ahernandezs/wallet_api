@@ -164,7 +164,7 @@ exports.createLoanFlow = function(payload,callback) {
           receipt.status = 'NEW';
           ReceiptQuery.createReceipt(receipt, function(err, result) {
             if (err)
-              callback('ERROR', result.message);
+              callback('ERROR', { statusCode : 1, additionalInfo : result.message });
             else {
                 forResult.statusCode = 0;
                 forResult.additionalInfo.type = 'LOAN';
