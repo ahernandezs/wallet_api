@@ -13,6 +13,7 @@ var ReceiptQuery = require('../../model/queries/receipt-query');
 exports.createLoanFlow = function(payload,callback) {
   var forReceipt = {};
     var forResult = {};
+    forResult.additionalInfo = {};
   var additionalInfo;
   async.waterfall([
     function(callback) {
@@ -39,7 +40,7 @@ exports.createLoanFlow = function(payload,callback) {
                     if(response.result  === '0' && response.current === '0')
                         callback(null);
                     else {
-                        var response = { statusCode: 1 , additionalInfo : 'You can not request a new loan' };
+                        var response = { statusCode: 1 , additionalInfo : 'You can not request a loan' };
                         callback('ERROR', response);
                     }
                 }
@@ -130,7 +131,7 @@ exports.createLoanFlow = function(payload,callback) {
     },
     function(loan,callback){
       loan.additionalInfo = JSON.stringify ({_id: loan._id , customerName : loan.name , customerImage : loan.customerImage , status: loan.status , date :loan.date });
-        forResult._id = loan._id;
+        forResult.additionalInfo._id = loan._id;
       var message = config.messages.loanRequestMsg + loan.amount;
       loan.message = message;
       var extraData = { action : config.messages.action.LOAN , loan : JSON.stringify(loan.additionalInfo) };
@@ -165,12 +166,10 @@ exports.createLoanFlow = function(payload,callback) {
             if (err)
               callback('ERROR', result.message);
             else {
-                forResult.type = 'LOAN';
-                forResult.title = 'You have requested a loan';
-                forResult.date = receipt.date;
-                forResult.additionalInfo = {};
+                forResult.statusCode = 0;
+                forResult.additionalInfo.type = 'LOAN';
+                forResult.additionalInfo.title = 'You have requested a loan';
                 forResult.additionalInfo.date = receipt.date;
-                forResult.additionalInfo.message =  '';
                 forResult.additionalInfo.status = receipt.status;
                 forResult.additionalInfo.amount = receipt.amount;
                 console.log( 'response: ' + JSON.stringify(forResult) );
