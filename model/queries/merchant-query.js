@@ -62,10 +62,18 @@ exports.getMerchands = function(callback){
       },
       function(data, callback){
         dateTime = new Date().getHours();
+        var tmp = data[0].schedule.split('-');
 
-        console.log(dateTime);
-        data[0].open = 1;
+        //var openTime = parseInt(tmp[0].replace(':00', '').replace(' ', ''));
+        //var closeTime = parseInt(tmp[1].replace(':00', '').replace(' ', ''));
+        var openTime = parseInt(tmp[0].replace('am', '').replace(' ', ''));
+        var closeTime = parseInt(tmp[1].replace('pm', '').replace(' ', '')) + 12;
 
+        if(dateTime>=openTime && dateTime<=closeTime){
+            data[0].open = 1;
+        }else{
+            data[0].open = 0;
+        }
         callback(null, data);
       }
     ], function (err, result){
