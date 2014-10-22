@@ -1,12 +1,17 @@
+var mailService = require('../../services/sendGrid-service');
 var Message = require('../message');
 
-exports.createMessage = function(message, callback) {
+exports.createMessage = function(sender,message, callback) {
     console.log( 'Persistmessage ');
       var messageToPersist = new Message(message);
+
+      if(sender)
+        mailService.sendMail(sender,messageToPersist);
+
       messageToPersist.save(function (err) {
         if (err) callback("ERROR", { statusCode: 1,  additionalInfo: 'Error to persist user' });
         callback(null, { statusCode: 0 ,  additionalInfo: 'Message persisted correctly' }); ;
-    });
+     });
 };
 
 exports.getMessages = function(phoneID, callback) {

@@ -7,6 +7,7 @@
     "aws-sdk": "^2.0.17",
     "express": "^3.16.6",
     "mongoose": "^3.8.14",
+    "sendgrid": "^1.2.1",
     "soap": "0.5.0",
     "urban-airship": "^0.4.1"
   },

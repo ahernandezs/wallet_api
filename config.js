@@ -1,5 +1,9 @@
 var config = {};
 
+config.sendGrid = {};
+config.sendGrid.user = 'dannywf@anzen.com.mx';
+config.sendGrid.password = 'Anzen7924';
+
 config.orders = {};
 config.orders.status = {NEW : 'NEW' ,IN_PROGRESS : 'IN PROGRESS' , READY : 'READY' , DELIVERED : 'DELIVERED' , CANCELED : 'CANCELED' };
 config.orders.errMsg = 'Something went wrong';

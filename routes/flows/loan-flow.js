@@ -120,7 +120,7 @@ exports.createLoanFlow = function(payload,callback) {
       loan.title = title;
       loan.message = title;
       console.log(loan);
-      messageQuery.createMessage(loan, function(err, result) {
+      messageQuery.createMessage(null,loan, function(err, result) {
         if (err) {
           var response = { statusCode: 1, additionalInfo: result };
           callback('ERROR', response);
@@ -260,7 +260,7 @@ exports.updateLoanFlow = function(payload,callback){
       loan.type = config.messages.type.LOAN;
       loan.date = dateTime;
       console.log(loan);
-      messageQuery.createMessage(loan, function(err, result) {
+      messageQuery.createMessage(null,loan, function(err, result) {
         if (err) {
           var response = { statusCode: 1, additionalInfo: result };
           callback('ERROR', response);
