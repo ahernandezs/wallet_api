@@ -103,7 +103,7 @@ exports.sendGift = function(payload,callback) {
 						var response = result.balanceReturn;
 						if(response.result  === '0' ) {
 							dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-							var balance = { current : currentMoney , dox : response.current , doxAdded:config.doxs.gift,  order : orderID ,  status :'IN PROGRESS' , date: dateTime } ;
+							var balance = { current : currentMoney , dox : response.current , doxAdded:config.doxs.gift,  order : orderID ,  status :'NEW' , date: dateTime } ;
 							response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
 						}else{
 							var response = { statusCode:1 ,  additionalInfo : response };
