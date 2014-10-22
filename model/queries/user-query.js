@@ -36,6 +36,17 @@ exports.createUser = function(user,callback){
 };
 
 
+exports.singleUpdateUser = function(payload,callback){
+  var conditions = { 'phoneID': payload.phoneID }
+  User.update(conditions, payload, null, function(err, result) {
+    if(err) {
+      return new Error(err);
+    } else {
+      callback(null);
+    }
+  });
+}
+
 exports.updateUser = function(payload,callback){
 
   async.waterfall([

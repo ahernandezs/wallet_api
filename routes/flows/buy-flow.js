@@ -170,7 +170,7 @@ exports.buyFlow = function(payload,callback) {
 								dox: response.current,
 								doxAdded: config.doxs.p2p,
 								order: orderID,
-								status:'IN PROGRESS',
+								status:'NEW',
 								date:dateTime,
 								twitter: config.messages.twitter,
 								facebook:config.messages.facebook,
@@ -197,7 +197,7 @@ exports.buyFlow = function(payload,callback) {
 			    receipt.amount = data.order.total;
 			    receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
 			    receipt.type = 'BUY';
-			    receipt.status = 'IN PROGRESS';
+			    receipt.status = 'NEW';
 			    ReceiptQuery.createReceipt(receipt, function(err, result) {
 			        if (err)
 			            callback('ERROR', result.message);

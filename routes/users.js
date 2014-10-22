@@ -3,6 +3,7 @@ var User = require('../model/user');
 var Userquery = require('../model/queries/user-query');
 var anzenUser = require('./flows/register-flow');
 var sessionUser = require('./flows/login-flow');
+var forgotPin = require('./flows/forgotPin-flow');
 var awsS3 = require('../services/aws-service');
 var config = require('../config.js');
 var soap = require('soap');
@@ -192,5 +193,17 @@ exports.getLeaderboard = function(req, res){
   Userquery.getLeaderboard(function(err,result){
     var result = {url_base: config.S3.url, users: result}
     res.json(result);
+  });
+}
+
+exports.forgotPIN = function(req, res){
+  forgotPin.resetPinFlow(req.body,function(err,result){
+    if(err) {
+      console.log(err);
+      res.send(500);
+    } else {
+      console.log(result);
+      res.json(result);
+    }
   });
 }
