@@ -2,6 +2,7 @@ var async = require('async');
 var soap = require('soap');
 var crypto = require('crypto');
 var Orderquery = require('../../model/queries/order-query');
+var productQuery = require('../../model/queries/product-query');
 var Userquery = require('../../model/queries/user-query');
 var urbanService = require('../../services/urban-service');
 var doxsService = require('../../services/doxs-service');
@@ -21,6 +22,7 @@ exports.sendGift = function(payload,callback) {
 	var id;
 	var response;
 	var name;
+	var imageProduct;
     var emitter = payload.phoneID;
     var receiver = payload.beneficiaryPhoneID;
 
@@ -32,6 +34,18 @@ exports.sendGift = function(payload,callback) {
 			Userquery.getName(payload.phoneID, function(err, resp) {
 				name = resp;
 				callback(null);
+			});
+		},
+		function(callback){
+			console.log('Get product image');
+			productQuery.getProduct(payload.order.products[0].name ,function(err,result){
+				if(err){
+					var response = { statusCode:1 ,  additionalInfo : result };
+					callback('ERROR',response);
+				}else{
+					imageProduct = result.url;
+					callback(null);
+				}
 			});
 		},
 		function(callback){
