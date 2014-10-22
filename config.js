@@ -33,6 +33,9 @@ config.messages.loanRejectedMsg = 'Build up your Dox score to be elegible for a 
 config.messages.action = {TRANSFER:1 , GIFT :2 , BUY :3 ,LOAN : 4 };
 config.messages.transferFund = 'You have sent a Transfer to ';
 
+config.messages.twitter1 = 'I just bought a ';
+config.messages.twitter2 = ' from AmdocsCafe at ';
+config.messages.twitterURL = 'http://goo.gl/IRbh4z';
 config.messages.twitter = { message :'I just bought a {0} from AmdocsCafe at {1} !!!!' , url :'http://goo.gl/IRbh4z'};
 config.messages.facebook ={ name:'AmdocsCafe', caption:'I just bought a coffee', description:'I just bought a coffee', link:'http://goo.gl/IRbh4z',picture:'https://s3-us-west-1.amazonaws.com/amdocs-images/products/black.jpg'};
 config.doxs = {};

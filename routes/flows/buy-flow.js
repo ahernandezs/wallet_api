@@ -158,7 +158,9 @@ exports.buyFlow = function(payload,callback) {
 						return new Error(err);
 					} else {
 						var response = result.balanceReturn;
-						var twitterMsg = config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''));
+						var twitterMsg = {};
+						twitterMsg = config.messages.twitter1 + payload.order.products[0].name + config.messages.twitter2 + new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') +'!!!';
+						//var twitterMsg = config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''));
 						config.messages.twitter.message = twitterMsg;
 						config.messages.facebook.description = twitterMsg;
 						if(response.result  === '0' ) {
