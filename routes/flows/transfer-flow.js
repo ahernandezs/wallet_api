@@ -102,9 +102,11 @@ exports.transferFunds = function(data, callback) {
     var forReceipt = {};
     var receiptName;
     var additionalInfoReceiver;
+    var addInfo;
     var beneficiaryName;
     var receiptAvatar;
     var dateTime;
+    var msg;
     var forReturn = {};
 
     async.waterfall([
@@ -112,6 +114,7 @@ exports.transferFunds = function(data, callback) {
             console.log('Do transfer in wallet');
             console.log(data.body);
             var payload = data.body;
+            msg = payload.message;
             var header = data.header;
             var requestSoap = { sessionid: header.sessionid, to: payload.destiny, amount: payload.amount, type: 1 };
             var request = { transferRequest: requestSoap };
@@ -180,6 +183,7 @@ exports.transferFunds = function(data, callback) {
                                 callback('ERROR', response);
                             } else {
                                 dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+                                addInfo = {transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime };
                                 additionalInfoReceiver = JSON.stringify({transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime });
                                 payload.additionalInfo = JSON.stringify({transferID : transid , message : payload.message,amount: payload.amount , doxAdded : config.doxs.p2p  ,name: receipt ,avatar: receiptAvatar , date:dateTime });
                                 payload.date = dateTime;
@@ -251,7 +255,7 @@ exports.transferFunds = function(data, callback) {
             receipt.emitter = data.user.data.phoneID;
             receipt.receiver = data.payload.phoneID;
             receipt.amount = data.payload.amount;
-            receipt.message = data.payload.message;
+            receipt.message = msg;
             receipt.additionalInfo = data.payload.additionalInfo;
             receipt.title = 'You have sent a Transfer of € '+ receipt.amount;
             receipt.date = dateTime;
@@ -273,8 +277,9 @@ exports.transferFunds = function(data, callback) {
             receipt.emitter = data.payload.phoneID;
             receipt.receiver = data.user.data.phoneID;
             receipt.amount = data.payload.amount;
-            receipt.message = data.payload.message;
-            receipt.additionalInfo = data.payload.additionalInfo;
+            receipt.message = msg;
+            addInfo.amount = '';
+            receipt.additionalInfo = JSON.stringify(addInfo);
             receipt.title = "You have received a Transfer of € "+ receipt.amount;
             receipt.date = dateTime;
             receipt.type = 'TRANSFER';
@@ -351,7 +356,7 @@ exports.transferFunds = function(data, callback) {
                         callback('ERROR', err);
                     else {
                         console.log( 'Transaction created for receiver' );
-                        balance.title = config.messages.transferMsg + beneficiaryName;
+                        balance.title = config.messages.transferFund + beneficiaryName;
                         balance.additionalInfo.date = dateTime;
                         balance.additionalInfo.amount = receipt.amount;
                         balance.additionalInfo.name = beneficiaryName;
