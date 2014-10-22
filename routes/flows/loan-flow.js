@@ -55,16 +55,28 @@ exports.createLoanFlow = function(payload,callback) {
       loan.customerImage = config.S3.url + loan.phoneID +'.png';
       console.log(loan);
       forReceipt.payload = payload.body;
-      loanQuery.CreateLoan(loan, function(err,result){
-        if(err) {
-          var response = { statusCode:1 ,  additionalInfo : err };
-          callback("ERROR", response);
-        } else{
-          loan._id = result;
-          callback(null, loan, merchantID);
-        }
+        userQuery.findUserByPhoneID(loan.phoneID,function(err,result){
+        if(err){
+            var response = { statusCode:1 ,  additionalInfo : err };
+            callback('ERROR',response);
+          }
+          else{
+              loan.customerName = result.name;
+              callback(null, loan, merchantID);
+          }
       });
     },
+      function(loan, merchantID, callback) {
+          loanQuery.CreateLoan(loan, function(err,result){
+            if(err) {
+                var response = { statusCode:1 ,  additionalInfo : err };
+                callback("ERROR", response);
+            } else{
+                loan._id = result;
+                callback(null, loan, merchantID);
+            }
+        });
+      },
     function(loan,merchantID,callback){
       console.log('search merchant by phoneID');
       merchantQuery.getMerchanByID(merchantID,function(err,result){
