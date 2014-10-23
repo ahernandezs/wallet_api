@@ -13,7 +13,7 @@ exports.sendMail = function(sender,message, callback){
 		else {
 			sendgrid.send({
 				to:        mail.receiver,
-				from:      mail.sender,
+				from:      'no-reply@wallet.amdocs.com',
 				subject:   mail.subject,
 				text:      mail.text
 			}, function(err, json) {
