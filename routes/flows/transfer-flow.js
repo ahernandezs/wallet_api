@@ -102,6 +102,7 @@ exports.transferFunds = function(data, callback) {
     var forReceipt = {};
     var receiptName;
     var additionalInfoReceiver;
+    var additionalInfoReceiverJSON;
     var addInfo;
     var beneficiaryName;
     var receiptAvatar;
@@ -185,6 +186,7 @@ exports.transferFunds = function(data, callback) {
                                 dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
                                 addInfo = {transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime };
                                 additionalInfoReceiver = JSON.stringify({transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime });
+                                additionalInfoReceiverJSON = {transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime };
                                 payload.additionalInfo = JSON.stringify({transferID : transid , message : payload.message,amount: payload.amount , doxAdded : config.doxs.p2p  ,name: receipt ,avatar: receiptAvatar , date:dateTime });
                                 payload.date = dateTime;
                                 console.log(payload.extra);
@@ -207,22 +209,15 @@ exports.transferFunds = function(data, callback) {
             message.phoneID = payload.phoneID;
             message.date = dateTime;
             message.message = payload.message;
+            message.additionalInfo = additionalInfoReceiver;
             messageQuery.createMessage(forReceipt.user.data.phoneID,message, function(err, result) {
                 if (err) {
                     var response = { statusCode: 1, additionalInfo: result };
                     callback('ERROR', response);
                 } else {
                     payload.message = title;
-                    var extraData = {
-                        action: 1, additionalInfo : JSON.stringify({
-                                                            transferID: transid,
-                                                            additionalInfo: additionalInfoReceiver,
-                                                            amount: payload.amount,
-                                                            message: payload.message,
-                                                            avatar : payload.additionalInfo.senderImg,
-                                                            name: payload.additionalInfo.senders})
-                                ,_id:result._id
-                    };
+                    var extraData = {   action: 1, additionalInfo : JSON.stringify(additionalInfoReceiverJSON),
+                                    _id:result._id };
                     payload.extra = { extra:extraData};
                     callback(null, sessionid,payload);
                 }

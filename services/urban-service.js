@@ -21,6 +21,7 @@ exports.singlePush = function(req, callback) {
 			if(req.extra){
 				var extraPayload = {extra : req.extra}
 				payload.notification['android'] = req.extra;
+				console.log(extraPayload);
 			}
 		}
 		else{
@@ -28,6 +29,7 @@ exports.singlePush = function(req, callback) {
 			if(req.extra){
 				var extraPayload = {extra : req.extra}
 				payload.notification['ios'] = req.extra;
+				console.log(extraPayload);
 			}
 		}
 
