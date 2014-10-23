@@ -200,43 +200,43 @@ exports.transferFunds = function(data, callback) {
             console.log('Save message in DB');
             var message = {};
             var title = config.messages.transferMsg + payload.amount;
-            var extraData = {
-                action: 1,
-                transferID: transid,
-                additionalInfo: additionalInfoReceiver,
-                amount: payload.amount,
-                message: payload.message,
-                avatar : payload.additionalInfo.senderImg,
-                name: payload.additionalInfo.senders
-            };
-
-            message = extraData;
+            //message = extraData;
             message.status = config.messages.status.NOTREAD;
             message.type = config.messages.type.TRANSFER;
             message.title = title;
             message.phoneID = payload.phoneID;
             message.date = dateTime;
-            console.log(forReceipt);
             messageQuery.createMessage(forReceipt.user.data.phoneID,message, function(err, result) {
                 if (err) {
                     var response = { statusCode: 1, additionalInfo: result };
                     callback('ERROR', response);
                 } else {
                     payload.message = title;
+                    var extraData = {
+                        action: 1, additionalInfo : JSON.stringify({
+                                                            transferID: transid,
+                                                            additionalInfo: additionalInfoReceiver,
+                                                            amount: payload.amount,
+                                                            message: payload.message,
+                                                            avatar : payload.additionalInfo.senderImg,
+                                                            name: payload.additionalInfo.senders})
+                                ,_id:result._id
+                    };
+                    payload.extra = { extra:extraData};
                     callback(null, sessionid,payload);
                 }
             });
         },
+
         function(sessionid,message, callback) {
             console.log('Send push notification');
             urbanService.singlePush(message, function(err, result) {
                 var response = { statusCode: 0, additionalInfo: 'The transfer was successful' };
-                callback(null, sessionid);
+                callback(null,sessionid,message);
             });
         },
-        function(sessionid, callback){
+        function(sessionid,message,callback){
             console.log('Get Balance');
-            console.log(sessionid);
             balance.balanceFlow(sessionid, function(err, result) {
                 if(err){
                     var response = { statusCode: 1, additionalInfo: result };
