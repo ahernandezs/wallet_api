@@ -15,7 +15,7 @@ exports.createReceipt = function(data, callback) {
 
 exports.getReceipts = function(phoneID, callback){
     console.log('phoneID ' + phoneID);
-	Receipt.find({emitter:phoneID},'emitter receiver title amount date type status',{sort: {date: -1}},function (err, receipt) {
+	Receipt.find({emitter:phoneID},'emitter receiver title amount date type status additionalInfo',{sort: {date: -1}},function (err, receipt) {
        if (err) callback('ERROR', err);
        else if(receipt){
           console.log(receipt);
