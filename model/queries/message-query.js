@@ -8,9 +8,9 @@ exports.createMessage = function(sender,message, callback) {
       if(sender)
         mailService.sendMail(sender,messageToPersist);
 
-      messageToPersist.save(function (err) {
+      messageToPersist.save(function (err,result) {
         if (err) callback("ERROR", { statusCode: 1,  additionalInfo: 'Error to persist user' });
-        callback(null, { statusCode: 0 ,  additionalInfo: 'Message persisted correctly' }); ;
+        callback(null, result); ;
      });
 };
 

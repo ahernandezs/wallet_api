@@ -177,18 +177,18 @@ exports.sendGift = function(payload,callback) {
                 if (err) {
                     callback('ERROR', { statusCode: 1, additionalInfo: result });
                 } else {
-                    callback(null, response);
+                    callback(null, response,result._id);
                 }
             });
         },
-		function(response,callback) {
+		function(response,messageID,callback) {
 			console.log('sending push');
 			//var additionalInfo = { phoneID: payload.phoneID, name: name.name, avatar: config.S3.url + payload.phoneID +'.png', order:orderID, date:dateTime,message:payload.message};
 			//console.log(additionalInfo);
 			var title = 'You have received a coffee gift!';
 			var message = payload.message;
 			payload.message = title;
-			var extraData = { action :2,additionalInfo:JSON.stringify(payload.additionalInfo)};
+			var extraData = { action :2,additionalInfo:JSON.stringify(payload.additionalInfo),_id:messageID};
 			payload.extra = {extra : extraData} ;
 			payload.phoneID = payload.beneficiaryPhoneID;
 			delete payload.beneficiaryPhoneID;
