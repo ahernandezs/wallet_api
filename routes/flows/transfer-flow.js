@@ -206,6 +206,7 @@ exports.transferFunds = function(data, callback) {
             message.title = title;
             message.phoneID = payload.phoneID;
             message.date = dateTime;
+            message.message = payload.message;
             messageQuery.createMessage(forReceipt.user.data.phoneID,message, function(err, result) {
                 if (err) {
                     var response = { statusCode: 1, additionalInfo: result };
