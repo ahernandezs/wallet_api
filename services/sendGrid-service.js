@@ -49,7 +49,10 @@ function createMail (sender,message,callback){
 		},
 		function(callback){
 			emailMessage.subject = message.title;
-			emailMessage.text = message.message;
+			if(message.message)
+				emailMessage.text = message.message;
+			else
+				emailMessage.text = message.title;
 			callback(null);
 		},
 		], function (err, result) {
