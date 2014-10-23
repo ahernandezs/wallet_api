@@ -159,10 +159,10 @@ exports.buyFlow = function(payload,callback) {
 					} else {
 						var response = result.balanceReturn;
 						var twitterMsg = {};
-						twitterMsg = config.messages.twitter1 + payload.order.products[0].name + config.messages.twitter2 + new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') +'!!!';
+						//twitterMsg = config.messages.twitter1 + payload.order.products[0].name + config.messages.twitter2 + new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') +'!!!';
 						//var twitterMsg = config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''));
+						var twitterMsg = config.messages.twitterMsg;
 						config.messages.twitter.message = twitterMsg;
-						config.messages.facebook.description = twitterMsg;
 						if(response.result  === '0' ) {
 							dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') ;
 							var balance = {
