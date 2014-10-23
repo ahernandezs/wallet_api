@@ -173,7 +173,7 @@ exports.sendGift = function(payload,callback) {
             var payloadMessage = payload;
             payloadMessage.phoneID = payload.beneficiaryPhoneID;
 
-            messageQuery.createMessage(payloadMessage, function(err, result) {
+            messageQuery.createMessage(emitter,payloadMessage, function(err, result) {
                 if (err) {
                     callback('ERROR', { statusCode: 1, additionalInfo: result });
                 } else {
