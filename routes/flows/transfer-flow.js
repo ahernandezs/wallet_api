@@ -66,10 +66,8 @@ var doxsService = require('../../services/doxs-service');
         },
         function(sessionid, callback){
             console.log('Transfer ' + sessionid);
-            console.log(payload);
             var requestSoap = { sessionid:sessionid, to: payload.transferRequest.phoneID, amount : payload.transferRequest.amount , type: payload.transferRequest.type };
             var request = { transferRequest: requestSoap };
-            console.log(request);
             soap.createClient(soapurl, function(err, client) {
                 client.transfer(request, function(err, result) {
                     if(err) {
@@ -77,6 +75,7 @@ var doxsService = require('../../services/doxs-service');
                         return new Error(err);
                     } else {
                         var response = result.transferReturn;
+                        console.log("Result: "+JSON.stringify(result));
                         if(response.result != 0){
                             var response = { statusCode:1 ,  additionalInfo : result };
                             callback("ERROR", response);
