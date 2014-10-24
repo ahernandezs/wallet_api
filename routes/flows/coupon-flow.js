@@ -38,15 +38,15 @@ exports.setCoupon = function(payload,callback) {
                     var response = { statusCode: 1, additionalInfo: result };
                     callback('ERROR', response);
                 } else {
+					var extraData = { action: 5, additionalInfo: JSON.stringify(prize), _id: result._id };
+					payload.extra = { extra:extraData};
+		            payload.message = config.messages.coupon;
                     callback(null,payload);
                 }
             });
 		},
 
         function(message, callback) {
-			var extraData = { action: 1, additionalInfo: JSON.stringify(prize)};
-			message.extra = { extra:extraData};
-            message.message = config.messages.coupon;
             urbanService.singlePush(message, function(err, result) {
                 callback(null);
             });
