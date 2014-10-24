@@ -242,7 +242,7 @@ exports.sendGift = function(payload,callback) {
 			console.log( 'Create  transacction Money' );
 			var receiver;
 			var transacction = {};
-			transacction.title = 'GIFT';
+			transacction.title = 'Coffee gift';
 			transacction.type = 'MONEY',
 			transacction.date = dateTime;
 			transacction.amount = (-1) * receipt.amount;
@@ -258,7 +258,7 @@ exports.sendGift = function(payload,callback) {
 					else{
 						console.log( 'Create  transacction DOX' );
 						var transacction = {};
-						transacction.title = 'GIFT';
+						transacction.title = 'Coffee gift';
 						transacction.type = 'DOX',
 						transacction.date = dateTime;
 						transacction.amount = config.doxs.gift;
