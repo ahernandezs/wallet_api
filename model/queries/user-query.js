@@ -237,7 +237,9 @@ exports.updateSession = function(user, callback) {
 };
 
 exports.getLeaderboard = function(callback){
-  User.find({}, 'phoneID name doxs', {sort: {doxs: -1}}, function (err, people) {
+  var query = User.find({}, 'phoneID name doxs', {sort: {doxs: -1}});
+  query.limit(10);
+  query.exec(function (err, people) {
     if (err) return handleError(err);
     else if(people){
       callback(null, people);
