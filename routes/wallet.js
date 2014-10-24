@@ -7,6 +7,7 @@ var TransferFlow = require('./flows/transfer-flow');
 var GiftFlow = require('./flows/gift-flow');
 var balance = require('./flows/balance-flow');
 var doxsService = require('../services/doxs-service');
+var couponService = require('../services/coupon-service');
 var receipt = require('../model/queries/receipt-query');
 var sessionQuery = require('../model/queries/session-query');
 var doxInfoQuery = require('../model/queries/catalog-query');
@@ -309,4 +310,19 @@ exports.updateReceipt = function(req, res){
       }
     });
 
+}
+
+exports.setCoupon = function(req, res){
+  console.log('execute POST method setCoupon');
+  var json = req.body;
+  json['sessionid']= req.headers['x-auth-token'];
+  couponService.setCoupon(json, function(err,result){
+      if(err) {
+        console.log('Error: '+JSON.stringify(err));
+        res.send(500);
+      } else {
+        console.log('Result: '+JSON.stringify(result));
+        res.json(result);
+      }
+  });
 }
