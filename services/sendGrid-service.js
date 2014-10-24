@@ -32,7 +32,7 @@ exports.sendRegisterMessage= function(user){
 		text:       user.name + '!!\n\n'+
 		config.mail.bodyPin + user.pin+'\n\n' +
 		config.mail.bodyFin + '\n\n' +
-		config.mail.regards + '\n' +
+		config.mail.regards + '\n\n' +
 		config.mail.footer
 
 	}, function(err, json) {
