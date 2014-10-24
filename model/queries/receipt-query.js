@@ -45,6 +45,29 @@ exports.updateReceipt = function(payload,callback){
   });
 };
 
+exports.updateReceiptByOrder = function(payload,callback){
+  var conditions = {orderID: payload.orderID};
+  Receipt.update(conditions, payload, null, function(err, result) {
+    callback(null, result);
+  });
+};
+
+exports.getReceiptByOrderID = function(orderID,callback){
+  Receipt.find({'orderID':orderID},'emitter receiver title amount date type status additionalInfo',{sort: {date: -1}},function (err, receipt) {
+       if (err) callback('ERROR', err);
+       else if(receipt){
+          console.log('Get order');
+          console.log(receipt);
+          console.log(receipt[0]);
+          callback(null, receipt[0]);
+      }
+      else{
+          console.log("receipt not found");
+          callback("receipt not found", null);
+      }
+  });
+};
+
 exports.getIdPhone = function(payload,callback){
   Receipt.findOne({_id: payload.id},'emitter',function (err, result) {
     callback(null, result.emitter)

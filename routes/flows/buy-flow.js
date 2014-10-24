@@ -198,6 +198,7 @@ exports.buyFlow = function(payload,callback) {
 			    receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
 			    receipt.type = 'BUY';
 			    receipt.status = 'NEW';
+			    receipt.orderID = orderID;
 			    ReceiptQuery.createReceipt(receipt, function(err, result) {
 			        if (err)
 			            callback('ERROR', result.message);

@@ -5,9 +5,6 @@ var transacctionQuery = require('../../model/queries/transacction-query');
 var doxsService = require('../../services/doxs-service');
 
 exports.updateProfile = function(payload,callback) {
-
-	console.log("estoy en el update profile flow! "+payload);
-
 	async.waterfall([
 
 		function(callback){
