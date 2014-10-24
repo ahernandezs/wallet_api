@@ -38,7 +38,7 @@ exports.createLoanFlow = function(payload,callback) {
                 } else {
                     var response = result.balanceReturn;
                     console.log(JSON.stringify(response));
-                    if(response.result  === '0' && response.current === '0')
+                    if(response.result  === '0' && response.current !== '0')
                         callback(null);
                     else {
                         var response = { statusCode: 1 , additionalInfo : 'You can only request a loan if you have no money' };
@@ -131,7 +131,7 @@ exports.createLoanFlow = function(payload,callback) {
       });
     },
     function(loan,callback){
-      loan.additionalInfo = JSON.stringify ({_id: loan._id , customerName : loan.name , customerImage : loan.customerImage , status: loan.status , date :loan.date });
+      loan.additionalInfo = JSON.stringify ({_id: loan._id, customerName : loan.name, customerImage : loan.customerImage, status: config.loans.status.NEW, date :loan.date });
         forResult.additionalInfo._id = loan._id;
       var message = config.messages.loanRequestMsg + loan.amount;
       loan.message = message;
@@ -157,7 +157,7 @@ exports.createLoanFlow = function(payload,callback) {
           receipt.emitter = data.payload.phoneID;
           receipt.receiver = 'merchant';
           receipt.amount = data.payload.amount;
-          receipt.message = "You have received a loan of € "+ receipt.amount;
+          receipt.message = "You have requested a loan of €"+ receipt.amount;
           receipt.additionalInfo = additionalInfo;
           receipt.title = receipt.message;
           receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
