@@ -46,8 +46,9 @@ exports.updateOrder = function(payload,callback){
 };
 
 exports.getOrders =  function(merchantID, callback) {
-    console.log( 'getOrders from MongoDB with status: ' + config.orders.status );
-    Order.find({ 'merchantId': merchantID , 'status': config.orders.status }, '_id customerImage customerName date status', function(err, orders)  {
+    console.log( 'getOrders from MongoDB with status: ' + config.orders.status.NEW );
+    //Order.find({ 'merchantId': merchantID , 'status': config.orders.status }, '_id customerImage customerName date status', function(err, orders)  {
+    Order.find({ 'status': config.orders.status.NEW }, 'orderId _id customerImage customerName date status products userId', function(err, orders)  {
         var response;
         if (err) {
             response = { statusCode: 1, additionalInfo: config.orders.errMsg };
