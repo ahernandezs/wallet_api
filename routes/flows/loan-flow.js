@@ -6,6 +6,7 @@ var messageQuery = require('../../model/queries/message-query');
 var merchantQuery = require('../../model/queries/merchant-query');
 var urbanService = require('../../services/urban-service');
 var transfer = require('./transfer-flow');
+var transacctionQuery = require('../../model/queries/transacction-query');
 var config = require('../../config.js');
 var soapurl = process.env.SOAP_URL;
 var ReceiptQuery = require('../../model/queries/receipt-query');
@@ -189,6 +190,8 @@ exports.createLoanFlow = function(payload,callback) {
 
 exports.updateLoanFlow = function(payload,callback){
   var loanID = payload.body._id;
+    var receiver;
+    var tranStatus = payload.body.status;
   async.waterfall([
     function(callback) {
       var loan = payload.body;
@@ -216,7 +219,7 @@ exports.updateLoanFlow = function(payload,callback){
           console.log('Recuperando Loan');
           var notification = {};
           notification.phoneID = result.phoneID;
-          console.log(result);
+            receiver = result.phoneID;
           loan.amount = result.amount;
           loan.phoneID = result.phoneID;
           callback(null,notification,loan);
@@ -225,24 +228,28 @@ exports.updateLoanFlow = function(payload,callback){
     },
 
     function(notification,loan,callback) {
-      console.log('Performing transfer');
-      console.log(loan);
-      var payloadTransfer = { amount : loan.amount ,  phoneID : notification.phoneID };
-      var payloadTransfer = { transferRequest : payloadTransfer };
-      transfer.transferFlow(payloadTransfer,function(err,result) {
-        if(err){
-          var response = { statusCode:1 ,  additionalInfo : result };
-          callback('ERROR',response);
+        if ( loan.status === config.loans.status.ACCEPTED ) {
+          console.log('Performing transfer');
+          console.log(loan);
+          var payloadTransfer = { amount : loan.amount ,  phoneID : notification.phoneID };
+          var payloadTransfer = { transferRequest : payloadTransfer };
+          transfer.transferFlow(payloadTransfer,function(err,result) {
+            if(err){
+              var response = { statusCode:1 ,  additionalInfo : result };
+              callback('ERROR',response);
+            }
+            else{
+              var response = { statusCode:0 ,  additionalInfo : result };
+              callback(null,notification,loan);
+            }
+          });
+        } else {
+            callback(null, notification, loan);
         }
-        else{
-          var response = { statusCode:0 ,  additionalInfo : result };
-          callback(null,notification,loan);
-        }
-      });
     },
     function(sessionid,loan,callback){
       console.log('Save message in DB');
-      if(loan.status === config.loans.status.ACCEPTED){
+      if( tranStatus === config.loans.status.ACCEPTED ){
         console.log('ACCEPTED');
         loan.message = 'Your loan for € ' + loan.amount + ' was accepted' ;
         loan.title = loan.message;
@@ -281,32 +288,35 @@ exports.updateLoanFlow = function(payload,callback){
         }
         else{
           var response = { statusCode:0 ,  additionalInfo : result };
-          callback(null,response);
+          callback(null, response, loan);
         }
-      });
-
-     /* function(balance,receipt, callback) {
-        console.log( 'Create History transacction' );
-        var transacction = {};
-        transacction.title = 'Transfer Fund ';
-        transacction.type = 'MONEY',
-        transacction.date = dateTime;
-        transacction.amount = (-1) * receipt.amount;
-        transacction.additionalInfo = receipt.additionalInfo;
-        transacction.operation = 'LOAN';
-        transacction.phoneID = receipt.emitter;
-        Userquery.findAppID(receipt.receiver,function(err,result){
-          transacction.description ='To ' + result.name;
-          transacctionQuery.createTranssaction(transacction, function(err, result) {
-            if (err)
-              callback('ERROR', err);
-            else{
-              console.log('Creando transacction');
-              callback(null, balance);
-            }
-          });
-        });
-      },*/
+      })
+    },
+    function(response, loan, callback) {
+        if ( tranStatus === config.loans.status.REJECTED )
+            callback(null, response);
+        else {
+            console.log( 'Create History transaction' );
+            var transacction = {};
+            transacction.title = 'Transfer Fund';
+            transacction.type = 'MONEY',
+            transacction.date = loan.date;
+            transacction.amount = loan.amount;
+            transacction.additionalInfo = loan.additionalInfo;
+            transacction.operation = 'LOAN';
+            transacction.phoneID = receiver;
+            userQuery.findAppID(receiver,function(err,result){
+              transacction.description ='From amdocs Cafe';
+              transacctionQuery.createTranssaction(transacction, function(err, result) {
+                if (err)
+                  callback('ERROR', err);
+                else{
+                  console.log('Transaction created');
+                  callback(null, response);
+                }
+              });
+            });
+        }
     }
     ],  function (err, result) {
       console.log(result);
