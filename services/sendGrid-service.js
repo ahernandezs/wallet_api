@@ -7,7 +7,6 @@ var config = require('../config.js');
 var sendgrid  = require('sendgrid')(config.sendGrid.user, config.sendGrid.password);
 
 exports.sendMail = function(sender,message, callback){
-
 	createMail(sender,message,function(err,mail){
 		if (err) callback("ERROR", { statusCode: 1,  additionalInfo: 'Error to create email message' });
 		else {
@@ -21,6 +20,24 @@ exports.sendMail = function(sender,message, callback){
 				console.log(json);
 			});
 		}
+	});
+}
+
+exports.sendRegisterMessage= function(user){
+
+	sendgrid.send({
+		to:        user.email,
+		from:      'no-reply@wallet.amdocs.com',
+		subject:   'Welcome to Amdocs Wallet',
+		text:       user.name + '!!\n\n'+
+		config.mail.bodyPin + user.pin+'\n\n' +
+		config.mail.bodyFin + '\n\n' +
+		config.mail.regards + '\n\n' +
+		config.mail.footer
+
+	}, function(err, json) {
+		if (err) { return console.error(err); }
+		console.log(json);
 	});
 }
 

@@ -3,8 +3,9 @@ var User = require('../user');
 var config = require('../../config.js');
 var balance = require('../../routes/flows/balance-flow');
 var transfer = require('../../routes/flows/transfer-flow');
-var profileFlow = require('../../routes/flows/profile-flow');
+//var profileFlow = require('../../routes/flows/profile-flow');
 var doxsService = require('../../services/doxs-service');
+var mailService = require('../../services/sendGrid-service');
 var transacctionQuery = require('../../model/queries/transacction-query');
 
 exports.validateUser = function(phoneID,callback){
@@ -30,6 +31,9 @@ exports.createUser = function(user,callback){
   console.log(user);
   var userToPersist = new User(user);
   console.log('User to persist user' + userToPersist);
+
+  if(user.email_address)
+      mailService.sendRegisterMessage(user);
   userToPersist.save(function (err) {
     if (err) callback("ERROR", { statusCode: 1,  additionalInfo: 'Error to register user' });
     callback(null, { statusCode: 0 ,  additionalInfo: 'User registered correctly' });
@@ -59,7 +63,7 @@ exports.updateUser = function(payload,callback){
       });
     },
 
-    function(callback){
+    /*function(callback){
       if(payload.profileCompleted === 1){
         profileFlow.updateProfile(payload, function(err, result){
         if(err){
@@ -69,8 +73,8 @@ exports.updateUser = function(payload,callback){
         });
       }else
         callback(null);
-    },
-    /*function(callback){
+    },*/
+    function(callback){
       if(payload.profileCompleted === 1){
         var transacction = {};
         transacction.title = 'Update Profile';
@@ -95,7 +99,7 @@ exports.updateUser = function(payload,callback){
         });
       }else
         callback(null);
-    },*/
+    },
 
     function(callback){
       console.log(payload.sessionid);
@@ -237,7 +241,9 @@ exports.updateSession = function(user, callback) {
 };
 
 exports.getLeaderboard = function(callback){
-  User.find({}, 'phoneID name doxs', {sort: {doxs: -1}}, function (err, people) {
+  var query = User.find({}, 'phoneID name doxs', {sort: {doxs: -1}});
+  query.limit(10);
+  query.exec(function (err, people) {
     if (err) return handleError(err);
     else if(people){
       callback(null, people);
