@@ -292,7 +292,7 @@ exports.transferFunds = function(data, callback) {
         function(balance,receipt, callback) {
             console.log( 'Create History transaction for emitter' );
             var transacction = {};
-            transacction.title = 'Transfer Fund';
+            transacction.title = 'Transfer fund';
             transacction.type = 'MONEY',
             transacction.date = dateTime;
             transacction.amount = (-1) * receipt.amount;
@@ -315,7 +315,7 @@ exports.transferFunds = function(data, callback) {
         function(balance,receipt, callback) {
             console.log( 'Create  transacction DOX' );
             var transacction = {};
-            transacction.title = 'Transfer Fund';
+            transacction.title = 'Transfer fund';
             transacction.type = 'DOX',
             transacction.date = dateTime;
             transacction.amount = config.doxs.p2p;
@@ -338,7 +338,7 @@ exports.transferFunds = function(data, callback) {
         function(balance, receipt) {
             console.log( 'Create History transaction for receiver' );
             var transaction = {};
-            transaction.title = 'Transfer Fund';
+            transaction.title = 'Transfer fund';
             transaction.type = 'MONEY';
             transaction.date = dateTime;
             transaction.amount = receipt.amount;

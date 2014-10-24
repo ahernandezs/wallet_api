@@ -298,7 +298,7 @@ exports.updateLoanFlow = function(payload,callback){
         else {
             console.log( 'Create History transaction' );
             var transacction = {};
-            transacction.title = 'Transfer Fund';
+            transacction.title = 'Transfer fund';
             transacction.type = 'MONEY',
             transacction.date = loan.date;
             transacction.amount = loan.amount;
