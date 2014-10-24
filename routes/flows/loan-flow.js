@@ -41,7 +41,7 @@ exports.createLoanFlow = function(payload,callback) {
                     if(response.result  === '0' && response.current === '0')
                         callback(null);
                     else {
-                        var response = { statusCode: 1 , additionalInfo : 'You can not request a loan' };
+                        var response = { statusCode: 1 , additionalInfo : 'You can only request a loan if you have no money' };
                         callback('ERROR', response);
                     }
                 }
@@ -192,6 +192,7 @@ exports.updateLoanFlow = function(payload,callback){
   var loanID = payload.body._id;
     var receiver;
     var tranStatus = payload.body.status;
+    var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
   async.waterfall([
     function(callback) {
       var loan = payload.body;
@@ -227,7 +228,7 @@ exports.updateLoanFlow = function(payload,callback){
       });
     },
 
-    /*function(notification,loan,callback) {
+    function(notification,loan,callback) {
         if ( loan.status === config.loans.status.ACCEPTED ) {
           console.log('Performing transfer');
           console.log(loan);
@@ -260,7 +261,6 @@ exports.updateLoanFlow = function(payload,callback){
         loan.title = 'Your loan for € ' + loan.amount + ' was rejected' ;
       }
 
-      var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
       loan.additionalInfo = JSON.stringify({ _id : loanID , sender: 1 , status: loan.status ,date:dateTime });
       console.log('additionalInfo ....'+loan.additionalInfo);
       loan.status = config.messages.status.NOTREAD;
@@ -317,11 +317,27 @@ exports.updateLoanFlow = function(payload,callback){
               });
             });
         }
-    },*/
-    function(notification, loan, callback) {
-        var search = { phoneID : receiver, type : 'LOAN', status : 'NEW' };
+    },
+    function(response, callback) {
+        var search = { phoneID : receiver, type : 'LOAN' };
         ReceiptQuery.getLastReceipt(search, function(err, result) {
-            console.log('recibos? ' + JSON.stringify(result));
+            console.log('receipt ' + JSON.stringify(result));
+            if (err)
+                callback('ERROR', result);
+            else
+                callback(null, JSON.parse(result), response);
+        });
+    },
+    function(receipt, response, callback) {
+        console.log('updating receipt')
+        receipt.date = dateTime;
+        receipt.status = tranStatus;
+        ReceiptQuery.updateReceipt(receipt, function(err, result) {
+           if (err)
+               callback('ERROR', { statusCode : 1, additionalInfo : result });
+            else {
+                callback(null, response);
+            }
         });
     }
     ],  function (err, result) {

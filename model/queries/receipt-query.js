@@ -29,16 +29,17 @@ exports.getReceipts = function(phoneID, callback){
 };
 
 exports.updateReceipt = function(payload,callback){
-  var conditions = {_id: payload.id};
-  var payload;
+  var conditions = {_id: payload._id};
 
-  if(payload.operation.toLowerCase() == 'twitter')
-    payload = {twitter: 1}
-  else if(payload.operation.toLowerCase() == 'facebook')
-    payload = {facebook: 1}
-  else if(payload.operation.toLowerCase() == 'instagram')
-    payload = {instagram: 1}
-
+    if (payload.operation !== undefined) {
+        console.log('entro D:');
+      if(payload.operation.toLowerCase() == 'twitter')
+        payload = {twitter: 1}
+      else if(payload.operation.toLowerCase() == 'facebook')
+        payload = {facebook: 1}
+      else if(payload.operation.toLowerCase() == 'instagram')
+        payload = {instagram: 1}
+    }
   Receipt.update(conditions, payload, null, function(err, result) {
     callback(null, result);
   });
@@ -59,15 +60,17 @@ exports.updateReceiptStatus = function(payload,callback){
 };
 
 exports.getLastReceipt = function(payload, callback) {
-    var conditions = { emitter : payload.phoneID, type : payload.type, status : payload.status };
-    Receipt.find(conditions, { sort : {date : -1} }, function(err, receipts) {
+    console.log('Get last receipt for ' + payload.phoneID);
+    var conditions = { emitter : payload.phoneID, type : payload.type };
+    console.log(conditions);
+    Receipt.find(conditions, 'emitter receiver amount message additionalInfo title date type status', { sort : {date : -1} }, function(err, receipts) {
         if(err)
-            callback('ERROR', 'There are no receipts for the user')
+            callback('ERROR', receipts);
         else {
             while (receipts.length > 1) {
                 receipts.removeChild(receipts.lastChild);
             }
-            callback(null, receipts);
+            callback(null, JSON.stringify(receipts[0]));
         }
     });
 };
