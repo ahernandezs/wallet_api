@@ -28,14 +28,15 @@ config.S3 = {};
 config.S3.url = 'https://s3-us-west-1.amazonaws.com/amdocs-images/profile/';
 
 config.messages = {};
-config.messages.status = { READ : 'READ' ,NOTREAD : 'NOTREAD'};
-config.messages.type = { TRANSFER:'TRANSFER' , GIFT : 'GIFT' , BUY :'BUY' ,LOAN :'LOAN' };
+config.messages.status = { READ : 'READ' ,NOTREAD : 'NOTREAD', DELIVERED: 'DELIVERED'};
+config.messages.type = { TRANSFER:'TRANSFER' , GIFT : 'GIFT' , BUY :'BUY' ,LOAN :'LOAN', COUPON: 'COUPON' };
 config.messages.transferMsg = 'You have received a transfer of €';
 config.messages.giftMsg = 'You have received a coffee gift!!!';
 config.messages.loanRequestMsg = 'There are new request loan for €';
 config.messages.loanRejectedMsg = 'Build up your Dox score to be elegible for a loan';
-config.messages.action = {TRANSFER:1 , GIFT :2 , BUY :3 ,LOAN : 4 };
+config.messages.action = {TRANSFER:1 , GIFT :2 , BUY :3 ,LOAN : 4, COUPON: 5 };
 config.messages.transferFund = 'You have sent a Transfer to ';
+config.messages.coupon = 'Congratulations! you won a prize!! ';
 
 config.messages.twitter = { message :'I just bought a {0} from AmdocsCafe at {1} !!!!' , url :'http://goo.gl/IRbh4z'};
 config.messages.twitter1 = 'I just bought a ';

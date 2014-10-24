@@ -13,3 +13,11 @@ exports.getPrizes =  function(top, callback) {
         callback(null, response);
     });
 };
+
+
+exports.getPrize = function(id, callback){
+    var conditions = { '_id' : id };
+    Prize.find( conditions, 'imgUrl description' , function(err, response)  {
+        callback(null, response);
+    });
+}
