@@ -10,9 +10,6 @@ exports.createMessage = function(sender,message, callback) {
 
       messageToPersist.save(function (err,result) {
         if (err) callback("ERROR", { statusCode: 1,  additionalInfo: 'Error to persist message' });
-          console.log('messageeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee');
-          
-          console.log(err);
         callback(null, result); ;
      });
 };
