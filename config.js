@@ -70,4 +70,10 @@ config.conn = {};
 config.username = 'anzen_01';
 config.pin = '1234';
 
+config.mail = {};
+config.mail.bodyPin= 'Thank you for registering with Amdocs wallet! Your pin number is: ';
+config.mail.bodyFin='Now you can buy a coffee or just send a coffee to a friend, also you can share your buy in your social networks, all these actions give you Dox points, with Dox points you could win some amazing prizes.';
+config.mail.regards='Thanks!';
+config.mail.footer='Amdocs wallet Team';
+
 module.exports = config;

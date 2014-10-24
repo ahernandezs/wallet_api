@@ -5,6 +5,7 @@ var balance = require('../../routes/flows/balance-flow');
 var transfer = require('../../routes/flows/transfer-flow');
 //var profileFlow = require('../../routes/flows/profile-flow');
 var doxsService = require('../../services/doxs-service');
+var mailService = require('../../services/sendGrid-service');
 var transacctionQuery = require('../../model/queries/transacction-query');
 
 exports.validateUser = function(phoneID,callback){
@@ -30,6 +31,9 @@ exports.createUser = function(user,callback){
   console.log(user);
   var userToPersist = new User(user);
   console.log('User to persist user' + userToPersist);
+
+  if(user.email_address)
+      mailService.sendRegisterMessage(user);
   userToPersist.save(function (err) {
     if (err) callback("ERROR", { statusCode: 1,  additionalInfo: 'Error to register user' });
     callback(null, { statusCode: 0 ,  additionalInfo: 'User registered correctly' });
