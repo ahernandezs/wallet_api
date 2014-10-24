@@ -3,7 +3,7 @@ var User = require('../user');
 var config = require('../../config.js');
 var balance = require('../../routes/flows/balance-flow');
 var transfer = require('../../routes/flows/transfer-flow');
-var profileFlow = require('../../routes/flows/profile-flow');
+//var profileFlow = require('../../routes/flows/profile-flow');
 var doxsService = require('../../services/doxs-service');
 var transacctionQuery = require('../../model/queries/transacction-query');
 
@@ -59,7 +59,7 @@ exports.updateUser = function(payload,callback){
       });
     },
 
-    function(callback){
+    /*function(callback){
       if(payload.profileCompleted === 1){
         profileFlow.updateProfile(payload, function(err, result){
         if(err){
@@ -69,8 +69,8 @@ exports.updateUser = function(payload,callback){
         });
       }else
         callback(null);
-    },
-    /*function(callback){
+    },*/
+    function(callback){
       if(payload.profileCompleted === 1){
         var transacction = {};
         transacction.title = 'Update Profile';
@@ -95,7 +95,7 @@ exports.updateUser = function(payload,callback){
         });
       }else
         callback(null);
-    },*/
+    },
 
     function(callback){
       console.log(payload.sessionid);
