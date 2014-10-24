@@ -318,10 +318,8 @@ exports.setCoupon = function(req, res){
   json['sessionid']= req.headers['x-auth-token'];
   couponService.setCoupon(json, function(err,result){
       if(err) {
-        console.log('Error: '+JSON.stringify(err));
         res.send(500);
       } else {
-        console.log('Result: '+JSON.stringify(result));
         res.json(result);
       }
   });
