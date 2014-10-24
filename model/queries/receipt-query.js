@@ -57,3 +57,17 @@ exports.updateReceiptStatus = function(payload,callback){
     callback(null, result);
   });
 };
+
+exports.getLastReceipt = function(payload, callback) {
+    var conditions = { emitter : payload.phoneID, type : payload.type, status : payload.status };
+    Receipt.find(conditions, { sort : {date : -1} }, function(err, receipts) {
+        if(err)
+            callback('ERROR', 'There are no receipts for the user')
+        else {
+            while (receipts.length > 1) {
+                receipts.removeChild(receipts.lastChild);
+            }
+            callback(null, receipts);
+        }
+    });
+};

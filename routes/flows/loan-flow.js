@@ -227,7 +227,7 @@ exports.updateLoanFlow = function(payload,callback){
       });
     },
 
-    function(notification,loan,callback) {
+    /*function(notification,loan,callback) {
         if ( loan.status === config.loans.status.ACCEPTED ) {
           console.log('Performing transfer');
           console.log(loan);
@@ -317,6 +317,12 @@ exports.updateLoanFlow = function(payload,callback){
               });
             });
         }
+    },*/
+    function(notification, loan, callback) {
+        var search = { phoneID : receiver, type : 'LOAN', status : 'NEW' };
+        ReceiptQuery.getLastReceipt(search, function(err, result) {
+            console.log('recibos? ' + JSON.stringify(result));
+        });
     }
     ],  function (err, result) {
       console.log(result);
