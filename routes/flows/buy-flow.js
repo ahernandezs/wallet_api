@@ -73,6 +73,22 @@ exports.buyFlow = function(payload,callback) {
 				callback(null,sessionid);
 			});
 		},
+        
+        function(sessionid, callback) {
+            console.log('search user by phoneID');
+              Userquery.findUserByPhoneID(payload.phoneID,function(err,result){
+                if(err){
+                    var response = { statusCode:1 ,  additionalInfo : err };
+                    callback('ERROR',response);
+                  }
+                  else{
+                    console.log(result);
+                    order.customerName = result.name;
+                    order.customerImage = config.S3.url + payload.phoneID +'.png',
+                    callback(null,sessionid);
+                  }
+              });  
+        },
 
 		function(sessionid,callback){
 			console.log('Saving order '+JSON.stringify(order));
