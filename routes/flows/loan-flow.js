@@ -38,7 +38,7 @@ exports.createLoanFlow = function(payload,callback) {
                 } else {
                     var response = result.balanceReturn;
                     console.log(JSON.stringify(response));
-                    if(response.result  === '0' && response.current !== '0')
+                    if(response.result  === '0' && response.current === '0')
                         callback(null);
                     else {
                         var response = { statusCode: 1 , additionalInfo : 'You can only request a loan if you have no money' };
@@ -126,6 +126,7 @@ exports.createLoanFlow = function(payload,callback) {
           var response = { statusCode: 1, additionalInfo: result };
           callback('ERROR', response);
         } else {
+            loan._id = result._id;
           callback(null, loan);
         }
       });
