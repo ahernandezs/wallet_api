@@ -1,8 +1,7 @@
 var Orderquery = require('../model/queries/order-query');
 var merchant = require('../model/merchant');
 var merchantQuery = require('../model/queries/merchant-query');
-var soap = require('soap');
-var soapurl = process.env.SOAP_URL;
+var updateOrder = require('../routes/flows/updateOrder-flow');
 
 exports.merchants =  function(req, res){
   console.log('execute GET method merchants!');
@@ -27,10 +26,12 @@ exports.putOrder = function(req,res){
 };
 
 exports.updateOrder = function(req, res){
-  Orderquery.updateOrder(req.body, function(err,result){
+  updateOrder.updateOrderFlow(req.body, function(err,result){
     if(err)
          res.send(err);
-    res.json(result);  });
+    else
+      res.json(result);  
+  });
 };
 
 exports.getOrders = function(req, res) {

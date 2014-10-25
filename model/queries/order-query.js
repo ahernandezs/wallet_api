@@ -45,6 +45,17 @@ exports.updateOrder = function(payload,callback){
 	});
 };
 
+exports.updateOrderbyOrderID = function(payload,callback){
+	var conditions = payload.orderID
+	Order.update(conditions, payload, null, function(err, result) {
+		if (err){
+			console.log(err)
+			callback("ERROR", { statusCode: 1,  additionalInfo: 'Update Fail' });
+		}else{
+			callback(null, { statusCode: 0 ,  additionalInfo: 'Update success' });
+		}
+	});
+};
 exports.getOrders =  function(merchantID, callback) {
     console.log( 'getOrders from MongoDB with status: ' + config.orders.status.NEW );
     //Order.find({ 'merchantId': merchantID , 'status': config.orders.status }, '_id customerImage customerName date status', function(err, orders)  {
