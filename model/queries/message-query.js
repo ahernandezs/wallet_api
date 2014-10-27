@@ -4,10 +4,6 @@ var Message = require('../message');
 exports.createMessage = function(sender,message, callback) {
     console.log( 'Persistmessage ');
       var messageToPersist = new Message(message);
-
-      if(sender)
-        mailService.sendMail(sender,messageToPersist);
-
       messageToPersist.save(function (err,result) {
         if (err) callback("ERROR", { statusCode: 1,  additionalInfo: 'Error to persist message' });
         callback(null, result); ;
