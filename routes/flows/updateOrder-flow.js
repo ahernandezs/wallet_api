@@ -47,7 +47,7 @@ exports.updateOrderFlow = function(payload,callback) {
 			var message = {};
 			message.phoneID = receipt.emitter;
 			message.title = 'Your order No' + payload.orderID +  ' is ' + status;
-			message.type = 'BUY';
+			message.type = receipt.type;
 			message.status = 'NOTREAD';
 			message.additionalInfo = receipt.additionalInfo;
 			message.date = dateTime;
@@ -66,7 +66,7 @@ exports.updateOrderFlow = function(payload,callback) {
 		function(message, callback){
 			urbanService.singlePush(message, function(err, result) {
 				if (err) {
-					var response = { statusCode: 1, additionalInfo: err };
+					var response = { statusCode: 3, additionalInfo: err };
 					callback('ERROR', response);
 				}else{
 					var response = { statusCode: 0, additionalInfo: 'Update order successful' };

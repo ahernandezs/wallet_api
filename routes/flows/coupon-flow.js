@@ -68,7 +68,7 @@ exports.setCoupon = function(payload,callback) {
                 if (err)
                     callback('ERROR', err);
                 else
-					var response = { statusCode: 0, additionalInfo: 'The coupon sent was successful' };
+					var response = { statusCode: 0, additionalInfo: 'The coupon was succesfully sent' };
                     callback(null, response);
             });
 
