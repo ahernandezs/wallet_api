@@ -83,6 +83,21 @@ exports.sendGift = function(payload,callback) {
 				});
 			});
 		},
+        function(sessionid, currentMoney, callback) {
+            console.log('search user by phoneID');
+              Userquery.findUserByPhoneID(receiver,function(err,result){
+                if(err){
+                    var response = { statusCode:1 ,  additionalInfo : err };
+                    callback('ERROR',response);
+                  }
+                  else{
+                    console.log(result);
+                    order.customerName = result.name;
+                    order.customerImage = config.S3.url + receiver +'.png',
+                    callback(null,sessionid, currentMoney);
+                  }
+              });  
+        },
 		function(sessionid,currentMoney, callback){
 				Orderquery.putOrder(order, function(err,result){
 				orderID = result.order;
