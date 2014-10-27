@@ -210,6 +210,7 @@ exports.sendGift = function(payload,callback) {
 			receipt.type = 'GIFT';
 			receipt.status = 'NEW';
 			receipt.orderID = orderID;
+            receipt.owner = 1;
 			console.log(receipt);
 			ReceiptQuery.createReceipt(receipt, function(err, result) {
 				if (err)
@@ -232,6 +233,7 @@ exports.sendGift = function(payload,callback) {
             newReceipt.date = dateTime;
             newReceipt.type = 'GIFT';
             newReceipt.status = 'NEW';
+            newReceipt.owner = 0;
             ReceiptQuery.createReceipt(newReceipt, function(err, result) {
                if (err)
                    callback('ERROR', errr);
