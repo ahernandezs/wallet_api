@@ -134,20 +134,13 @@ exports.sendGift = function(payload,callback) {
         function(sessionid, response, callback){
             Userquery.getIdByPhoneID(payload.phoneID,function(err,result){
                 var id = result._id;
-                callback(null,sessionid,response,id);    
+                callback(null,sessionid,response);
             });
         },
-		function(sessionid,response, id, callback){
-			Orderquery.putOrder(order, function(err,result){
-				console.log('Order saving result: '+JSON.stringify(result));
-                forReceipt.orderID = result.order;
-				callback(null, sessionid, response, result);
-			});
-		},
-        function(sessionid, response, result, callback){
+        function(sessionid, response, callback){
             console.log('Save message in DB');
             var title = config.messages.giftMsg;
-            var extraData = { action :1, giftID: result.order , additionalInfo: payload.additionalInfo };
+            var extraData = { action :1, giftID: orderID , additionalInfo: payload.additionalInfo };
             payload.extra = {extra : extraData} ;
             payload.status = config.messages.status.NOTREAD;
             payload.type = config.messages.type.GIFT;
@@ -275,13 +268,12 @@ exports.sendGift = function(payload,callback) {
 							else {
 								balance.date = dateTime;
                                 balance.type = 'GIFT';
-                                balance._id = balance.additionalInfo.order;
+                                balance._id = orderID;
                                 balance.additionalInfo.avatar = config.S3.url + emitter +'.png';
                                 balance.additionalInfo.name = receiver;
                                 balance.additionalInfo.amount = receipt.amount;
                                 balance.title = 'You have sent a gift';
                                 balance.additionalInfo.product = payload.order.products[0].name;
-                                balance._id = forReceipt.orderID;
 								callback(null, balance);
 							}
 						});
