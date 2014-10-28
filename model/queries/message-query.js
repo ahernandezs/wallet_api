@@ -15,14 +15,17 @@ exports.getMessages = function(phoneID, callback) {
     console.log( 'Getting messages: ' + phoneID);
 
     var mensajes = {};
+    var tmp = {};
     var condiciones = {$and: [  {'status': config.messages.status.NOTREAD },
                                 {'phoneID': phoneID }]}
 
     Message.find(condiciones, ' title type message status additionalInfo date', {sort: {date: -1}}, function (err, msgs) {
 
       if (err) callback('ERROR', err);
-      else if(msgs)
+      else if(msgs){
         mensajes = msgs;
+        tmp = msgs;
+      }
 
       var conditions =  {$and: [ {'status': config.messages.status.READ},
                                  {'phoneID': phoneID }]};
@@ -33,9 +36,10 @@ exports.getMessages = function(phoneID, callback) {
 
         if (err1) callback('ERROR', err);
         else if(losMensajes)
-          mensajes.push(losMensajes);
 
-        callback(null, mensajes);
+          tmp = mensajes.concat(losMensajes);
+
+        callback(null, tmp);
 
       });
     });
