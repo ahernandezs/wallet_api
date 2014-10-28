@@ -1,5 +1,6 @@
 var mailService = require('../../services/sendGrid-service');
 var Message = require('../message');
+var config = require('../../config.js');
 
 exports.createMessage = function(sender,message, callback) {
     console.log( 'Persistmessage ');
@@ -11,18 +12,37 @@ exports.createMessage = function(sender,message, callback) {
 };
 
 exports.getMessages = function(phoneID, callback) {
-    console.log( 'Getting NOREAD messages  : ' + phoneID);
-    Message.find({ 'phoneID': phoneID }, ' title type message status additionalInfo date',{sort: {date: -1}}, function (err, msgs) {
-        if (err) callback('ERROR', err);
-        else if(msgs){
-          console.log(msgs);
-          callback(null, msgs);
+    console.log( 'Getting messages: ' + phoneID);
+
+    var mensajes = {};
+    var tmp = {};
+    var condiciones = {$and: [  {'status': config.messages.status.NOTREAD },
+                                {'phoneID': phoneID }]}
+
+    Message.find(condiciones, ' title type message status additionalInfo date', {sort: {date: -1}}, function (err, msgs) {
+
+      if (err) callback('ERROR', err);
+      else if(msgs){
+        mensajes = msgs;
+        tmp = msgs;
       }
-      else{
-          console.log("messages not found");
-          callback("messages not found", null);
-      }
-  });
+
+      var conditions =  {$and: [ {'status': config.messages.status.READ},
+                                 {'phoneID': phoneID }]};
+
+      var  msj = Message.find(conditions, 'title type message status additionalInfo date');
+      msj.limit(10);
+      msj.exec(function (err1, losMensajes) {
+
+        if (err1) callback('ERROR', err);
+        else if(losMensajes)
+
+          tmp = mensajes.concat(losMensajes);
+
+        callback(null, tmp);
+
+      });
+    });
 };
 
 exports.updateMessage = function(message,callback){
