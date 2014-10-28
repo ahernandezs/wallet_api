@@ -58,12 +58,13 @@ exports.updateOrderbyOrderID = function(payload,callback){
 };
 
 exports.getOrders =  function(merchantID, callback) {
-	var condiciones = {$or: [	{'status':config.orders.status.DELIVERED },
+	var conditionsDeliveredAndCanceled = {$or: [	{'status':config.orders.status.DELIVERED },
 								{'status':config.orders.status.CANCELED}]}
-    var  deliveredAndCanceled = Order.find(condiciones, 'orderId _id customerImage customerName date status products userId');
+    var  deliveredAndCanceled = Order.find(conditionsDeliveredAndCanceled, 'orderId _id customerImage customerName date status products userId');
 	deliveredAndCanceled.limit(10);
-	deliveredAndCanceled.exec(function (err1, ordenes) {
-		var response = { statusCode: 0, additionalInfo: ordenes };
+	deliveredAndCanceled.exec(function (err1, ordersDeliveredAndCanceled) {
+
+		var response = { statusCode: 0 };
 		var conditions = {$or: [{'status':config.orders.status.NEW },
 								{'status':config.orders.status.IN_PROGRESS},
 								{'status':config.orders.status.READY}]};
@@ -73,8 +74,8 @@ exports.getOrders =  function(merchantID, callback) {
 	            callback("ERROR: " + JSON.stringify(err.message), response);
 	        } else {
 				if(orders.length != 0){
-					var temp = ordenes.concat(orders);
-					response.additionalInfo = temp;
+					var ordersMerge = ordersDeliveredAndCanceled.concat(orders);
+					response.additionalInfo = ordersMerge;
 	            }
 	            if(response.additionalInfo.length === 0){
 		            response = { statusCode: 0, additionalInfo: config.orders.emptyMsg }

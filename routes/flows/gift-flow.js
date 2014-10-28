@@ -202,7 +202,7 @@ exports.sendGift = function(payload,callback) {
 			var title = 'You have received a coffee gift!';
 			var message = payload.message;
 			payload.message = title;
-			var extraData = { action :2,additionalInfo:JSON.stringify(payload.additionalInfo),_id:messageID};
+			var extraData = { action :2,additionalInfo:payload.additionalInfo,_id:messageID};
 			payload.extra = {extra : extraData} ;
 			payload.phoneID = payload.beneficiaryPhoneID;
 			delete payload.beneficiaryPhoneID;
@@ -222,7 +222,6 @@ exports.sendGift = function(payload,callback) {
 			receipt.date = dateTime;
 			receipt.type = 'GIFT';
 			receipt.status = 'NEW';
-			receipt.orderID = orderID;
             receipt.owner = 1;
 			console.log(receipt);
 			ReceiptQuery.createReceipt(receipt, function(err, result) {
@@ -239,6 +238,7 @@ exports.sendGift = function(payload,callback) {
             newReceipt.receiver = emitter;
             newReceipt.amount = payload.order.total;
             newReceipt.message = message;
+            newReceipt.orderID = orderID;
             var temp = JSON.parse(additionalInfo);
             delete temp.doxAdded;
             newReceipt.additionalInfo = JSON.stringify(temp);

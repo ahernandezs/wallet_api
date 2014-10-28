@@ -19,26 +19,24 @@ exports.updateOrderFlow = function(payload,callback) {
 				}
 			});
 		},
-		//enviar el número de orden
-		function(callback){
-			payload.date = dateTime;
- 				receiptQuery.updateReceiptByOrder(payload,function(err,result){
-				if (err){
-					console.log(err);
-					callback("ERROR", { statusCode: 1 ,  additionalInfo: 'Receipt update failed' });
-				}else{
-					callback(null);
-				}
-			});		
-		},
-
 		function(callback){
 			receiptQuery.getReceiptByOrderID(payload.orderID,function(err,result) {
 				if (err){
 					console.log(err);
 					callback("ERROR", { statusCode: 1 ,  additionalInfo: 'Error to get receipt' });
 				}else{
-					callback(null,result);
+					var receipt = result;
+					var additionalInfoJSON = JSON.parse(receipt.additionalInfo);
+					additionalInfoJSON.status = status;
+					payload.additionalInfo = JSON.stringify(additionalInfoJSON);
+					receiptQuery.updateReceiptByOrder(payload,function(err,result){
+						if (err){
+							console.log(err);
+							callback("ERROR", { statusCode: 1 ,  additionalInfo: 'Receipt update failed' });
+						}else{
+							callback(null,receipt);
+						}
+					});
 				}
 			});
 		},
@@ -49,7 +47,9 @@ exports.updateOrderFlow = function(payload,callback) {
 			message.title = 'Your order No' + payload.orderID +  ' is ' + status;
 			message.type = receipt.type;
 			message.status = 'NOTREAD';
-			message.additionalInfo = receipt.additionalInfo;
+			var additionalInfoJSON = JSON.parse(receipt.additionalInfo);
+			additionalInfoJSON.status = status;
+			message.additionalInfo =  JSON.stringify(additionalInfoJSON);
 			message.date = dateTime;
 			message.message = 'Your order No ' + payload.orderID +  ' is ' + status;
             messageQuery.createMessage(message.phoneID,message, function(err, result) {
@@ -57,7 +57,13 @@ exports.updateOrderFlow = function(payload,callback) {
                     var response = { statusCode: 1, additionalInfo: err };
                     callback('ERROR', response);
                 } else {
-					var extraData = {   action: 1, additionalInfo : message.additionalInfo, _id: result._id};
+					var actionType ;
+					if(message.type === config.messages.type.BUY) actionType = config.messages.action.BUY;
+					else if(message.type === config.messages.type.GIFT) actionType = config.messages.action.GIFT;
+					else if(message.type === config.messages.type.LOAN) actionType = config.messages.action.LOAN;
+					else if(message.type === config.messages.type.TRANSFER) actionType = config.messages.action.TRANSFER;
+					else if(message.type === config.messages.type.COUPON) actionType = config.messages.action.COUPON;
+					var extraData = {   action: actionType, additionalInfo : message.additionalInfo, _id: result._id};
 					message.extra = {extra : extraData} ;
                     callback(null,message);
                 }
