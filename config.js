@@ -47,8 +47,7 @@ config.messages.facebook =	{
 								name:'AmdocsCafe',
 								caption:'I just bought a coffee',
 								description:'Just dowloaded my Amdocs Wallet at Mobile Money Global! Looking forward to the delicous coffee at the fully cashless Amdocs Café, now open at Grand Wyndham, Istanbul',
-								link:'http://goo.gl/IRbh4z',
-								picture:'https://s3-us-west-1.amazonaws.com/amdocs-images/products/black.jpg'
+								link:'http://goo.gl/IRbh4z'
 							};
 config.doxs = {};
 config.doxs.p2p = 500;

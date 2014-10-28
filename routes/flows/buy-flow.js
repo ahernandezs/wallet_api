@@ -160,6 +160,7 @@ exports.buyFlow = function(payload,callback) {
 					callback('ERROR',response);
 				}else{
 					imageProduct = result.url;
+                    config.messages.facebook.product = imageProduct;
 					callback(null,sessionid,currentMoney);
 				}
 			});
