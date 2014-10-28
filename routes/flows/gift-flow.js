@@ -162,6 +162,10 @@ exports.sendGift = function(payload,callback) {
             payload.type = config.messages.type.GIFT;
             payload.title = title;
             payload.date = dateTime;
+
+			var fbinfo = config.messages.facebook;
+			fbinfo.picture = imageProduct;
+
             //var twitterMsg = config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''));
 			var twitterMsg = config.messages.twitterMsg;
 			config.messages.twitter.message = twitterMsg;
@@ -176,7 +180,7 @@ exports.sendGift = function(payload,callback) {
 											amount :payload.order.total,
 											status: config.orders.status.NEW,
 											doxAdded : 500 ,
-											facebook:config.messages.facebook,
+											facebook: fbinfo,
 											twitter:config.messages.twitter,
 										});
 
