@@ -56,23 +56,31 @@ exports.updateOrderbyOrderID = function(payload,callback){
 		}
 	});
 };
+
 exports.getOrders =  function(merchantID, callback) {
-    console.log( 'getOrders from MongoDB with status: ' + config.orders.status.NEW );
-    //Order.find({ 'merchantId': merchantID , 'status': config.orders.status }, '_id customerImage customerName date status', function(err, orders)  {
-    Order.find({}, 'orderId _id customerImage customerName date status products userId', function(err, orders)  {
-        var response;
-        if (err) {
-            response = { statusCode: 1, additionalInfo: config.orders.errMsg };
-            callback("ERROR: " + err.message, response);
-            console.log(err.message);
-        } else if (orders.length === 0) {
-            response = { statusCode: 0, additionalInfo: config.orders.emptyMsg }
-            callback(null, response);
-            console.log(config.orders.emptyMsg);
-        } else {
-            response = { statusCode: 0, additionalInfo: orders };
-            callback(null, response);
-            console.log(response);
-        }
-    });
+	var condiciones = {$or: [	{'status':config.orders.status.DELIVERED },
+								{'status':config.orders.status.CANCELED}]}
+    var  deliveredAndCanceled = Order.find(condiciones, 'orderId _id customerImage customerName date status products userId');
+	deliveredAndCanceled.limit(10);
+	deliveredAndCanceled.exec(function (err1, ordenes) {
+		var response = { statusCode: 0, additionalInfo: ordenes };
+		var conditions = {$or: [{'status':config.orders.status.NEW },
+								{'status':config.orders.status.IN_PROGRESS},
+								{'status':config.orders.status.READY}]};
+		Order.find(conditions, 'orderId _id customerImage customerName date status products userId', function(err, orders)  {
+	        if (err) {
+	            response = { statusCode: 1, additionalInfo: config.orders.errMsg };
+	            callback("ERROR: " + JSON.stringify(err.message), response);
+	        } else {
+				if(orders.length != 0){
+					response.additionalInfo.push(orders);
+	            }
+	            if(response.additionalInfo.length === 0){
+		            response = { statusCode: 0, additionalInfo: config.orders.emptyMsg }
+		            callback(null, response);
+	            }else
+		            callback(null, response);
+	        }
+		});
+	});
 };
