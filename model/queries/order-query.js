@@ -73,7 +73,8 @@ exports.getOrders =  function(merchantID, callback) {
 	            callback("ERROR: " + JSON.stringify(err.message), response);
 	        } else {
 				if(orders.length != 0){
-					response.additionalInfo.push(orders);
+					var temp = ordenes.concat(orders);
+					response.additionalInfo = temp;
 	            }
 	            if(response.additionalInfo.length === 0){
 		            response = { statusCode: 0, additionalInfo: config.orders.emptyMsg }
