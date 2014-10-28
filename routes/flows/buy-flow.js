@@ -85,6 +85,7 @@ exports.buyFlow = function(payload,callback) {
                     console.log(result);
                     order.customerName = result.name;
                     order.customerImage = config.S3.url + payload.phoneID +'.png',
+                    order.merchantId = payload.merchantID;
                     callback(null,sessionid);
                   }
               });  
