@@ -94,6 +94,7 @@ exports.sendGift = function(payload,callback) {
                     console.log(result);
                     order.customerName = result.name;
                     order.customerImage = config.S3.url + receiver +'.png',
+                    order.merchantId = payload.merchantID;
                     callback(null,sessionid, currentMoney);
                   }
               });  
