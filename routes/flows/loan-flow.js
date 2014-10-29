@@ -279,7 +279,7 @@ exports.updateLoanFlow = function(payload,callback){
     },
     function(notification,loan,callback) {
       notification.message = loan.title;
-      var extraData = { action : 4 , loan : JSON.stringify(loan.additionalInfo) };
+      var extraData = { action : 4 , loan : loan.additionalInfo };
       notification.extra = {extra : extraData} ;
       console.log(notification);
       urbanService.singlePush(notification, function(err, result) {
