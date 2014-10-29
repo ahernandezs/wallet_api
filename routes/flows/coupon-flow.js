@@ -25,13 +25,13 @@ exports.setCoupon = function(payload,callback) {
 		function(callback){
 
             var message = {};
-            message.status = 'DELIVERED';
+            message.status = 'NOTREAD';
             message.type = 'COUPON';
             message.title = config.messages.coupon;
             message.phoneID = payload.phoneID;
             message.date = dateTime;
             message.message = config.messages.coupon;
-            message.additionalInfo = prize;
+            message.additionalInfo = JSON.stringify(prize);
 
             messageQuery.createMessage(payload.phoneID, message, function(err, result) {
                 if (err) {
@@ -59,7 +59,7 @@ exports.setCoupon = function(payload,callback) {
             receipt.receiver = payload.phoneID;
             receipt.amount = "0";
             receipt.message = config.messages.coupon;
-            receipt.additionalInfo = prize;
+            receipt.additionalInfo = JSON.stringify(prize);
             receipt.title = config.messages.coupon;
             receipt.date = dateTime;
             receipt.type = 'COUPON';

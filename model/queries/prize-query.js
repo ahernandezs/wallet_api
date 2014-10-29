@@ -17,7 +17,7 @@ exports.getPrizes =  function(top, callback) {
 
 exports.getPrize = function(id, callback){
     var conditions = { '_id' : id };
-    Prize.find( conditions, 'imgUrl description' , function(err, response)  {
+    Prize.findOne( conditions, 'imgUrl description' , function(err, response)  {
         callback(null, response);
     });
 }
