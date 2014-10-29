@@ -16,7 +16,8 @@ var receiptSchema = new Schema({
     instagram: Number,
     additionalInfo: String,
     orderID:Number,
-    owner : Number
+    owner : Number,
+    loanID: String
 });
 
 module.exports = mongoose.model('Receipt', receiptSchema);
