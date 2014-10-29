@@ -44,7 +44,7 @@ exports.updateOrderFlow = function(payload,callback) {
 			console.log(receipt);
 			var message = {};
 			message.phoneID = receipt.emitter;
-			message.title = 'Your order No' + payload.orderID +  ' is ' + status;
+			message.title = 'Your order No ' + payload.orderID +  ' is ' + status;
 			message.type = receipt.type;
 			message.status = 'NOTREAD';
 			var additionalInfoJSON = JSON.parse(receipt.additionalInfo);
