@@ -257,6 +257,7 @@ exports.transferFunds = function(data, callback) {
             receipt.date = dateTime;
             receipt.type = 'TRANSFER';
             receipt.status = 'DELIVERED';
+            receipt.owner = 0;
             console.log(data.payload);
             ReceiptQuery.createReceipt(receipt, function(err, result) {
                 if (err)
@@ -280,6 +281,7 @@ exports.transferFunds = function(data, callback) {
             receipt.date = dateTime;
             receipt.type = 'TRANSFER';
             receipt.status = 'DELIVERED';
+            receipt.owner = 1;
             console.log(data.payload);
             ReceiptQuery.createReceipt(receipt, function(err, result) {
                 if (err)
