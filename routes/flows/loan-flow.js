@@ -273,13 +273,13 @@ exports.updateLoanFlow = function(payload,callback){
           var response = { statusCode: 1, additionalInfo: result };
           callback('ERROR', response);
         } else {
-          callback(null, sessionid,loan);
+          callback(null, sessionid,loan,result._id);
         }
       });
     },
-    function(notification,loan,callback) {
+    function(notification,loan,idMessage,callback) {
       notification.message = loan.title;
-      var extraData = { action : 4 , loan : JSON.stringify(loan.additionalInfo) };
+      var extraData = { action : 4 , additionalInfo : loan.additionalInfo , _id:idMessage };
       notification.extra = {extra : extraData} ;
       console.log(notification);
       urbanService.singlePush(notification, function(err, result) {
