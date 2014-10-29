@@ -30,9 +30,8 @@ exports.getReceipts = function(phoneID, callback){
 
 exports.updateReceipt = function(payload,callback){
   var conditions = {_id: payload._id};
-
+    
     if (payload.operation !== undefined) {
-        console.log('entro D:');
       if(payload.operation.toLowerCase() == 'twitter')
         payload = {twitter: 1}
       else if(payload.operation.toLowerCase() == 'facebook')
@@ -40,8 +39,9 @@ exports.updateReceipt = function(payload,callback){
       else if(payload.operation.toLowerCase() == 'instagram')
         payload = {instagram: 1}
     }
-  Receipt.update(conditions, payload, null, function(err, result) {
-    callback(null, result);
+
+    Receipt.findByIdAndUpdate(conditions, payload, null, function(err, result) {
+        callback(null, result);
   });
 };
 
@@ -83,17 +83,12 @@ exports.updateReceiptStatus = function(payload,callback){
 };
 
 exports.getLastReceipt = function(payload, callback) {
-    console.log('Get last receipt for ' + payload.phoneID);
-    var conditions = { emitter : payload.phoneID, type : payload.type };
-    console.log(conditions);
-    Receipt.find(conditions, 'emitter receiver amount message additionalInfo title date type status', { sort : {date : -1} }, function(err, receipts) {
+    console.log('Get last receipt for ' + payload.loanID);
+    var conditions = { emitter : payload.phoneID, type : payload.type, loanID: payload.loanID };
+    Receipt.findOne(conditions, 'emitter receiver amount message additionalInfo title date type status loanID', function(err, receipt) {
         if(err)
-            callback('ERROR', receipts);
-        else {
-            while (receipts.length > 1) {
-                receipts.removeChild(receipts.lastChild);
-            }
-            callback(null, JSON.stringify(receipts[0]));
-        }
+            callback('ERROR', receipt);
+        else
+            callback(null, receipt);
     });
 };
