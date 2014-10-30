@@ -30,7 +30,7 @@ exports.getMessages = function(phoneID, callback) {
       var conditions =  {$and: [ {'status': config.messages.status.READ},
                                  {'phoneID': phoneID }]};
 
-      var  msj = Message.find(conditions, 'title type message status additionalInfo date');
+      var  msj = Message.find(conditions, 'title type message status additionalInfo date', {sort: {date: -1}});
       msj.limit(10);
       msj.exec(function (err1, losMensajes) {
 
@@ -49,7 +49,8 @@ exports.updateMessage = function(message,callback){
     console.log( 'Updating status message in MongoDB');
     console.log(message);
     var conditions = { _id : message._id };
-    Message.update( conditions, { status : message.status}, null, function(err, result) {
+    var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+    Message.update( conditions, { status : message.status, date : dateTime }, null, function(err, result) {
         if (err) {
             console.log( 'Failed message status update: ' + err );
             callback( 'ERROR', { message: 'Failed session update' } );
