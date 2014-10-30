@@ -160,7 +160,7 @@ exports.buyFlow = function(payload,callback) {
 					callback('ERROR',response);
 				}else{
 					imageProduct = result.url;
-                    config.messages.facebook.product = imageProduct;
+                    config.messages.facebook.picture = imageProduct;
 					callback(null,sessionid,currentMoney);
 				}
 			});
@@ -192,7 +192,7 @@ exports.buyFlow = function(payload,callback) {
 								date:dateTime,
 								twitter: config.messages.twitter,
 								facebook:config.messages.facebook,
-								product : imageProduct
+								picture : imageProduct
 							};
 							console.log(config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')));
 							response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
