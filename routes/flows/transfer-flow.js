@@ -190,7 +190,7 @@ exports.transferFunds = function(data, callback) {
         },
 
         function(sessionid,payload,callback){
-            var updateDoxs = {phoneID: payload.phoneID, operation: 'p2p',sessionid};
+            var updateDoxs = {phoneID: payload.phoneID, operation: 'p2p',sessionid: sessionid};
             console.log('Saving doxs in mongo');
             Userquery.putDoxs(updateDoxs, function(err,result){
                 callback(null,sessionid,payload);
