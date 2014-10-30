@@ -180,14 +180,32 @@ exports.activity = function(req, res){
   console.log(JSON.stringify(req.body));
 
   var payload = req.body;
-  var sessionid= req.headers['x-auth-token'];
+  var sessionid = req.headers['x-auth-token'];
+  payload.sessionid = sessionid;
 
   async.waterfall([
 
     function(callback){
-      var result;
-      doxsService.saveDoxs(req.body, function(err, result){
+      sessionQuery.getCredentials(sessionid,function(err,user){
+          payload.phoneID = user.data.phoneID;
+          callback(null);
+      });
+    },
+
+    function(callback){
+      var operacion = payload.action == 'LINK' ? 'linking' : payload.socialNetwork.toLowerCase();
+      var payloadoxs = {phoneID: payload.phoneID, action: operacion, type: 3}
+      doxsService.saveDoxs(payloadoxs, function(err, result){
         callback(null, result);
+      });
+    },
+
+    function(resultado, callback){
+      var operacion = payload.action == 'LINK' ? 'linking' : payload.socialNetwork.toLowerCase();
+      var updateDoxs = {phoneID: payload.phoneID, operation: operacion, sessionid: sessionid};
+      console.log('Saving doxs in mongo');
+      Userquery.putDoxs(updateDoxs, function(err,result){
+        callback(null, resultado);
       });
     },
 
@@ -199,11 +217,9 @@ exports.activity = function(req, res){
       transacction.operation = payload.action + ' - ' + payload.socialNetwork;
       transacction.title =  payload.action + ' - ' + payload.socialNetwork;
       transacction.amount = payload.action == 'LINK' ? config.doxs.linking : config.doxs.social;
-      sessionQuery.getCredentials(sessionid,function(err,user){
-        transacction.phoneID = user.data.phoneID;
-        transacctionQuery.createTranssaction(transacction, function(err, result) {
-          callback(null, result);
-        });
+      transacction.phoneID = payload.phoneID;
+      transacctionQuery.createTranssaction(transacction, function(err, result) {
+        callback(null, result);
       });
     },
 
@@ -288,7 +304,7 @@ exports.updateReceipt = function(req, res){
 
       //saving doxs in mongo
       function(phoneId, callback){
-        var updateDoxs = {phoneID: phoneId, operation: req.operation};
+        var updateDoxs = {phoneID: phoneId, operation: req.operation, sessionid: req.headers['x-auth-token']};
         Userquery.putDoxs(updateDoxs, function(err,result){
           callback(null,phoneId);
         });
