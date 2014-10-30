@@ -131,13 +131,6 @@ exports.sendGift = function(payload,callback) {
 		},
 
 		function(sessionid, response, callback){
-			var updateDoxs = {phoneID: payload.phoneID, operation: 'gift'};
-			console.log('Saving doxs in mongo');
-			Userquery.putDoxs(updateDoxs, function(err,result){
-				callback(null,sessionid, response);
-			});
-		},
-		function(sessionid, response, callback){
 			doxsService.saveDoxs(payloadoxs, function(err, result){
 				console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
 				if(err) {
@@ -147,6 +140,15 @@ exports.sendGift = function(payload,callback) {
 				}
 			});
 		},
+
+		function(sessionid, response, callback){
+			var updateDoxs = {phoneID: payload.phoneID, operation: 'gift', sessionid:payload.sessionid};
+			console.log('Saving doxs in mongo');
+			Userquery.putDoxs(updateDoxs, function(err,result){
+				callback(null,sessionid, response);
+			});
+		},
+
         function(sessionid, response, callback){
             Userquery.getIdByPhoneID(payload.phoneID,function(err,result){
                 var id = result._id;

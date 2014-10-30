@@ -40,7 +40,6 @@ exports.createUser = function(user,callback){
   });
 };
 
-
 exports.singleUpdateUser = function(payload,callback){
   var conditions = { 'phoneID': payload.phoneID }
   User.update(conditions, payload, null, function(err, result) {
@@ -63,17 +62,6 @@ exports.updateUser = function(payload,callback){
       });
     },
 
-    /*function(callback){
-      if(payload.profileCompleted === 1){
-        profileFlow.updateProfile(payload, function(err, result){
-        if(err){
-          return new Error(err);
-        }else
-          callback(null);
-        });
-      }else
-        callback(null);
-    },*/
     function(callback){
       if(payload.profileCompleted === 1){
         var transacction = {};
@@ -85,17 +73,25 @@ exports.updateUser = function(payload,callback){
         transacction.operation = 'Update profile';
         transacction.phoneID = payload.phoneID;
         transacctionQuery.createTranssaction(transacction, function(err, result) {
-          var updateDoxs = {phoneID: payload.phoneID, operation: 'profile'};
-          putDoxs(updateDoxs, function(err,result){
-            var payloadoxs = {phoneID: payload.phoneID, action: 'profile', type: 3}
-            doxsService.saveDoxs(payloadoxs, function(err, result){
-              if(err) {
-                return new Error(err);
-              } else {
-                callback(null);
-              }
-            });
+
+          var payloadoxs = {phoneID: payload.phoneID, action: 'profile', type: 3}
+          doxsService.saveDoxs(payloadoxs, function(err, result){
+            if(err) {
+              return new Error(err);
+            } else {
+              callback(null);
+            }
           });
+        });
+      }else
+        callback(null);
+    },
+
+    function(callback){
+      if(payload.profileCompleted === 1){
+        var updateDoxs = {phoneID: payload.phoneID, operation: 'profile', sessionid: payload.sessionid};
+        putDoxs(updateDoxs, function(err,result){
+          callback(null);
         });
       }else
         callback(null);
@@ -174,17 +170,43 @@ exports.getDoxs = function(phoneID, callback){
 
 var putDoxs = exports.putDoxs = function(payload, callback){
 
-  var puntos = config.doxs[payload.operation];
-  var query = { 'phoneID': payload.phoneID };
-  var update = { $inc : {doxs:puntos} };
-  var options = { new: false };
+  async.waterfall([
 
-  User.findOneAndUpdate(query, update, options, function (err, person) {
-    if (err) return handleError(err);
-    else if(!person)
-      callback("ERROR", { statusCode: 0 ,  additionalInfo: 'User not  Found' });
-    else
-      callback(null, person.doxs);
+    //consultar doxs en utiba
+    function(callback){
+      console.log('the sessionid: '+payload.sessionid);
+      balance.balanceFlow(payload.sessionid, function(err, result) {
+        if(err){
+          callback('ERROR', response);
+        }
+        else{
+          callback(null, result.additionalInfo.dox);
+        }
+      });
+    },
+
+    //salvar numero de doxs en mongo
+    function(doxs, callback){
+
+      var query = { 'phoneID': payload.phoneID };
+      var update = { 'doxs': doxs };
+      var options = { new: false };
+      User.findOneAndUpdate(query, update, options, function (err, person) {
+        if (err) return handleError(err);
+        else if(!person)
+          callback("ERROR", { statusCode: 0 ,  additionalInfo: 'User not  Found' });
+        else
+          callback(null, person.doxs);
+      });
+
+    }
+
+  ], function (err, result) {
+    if(err){
+      callback(err,result);
+    }else{
+      callback(null,result);
+    }
   });
 };
 

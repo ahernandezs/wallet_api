@@ -28,20 +28,6 @@ exports.updateProfile = function(payload,callback) {
 
 		function(callback){
 
-			var puntos = config.doxs['profile'];
-			var query = { 'phoneID': payload.phoneID };
-			var update = { $inc : {doxs:puntos} };
-			var options = { new: false };
-
-			User.findOneAndUpdate(query, update, options, function (err, person) {
-				if (err) return handleError(err);
-					callback(null);
-			});
-
-		},
-
-		function(callback){
-
 			console.log('updating doxs in utiba');
             var payloadoxs = {phoneID: payload.phoneID, action: 'profile', type: 3}
             doxsService.saveDoxs(payloadoxs, function(err, result){
@@ -52,6 +38,28 @@ exports.updateProfile = function(payload,callback) {
               }
             });
 		},
+
+		function(callback){
+			var updateDoxs = {phoneID: payload.phoneID, operation: 'profile', sessionid:payload.sessionid};
+			console.log('Saving doxs in mongo');
+			Userquery.putDoxs(updateDoxs, function(err,result){
+				callback(null);
+			});
+		},
+
+/*		function(callback){
+
+			var puntos = config.doxs['profile'];
+			var query = { 'phoneID': payload.phoneID };
+			var update = { $inc : {doxs:puntos} };
+			var options = { new: false };
+
+			User.findOneAndUpdate(query, update, options, function (err, person) {
+				if (err) return handleError(err);
+					callback(null);
+			});
+		},
+*/
 
 	], function(err, result) {
 	    if (err) 
