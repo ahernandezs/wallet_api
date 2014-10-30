@@ -1,5 +1,6 @@
 var Session = require('../session');
 var config = require('../../config.js');
+var async = require('async');
 
 exports.createSession = function(session, callback) {
     console.log( 'Creating a new session in MongoDB' );
@@ -11,16 +12,36 @@ exports.createSession = function(session, callback) {
     });
 };
 
-exports.getCredentials = function(sessionid, callback) {
+exports.getCredentials = function(session, callback) {
     console.log( 'Getting credentials' );
-    Session.findOne( { 'token': sessionid }, 'phoneID pin', function(err, credentials) {
-        if (err) {
-            callback( 'ERROR', { message: 'Something went wrong' } );
-            console.log(err.message);
-        } else if (credentials === null)
-            callback( 'ERROR', { statusCode : 1, message: 'No credentials for that token' } );
+    async.waterfall([
+        function(callback) {
+            Session.findOne( { 'token': session.sessionid }, 'phoneID pin', function(err, credentials) {
+                if (err) {
+                    callback( 'ERROR', { message: 'Something went wrong' } );
+                    console.log(err.message);
+                } else if (credentials === null)
+                    callback(null, { statusCode : 1, message: 'No credentials for that token' } );
+                else
+                    callback('STOP', { data: credentials });
+            });
+        },
+        function(response, callback) {
+            Session.findOne( { 'phoneID': session.phoneID }, 'pin', function(err, credentials) {
+                if (err) {
+                    callback( 'ERROR', { message: 'Something went wrong' } );
+                    console.log(err.message);
+                } else if (credentials === null)
+                    callback('ERROR', response);
+                else
+                    callback(null, { data: { phoneID : session.phoneID, pin : credentials.pin } });
+            });
+        }
+    ], function(err, result) {
+        if (err) 
+            callback(err, result);
         else
-            callback(null, { data: credentials });
+            callback(null, result);   
     });
 };
 

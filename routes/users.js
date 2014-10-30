@@ -177,6 +177,7 @@ exports.regenerate = function(req, res, callback) {
     console.log( 'POST method regenerate (session)' );
     var request = {};
     request.sessionid = req.headers['x-auth-token'];
+    request.phoneID = req.headers['phoneid'];
     request.type = 1;
     sessionUser.regenerate(request, res, function(err, result) {
         if (err === 'ERROR') {
