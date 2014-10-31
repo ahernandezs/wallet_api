@@ -100,6 +100,7 @@ exports.transferFunds = function(data, callback) {
     var transid;
     var forReceipt = {};
     var receiptName;
+    var senderName;
     var additionalInfoReceiver;
     var additionalInfoReceiverJSON;
     var addInfo;
@@ -175,6 +176,7 @@ exports.transferFunds = function(data, callback) {
                                 callback('ERROR', response);
                             } else {
                                 dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+                                var senderName = result.name;
                                 addInfo = {transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime };
                                 additionalInfoReceiver = JSON.stringify({transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime });
                                 additionalInfoReceiverJSON = {transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime };
@@ -200,7 +202,7 @@ exports.transferFunds = function(data, callback) {
         function(sessionid,payload,callback){
             console.log('Save message in DB');
             var message = {};
-            var title = config.messages.transferMsg + payload.amount;
+            var title = config.messages.transferMsg + senderName;
             //message = extraData;
             message.status = config.messages.status.NOTREAD;
             message.type = config.messages.type.TRANSFER;
