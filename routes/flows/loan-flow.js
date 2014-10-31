@@ -176,10 +176,22 @@ exports.createLoanFlow = function(payload,callback) {
                 forResult.additionalInfo.status = receipt.status;
                 forResult.additionalInfo.amount = receipt.amount;
                 console.log( 'response: ' + JSON.stringify(forResult) );
-              callback(null, forResult);
+              callback(null, forResult, loan._id);
             }
           }); 
-      }
+      },
+
+      function(response, loanId, callback){
+
+        var carga = {body:{"_id" : loanId, "status" : "ACCEPTED"}};
+
+        updateLoanFlow(carga, function(err, result) {
+          callback(null, result);
+        });
+
+      },
+
+
     ], function (err, result) {
       console.log(result);
       if(err){      
@@ -190,7 +202,7 @@ exports.createLoanFlow = function(payload,callback) {
     });
 };
 
-exports.updateLoanFlow = function(payload,callback){
+var updateLoanFlow = exports.updateLoanFlow = function(payload,callback){
   var loanID = payload.body._id;
     var receiver;
     var tranStatus = payload.body.status;
