@@ -181,6 +181,8 @@ exports.loginFlow = function(payload,callback) {
 };
 
 exports.regenerate = function(request, res, callback) {
+      var phoneID = request.phoneID;
+      delete request.phoneID;
     async.waterfall([
         function(callback) {
             wallet.balance(request, function(err, response) {
@@ -201,11 +203,12 @@ exports.regenerate = function(request, res, callback) {
         },
         function(data, callback) {
             console.log( 'is there a session?: ' + data.session );
+            request.phoneID = phoneID;
             if (data.session)
                 callback('STOP', request.sessionid);
             else
-                session.getCredentials(request.sessionid, function(err, result) {
-                    if (err)
+                session.getCredentials(request, function(err, result) {
+                    if (err === 'ERROR')
                         callback('ERROR', result);
                     else
                         callback(null, result.data);

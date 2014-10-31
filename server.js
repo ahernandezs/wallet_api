@@ -43,6 +43,7 @@ var interceptorHeader = function(req, res, next) {
 	console.log('Running interceptor');
 	console.log(req.originalUrl.toString());
 	console.log(req.headers['x-auth-token']);
+    console.log('user: ' + req.headers['x-phoneid']);
     user.regenerate(req, res, function(err, result) {
         if (err)
             res.json(result);
