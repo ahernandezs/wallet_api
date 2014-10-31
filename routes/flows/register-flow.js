@@ -75,8 +75,12 @@ exports.registerFlow = function(payload,callback) {
             console.log(result);
             var response = result.registerReturn;
             if(response.result != 0){
-                var response = { statusCode:1 ,  additionalInfo : result };
-               callback("ERROR", response);
+                if(response.result === 18)
+                  callback(null,sessionid);
+                else{
+                  var response = { statusCode:1 ,  additionalInfo : result };
+                  callback("ERROR", response);
+                }
             }
             else
               callback(null,sessionid);
