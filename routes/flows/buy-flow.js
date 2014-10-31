@@ -66,7 +66,7 @@ exports.buyFlow = function(payload,callback) {
 		},
 
 		function(sessionid, callback){
-			var updateDoxs = {phoneID: payload.phoneID, operation: 'payment'};
+			var updateDoxs = {sessionid:sessionid, phoneID: payload.phoneID, operation: 'payment'};
 			console.log('Saving doxs in mongo');
 			Userquery.putDoxs(updateDoxs, function(err,result){
 				console.log(sessionid);
