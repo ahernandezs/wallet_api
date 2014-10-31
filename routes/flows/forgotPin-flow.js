@@ -2,103 +2,50 @@ var async = require('async');
 var soap = require('soap');
 var crypto = require('crypto');
 var Userquery = require('../../model/queries/user-query');
-var sessionUser = require('./login-flow');
+var Session = require('../../model/session');
 var soapurl = process.env.SOAP_URL;
 var config = require('../../config.js');
+var mailService = require('../../services/sendGrid-service');
 
-exports.resetPinFlow = function(payload,callback) {
-  async.waterfall([
-    function(callback){
-      console.log('Validate connection');
-      var response = null;
-      soap.createClient(soapurl, function(err, client) {
-        if(err) {
-          console.log(err);
-          var response = { statusCode:1 ,  additionalInfo : err };
-          callback(err,response);
-        }else
-        callback(null);
-      });
-    },
-    function(callback){
-      console.log('Create Session');
-      var response = null;
-      soap.createClient(soapurl, function(err, client) {
-        client.createsession({}, function(err, result) {
-          if(err) {
-            return new Error(err);
-          } else {
-            console.log(result);
-            var response = result.createsessionReturn;
-            callback(null, response.sessionid); 
-          }
-        });
-      });
-    },
-    function(sessionid, callback){
-      console.log('Create hashpin');
-      var hashpin = config.username.toLowerCase() + config.pin ;
-      hashpin = sessionid + crypto.createHash('sha1').update(hashpin).digest('hex').toLowerCase();
-      hashpin = crypto.createHash('sha1').update(hashpin).digest('hex').toUpperCase();
-      console.log(hashpin);
-      callback(null, sessionid, hashpin);
-    },
-    function(sessionid, hashpin, callback){
-      console.log('Login');
-      var  request = { sessionid: sessionid, initiator: config.username, pin: hashpin  };
-      var request = {loginRequest: request};
-      console.log(request);
-      soap.createClient(soapurl, function(err, client) {
-        client.login(request, function(err, result) {
-          if(err) {
-            console.log('Error' + err);
-            return new Error(err);
-          } else {
-            var response = result.loginReturn;
-            console.log(response);
-            callback(null,sessionid);
-          }
-        });
-      });
-    },
-    function(sessionid,callback){
-      console.log('Reset PIN ' + sessionid);
-      var requestSoap = { sessionid:sessionid, new_pin: payload.pin , agent: payload.phoneID, suppress_pin_expiry:'true' };
-      var request = { resetPinRequestType: requestSoap };
-      console.log(request);
-      soap.createClient(soapurl, function(err, client) {
-        client.resetPin(request, function(err, result) {
-          if(err) {
-            console.log(err);
-            return new Error(err);
-          } else {
-            console.log(result);
-            var response = { statusCode:0 ,  additionalInfo : result.resetPinReturn };
-            callback(null, sessionid);
-          }
-        });
-      });
-    },
-    function(sessionid, callback){
-      payload.profileCompleted = 0;
-      console.log('Updte user in Mongo ' + sessionid);
-      Userquery.singleUpdateUser(payload,function(err,result){
-        if (err) {
-            var response = { statusCode:1 ,  additionalInfo : result.resetPinReturn };
-            callback('ERROR',response);
+exports.requestPinFlow = function(phoneID,callback) {
+    async.waterfall([
+        function(callback) {
+            console.log( 'Getting credentials for phoneID: ' + phoneID );
+            Session.findOne( { 'phoneID': phoneID }, 'pin', function(err, credentials) {
+                if (err) {
+                    console.log(err.message);
+                    callback( 'ERROR', { message: 'Something went wrong' } );
+                } else if (credentials === null)
+                    callback('ERROR', response);
+                else
+                    callback( null, { phoneID : phoneID, pin : credentials.pin } );
+            });
+        },
+        function(credentials, callback) {
+            Userquery.findUserByPhoneID(phoneID, function(err, result){
+                if (err) {
+                    var response = { statusCode : 1,  additionalInfo : err };
+                    callback('ERROR', response);
+                } else {
+                    credentials.email = result.email;
+                    credentials.name = result.name;
+                    callback(null, credentials);
+                }
+            });
+        },
+        function(user, callback) {
+            mailService.sendForgottenPIN(user, function(err, message) {
+                if (err)
+                    callback('ERROR', message);
+                else
+                    callback(null, { statusCode : 0, message : 'Your PIN has been sent by email' } );
+            });
         }
-        else{
-            var response = { statusCode:0 ,  additionalInfo : 'CHANGE PIN SUCCESFUL' };
-            callback(null,response);
-        }
-      });
-    },
     ], function (err, result) {
-      console.log(result);
-      if(err){      
-        callback(err,result);    
-      }else{      
-        callback(null,result);    
-      }  
+        if(err){      
+            callback(err,result);    
+        } else {      
+            callback(null,result);    
+        }
     });
 };

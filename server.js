@@ -63,7 +63,7 @@ app.get('/api/ping', function(req, res){
 	console.log('execute GET method ping');
 });
 
-app.post('/api/forgotpin',user.forgotPIN);
+app.get('/api/forgotpin',user.forgotPIN);
 app.post('/api/validate',user.validate);
 app.post('/api/register', user.register);
 app.post('/api/products', product.products);

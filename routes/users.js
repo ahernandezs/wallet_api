@@ -198,13 +198,14 @@ exports.getLeaderboard = function(req, res){
 }
 
 exports.forgotPIN = function(req, res){
-  forgotPin.resetPinFlow(req.body,function(err,result){
-    if(err) {
-      console.log(err);
-      res.send(500);
-    } else {
-      console.log(result);
-      res.json(result);
-    }
-  });
-}
+    console.log('Request forgotten PIN');
+    var phoneID = req.headers['x-phoneid'];
+    forgotPin.requestPinFlow(phoneID,function(err,result){
+        if(err) {
+            console.log(err);
+        } else {
+            console.log(result);
+            res.json(result);
+        }
+    });
+};
