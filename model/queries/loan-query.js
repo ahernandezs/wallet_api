@@ -68,10 +68,12 @@ exports.getLoan = function(loanID,callback){
 exports.findUserLoans = function(phoneID, callback) {
     Loan.find( { "phoneID" : phoneID, "status" : "NEW" }, function(err, loans) {
         console.log( 'loans!: ' + loans);
-       if (err)
+        if (err)
            callback('ERROR', { message : 'Something went wrong' });
         else if (loans.length > 0)
             callback('ERROR', { message : 'You can not have more loans' });
+        else if ((new Date() - new Date(loans.date)) < (3*60*60*1000))
+            callback('ERROR', { message : 'You have to wait 3 hours' });
         else
             callback(null, loans);
     });
