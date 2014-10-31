@@ -39,7 +39,22 @@ exports.sendRegisterMessage= function(user){
 		if (err) { return console.error(err); }
 		console.log(json);
 	});
-}
+};
+
+exports.sendForgottenPIN = function(user, callback) {
+    console.log('Writting email');
+    sendgrid.send({
+        to:         user.email,
+        from:       'no-reply@wallet.amdocs.com',
+        subject:    'Forgotten PIN',
+        text:       'Dear ' + user.name + ',\n\n' +
+                    'Your PIN is ' + user.pin + '.\n\n' +
+                    'Amdocs Wallet Team'
+    }, function(err, json) {
+        if (err) callback('ERROR', err);
+        callback(null, json);
+    });
+};
 
 function createMail (sender,message,callback){
 	var emailMessage = {};
