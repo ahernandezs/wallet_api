@@ -176,7 +176,7 @@ exports.transferFunds = function(data, callback) {
                                 callback('ERROR', response);
                             } else {
                                 dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-                                var senderName = result.name;
+                                senderName = result.name;
                                 addInfo = {transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime };
                                 additionalInfoReceiver = JSON.stringify({transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime });
                                 additionalInfoReceiverJSON = {transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime };
