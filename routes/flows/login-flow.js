@@ -181,8 +181,8 @@ exports.loginFlow = function(payload,callback) {
 };
 
 exports.regenerate = function(request, res, callback) {
-      var phoneID = request.phoneID;
-      delete request.phoneID;
+    var phoneID = request.phoneID;
+    delete request.phoneID;
     async.waterfall([
         function(callback) {
             wallet.balance(request, function(err, response) {

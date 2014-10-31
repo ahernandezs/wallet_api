@@ -41,7 +41,7 @@ exports.getCredentials = function(session, callback) {
         if (err) 
             callback(err, result);
         else
-            callback(null, result);   
+            callback(null, result);
     });
 };
 
