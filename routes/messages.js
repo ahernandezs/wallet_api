@@ -10,8 +10,8 @@ exports.getMessages = function(req, res) {
     payload.body = req.body;
     payload.header = req.headers;
     console.log( req.body );
-    var requestSession = {sessionid:req.headers.sessionid};
-    sessionQuery.getCredentials(requestSession ,function(err,result){
+    var request = { sessionid : req.headers.sessionid, phoneID : req.headers['x-phoneid'] };
+    sessionQuery.getCredentials(request, function(err,result){
         console.log(result);
         messageQuery.getMessages(result.data.phoneID,function(err,result) {
             if(err) {

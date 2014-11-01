@@ -5,7 +5,8 @@ exports.getTransacctionsHistory = function(req,res){
   console.log('execute GET method getTransacctionsHistory');
   console.log( req.headers['x-auth-token'] );
   req.headers.sessionid = req.headers['x-auth-token'];
-  sessionQuery.getCredentials(req.headers.sessionid ,function(err,result){
+    var request = { sessionid : req.headers.sessionid, phoneID : req.headers['x-phoneid'] };
+  sessionQuery.getCredentials(request,function(err,result){
     if(!result.data){
       var response = { statusCode: 1, additionalInfo: result.message };
       res.json(response);
@@ -33,7 +34,8 @@ exports.getTransacctionsDox = function(req,res){
   console.log('execute GET method getTransacctionsDox');
   console.log( req.headers['x-auth-token'] );
   req.headers.sessionid = req.headers['x-auth-token'];
-  sessionQuery.getCredentials(req.headers.sessionid ,function(err,result){
+    var request = { sessionid : req.headers.sessionid, phoneID : req.headers['x-phoneid'] };
+  sessionQuery.getCredentials(request, function(err,result){
     if(!result.data){
       var response = { statusCode: 1, additionalInfo: result.message };
       res.json(response);

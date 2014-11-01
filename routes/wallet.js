@@ -186,7 +186,8 @@ exports.activity = function(req, res){
   async.waterfall([
 
     function(callback){
-      sessionQuery.getCredentials(sessionid,function(err,user){
+        var request = { sessionid : sessionid, phoneID : req.headers['x-phoneid'] };
+      sessionQuery.getCredentials(request, function(err,user){
           payload.phoneID = user.data.phoneID;
           callback(null);
       });
@@ -246,11 +247,11 @@ exports.activity = function(req, res){
 
 };
 
-
 exports.getReceipts = function(req, res){
   console.log('\n\nExecute Get receipts');
   sessionToken = req.headers['x-auth-token'];
-  sessionQuery.getCredentials(sessionToken,function(err,credential){
+    var request = { sessionid : sessionToken, phoneID : req.headers['x-phoneid'] };
+  sessionQuery.getCredentials(request, function(err,credential){
     console.log(credential);
     receipt.getReceipts(credential.data.phoneID, function(err, result){
       if(err) {

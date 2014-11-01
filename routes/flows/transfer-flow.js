@@ -161,7 +161,8 @@ exports.transferFunds = function(data, callback) {
 
         function(sessionid,payload,callback){
             console.log('Get sender in db ' +sessionid);
-            sessionQuery.getCredentials(sessionid,function(err,user){
+            var requestSession = { sessionid :  sessionid };
+            sessionQuery.getCredentials(requestSession,function(err,user){
                 console.log(user);
                 forReceipt.user = user;
                 var payloadoxs = {phoneID: user.data.phoneID, action: 'gift', type: 3}
