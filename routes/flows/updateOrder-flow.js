@@ -70,15 +70,20 @@ exports.updateOrderFlow = function(payload,callback) {
             });
 		},
 		function(message, callback){
-			urbanService.singlePush(message, function(err, result) {
-				if (err) {
-					var response = { statusCode: 3, additionalInfo: err };
-					callback('ERROR', response);
-				}else{
-					var response = { statusCode: 0, additionalInfo: 'Update order successful' };
-					callback(null,response);
-				}
-			});
+			if(status === config.orders.status.READY){
+				urbanService.singlePush(message, function(err, result) {
+					if (err) {
+						var response = { statusCode: 3, additionalInfo: err };
+						callback('ERROR', response);
+					}else{
+						var response = { statusCode: 0, additionalInfo: 'Update order successful' };
+						callback(null,response);
+					}
+				});
+			}else{
+				var response = { statusCode: 0, additionalInfo: 'Update order successful' };
+				callback(null,response);
+			}
 		},
 		], function(err, result) {
 			if (err) 
