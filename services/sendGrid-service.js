@@ -95,4 +95,17 @@ function createMail (sender,message,callback){
 				callback(null,emailMessage);
 			}
 		});
-}
+};
+
+exports.sendInvitation = function(friend){
+	console.log('Sending invitation: '+JSON.stringify(friend));
+	sendgrid.send({
+		to:        friend.email,
+		from:      'no-reply@wallet.amdocs.com',
+		subject:   'Join us to amdocs, '+friend.name,
+		text:      friend.message
+	}, function(err, json) {
+		if (err) { return console.error(err); }
+		console.log(json);
+	});
+};

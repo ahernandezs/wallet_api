@@ -209,3 +209,17 @@ exports.forgotPIN = function(req, res){
         }
     });
 };
+
+exports.inviteFriend = function(req, res){
+  req.body.sessionid = req.headers['x-auth-token'];
+  req.body.phoneID = req.headers['x-phoneid'];
+
+  Userquery.inviteFriend(req.body, function(err, result){
+    if(err) {
+        console.log('Error: '+err);
+    } else {
+        console.log('Resultado: '+result);
+        res.json(result);
+    }
+  });
+}

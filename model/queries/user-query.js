@@ -7,6 +7,7 @@ var profileFlow = require('../../routes/flows/profile-flow');
 var doxsService = require('../../services/doxs-service');
 var mailService = require('../../services/sendGrid-service');
 var transacctionQuery = require('../../model/queries/transacction-query');
+var sessionQuery = require('./session-query');
 
 exports.validateUser = function(phoneID,callback){
 	console.log('Search user in mongoDB');
@@ -275,4 +276,43 @@ exports.getLeaderboard = function(callback){
       callback("USERS NOT FOUND", null);
     }
   });
-}
+};
+
+exports.inviteFriend = function(payload, callback){
+
+  async.waterfall([
+
+    function(callback){
+      mailService.sendInvitation(payload);
+      callback("The invitation was sent successfully", null);
+    },
+
+    /*function(callback){
+      var payloadoxs = {phoneID: payload.phoneID, action: 'social', type: 3}
+      doxsService.saveDoxs(payloadoxs, function(err, result){
+        console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
+        if(err) {
+          return new Error(err);
+        } else {
+          callback(null);
+        }
+      });
+    },
+
+    function(callback){
+      var updateDoxs = {phoneID: payload.phoneID, operation: 'social', sessionid:payload.sessionid};
+      console.log('Saving doxs in mongo');
+      Userquery.putDoxs(updateDoxs, function(err,result){
+        callback("The invitation was sent successfully", null);
+      });
+    },*/
+
+  ], function (err, result) {
+    if(err){
+      callback(err,result);
+    }else{
+      callback(null,result);
+    }
+  });
+
+};
