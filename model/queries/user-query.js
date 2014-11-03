@@ -284,10 +284,11 @@ exports.inviteFriend = function(payload, callback){
   async.waterfall([
 
     function(callback){
-      mailService.sendInvitation(payload);
-      callback("The invitation was sent successfully", null);
+      mailService.sendInvitation(payload,function(err,result){
+        if (err) callback('ERROR', {statusCode:1, additionalInfo:err});
+        callback(null,{statusCode:0, additionalInfo:'The invitation was sent successfully'});
+      });
     },
-
     /*function(callback){
       var payloadoxs = {phoneID: payload.phoneID, action: 'social', type: 3}
       doxsService.saveDoxs(payloadoxs, function(err, result){
