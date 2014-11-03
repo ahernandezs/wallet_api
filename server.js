@@ -86,6 +86,7 @@ app.get('/api/transacctionsDox', interceptorHeader, transacction.getTransacction
 app.get('/api/receipts', interceptorHeader, wallet.getReceipts);
 app.put('/api/receipt', wallet.updateReceipt);
 app.get('/api/doxInfo', interceptorHeader, wallet.doxInfo);
+app.post('/api/invitefriend', interceptorHeader, user.inviteFriend);
 //Merchant operations
 //app.put('/api/order', merchant.putOrder);
 app.put('/api/order', merchant.updateOrder);
@@ -105,3 +106,4 @@ app.post('/api/coupon', wallet.setCoupon);
 
 app.listen( process.env.PORT  || 3000);
 console.log('Listening on port 3000');
+
