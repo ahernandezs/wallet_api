@@ -30,7 +30,7 @@ exports.setCoupon = function(payload,callback) {
             message.title = config.messages.coupon;
             message.phoneID = payload.phoneID;
             message.date = dateTime;
-            message.message = config.messages.coupon;
+            message.message = payload.message;
             message.additionalInfo = JSON.stringify(prize);
 
             messageQuery.createMessage(payload.phoneID, message, function(err, result) {
@@ -40,7 +40,7 @@ exports.setCoupon = function(payload,callback) {
                 } else {
 					var extraData = { action: 5, additionalInfo: JSON.stringify(prize), _id: result._id };
 					payload.extra = { extra:extraData};
-		            payload.message = config.messages.coupon;
+		            payload.message = payload.message;
                     callback(null,payload);
                 }
             });
@@ -58,7 +58,7 @@ exports.setCoupon = function(payload,callback) {
             receipt.emitter = payload.phoneID;
             receipt.receiver = payload.phoneID;
             receipt.amount = "0";
-            receipt.message = config.messages.coupon;
+            receipt.message = payload.message;
             receipt.additionalInfo = JSON.stringify(prize);
             receipt.title = config.messages.coupon;
             receipt.date = dateTime;

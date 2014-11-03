@@ -28,7 +28,7 @@ exports.createLoanFlow = function(payload,callback) {
         });
     },
     function(sessionid, callback) {
-        console.log( 'Getting balance for this user' );
+        /*console.log( 'Getting balance for this user' );
         var request = { sessionid: sessionid, type: 1  };
         var request = {balanceRequest: request};
         soap.createClient(soapurl, function(err, client) {
@@ -46,7 +46,8 @@ exports.createLoanFlow = function(payload,callback) {
                     }
                 }
             });
-        });
+        });*/
+        callback(null);
     },
     function(callback){
       console.log('saving loan in DB');
