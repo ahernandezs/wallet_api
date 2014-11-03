@@ -57,6 +57,7 @@ exports.updateUser = function(payload,callback){
   async.waterfall([
 
     function(callback){
+      payload.email = payload.email_address;
       var conditions = { 'phoneID': payload.phoneID }
       User.update(conditions, payload, null, function(err, result) {
         callback(null);

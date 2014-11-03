@@ -42,7 +42,7 @@ config.messages.twitter = { message :'I just bought a {0} from AmdocsCafe at {1}
 config.messages.twitter1 = 'I just bought a ';
 config.messages.twitter2 = ' from AmdocsCafe at ';
 config.messages.twitterURL = 'http://goo.gl/IRbh4z';
-config.messages.twitterMsg = 'Having a great time at Mobile Money Global! Looking forward to some delicious coffee at the fully cashless Amdocs Café with my Amdocs Wallet!';
+config.messages.twitterMsg = 'Having a great time at #mmglobal in Istanbul, enjoying the delicious coffee bought with my #AmdocsWallet !!';
 config.messages.facebook =	{
 								name:'AmdocsCafe',
 								caption:'I just bought a coffee',
