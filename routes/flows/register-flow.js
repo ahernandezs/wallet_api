@@ -88,15 +88,20 @@ exports.registerFlow = function(payload,callback) {
         });
       });
       },
-    function(sessionid, callback){
-      payload.profileCompleted = 0;
-      console.log('Register in Mongo ' + sessionid);
-      Userquery.createUser(payload,function(err,result){
-          if (err) return handleError(err);
-          else
+      function(sessionid, callback){
+        payload.profileCompleted = 0;
+        console.log('Register in Mongo ' + sessionid);
+        Userquery.validateUser( payload.phoneID, function (err, result) {
+          if(result.statusCode === 0)
             callback(null,sessionid);
-      });
-    },
+          else
+            Userquery.createUser(payload,function(err,result){
+              if (err) return handleError(err);
+              else
+                callback(null,sessionid);
+            });
+        });
+      },
     function(sessionid,callback){
       console.log('Reset PIN ' + sessionid);
       var requestSoap = { sessionid:sessionid, new_pin: payload.pin , agent: payload.phoneID, suppress_pin_expiry:'true' };
