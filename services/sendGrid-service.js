@@ -97,7 +97,7 @@ function createMail (sender,message,callback){
 		});
 };
 
-exports.sendInvitation = function(friend){
+exports.sendInvitation = function(friend,callback){
 	console.log('Sending invitation: '+JSON.stringify(friend));
 	sendgrid.send({
 		to:        friend.email,
@@ -105,7 +105,7 @@ exports.sendInvitation = function(friend){
 		subject:   'Join us to amdocs, '+friend.name,
 		text:      friend.message
 	}, function(err, json) {
-		if (err) { return console.error(err); }
-		console.log(json);
+		if (err) { return callback.error("ERROR",err); }
+		callback(null,json)
 	});
 };
