@@ -31,7 +31,11 @@ exports.setCoupon = function(payload,callback) {
             message.phoneID = payload.phoneID;
             message.date = dateTime;
             message.message = payload.message;
-            message.additionalInfo = JSON.stringify(prize);
+
+            regalo = JSON.parse(JSON.stringify(prize));
+            regalo.message = payload.message;
+
+            message.additionalInfo = JSON.stringify(regalo);
 
             messageQuery.createMessage(payload.phoneID, message, function(err, result) {
                 if (err) {
@@ -40,7 +44,7 @@ exports.setCoupon = function(payload,callback) {
                 } else {
 					var extraData = { action: 5, additionalInfo: JSON.stringify(prize), _id: result._id };
 					payload.extra = { extra:extraData};
-		            payload.message = payload.message;
+		            payload.message = config.messages.coupon;
                     callback(null,payload);
                 }
             });
