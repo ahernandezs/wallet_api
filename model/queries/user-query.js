@@ -34,11 +34,15 @@ exports.createUser = function(user,callback){
   console.log('User to persist user' + userToPersist);
 
   if(user.email_address)
-      mailService.sendRegisterMessage(user);
-  userToPersist.save(function (err) {
-    if (err) callback("ERROR", { statusCode: 1,  additionalInfo: 'Error to register user' });
-    callback(null, { statusCode: 0 ,  additionalInfo: 'User registered correctly' });
-  });
+      mailService.sendRegisterMessage(user, function(err, result) {
+          if (err)
+              callback('ERROR', { statusCode : 1, additionalInfo : result } );
+          else
+              userToPersist.save(function (err) {
+                if (err) callback("ERROR", { statusCode: 1,  additionalInfo: 'Error to register user' });
+                callback(null, { statusCode: 0 ,  additionalInfo: 'User registered correctly' });
+            });
+      });
 };
 
 exports.singleUpdateUser = function(payload,callback){

@@ -23,22 +23,46 @@ exports.sendMail = function(sender,message, callback){
 	});
 }
 
-exports.sendRegisterMessage= function(user){
-
-	sendgrid.send({
-		to:        user.email,
-		from:      'no-reply@wallet.amdocs.com',
-		subject:   'Welcome to Amdocs Wallet',
-		text:       user.name + '!!\n\n'+
-		config.mail.bodyPin + user.pin+'\n\n' +
-		config.mail.bodyFin + '\n\n' +
-		config.mail.regards + '\n\n' +
-		config.mail.footer
-
-	}, function(err, json) {
-		if (err) { return console.error(err); }
-		console.log(json);
-	});
+exports.sendRegisterMessage= function(user, callback){
+    console.log('Writting email');
+    var email = new sendgrid.Email({
+        to:         user.email,
+        from:       'no-reply@wallet.amdocs.com',
+        subject:    'Welcome to Amdocs Wallet',
+        text:       'hello'
+    });
+    
+    async.waterfall([
+        function(callback) {
+            console.log( 'Reading html file' );
+            var fs = require('fs');
+            var __dirname = 'resources';
+            fs.readFile( __dirname + '/index.html', function (err, data) {
+              if (err) {
+                callback('ERROR', 'There was an error sending the email');
+              }
+                callback(null, data.toString());
+            });
+        },
+        function(html, callback) {
+            html = html.replace('1234', user.pin);
+            email.setHtml(html);
+            
+            sendgrid.send(email, function(err, json) {
+                if (err) {
+                    callback('ERROR', err);
+                } else {
+                    callback(null, json);
+                }
+            });
+        }
+    ], function (err, result) {
+        if(err){      
+            callback(err,result);    
+        } else {      
+            callback(null,result);    
+        }
+    });
 };
 
 exports.sendForgottenPIN = function(user, callback) {
@@ -51,8 +75,11 @@ exports.sendForgottenPIN = function(user, callback) {
                     'Your PIN is ' + user.pin + '.\n\n' +
                     'Amdocs Wallet Team'
     }, function(err, json) {
-        if (err) callback('ERROR', err);
-        callback(null, json);
+        if (err) {
+            callback('ERROR', err);
+        } else {
+            callback(null, json);
+        }
     });
 };
 

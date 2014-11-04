@@ -16,7 +16,7 @@ exports.requestPinFlow = function(phoneID,callback) {
                     console.log(err.message);
                     callback( 'ERROR', { message: 'Something went wrong' } );
                 } else if (credentials === null)
-                    callback('ERROR', response);
+                    callback('ERROR', { message : 'The device is not registered' } );
                 else
                     callback( null, { phoneID : phoneID, pin : credentials.pin } );
             });
@@ -35,10 +35,12 @@ exports.requestPinFlow = function(phoneID,callback) {
         },
         function(user, callback) {
             mailService.sendForgottenPIN(user, function(err, message) {
-                if (err)
-                    callback('ERROR', message);
-                else
-                    callback(null, { statusCode : 0, message : 'Your PIN has been sent by email' } );
+                if (err) {
+                    console.log(message);
+                    callback('ERROR', 'There was an error sending the email');
+                } else {
+                    callback(null, 'Your PIN has been sent by email');
+                }
             });
         }
     ], function (err, result) {

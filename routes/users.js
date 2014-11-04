@@ -201,12 +201,11 @@ exports.forgotPIN = function(req, res){
     console.log('Request forgotten PIN');
     var phoneID = req.headers['x-phoneid'];
     forgotPin.requestPinFlow(phoneID,function(err,result){
-        if(err) {
-            console.log(err);
-        } else {
-            console.log(result);
-            res.json(result);
-        }
+        console.log(result);
+        if(err)
+            res.json({ statusCode : 1, message : result});
+        else
+            res.json({statusCode : 0, message :  result});
     });
 };
 
