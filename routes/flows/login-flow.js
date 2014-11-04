@@ -2,6 +2,7 @@ var async = require('async');
 var soap = require('soap');
 var crypto = require('crypto');
 var Userquery = require('../../model/queries/user-query');
+var User = require('../../model/user');
 var soapurl = process.env.SOAP_URL;
 var wallet = require('../wallet');
 var session =  require('../../model/queries/session-query');
@@ -198,21 +199,46 @@ exports.regenerate = function(request, res, callback) {
         });
       },
         function(callback) {
-            wallet.balance(request, function(err, response) {
+            console.log( 'Calculate session lifetime' );
+            User.findOne({ phoneID : phoneID }, 'lastSession', function(err, data) {
                 if (err)
-                    callback('ERROR', response );
+                    callback('ERROR', data);
                 else {
-                    var result;
-                    if (response.result != 0) {
-                        result = { session: false };
-                        callback(null, result);
-                    }
-                    else {
-                        result = { session: true };
-                        callback(null, result);
-                    }
+                    var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+                    var moment = require('moment');
+                    var startDate = moment( data.lastSession, 'YYYY-M-DD HH:mm:ss' );
+                    var endDate = moment( dateTime, 'YYYY-M-DD HH:mm:ss' );
+                    var difference = endDate.diff(startDate, 'minutes');
+                    console.log(difference + ' minutes');
+                    if (difference > 4)
+                        callback(null, true);
+                    else
+                        callback(null, false);
                 }
             });
+        },
+        function(getBalance, callback) {
+            if (getBalance) {
+                console.log( 'Getting balance' );
+                wallet.balance(request, function(err, response) {
+                    if (err)
+                        callback('ERROR', response );
+                    else {
+                        var result;
+                        if (response.result != 0) {
+                            result = { session: false };
+                            callback(null, result);
+                        }
+                        else {
+                            result = { session: true };
+                            callback(null, result);
+                        }
+                    }
+                });
+            } else {
+                var data = { session : true };
+                callback(null, data);
+            }
         },
         function(data, callback) {
             console.log( 'is there a session?: ' + data.session );
