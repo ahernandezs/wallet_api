@@ -44,7 +44,8 @@ exports.setCoupon = function(payload,callback) {
                 } else {
 					var extraData = { action: 5, additionalInfo: JSON.stringify(prize), _id: result._id };
 					payload.extra = { extra:extraData};
-		            payload.message = config.messages.coupon;
+		            payload.message = payload.message;
+                    payload.title = config.messages.coupon;
                     callback(null,payload);
                 }
             });
