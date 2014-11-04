@@ -8,6 +8,9 @@ var doxsService = require('../../services/doxs-service');
 var mailService = require('../../services/sendGrid-service');
 var transacctionQuery = require('../../model/queries/transacction-query');
 var sessionQuery = require('./session-query');
+var soap = require('soap');
+var soapurl = process.env.SOAP_URL;
+var Userquery = require('../../model/queries/user-query');
 
 exports.validateUser = function(phoneID,callback){
 	console.log('Search user in mongoDB');
@@ -290,10 +293,11 @@ exports.inviteFriend = function(payload, callback){
     function(callback){
       mailService.sendInvitation(payload,function(err,result){
         if (err) callback('ERROR', {statusCode:1, additionalInfo:err});
-        callback(null,{statusCode:0, additionalInfo:'The invitation was sent successfully'});
+        callback(null);
       });
     },
-    /*function(callback){
+
+    function(callback){
       var payloadoxs = {phoneID: payload.phoneID, action: 'social', type: 3}
       doxsService.saveDoxs(payloadoxs, function(err, result){
         console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
@@ -309,9 +313,32 @@ exports.inviteFriend = function(payload, callback){
       var updateDoxs = {phoneID: payload.phoneID, operation: 'social', sessionid:payload.sessionid};
       console.log('Saving doxs in mongo');
       Userquery.putDoxs(updateDoxs, function(err,result){
-        callback("The invitation was sent successfully", null);
+        callback(null);
       });
-    },*/
+    },
+
+    function(callback){
+      console.log('balance e-wallet');
+      sessionid = payload.sessionid;
+      var request = { sessionid: sessionid, type: 1  };
+      request = {balanceRequest: request};
+      soap.createClient(soapurl, function(err, client) {
+        client.balance(request, function(err, result) {
+          if(err) {
+            return new Error(err);
+          } else {
+            response = result.balanceReturn;
+            if(response.result  === '0' )
+              response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : response };
+            else
+              response = { statusCode:1 ,  additionalInfo : response };
+
+            callback(null, response);
+          }
+        });
+      });
+    },
+
 
   ], function (err, result) {
     if(err){

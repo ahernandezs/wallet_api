@@ -51,16 +51,17 @@ config.messages.facebook =	{
 								picture: '',
 							};
 config.doxs = {};
-config.doxs.p2p = 500;
-config.doxs.gift = 500;
-config.doxs.pic = 200;
-config.doxs.linking = 100;
-config.doxs.payment = 500;
-config.doxs.social = 500;
-config.doxs.twitter = 500;
-config.doxs.facebook = 500;
-config.doxs.instagram = 500;
-config.doxs.profile = 500;
+
+config.doxs.linking = 500; //link to twitter/facebook
+config.doxs.social = 1000; //Invite a friend
+config.doxs.p2p = 1000;	   //Transfer money to a friend
+config.doxs.profile = 1000;//Complete profile
+config.doxs.pic = 1000;	   //Photo
+config.doxs.payment = 1500;//Make a purchase
+config.doxs.gift = 1000    //Send a gift to a friend
+config.doxs.twitter = 1000;
+config.doxs.facebook = 1000;
+config.doxs.instagram = 1000;
 
 config.prizes = {};
 config.prizes.top = 1;
