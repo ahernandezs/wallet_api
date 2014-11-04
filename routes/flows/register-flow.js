@@ -7,6 +7,7 @@ var soapurl = process.env.SOAP_URL;
 var config = require('../../config.js');
 
 exports.registerFlow = function(payload,callback) {
+    var transfer = true;
   async.waterfall([
     function(callback){
       console.log('Validate connection');
@@ -75,15 +76,17 @@ exports.registerFlow = function(payload,callback) {
             console.log(result);
             var response = result.registerReturn;
             if(response.result != 0){
-                if(response.result === 18)
+                if (response.result === 18) {
+                    transfer = false;
                   callback(null,sessionid);
-                else{
+                } else {
                   var response = { statusCode:1 ,  additionalInfo : result };
                   callback("ERROR", response);
                 }
             }
-            else
+            else {
               callback(null,sessionid);
+            }
           }
         });
       });
@@ -121,30 +124,35 @@ exports.registerFlow = function(payload,callback) {
       });
     },
     function(sessionid,callback){
-      console.log('Transfer ' + sessionid);
-      var requestSoap = { sessionid:sessionid, to: payload.phoneID, amount : 5 , type: 1 };
-      var request = { transferRequest: requestSoap };
-      console.log(request);
-      soap.createClient(soapurl, function(err, client) {
-        client.transfer(request, function(err, result) {
-          if(err) {
-            console.log(err);
-            return new Error(err);
-          } else {
-            console.log(result);
-            var response = result.transferReturn;
-            if(response.result != 0){
-              var response = { statusCode:1 ,  additionalInfo : result };
-              callback("ERROR", response);
-            }
-            else{
-              sessionUser.loginFlow({phoneID:payload.phoneID , pin :payload.pin },function(err,result){
+        if (transfer) {
+            console.log('Transfer ' + sessionid);
+            var requestSoap = { sessionid:sessionid, to: payload.phoneID, amount : 5 , type: 1 };
+            var request = { transferRequest: requestSoap };
+            console.log(request);
+            soap.createClient(soapurl, function(err, client) {
+                client.transfer(request, function(err, result) {
+                    if(err) {
+                        console.log(err);
+                        return new Error(err);
+                    } else {
+                        console.log(result);
+                        var response = result.transferReturn;
+                        if(response.result != 0){
+                            var response = { statusCode:1 ,  additionalInfo : result };
+                            callback("ERROR", response);
+                        } else{
+                            sessionUser.loginFlow({phoneID:payload.phoneID , pin :payload.pin },function(err,result){
+                                callback(null, result);
+                            });
+                        }
+                    }
+                });
+            });
+        } else {
+            sessionUser.loginFlow({phoneID:payload.phoneID , pin :payload.pin },function(err,result){
                 callback(null, result);
-              });
-            }
-          }
-        });
-      });
+            });
+        }
     },
     ], function (err, result) {
       console.log(result);
