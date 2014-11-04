@@ -37,15 +37,15 @@ exports.createUser = function(user,callback){
   console.log('User to persist user' + userToPersist);
 
   if(user.email_address)
-      mailService.sendRegisterMessage(user, function(err, result) {
-          if (err)
-              callback('ERROR', { statusCode : 1, additionalInfo : result } );
-          else
-              userToPersist.save(function (err) {
-                if (err) callback("ERROR", { statusCode: 1,  additionalInfo: 'Error to register user' });
-                callback(null, { statusCode: 0 ,  additionalInfo: 'User registered correctly' });
-            });
-      });
+    mailService.sendRegisterMessage(user, function(err, result) {
+      if (err)
+        callback('ERROR', { statusCode : 1, additionalInfo : result } );
+      else
+        userToPersist.save(function (err) {
+          if (err) callback("ERROR", { statusCode: 1,  additionalInfo: 'Error to register user' });
+          callback(null, { statusCode: 0 ,  additionalInfo: 'User registered correctly' });
+        });
+    });
 };
 
 exports.singleUpdateUser = function(payload,callback){
@@ -93,7 +93,7 @@ exports.updateUser = function(payload,callback){
           });
         });
       }else
-        callback(null);
+      callback(null);
     },
 
     function(callback){
@@ -103,7 +103,7 @@ exports.updateUser = function(payload,callback){
           callback(null);
         });
       }else
-        callback(null);
+      callback(null);
     },
 
     function(callback){
@@ -121,14 +121,14 @@ exports.updateUser = function(payload,callback){
       });
     },
 
-  ], function (err, result) {
-    console.log('Return Update User');
-    if(err){      
-      callback(err,result);    
-    }else{
-      callback(null,result);    
-    }  
-  });
+    ], function (err, result) {
+      console.log('Return Update User');
+      if(err){
+        callback(err,result);
+      }else{
+        callback(null,result);
+      }
+    });
 };
 
 exports.findAppID = function(phoneID,callback){
@@ -173,7 +173,7 @@ exports.getDoxs = function(phoneID, callback){
     else if(!person){
       callback("ERROR", { statusCode: 0 ,  additionalInfo: 'User not  Found' });
     }else
-      callback(null, person.doxs);
+    callback(null, person.doxs);
   });
 };
 
@@ -210,18 +210,18 @@ var putDoxs = exports.putDoxs = function(payload, callback){
 
     }
 
-  ], function (err, result) {
-    if(err){
-      callback(err,result);
-    }else{
-      callback(null,result);
-    }
-  });
+    ], function (err, result) {
+      if(err){
+        callback(err,result);
+      }else{
+        callback(null,result);
+      }
+    });
 };
 
 exports.confirmPin = function(phoneID, callback){
   console.log('Confirm Pin');
-    console.log(phoneID);
+  console.log(phoneID);
   User.findOne({ 'phoneID': phoneID }, 'pin email company name profileCompleted', function (err, person) {
     if (err) return handleError(err);
     else if(person){
@@ -235,18 +235,49 @@ exports.confirmPin = function(phoneID, callback){
   });
 };
 
-exports.getUsers = function(callback){
-  User.find({}, 'phoneID name email lastSession', { sort : { lastSession : -1 }}, function (err, people) {
-    if (err) return handleError(err);
-    else if(people){
-      callback(null, people);
-    }
-    else{
-      console.log("users not found");
-      callback("USERS NOT FOUND", null);
-    }
-  });
-}
+exports.getUsers = function(parameters,callback){
+  if(parameters.phoneID){
+    User.findOne({'phoneID': parameters.phoneID }, 'group', function (err, user) {
+      if (err) return handleError(err);
+      else if(user){
+        User.find({group:user.group }, 'phoneID name email lastSession', { sort : { lastSession : -1 }}, function (err, people) {
+          if (err) return handleError(err);
+          else if(people){
+            callback(null, people);
+          }
+          else{
+            console.log("users not found");
+            callback("USERS NOT FOUND", null);
+          }
+        });
+      }// end else if
+      else{
+        User.find({}, 'phoneID name email lastSession', { sort : { lastSession : -1 }}, function (err, people) {
+          if (err) return handleError(err);
+          else if(people){
+            callback(null, people);
+          }
+          else{
+            console.log("users not found");
+            callback("USERS NOT FOUND", null);
+          }
+        });
+      }
+    });
+  }//end of if
+  else{
+    User.find({}, 'phoneID name email lastSession', { sort : { lastSession : -1 }}, function (err, people) {
+      if (err) return handleError(err);
+      else if(people){
+        callback(null, people);
+      }
+      else{
+        console.log("users not found");
+        callback("USERS NOT FOUND", null);
+      }
+    });
+  }//end else
+};
 
 exports.getName = function(phoneID,callback){
   console.log('Search user in mongoDB');
@@ -261,14 +292,14 @@ exports.getName = function(phoneID,callback){
 };
 
 exports.updateSession = function(user, callback) {
-    console.log( 'Adding timestamp to session' );
-    var now = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-    User.update( { 'phoneID' : user.phoneID }, { $set : { 'lastSession' : now } }, function(err, result) {
-        if (err)
-            callback('ERROR', { message: 'Failed updating session' });
-        else
-            callback(null, { message: 'Successful updating session' });
-    });
+  console.log( 'Adding timestamp to session' );
+  var now = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+  User.update( { 'phoneID' : user.phoneID }, { $set : { 'lastSession' : now } }, function(err, result) {
+    if (err)
+      callback('ERROR', { message: 'Failed updating session' });
+    else
+      callback(null, { message: 'Successful updating session' });
+  });
 };
 
 exports.getLeaderboard = function(callback){
@@ -347,5 +378,4 @@ exports.inviteFriend = function(payload, callback){
       callback(null,result);
     }
   });
-
 };
