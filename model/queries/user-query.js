@@ -8,6 +8,8 @@ var doxsService = require('../../services/doxs-service');
 var mailService = require('../../services/sendGrid-service');
 var transacctionQuery = require('../../model/queries/transacction-query');
 var sessionQuery = require('./session-query');
+var enviromentQuery = require('./enviroment-query');
+
 var soap = require('soap');
 var soapurl = process.env.SOAP_URL;
 var Userquery = require('../../model/queries/user-query');
@@ -333,6 +335,21 @@ exports.inviteFriend = function(payload, callback){
   async.waterfall([
 
     function(callback){
+      User.findOne({'phoneID': payload.phoneID }, 'group', function (err, user) {
+        console.log('Enviroment: '+user.group);
+        callback(null, user.group);
+      });
+    },
+
+    function(env, callback){
+      enviromentQuery.getUrl(env, function(err, result) {
+        console.log('URL: '+result.url)
+        callback(null, result.url);
+      });
+    },
+
+    function(url, callback){
+      payload.url = url;
       mailService.sendInvitation(payload,function(err,result){
         if (err) callback('ERROR', {statusCode:1, additionalInfo:err});
         callback(null);
@@ -380,7 +397,6 @@ exports.inviteFriend = function(payload, callback){
         });
       });
     },
-
 
   ], function (err, result) {
     if(err){
