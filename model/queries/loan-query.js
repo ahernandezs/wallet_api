@@ -70,17 +70,22 @@ exports.findUserLoans = function(phoneID, callback) {
         if (err)
            callback('ERROR', { message : 'Something went wrong' });
         
-        var lastLoan = loans[ loans.length -1 ];
-        var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-        var moment = require('moment');
-        var startDate = moment( lastLoan.date, 'YYYY-M-DD HH:mm:ss' );
-        var endDate = moment( dateTime, 'YYYY-M-DD HH:mm:ss' );
-        var difference = endDate.diff(startDate, 'minutes');
-        console.log(difference + ' minutes');
-        
-        if (difference < 180)
-            callback('ERROR', { message : 'You have to wait 3 hours to request a new loan' });
-        else
+        try {
+            var lastLoan = loans[ loans.length -1 ];
+            var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+            var moment = require('moment');
+            var startDate = moment( lastLoan.date, 'YYYY-M-DD HH:mm:ss' );
+            var endDate = moment( dateTime, 'YYYY-M-DD HH:mm:ss' );
+            var difference = endDate.diff(startDate, 'minutes');
+            console.log(difference + ' minutes');
+
+            if (difference < 180)
+                callback('ERROR', { message : 'You have to wait 3 hours to request a new loan' });
+            else
+                callback(null, loans);   
+        } catch (e) {
+            console.log(e);
             callback(null, loans);
+        }
     });
 };
