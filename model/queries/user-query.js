@@ -343,8 +343,8 @@ exports.inviteFriend = function(payload, callback){
 
     function(env, callback){
       enviromentQuery.getUrl(env, function(err, result) {
-        console.log('URL: '+result.url)
-        callback(null, result.url);
+        console.log('URL: '+result)
+        callback(null, result);
       });
     },
 
