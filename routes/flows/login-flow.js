@@ -14,6 +14,7 @@ exports.loginFlow = function(payload,callback) {
     var info = {};
   async.waterfall([
     function(callback){
+
       Userquery.confirmPin(payload.phoneID, function(err, person) {
         if(err){
           console.log(err);
@@ -35,6 +36,20 @@ exports.loginFlow = function(payload,callback) {
           }
         }
       });
+    },
+    //Update environment
+    function(callback){
+      if(payload.group)
+        Userquery.singleUpdateUser({phoneID:payload.phoneID, group: payload.group},function (err,result) {
+          if(err) {
+            console.log(err);
+            var response = { statusCode:1 ,  additionalInfo : err };
+            callback(err,response);
+          }else
+          callback(null);
+        });
+      else
+        callback(null);
     },
     function(callback){
       console.log('Validate connection');
