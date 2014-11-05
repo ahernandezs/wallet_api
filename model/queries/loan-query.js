@@ -66,14 +66,20 @@ exports.getLoan = function(loanID,callback){
 };
 
 exports.findUserLoans = function(phoneID, callback) {
-    Loan.find( { "phoneID" : phoneID, "status" : "NEW" }, function(err, loans) {
-        console.log( 'loans!: ' + loans);
+    Loan.find( { "phoneID" : phoneID, "status" : "ACCEPTED" }, function(err, loans) {
         if (err)
            callback('ERROR', { message : 'Something went wrong' });
-        else if (loans.length > 0)
-            callback('ERROR', { message : 'You can not have more loans' });
-        else if ((new Date() - new Date(loans.date)) < (3*60*60*1000))
-            callback('ERROR', { message : 'You have to wait 3 hours' });
+        
+        var lastLoan = loans[ loans.length -1 ];
+        var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+        var moment = require('moment');
+        var startDate = moment( lastLoan.date, 'YYYY-M-DD HH:mm:ss' );
+        var endDate = moment( dateTime, 'YYYY-M-DD HH:mm:ss' );
+        var difference = endDate.diff(startDate, 'minutes');
+        console.log(difference + ' minutes');
+        
+        if (difference < 180)
+            callback('ERROR', { message : 'You have to wait 3 hours to request a new loan' });
         else
             callback(null, loans);
     });
