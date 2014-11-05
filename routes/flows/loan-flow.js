@@ -24,30 +24,8 @@ exports.createLoanFlow = function(payload,callback) {
            if (err)
                callback('ERROR', { statusCode : 1, additionalInfo : result.message });
             else
-                callback(null, payload.header['x-auth-token']);
+                callback(null);
         });
-    },
-    function(sessionid, callback) {
-        /*console.log( 'Getting balance for this user' );
-        var request = { sessionid: sessionid, type: 1  };
-        var request = {balanceRequest: request};
-        soap.createClient(soapurl, function(err, client) {
-            client.balance(request, function(err, result) {
-                if(err) {
-                    return new Error(err);
-                } else {
-                    var response = result.balanceReturn;
-                    console.log(JSON.stringify(response));
-                    if(response.result  === '0' && response.current === '0')
-                        callback(null);
-                    else {
-                        var response = { statusCode: 1 , additionalInfo : 'You can only request a loan if you have no money' };
-                        callback('ERROR', response);
-                    }
-                }
-            });
-        });*/
-        callback(null);
     },
     function(callback){
       console.log('saving loan in DB');
@@ -112,24 +90,6 @@ exports.createLoanFlow = function(payload,callback) {
             forReceipt.detail = loan;
             callback(null,loan);
           }
-      });
-    },
-    function(loan,callback){
-      console.log('Save message in DB');
-      var title = config.messages.loanRequestMsg + loan.amount;
-      loan.status = config.messages.status.NOTREAD;
-      loan.type = config.messages.type.LOAN;
-      loan.title = title;
-      loan.message = title;
-      console.log(loan);
-      messageQuery.createMessage(null,loan, function(err, result) {
-        if (err) {
-          var response = { statusCode: 1, additionalInfo: result };
-          callback('ERROR', response);
-        } else {
-            loan._id = result._id;
-          callback(null, loan);
-        }
       });
     },
     function(loan,callback){
