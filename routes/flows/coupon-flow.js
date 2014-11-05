@@ -27,13 +27,13 @@ exports.setCoupon = function(payload,callback) {
             var message = {};
             message.status = 'NOTREAD';
             message.type = 'COUPON';
-            message.title = config.messages.coupon;
+            message.title = config.messages.coupon.title;
+            message.message = config.messages.coupon.message;
             message.phoneID = payload.phoneID;
             message.date = dateTime;
-            message.message = payload.message;
 
             regalo = JSON.parse(JSON.stringify(prize));
-            regalo.message = payload.message;
+            regalo.message = config.messages.coupon.message;
 
             message.additionalInfo = JSON.stringify(regalo);
 
@@ -42,9 +42,9 @@ exports.setCoupon = function(payload,callback) {
                     var response = { statusCode: 1, additionalInfo: result };
                     callback('ERROR', response);
                 } else {
-					var extraData = { action: 5, additionalInfo: JSON.stringify(prize), _id: result._id };
+					var extraData = { action: 5, additionalInfo: JSON.stringify(regalo), _id: result._id };
 					payload.extra = { extra:extraData};
-		            payload.message = payload.message;
+		            payload.message = config.messages.coupon.message;
                     payload.title = config.messages.coupon;
                     callback(null,payload);
                 }
@@ -63,9 +63,13 @@ exports.setCoupon = function(payload,callback) {
             receipt.emitter = payload.phoneID;
             receipt.receiver = payload.phoneID;
             receipt.amount = "0";
-            receipt.message = payload.message;
-            receipt.additionalInfo = JSON.stringify(prize);
-            receipt.title = config.messages.coupon;
+            receipt.message = config.messages.coupon.message;
+
+            regalo = JSON.parse(JSON.stringify(prize));
+            regalo.message = config.messages.coupon.message;
+
+            receipt.additionalInfo = JSON.stringify(regalo);
+            receipt.title = config.messages.coupon.title;
             receipt.date = dateTime;
             receipt.type = 'COUPON';
             receipt.status = 'DELIVERED';

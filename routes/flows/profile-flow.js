@@ -47,6 +47,22 @@ exports.updateProfile = function(payload,callback) {
 			});
 		},
 
+	    function(callback){
+	      console.log(payload.sessionid);
+	      balance.balanceFlow(payload.sessionid, function(err, result) {
+	        if(err){
+	          var response = { statusCode: 1, additionalInfo: result };
+	          callback('ERROR', response);
+	        }
+	        else{
+	          console.log(result);
+	          result.additionalInfo.doxAdded = config.doxs.profile;
+	          callback(null,result);
+	        }
+	      });
+	    },
+
+
 /*		function(callback){
 
 			var puntos = config.doxs['profile'];
