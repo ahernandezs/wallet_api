@@ -302,17 +302,28 @@ exports.updateSession = function(user, callback) {
   });
 };
 
-exports.getLeaderboard = function(callback){
-  var query = User.find({}, 'phoneID name doxs', {sort: {doxs: -1}});
-  query.limit(15);
-  query.exec(function (err, people) {
-    if (err) return handleError(err);
-    else if(people){
-      callback(null, people);
-    }
+exports.getLeaderboard = function(phoneIDUser,callback){
+
+  User.findOne({phoneID:phoneIDUser},'group',function(err,result){
+    if (err)
+      callback('ERROR', { message: 'Fail  getLeaderboard' });
     else{
-      console.log("users not found");
-      callback("USERS NOT FOUND", null);
+      if(result.group){
+        var query = User.find({group:result.group}, 'phoneID name doxs', {sort: {doxs: -1}});
+        query.limit(15);
+        query.exec(function (err, people) {
+          if (err) return handleError(err);
+          else if(people){
+            callback(null, people);
+          }
+          else{
+            console.log("users not found");
+            callback("USERS NOT FOUND", null);
+          }
+        });
+      }else{
+          callback(null,[]);
+      }
     }
   });
 };
