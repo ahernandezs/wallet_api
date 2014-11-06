@@ -48,8 +48,8 @@ config.messages.twitterMsg = 'Having a great time at #mmglobal in Istanbul, enjo
 config.messages.facebook =	{
 								name:'AmdocsCafe',
 								caption:'I just bought a coffee',
-								description:'Just dowloaded my Amdocs Wallet at Mobile Money Global! Looking forward to the delicous coffee at the fully cashless Amdocs Café, now open at Grand Wyndham, Istanbul',
-								link:''
+								description:'Just downloaded my Amdocs Wallet at Mobile Money Global! Looking forward to the delicous coffee at the fully cashless Amdocs Café, now open at Grand Wyndham, Istanbul',
+								link:'http://goo.gl/IRbh4z'
 							};
 config.doxs = {};
 
