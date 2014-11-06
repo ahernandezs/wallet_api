@@ -179,56 +179,101 @@ exports.sendGift = function(req, res){
 exports.activity = function(req, res){
   console.log('\n\nExecute POST activity');
   console.log(JSON.stringify(req.body));
-
   var payload = req.body;
   var sessionid = req.headers['x-auth-token'];
+  var phoneID = req.headers['x-phoneid'];
+  payload.phoneID = phoneID;
   payload.sessionid = sessionid;
+
+  var actualizar = false;
 
   async.waterfall([
 
     function(callback){
-        var request = { sessionid : sessionid, phoneID : req.headers['x-phoneid'] };
-      sessionQuery.getCredentials(request, function(err,user){
-          payload.phoneID = user.data.phoneID;
-          callback(null);
-      });
+
+      //Available values for operacion: 'linking', 'twitter' and 'facebook'
+      var operacion = payload.action == 'LINK' ? 'linking' : payload.socialNetwork.toLowerCase();
+
+      if(operacion==='linking'){
+        //if 'linking' validate flag in user's record
+        Userquery.getSocialNetworks(payload.phoneID, function(err, socialNetworksUsers){
+          if(payload.socialNetwork.toLowerCase() == 'twitter' && (socialNetworksUsers.twitter == null || socialNetworksUsers.twitter == '0')){
+            console.log('Set flag twitter in user');
+            actualizar = true;
+            var carga = {phoneID: payload.phoneID, social: 'twitter'};
+            Userquery.setSocialNetworks(carga, function(err, result){
+              callback(null, operacion);
+            });
+          }else if(payload.socialNetwork.toLowerCase() == 'facebook' && (socialNetworksUsers.facebook == null || socialNetworksUsers.facebook == '0')){
+            console.log('Set flag facebook in user');
+            actualizar = true;
+            var carga = {phoneID: payload.phoneID, social: 'facebook'};
+            Userquery.setSocialNetworks(carga, function(err, result){
+              callback(null, operacion);
+            });
+          }else{
+            callback(null, operacion);
+          }
+        });
+      }else{
+        //if 'shared' validate flag in receipt's record
+        receipt.getSocialNetworks(payload.receiptid, function(err, socialNetworksReceipt){
+          if(payload.socialNetwork.toLowerCase() == 'twitter' && (socialNetworksReceipt.twitter == null || socialNetworksReceipt.twitter == '0')){
+            actualizar = true;
+          }else if(payload.socialNetwork.toLowerCase() == 'facebook' && (socialNetworksReceipt.facebook == null || socialNetworksReceipt.facebook == '0')){
+            actualizar = true;
+          }
+          callback(null, operacion);
+        });
+      }
     },
 
-    function(callback){
-      var operacion = payload.action == 'LINK' ? 'linking' : payload.socialNetwork.toLowerCase();
-      var payloadoxs = {phoneID: payload.phoneID, action: operacion, type: 3}
-      doxsService.saveDoxs(payloadoxs, function(err, result){
-        callback(null, result);
-      });
+    function(operacion, callback){
+      if(actualizar){
+        var payloadoxs = {phoneID: payload.phoneID, action: operacion, type: 3}
+        doxsService.saveDoxs(payloadoxs, function(err, result){
+          callback(null, operacion);
+        });
+      }else{
+        callback(null, operacion);
+      }
     },
 
     function(resultado, callback){
-      var operacion = payload.action == 'LINK' ? 'linking' : payload.socialNetwork.toLowerCase();
-      var updateDoxs = {phoneID: payload.phoneID, operation: operacion, sessionid: sessionid};
-      console.log('Saving doxs in mongo');
-      Userquery.putDoxs(updateDoxs, function(err,result){
+      if(actualizar){
+        var operacion = payload.action == 'LINK' ? 'linking' : payload.socialNetwork.toLowerCase();
+        var updateDoxs = {phoneID: payload.phoneID, operation: operacion, sessionid: sessionid};
+        console.log('Saving doxs in mongo');
+        Userquery.putDoxs(updateDoxs, function(err,result){
+          callback(null, resultado);
+        });
+      }else{
         callback(null, resultado);
-      });
+      }
     },
 
     function(result, callback){
-      var transacction = {};
-      transacction.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-      transacction.type = 'DOX',
-      transacction.description = 'You had earned some doxs points for your social activity!'
-      transacction.operation = payload.action + ' - ' + payload.socialNetwork;
-      transacction.title =  payload.action + ' - ' + payload.socialNetwork;
-      transacction.amount = payload.action == 'LINK' ? config.doxs.linking : config.doxs.social;
-      transacction.phoneID = payload.phoneID;
-      transacctionQuery.createTranssaction(transacction, function(err, result) {
-        callback(null, result);
-      });
+      if(actualizar){
+        var transacction = {};
+        transacction.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+        transacction.type = 'DOX',
+        transacction.description = 'You had earned some doxs points for your social activity!'
+        transacction.operation = payload.action + ' - ' + payload.socialNetwork;
+        transacction.title =  payload.action + ' - ' + payload.socialNetwork;
+        transacction.amount = payload.action == 'LINK' ? config.doxs.linking : config.doxs.social;
+        transacction.phoneID = payload.phoneID;
+        transacctionQuery.createTranssaction(transacction, function(err, result) {
+          callback(null, result);
+        });
+      }else{
+          callback(null, result);
+      }
     },
 
     function(result, callback){
-      if(payload.action == "SHARED"){
+      if(payload.action == "SHARED" && actualizar){
         var carga = {};
-        carga.id = payload.receiptid;
+        carga._id = payload.receiptid;
         carga.operation = payload.socialNetwork;
         receipt.updateReceipt(carga, function(err, result){
           callback(null, result);
@@ -240,9 +285,10 @@ exports.activity = function(req, res){
 
   ], function (err, result) {
     if(err){
-      callback("Error! "+err,result);
+      res.send(500);
     }else{
-      res.json(result);
+      var response = { statusCode: 0, additionalInfo: result };
+      res.json(response);
     }
   });
 
