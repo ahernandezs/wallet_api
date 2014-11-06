@@ -195,6 +195,7 @@ var putDoxs = exports.putDoxs = function(payload, callback){
           callback('ERROR', response);
         }
         else{
+          console.log("\n\nDoxes en UTIBA: "+result.additionalInfo.dox);
           callback(null, result.additionalInfo.dox);
         }
       });
@@ -207,9 +208,11 @@ var putDoxs = exports.putDoxs = function(payload, callback){
       var update = { 'doxs': doxs };
       var options = { new: false };
       User.findOneAndUpdate(query, update, options, function (err, person) {
-        if (err) return handleError(err);
+        if (err){
+          callback("ERROR", { statusCode: 1 ,  additionalInfo: err });
+        }
         else if(!person)
-          callback("ERROR", { statusCode: 0 ,  additionalInfo: 'User not  Found' });
+          callback("ERROR", { statusCode: 1 ,  additionalInfo: 'User not  Found' });
         else
           callback(null, person.doxs);
       });
@@ -429,3 +432,20 @@ exports.inviteFriend = function(payload, callback){
     }
   });
 };
+
+exports.getSocialNetworks = function(phoneID, callback){
+  console.log("getSocialNetworks: "+phoneID);
+  User.findOne({ 'phoneID': phoneID }, 'phoneID twitter facebook', function(err, social){
+    callback(null, social);
+  })
+};
+
+exports.setSocialNetworks = function(payload, callback){
+  console.log("setSocialNetworks: "+JSON.stringify(payload));
+  var conditions = { 'phoneID': payload.phoneID }
+  payload = payload.social == 'twitter' ? {'twitter':'1'} : {'facebook':'1'};
+  User.update(conditions, payload, null, function(err, result) {
+    console.log(result);
+    callback(null);
+  });
+}

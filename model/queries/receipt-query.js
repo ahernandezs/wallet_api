@@ -108,3 +108,16 @@ exports.getLastReceipt = function(payload, callback) {
             callback(null, receipt);
     });
 };
+
+exports.getSocialNetworks = function(receiptID, callback){
+  Receipt.findOne({'_id':receiptID}, 'twitter facebook', function (err, receipt) {
+       if (err) callback('ERROR', err);
+       else if(receipt){
+          callback(null, receipt);
+      }
+      else{
+          console.log("receipt not found");
+          callback("receipt not found", null);
+      }
+  });
+}
