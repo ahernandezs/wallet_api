@@ -219,16 +219,21 @@ exports.regenerate = function(request, res, callback) {
                 if (err)
                     callback('ERROR', data);
                 else {
-                    var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-                    var moment = require('moment');
-                    var startDate = moment( data.lastSession, 'YYYY-M-DD HH:mm:ss' );
-                    var endDate = moment( dateTime, 'YYYY-M-DD HH:mm:ss' );
-                    var difference = endDate.diff(startDate, 'minutes');
-                    console.log(difference + ' minutes');
-                    if (difference > 4)
+                    try {
+                        var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+                        var moment = require('moment');
+                        var startDate = moment( data.lastSession, 'YYYY-M-DD HH:mm:ss' );
+                        var endDate = moment( dateTime, 'YYYY-M-DD HH:mm:ss' );
+                        var difference = endDate.diff(startDate, 'minutes');
+                        console.log(difference + ' minutes');
+                        if (difference > 4)
+                            callback(null, true);
+                        else
+                            callback(null, false);
+                    } catch (e) {
+                        console.log(e);
                         callback(null, true);
-                    else
-                        callback(null, false);
+                    }
                 }
             });
         },
