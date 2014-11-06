@@ -109,6 +109,7 @@ exports.transferFunds = function(data, callback) {
     var dateTime;
     var msg;
     var forReturn = {};
+    var mainUser = data.header.phoneID;
 
     async.waterfall([
         function(callback) {
@@ -144,7 +145,7 @@ exports.transferFunds = function(data, callback) {
         },
 
         function(sessionid,payload,callback){
-            console.log('Get receiver in db ' +sessionid);
+            console.log('Get receiver in db ' + payload.phoneID);
             Userquery.getName(payload.phoneID,function(err,user){
                 if (err) {
                     var response = { statusCode: 1, additionalInfo: err };
@@ -160,8 +161,8 @@ exports.transferFunds = function(data, callback) {
         },
 
         function(sessionid,payload,callback){
-            console.log('Get sender in db ' +sessionid);
-            var requestSession = { sessionid :  sessionid };
+            console.log('Get sender in db ' + mainUser);
+            var requestSession = { phoneID :  mainUser };
             sessionQuery.getCredentials(requestSession,function(err,user){
                 console.log(user);
                 forReceipt.user = user;
@@ -193,7 +194,7 @@ exports.transferFunds = function(data, callback) {
         },
 
         function(sessionid,payload,callback){
-            var updateDoxs = {phoneID: payload.phoneID, operation: 'p2p',sessionid: sessionid};
+            var updateDoxs = {phoneID: mainUser, operation: 'p2p',sessionid: sessionid};
             console.log('Saving doxs in mongo');
             Userquery.putDoxs(updateDoxs, function(err,result){
                 callback(null,sessionid,payload);

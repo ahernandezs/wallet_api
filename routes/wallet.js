@@ -122,6 +122,7 @@ exports.buyFlow = function(req, res){
 exports.transferFunds = function(req, res) {
     console.log('POST method transferFunds' );
     req.headers.sessionid = req.headers['x-auth-token'];
+    req.headers.phoneID = req.headers['x-phoneid'];
     var values = {};
     values.body = req.body;
     values.header = req.headers;
