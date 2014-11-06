@@ -379,6 +379,25 @@ exports.inviteFriend = function(payload, callback){
         callback(null);
       });
     },
+    function(callback) {
+        console.log( 'Saving transaction in mongo' );
+        var transacction = {};
+        transacction.title = 'Friend invited';
+        transacction.type = 'DOX',
+        transacction.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+        transacction.amount = config.doxs.invite;
+        transacction.operation = 'INVITE';
+        transacction.phoneID = payload.phoneID;
+        transacction.description ='Invited a friend to install amdocs wallet';
+        transacctionQuery.createTranssaction(transacction, function(err, result) {
+            if (err)
+                callback('ERROR', err);
+            else{
+                console.log(result);
+                callback(null);
+            }
+        });
+    },
 
     function(callback){
       console.log('balance e-wallet');
