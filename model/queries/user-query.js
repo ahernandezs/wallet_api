@@ -121,7 +121,8 @@ exports.updateUser = function(payload,callback){
         }
         else{
           console.log(result);
-          result.additionalInfo.doxAdded = config.doxs.profile;
+          if(payload.profileCompleted === 1)
+            result.additionalInfo.doxAdded = config.doxs.profile;
           callback(null,result);
         }
       });

@@ -52,6 +52,7 @@ exports.setCoupon = function(payload,callback) {
 		},
 
         function(message, callback) {
+            message.message = config.messages.coupon.title;
             urbanService.singlePush(message, function(err, result) {
                 callback(null);
             });
