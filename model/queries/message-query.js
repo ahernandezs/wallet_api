@@ -49,8 +49,7 @@ exports.updateMessage = function(message,callback){
     console.log( 'Updating status message in MongoDB');
     console.log(message);
     var conditions = { _id : message._id };
-    var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-    Message.update( conditions, { status : message.status, date : dateTime }, null, function(err, result) {
+    Message.update( conditions, { status : message.status }, null, function(err, result) {
         if (err) {
             console.log( 'Failed message status update: ' + err );
             callback( 'ERROR', { message: 'Failed session update' } );
