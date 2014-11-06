@@ -217,7 +217,7 @@ exports.activity = function(req, res){
         });
       }else{
         //if 'shared' validate flag in receipt's record
-        receipt.getSocialNetworks(payload.receiptid, function(err, socialNetworksReceipt){
+        receipt.getSocialNetworks(payload.orderid, function(err, socialNetworksReceipt){
           if(payload.socialNetwork.toLowerCase() == 'twitter' && (socialNetworksReceipt.twitter == null || socialNetworksReceipt.twitter == '0')){
             actualizar = true;
           }else if(payload.socialNetwork.toLowerCase() == 'facebook' && (socialNetworksReceipt.facebook == null || socialNetworksReceipt.facebook == '0')){
@@ -273,9 +273,14 @@ exports.activity = function(req, res){
     function(result, callback){
       if(payload.action == "SHARED" && actualizar){
         var carga = {};
-        carga._id = payload.receiptid;
-        carga.operation = payload.socialNetwork;
-        receipt.updateReceipt(carga, function(err, result){
+        carga.orderID = payload.orderid;
+
+        if(payload.socialNetwork.toLowerCase() == 'twitter')
+          carga.twitter = 1;
+        else if(payload.socialNetwork.toLowerCase() == 'facebook')
+          carga.facebook = 1;
+
+        receipt.updateReceiptByOrder(carga, function(err, result){
           callback(null, result);
         });
       }else{

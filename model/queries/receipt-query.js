@@ -109,8 +109,8 @@ exports.getLastReceipt = function(payload, callback) {
     });
 };
 
-exports.getSocialNetworks = function(receiptID, callback){
-  Receipt.findOne({'_id':receiptID}, '_id twitter facebook', function (err, receipt) {
+exports.getSocialNetworks = function(orderID, callback){
+  Receipt.findOne({'orderID':orderID}, 'orderID twitter facebook', function (err, receipt) {
        if (err) callback('ERROR', err);
        else if(receipt){
           callback(null, receipt);

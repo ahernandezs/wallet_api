@@ -229,10 +229,8 @@ exports.sendGift = function(payload,callback) {
 			ReceiptQuery.createReceipt(receipt, function(err, result) {
 				if (err)
 					callback('ERROR', err);
-				else{
-					receipt._id = result._id;
+				else
 					callback(null, balance,receipt, message, additionalInfo);
-				}
 			});
 		},
         function(balance, receipt, message, additionalInfo, callback) {
@@ -254,9 +252,8 @@ exports.sendGift = function(payload,callback) {
             ReceiptQuery.createReceipt(newReceipt, function(err, result) {
                if (err)
                    callback('ERROR', errr);
-                else{
+                else
                     callback(null, balance, receipt);
-                }
             });
         },
 		function(balance,receipt, callback) {
@@ -294,7 +291,6 @@ exports.sendGift = function(payload,callback) {
 								balance.date = dateTime;
                                 balance.type = 'GIFT';
                                 balance._id = orderID;
-                                balance.receiptid = receipt._id;
                                 balance.additionalInfo.avatar = config.S3.url + emitter +'.png';
                                 balance.additionalInfo.name = receiver;
                                 balance.additionalInfo.amount = receipt.amount;
