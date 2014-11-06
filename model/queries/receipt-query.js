@@ -3,6 +3,7 @@ var config = require('../../config.js');
 
 exports.createReceipt = function(data, callback) {
     var newReceipt = new Receipt(data);
+    console.log( newReceipt );
     var result = newReceipt.save(function(err) {
         if (err) return 1;
         return 0;
