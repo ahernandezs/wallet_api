@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var receiptSchema = new Schema({
+    _id: String,
 	emitter: String,
     receiver: String,
     amount: String,
