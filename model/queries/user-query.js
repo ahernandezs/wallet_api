@@ -66,11 +66,15 @@ exports.updateUser = function(payload,callback){
   async.waterfall([
 
     function(callback){
-      payload.email = payload.email_address;
+      if(payload.email_address)
+        payload.email = payload.email_address;
       var conditions = { 'phoneID': payload.phoneID }
       User.update(conditions, payload, null, function(err, result) {
-        callback(null);
-      });
+        if(err)
+          return new Error(err);
+        else
+          callback(null);
+        });
     },
 
     function(callback){
