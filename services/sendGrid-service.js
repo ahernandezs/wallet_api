@@ -130,7 +130,7 @@ exports.sendInvitation = function(friend,callback){
 		to:        friend.email,
 		from:      'no-reply@wallet.amdocs.com',
 		subject:   'Join us to amdocs, '+friend.name,
-		text:      friend.message
+		text:      friend.message + '\n\nthe link is: '+ friend.url
 	}, function(err, json) {
 		if (err) { return callback.error("ERROR",err); }
 		callback(null,json)
