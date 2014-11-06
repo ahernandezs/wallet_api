@@ -40,7 +40,7 @@ config.messages.coupon = {};
 config.messages.coupon.message = 'Congratulations! You are today’s winner of “Don’t Miss a Beat with DOX” promotion! We will be in touch shortly, along with your Beats Studio headsets!';
 config.messages.coupon.title = 'Congratulations! You won a prize!!'
 
-config.messages.twitter = { message :'I just bought a {0} from AmdocsCafe at {1} !!!!' , url :'http://goo.gl/IRbh4z'};
+config.messages.twitter = { message :'I just bought a {0} from AmdocsCafe at {1} !!!!' , url :''};
 config.messages.twitter1 = 'I just bought a ';
 config.messages.twitter2 = ' from AmdocsCafe at ';
 config.messages.twitterURL = 'http://goo.gl/IRbh4z';
