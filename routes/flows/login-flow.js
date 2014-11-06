@@ -200,19 +200,6 @@ exports.regenerate = function(request, res, callback) {
     var phoneID = request.phoneID;
     delete request.phoneID;
     async.waterfall([
-
-      function(callback){
-        console.log('Validate connection');
-        var response = null;
-        soap.createClient(soapurl, function(err, client) {
-          if(err) {
-            console.log(err);
-            var response = { statusCode:1 ,  additionalInfo : err };
-            callback(err,response);
-          }else
-          callback(null);
-        });
-      },
         function(callback) {
             console.log( 'Calculate session lifetime' );
             User.findOne({ phoneID : phoneID }, 'lastSession', function(err, data) {
