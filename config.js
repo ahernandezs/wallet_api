@@ -40,16 +40,16 @@ config.messages.coupon = {};
 config.messages.coupon.message = 'Congratulations! You are today’s winner of “Don’t Miss a Beat with DOX” promotion! We will be in touch shortly, along with your Beats Studio headsets!';
 config.messages.coupon.title = 'Congratulations! You won a prize!!'
 
-config.messages.twitter = { message :'I just bought a {0} from AmdocsCafe at {1} !!!!' , url :'http://goo.gl/IRbh4z'};
+config.messages.twitter = { message :'I just bought a {0} from AmdocsCafe at {1} !!!!' , url :''};
 config.messages.twitter1 = 'I just bought a ';
 config.messages.twitter2 = ' from AmdocsCafe at ';
-config.messages.twitterURL = 'http://goo.gl/IRbh4z';
+config.messages.twitterURL = '';
 config.messages.twitterMsg = 'Having a great time at #mmglobal in Istanbul, enjoying the delicious coffee bought with my #AmdocsWallet !!';
 config.messages.facebook =	{
 								name:'AmdocsCafe',
 								caption:'I just bought a coffee',
 								description:'Just dowloaded my Amdocs Wallet at Mobile Money Global! Looking forward to the delicous coffee at the fully cashless Amdocs Café, now open at Grand Wyndham, Istanbul',
-								link:'http://goo.gl/IRbh4z',
+								link:'',
 								picture: '',
 							};
 config.doxs = {};

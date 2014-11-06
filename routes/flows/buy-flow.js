@@ -186,7 +186,7 @@ exports.buyFlow = function(payload,callback) {
 							var balance = {
 								current: currentMoney,
 								dox: response.current,
-								doxAdded: config.doxs.p2p,
+								doxAdded: config.doxs.payment,
 								order: orderID,
 								status:'NEW',
 								date:dateTime,
@@ -249,7 +249,7 @@ exports.buyFlow = function(payload,callback) {
 			transacction.title = 'Amdocs cafe ';
 			transacction.type = 'DOX',
 			transacction.date = dateTime;
-			transacction.amount = config.doxs.p2p;
+			transacction.amount = config.doxs.payment;
 			transacction.additionalInfo = receipt.additionalInfo;
 			transacction.operation = 'BUY';
 			transacction.phoneID = receipt.emitter;
