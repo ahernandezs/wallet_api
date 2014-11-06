@@ -221,6 +221,7 @@ exports.buyFlow = function(payload,callback) {
 			        if (err)
 			            callback('ERROR', result.message);
 			        else{
+						response.receiptid = result._id;
 			            callback(null, response,receipt);
 			        }
 			    });
