@@ -15,7 +15,7 @@ exports.createReceipt = function(data, callback) {
 
 exports.getReceipts = function(phoneID, callback){
     console.log('phoneID ' + phoneID);
-	Receipt.find({emitter:phoneID},'emitter receiver title amount date type status additionalInfo owner',{sort: {date: -1}},function (err, receipt) {
+	Receipt.find({emitter:phoneID},'_id emitter receiver title amount date type status additionalInfo owner',{sort: {date: -1}},function (err, receipt) {
        if (err) callback('ERROR', err);
        else if(receipt){
           console.log(receipt);
@@ -53,7 +53,7 @@ exports.updateReceiptByOrder = function(payload,callback){
 };
 
 exports.getReceiptByOrderID = function(orderID,callback){
-  Receipt.find({'orderID':orderID},'emitter receiver title amount date type status additionalInfo',{sort: {date: -1}},function (err, receipt) {
+  Receipt.find({'orderID':orderID},'_id emitter receiver title amount date type status additionalInfo',{sort: {date: -1}},function (err, receipt) {
        if (err) callback('ERROR', err);
        else if(receipt){
           console.log('Get order');
@@ -69,7 +69,7 @@ exports.getReceiptByOrderID = function(orderID,callback){
 };
 
 exports.getReceiptByID = function(receiptID,callback){
-  Receipt.find({'_id':receiptID},'emitter receiver title amount date type status additionalInfo',{sort: {date: -1}},function (err, receipt) {
+  Receipt.find({'_id':receiptID},'_id emitter receiver title amount date type status additionalInfo',{sort: {date: -1}},function (err, receipt) {
        if (err) callback('ERROR', err);
        else if(receipt){
           console.log('Get order');
@@ -85,7 +85,7 @@ exports.getReceiptByID = function(receiptID,callback){
 };
 
 exports.getIdPhone = function(payload,callback){
-  Receipt.findOne({_id: payload.id},'emitter',function (err, result) {
+  Receipt.findOne({_id: payload.id},'_id emitter',function (err, result) {
     callback(null, result.emitter)
   });
 };
@@ -101,7 +101,7 @@ exports.updateReceiptStatus = function(payload,callback){
 exports.getLastReceipt = function(payload, callback) {
     console.log('Get last receipt for ' + payload.loanID);
     var conditions = { emitter : payload.phoneID, type : payload.type, loanID: payload.loanID };
-    Receipt.findOne(conditions, 'emitter receiver amount message additionalInfo title date type status loanID', function(err, receipt) {
+    Receipt.findOne(conditions, '_id emitter receiver amount message additionalInfo title date type status loanID', function(err, receipt) {
         if(err)
             callback('ERROR', receipt);
         else
@@ -110,7 +110,7 @@ exports.getLastReceipt = function(payload, callback) {
 };
 
 exports.getSocialNetworks = function(receiptID, callback){
-  Receipt.findOne({'_id':receiptID}, 'twitter facebook', function (err, receipt) {
+  Receipt.findOne({'_id':receiptID}, '_id twitter facebook', function (err, receipt) {
        if (err) callback('ERROR', err);
        else if(receipt){
           callback(null, receipt);
