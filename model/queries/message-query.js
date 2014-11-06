@@ -14,34 +14,16 @@ exports.createMessage = function(sender,message, callback) {
 exports.getMessages = function(phoneID, callback) {
     console.log( 'Getting messages: ' + phoneID);
 
-    var mensajes = {};
     var tmp = {};
-    var condiciones = {$and: [  {'status': config.messages.status.NOTREAD },
-                                {'phoneID': phoneID }]}
+    var condiciones = {$and: [  {'phoneID': phoneID } ] };
 
     Message.find(condiciones, ' title type message status additionalInfo date', {sort: {date: -1}}, function (err, msgs) {
 
       if (err) callback('ERROR', err);
       else if(msgs){
-        mensajes = msgs;
         tmp = msgs;
       }
-
-      var conditions =  {$and: [ {'status': config.messages.status.READ},
-                                 {'phoneID': phoneID }]};
-
-      var  msj = Message.find(conditions, 'title type message status additionalInfo date', {sort: {date: -1}});
-      msj.limit(10);
-      msj.exec(function (err1, losMensajes) {
-
-        if (err1) callback('ERROR', err);
-        else if(losMensajes)
-
-          tmp = mensajes.concat(losMensajes);
-
         callback(null, tmp);
-
-      });
     });
 };
 
