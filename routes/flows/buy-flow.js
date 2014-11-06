@@ -186,7 +186,7 @@ exports.buyFlow = function(payload,callback) {
 							var balance = {
 								current: currentMoney,
 								dox: response.current,
-								doxAdded: config.doxs.p2p,
+								doxAdded: config.doxs.payment,
 								order: orderID,
 								status:'NEW',
 								date:dateTime,
