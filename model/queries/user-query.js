@@ -382,7 +382,7 @@ exports.inviteFriend = function(payload, callback){
     function(callback) {
         console.log( 'Saving transaction in mongo' );
         var transacction = {};
-        transacction.title = 'Invited a friend';
+        transacction.title = 'Friend invited';
         transacction.type = 'DOX',
         transacction.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
         transacction.amount = config.doxs.invite;
