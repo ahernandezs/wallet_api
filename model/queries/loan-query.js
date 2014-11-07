@@ -79,8 +79,8 @@ exports.findUserLoans = function(phoneID, callback) {
             var difference = endDate.diff(startDate, 'minutes');
             console.log(difference + ' minutes');
 
-            if (difference < 180)
-                callback('ERROR', { message : 'You have to wait 3 hours to request a new loan' });
+            if (difference < 30)
+                callback('ERROR', { message : config.messages.loanRejectedTimeMsg });
             else
                 callback(null, loans);   
         } catch (e) {
