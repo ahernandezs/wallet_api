@@ -70,15 +70,16 @@ exports.updateUser = function(payload,callback){
         payload.email = payload.email_address;
       var conditions = { 'phoneID': payload.phoneID }
       User.update(conditions, payload, null, function(err, result) {
-        if(err)
-          return new Error(err);
-        else
+        if(err){
+          console.log(err);
+          callback('ERROR',err);
+        }else
           callback(null);
         });
     },
 
     function(callback){
-      if(payload.profileCompleted === 1){
+      if(payload.profileCompleted === 1 || payload.profileCompleted === "1" ){
         var transacction = {};
         transacction.title = 'Update Profile';
         transacction.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
@@ -92,7 +93,8 @@ exports.updateUser = function(payload,callback){
           var payloadoxs = {phoneID: payload.phoneID, action: 'profile', type: 3}
           doxsService.saveDoxs(payloadoxs, function(err, result){
             if(err) {
-              return new Error(err);
+              console.log(err);
+              callback('ERROR',err);
             } else {
               callback(null);
             }
@@ -103,10 +105,14 @@ exports.updateUser = function(payload,callback){
     },
 
     function(callback){
-      if(payload.profileCompleted === 1){
+      if(payload.profileCompleted === 1 || payload.profileCompleted === "1" ){
         var updateDoxs = {phoneID: payload.phoneID, operation: 'profile', sessionid: payload.sessionid};
         putDoxs(updateDoxs, function(err,result){
-          callback(null);
+            if(err) {
+              console.log(err);
+              callback('ERROR',err);
+            } else 
+              callback(null);
         });
       }else
       callback(null);
@@ -114,20 +120,23 @@ exports.updateUser = function(payload,callback){
 
     function(callback){
       console.log(payload.sessionid);
-      balance.balanceFlow(payload.sessionid, function(err, result) {
-        if(err){
-          var response = { statusCode: 1, additionalInfo: result };
-          callback('ERROR', response);
-        }
-        else{
-          console.log(result);
-          if(payload.profileCompleted === 1)
-            result.additionalInfo.doxAdded = config.doxs.profile;
-          callback(null,result);
-        }
-      });
+        balance.balanceFlow(payload.sessionid, function(err, result) {
+          if(err){
+            var response = { statusCode: 1, additionalInfo: result };
+              if(err) {
+                console.log(err);
+                callback('ERROR',err);
+              } else 
+                callback('ERROR', response);
+          }
+          else{
+            console.log(result);
+            if(payload.profileCompleted === 1 || payload.profileCompleted === "1" )
+              result.additionalInfo.doxAdded = config.doxs.profile;
+            callback(null,result);
+          }
+        });
     },
-
     ], function (err, result) {
       console.log('Return Update User');
       if(err){
@@ -191,15 +200,15 @@ var putDoxs = exports.putDoxs = function(payload, callback){
     //consultar doxs en utiba
     function(callback){
       console.log('the sessionid: '+payload.sessionid);
-      balance.balanceFlow(payload.sessionid, function(err, result) {
-        if(err){
-          callback('ERROR', response);
-        }
-        else{
-          console.log("\n\nDoxes en UTIBA: "+result.additionalInfo.dox);
-          callback(null, result.additionalInfo.dox);
-        }
-      });
+        balance.balanceFlow(payload.sessionid, function(err, result) {
+          if(err){
+            callback('ERROR', response);
+          }
+          else{
+            console.log("\n\nDoxes en UTIBA: "+result.additionalInfo.dox);
+            callback(null, result.additionalInfo.dox);
+          }
+        });
     },
 
     //salvar numero de doxs en mongo
