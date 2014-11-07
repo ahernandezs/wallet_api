@@ -228,7 +228,7 @@ var updateLoanFlow = exports.updateLoanFlow = function(payload,callback){
       console.log('Save message in DB');
       if( tranStatus === config.loans.status.ACCEPTED ){
         console.log('ACCEPTED');
-        loan.message = 'Your loan for €' + loan.amount + ' was accepted' ;
+        loan.message = config.messages.loanAcceptedMsg;
         loan.title = loan.message;
       }
       else{
