@@ -220,6 +220,7 @@ exports.inviteFriend = function(req, res){
   Userquery.inviteFriend(req.body, function(err, result){
     if(err) {
         console.log('Error: '+err);
+        res.json({ statusCode : 1, message : err});
     } else {
         console.log('Resultado: '+result);
         res.json(result);
