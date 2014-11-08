@@ -219,10 +219,10 @@ exports.inviteFriend = function(req, res){
 
   Userquery.inviteFriend(req.body, function(err, result){
     if(err) {
-        console.log('Error: '+err);
-        res.json({ statusCode : 1, message : err});
+        console.log('Error: '+JSON.stringify(err));
+        res.json( err);
     } else {
-        console.log('Resultado: '+result);
+        console.log('Resultado: '+JSON.stringify(result));
         res.json(result);
     }
   });

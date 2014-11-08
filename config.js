@@ -49,7 +49,7 @@ config.messages.twitter2 = ' from AmdocsCafe at ';
 config.messages.twitterURL = '';
 config.messages.twitterMsg = 'Having a great time at #mmglobal in Istanbul, enjoying the delicious coffee bought with my #AmdocsWallet !!';
 config.messages.facebook =	{
-								name:'AmdocsCafe',
+								name:'Amdocs Wallet',
 								caption:'I just bought a coffee',
 								description:'Just downloaded my Amdocs Wallet at Mobile Money Global! Looking forward to the delicous coffee at the fully cashless Amdocs Café, now open at Grand Wyndham, Istanbul',
 								link:'http://goo.gl/IRbh4z'
@@ -58,9 +58,9 @@ config.doxs = {};
 
 config.doxs.linking = 500; //link to twitter/facebook
 config.doxs.social = 1000; //Invite a friend
-config.doxs.p2p = 1000;	   //Transfer money to a friend
+config.doxs.p2p = 1000;	   //Transfer money to a friendAmdocs Wallet
 config.doxs.profile = 1000;//Complete profile
-config.doxs.pic = 1000;	   //Photo
+config.doxs.pic = 1000;	   //PhotoAmdocs Wallet
 config.doxs.payment = 1500;//Make a purchase
 config.doxs.gift = 1000    //Send a gift to a friend
 config.doxs.twitter = 1000;
