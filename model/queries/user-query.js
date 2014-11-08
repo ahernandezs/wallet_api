@@ -9,6 +9,7 @@ var mailService = require('../../services/sendGrid-service');
 var transacctionQuery = require('../../model/queries/transacction-query');
 var sessionQuery = require('./session-query');
 var enviromentQuery = require('./enviroment-query');
+var transacction = require('../transacction');
 
 var soap = require('soap');
 var soapurl = process.env.SOAP_URL;
@@ -349,7 +350,31 @@ exports.getLeaderboard = function(phoneIDUser,callback){
 
 exports.inviteFriend = function(payload, callback){
 
+console.log('invite friend');
+
   async.waterfall([
+
+    function(callback){
+
+      var hoy = new Date();
+      fecha = hoy.toISOString().split('T');
+
+      var pattern = "^"+fecha[0];
+      var re = new RegExp(pattern);
+
+      var query = {$and: [{'operation':'INVITE'},
+                          {'phoneID':payload.phoneID},
+                          {'date':re}]};
+
+      transacction.find(query, function(err, trans){
+        console.log('Result: '+trans);
+        if(trans.length<5){
+          callback(null);
+        }else{
+          callback(config.messages.inviteError, null);
+        }
+      });
+    },
 
     function(callback){
       User.findOne({'phoneID': payload.phoneID }, 'group', function (err, user) {
@@ -392,6 +417,7 @@ exports.inviteFriend = function(payload, callback){
         callback(null);
       });
     },
+
     function(callback) {
         console.log( 'Saving transaction in mongo' );
         var transacction = {};
