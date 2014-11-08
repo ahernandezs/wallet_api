@@ -371,7 +371,7 @@ console.log('invite friend');
         if(trans.length<5){
           callback(null);
         }else{
-          callback(config.messages.inviteError, null);
+          callback({statusCode:1, additionalInfo:config.messages.inviteError}, null);
         }
       });
     },

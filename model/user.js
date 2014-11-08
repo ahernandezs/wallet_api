@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
-var db = mongoose.connect(   process.env.MONGOLAB_URI || 'mongodb://admin:admin@candidate.42.mongolayer.com:10128,candidate.43.mongolayer.com:10202/amdocs' ||   'mongodb://localhost/app28614432');
+//var db = mongoose.connect(   process.env.MONGOLAB_URI || 'mongodb://admin:admin@candidate.42.mongolayer.com:10128,candidate.43.mongolayer.com:10202/amdocs' ||   'mongodb://localhost/app28614432');
+var db = mongoose.connect(   process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/app28614432');
 
 var Schema = mongoose.Schema;
 
