@@ -180,7 +180,7 @@ exports.buyFlow = function(payload,callback) {
 						//twitterMsg = config.messages.twitter1 + payload.order.products[0].name + config.messages.twitter2 + new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') +'!!!';
 						//var twitterMsg = config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''));
                         dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-						var twitterMsg = config.messages.twitterMsg + dateTime.substr(-8, -3);
+						var twitterMsg = config.messages.twitterMsg + dateTime.substr(11, 5);
 						config.messages.twitter.message = twitterMsg;
 						if(response.result  === '0' ) {
 							var balance = {
