@@ -1,5 +1,7 @@
 var config = {};
 
+var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+
 config.sendGrid = {};
 config.sendGrid.user = 'dannywf@anzen.com.mx';
 config.sendGrid.password = 'Anzen7924';
@@ -47,7 +49,7 @@ config.messages.twitter = { message :'I just bought a {0} from AmdocsCafe at {1}
 config.messages.twitter1 = 'I just bought a ';
 config.messages.twitter2 = ' from AmdocsCafe at ';
 config.messages.twitterURL = '';
-config.messages.twitterMsg = 'Having a great time at #mmglobal in Istanbul, enjoying the delicious coffee bought with my #AmdocsWallet !!';
+config.messages.twitterMsg = 'Having a great time at #mmglobal in Istanbul, enjoying the delicious coffee bought with my #AmdocsWallet! ' + dateTime.substr(-8, -3);
 config.messages.facebook =	{
 								name:'Amdocs Wallet',
 								caption:'I just bought a coffee',
