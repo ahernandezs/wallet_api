@@ -42,7 +42,7 @@ config.messages.transferFund = 'You have sent a Transfer to ';
 config.messages.coupon = {};
 config.messages.coupon.message = 'Congratulations! You are today’s winner of “Don’t Miss a Beat with DOX” promotion! We will be in touch shortly, along with your Beats Studio headsets!';
 config.messages.coupon.title = 'Congratulations! You won a prize!!'
-config.messages.inviteError = 'Sorry! you have exceeded your invitations for today.'
+config.messages.inviteError = 'Sorry! Your invitations have expired!'
 
 config.messages.twitter = { message :'I just bought a {0} from AmdocsCafe at {1} !!!!' , url :''};
 config.messages.twitter1 = 'I just bought a ';

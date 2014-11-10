@@ -124,7 +124,7 @@ function createMail (sender,message,callback){
 		});
 };
 
-exports.sendInvitation = function(friend,callback){
+/*exports.sendInvitation = function(friend,callback){
 	console.log('Sending invitation: '+JSON.stringify(friend));
 	sendgrid.send({
 		to:        friend.email,
@@ -135,4 +135,47 @@ exports.sendInvitation = function(friend,callback){
 		if (err) { return callback.error("ERROR",err); }
 		callback(null,json)
 	});
+};*/
+
+exports.sendInvitation= function(friend, callback){
+	console.log('Sending invitation: '+JSON.stringify(friend));
+    var email = new sendgrid.Email({
+		to:        friend.email,
+		from:      'no-reply@amdocswallet.com',
+		subject:   'Check out the Amdocs Mobile Wallet!',
+    });
+
+    async.waterfall([
+        function(callback) {
+            console.log( 'Reading html file' );
+            var fs = require('fs');
+            var __dirname = 'resources';
+            fs.readFile( __dirname + '/mail.html', function (err, data) {
+              if (err) {
+                callback('ERROR', 'There was an error sending the email');
+              }
+                callback(null, data.toString());
+            });
+        },
+        function(html, callback) {
+            html = html.replace('[sender]', friend.name);
+            html = html.replace('[URL]', friend.url);
+            html = html.replace('[URLVIEW]', friend.url);
+            email.setHtml(html);
+
+            sendgrid.send(email, function(err, json) {
+                if (err) {
+                    callback('ERROR', err);
+                } else {
+                    callback(null, json);
+                }
+            });
+        }
+    ], function (err, result) {
+        if(err){
+            callback(err,result);
+        } else {
+            callback(null,result);
+        }
+    });
 };
