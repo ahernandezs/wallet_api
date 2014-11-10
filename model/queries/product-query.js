@@ -23,7 +23,7 @@ exports.getProducts =  function(merchantID, callback) {
 
 exports.getInventory = function(merchantID, callback) {
     console.log( 'getInventory from MongoDB for merchantID: ' + merchantID );
-    Product.find({ 'merchantId' : merchantID }, '_id name description url', function(err, inventory) {
+    Product.find({ 'merchantId' : merchantID }, '_id name description url status', function(err, inventory) {
         var response;
         if (err) {
             response = { statusCode: 1, additionalInfo: config.products.errMsg };
@@ -43,27 +43,17 @@ exports.getInventory = function(merchantID, callback) {
 
 exports.updateInventory = function(product, callback) {
     console.log( 'verifying product in MongoDB' );
-    Product.find({ '_id' : product._id }, '_id name url', function(err, products) {
-        if (err) {
-            callback('ERROR', { statusCode: 1,  message: 'Something went wrong' } );
-            console.log( 'Something went wrong' );
-        } else if (products.length === 0) {
-            callback('ERROR', { statusCode: 1,  message: 'Failed Update (no product found)' } );
-            console.log( 'Failed Update (no product found)' );
-        } else {
-            console.log( 'updateInventory in MongoDB with _id: ' +  product._id + ". New status: " + product.status);
-            var conditions = product._id;
-            delete product._id;
-            Product.update( conditions, product, null, function(err, result) {
-                if (err) {
-                    callback('ERROR', { statusCode: 1,  message: 'Failed Update' } );
-                    console.log( 'Failed Update' );
-                } else {
-                    callback( null, { statusCode: 0 ,  message: 'Successful Update' } );
-                    console.log( 'Successful Update' );
-                }
-            });
-        }
+    var query = { '_id': product._id};
+    delete product._id;
+    var options = { new: false };
+    Product.findOneAndUpdate(query, product, options, function (err, product) {
+    if (err){
+          callback("ERROR", { statusCode: 1 ,  additionalInfo: err });
+      }
+      else if(!product)
+          callback("ERROR", { statusCode: 1 ,  additionalInfo: 'Product not  Found' });
+      else
+          callback( null, { statusCode: 0 ,  message: 'Successful Update' } );
     });
 };
 
