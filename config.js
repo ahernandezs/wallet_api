@@ -1,7 +1,5 @@
 var config = {};
 
-var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
-
 config.sendGrid = {};
 config.sendGrid.user = 'dannywf@anzen.com.mx';
 config.sendGrid.password = 'Anzen7924';
@@ -36,7 +34,8 @@ config.messages.transferMsg = 'You have received money from ';
 config.messages.giftMsg = 'You have received a coffee gift!!!';
 config.messages.loanRequestMsg = 'You have requested a loan for €';
 config.messages.loanRejectedMsg = 'Build up your Dox score to be elegible for a loan';
-config.messages.loanRejectedTimeMsg = 'Sorry, you need to wait 30 minutes since your last loan application to become eligible for a new loan!';
+config.messages.loanRejectedOneMsg = 'Sorry, you need to wait ';
+config.messages.loanRejectedTwoMsg = ' minutes since your last loan application to become eligible for a new loan!';
 config.messages.loanAcceptedMsg = 'Congratulations! Your Insta-Loan has been approved!';
 config.messages.action = {TRANSFER:1 , GIFT :2 , BUY :3 ,LOAN : 4, COUPON: 5 };
 config.messages.transferFund = 'You have sent a Transfer to ';
@@ -49,7 +48,7 @@ config.messages.twitter = { message :'I just bought a {0} from AmdocsCafe at {1}
 config.messages.twitter1 = 'I just bought a ';
 config.messages.twitter2 = ' from AmdocsCafe at ';
 config.messages.twitterURL = '';
-config.messages.twitterMsg = 'Having a great time at #mmglobal in Istanbul, enjoying the delicious coffee bought with my #AmdocsWallet! ' + dateTime.substr(-8, -3);
+config.messages.twitterMsg = 'Having a great time at #mmglobal in Istanbul, enjoying the delicious coffee bought with my #AmdocsWallet! ';
 config.messages.facebook =	{
 								name:'Amdocs Wallet',
 								caption:'I just bought a coffee',
