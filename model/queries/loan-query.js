@@ -80,9 +80,9 @@ exports.findUserLoans = function(phoneID, callback) {
             console.log(difference + ' minutes');
 
             if (difference < 30)
-                callback('ERROR', { message : config.messages.loanRejectedTimeMsg });
+                callback('ERROR', { message : config.messages.loanRejectedOneMsg + (30 - difference) + config.messages.loanRejectedTwoMsg });
             else
-                callback(null, loans);   
+                callback(null, loans);
         } catch (e) {
             console.log(e);
             callback(null, loans);

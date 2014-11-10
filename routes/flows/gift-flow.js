@@ -169,7 +169,7 @@ exports.sendGift = function(payload,callback) {
 			fbinfo.picture = imageProduct;
 
             //var twitterMsg = config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''));
-			var twitterMsg = config.messages.twitterMsg;
+			var twitterMsg = config.messages.twitterMsg + dateTime.substr(-8, -3);
 			config.messages.twitter.message = twitterMsg;
             payload.additionalInfo = JSON.stringify( {
 											phoneID: payload.phoneID,
