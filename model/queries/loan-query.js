@@ -82,7 +82,7 @@ exports.findUserLoans = function(phoneID, callback) {
             console.log(difference + ' minutes');
 
             if (difference < 30)
-                callback('ERROR', { message : config.messages.loanRejectedOneMsg + (30 - difference) + config.messages.loanRejectedTwoMsg });
+                callback('STOP', { message : config.messages.loanRejectedOneMsg + (30 - difference) + config.messages.loanRejectedTwoMsg });
             else
                 callback(null, loans);
         } catch (e) {

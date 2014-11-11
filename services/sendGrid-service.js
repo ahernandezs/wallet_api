@@ -124,19 +124,6 @@ function createMail (sender,message,callback){
 		});
 };
 
-/*exports.sendInvitation = function(friend,callback){
-	console.log('Sending invitation: '+JSON.stringify(friend));
-	sendgrid.send({
-		to:        friend.email,
-		from:      'no-reply@amdocswallet.com',
-		subject:   'Join us to amdocs, '+friend.name,
-		text:      friend.message + '\n\nthe link is: '+ friend.url
-	}, function(err, json) {
-		if (err) { return callback.error("ERROR",err); }
-		callback(null,json)
-	});
-};*/
-
 exports.sendInvitation= function(friend, callback){
 	console.log('Sending invitation: '+JSON.stringify(friend));
     var email = new sendgrid.Email({
@@ -158,7 +145,7 @@ exports.sendInvitation= function(friend, callback){
             });
         },
         function(html, callback) {
-            html = html.replace('[sender]', friend.name);
+            html = html.replace('[sender]', friend.sender);
             html = html.replace('[URL]', friend.url);
             html = html.replace('[URLVIEW]', friend.url);
             email.setHtml(html);
