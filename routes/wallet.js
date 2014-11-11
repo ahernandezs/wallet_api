@@ -184,6 +184,8 @@ exports.activity = function(req, res){
   var phoneID = req.headers['x-phoneid'];
   payload.phoneID = phoneID;
   payload.sessionid = sessionid;
+    var action = payload.action.substr(0, 1).toUpperCase() + payload.action.substr(1).toLowerCase();
+    var socialNetwork = payload.socialNetwork.substr(0, 1).toUpperCase() + payload.socialNetwork.substr(1).toLowerCase();
 
   var actualizar = false;
 
@@ -258,8 +260,8 @@ exports.activity = function(req, res){
         transacction.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
         transacction.type = 'DOX',
         transacction.description = 'You had earned some doxs points for your social activity!'
-        transacction.operation = payload.action + ' - ' + payload.socialNetwork;
-        transacction.title =  payload.action + ' - ' + payload.socialNetwork;
+        transacction.operation = action + ' - ' + socialNetwork;
+        transacction.title =  action + ' - ' + socialNetwork;
         transacction.amount = payload.action == 'LINK' ? config.doxs.linking : config.doxs.social;
         transacction.phoneID = payload.phoneID;
         transacctionQuery.createTranssaction(transacction, function(err, result) {
