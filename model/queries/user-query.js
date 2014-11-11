@@ -403,21 +403,22 @@ console.log('invite friend');
     },
 
     function(callback){
-      User.findOne({'phoneID': payload.phoneID }, 'group', function (err, user) {
+      User.findOne({'phoneID': payload.phoneID }, 'group name', function (err, user) {
         console.log('Enviroment: '+user.group);
-        callback(null, user.group);
+        callback(null, user.group, user.name);
       });
     },
 
-    function(env, callback){
+    function(env, name, callback){
       enviromentQuery.getUrl(env, function(err, result) {
         console.log('URL: '+result)
-        callback(null, result);
+        callback(null, result, name);
       });
     },
 
-    function(url, callback){
+    function(url, name, callback){
       payload.url = url;
+        payload.sender = name;
       mailService.sendInvitation(payload,function(err,result){
         if (err) callback('ERROR', {statusCode:1, additionalInfo:err});
         callback(null);
