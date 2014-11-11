@@ -7,6 +7,7 @@ var profileFlow = require('../../routes/flows/profile-flow');
 var doxsService = require('../../services/doxs-service');
 var mailService = require('../../services/sendGrid-service');
 var transacctionQuery = require('../../model/queries/transacction-query');
+var merchantQuery = require('../../model/queries/merchant-query');
 var sessionQuery = require('./session-query');
 var enviromentQuery = require('./enviroment-query');
 var transacction = require('../transacction');
@@ -324,28 +325,53 @@ exports.updateSession = function(user, callback) {
 
 exports.getLeaderboard = function(phoneIDUser,callback){
 
-  User.findOne({phoneID:phoneIDUser},'group',function(err,result){
-    if (err)
-      callback('ERROR', { message: 'Fail  getLeaderboard' });
-    else{
-      if(result.group){
-        var query = User.find({group:result.group}, 'phoneID name doxs', {sort: {doxs: -1}});
-        query.limit(15);
-        query.exec(function (err, people) {
-          if (err) return handleError(err);
-          else if(people){
-            callback(null, people);
-          }
-          else{
-            console.log("users not found");
-            callback("USERS NOT FOUND", null);
-          }
-        });
-      }else{
+  if(phoneIDUser){
+    User.findOne({phoneID:phoneIDUser},'group',function(err,result){
+      if (err)
+        callback('ERROR', { message: 'Fail  getLeaderboard' });
+      else{
+        if(result.group){
+          var query = User.find({group:result.group}, 'phoneID name doxs', {sort: {doxs: -1}});
+          query.limit(15);
+          query.exec(function (err, people) {
+            if (err) return handleError(err);
+            else if(people){
+              callback(null, people);
+            }
+            else{
+              console.log("users not found");
+              callback("USERS NOT FOUND", null);
+            }
+          });
+        }else{
           callback(null,[]);
+        }
       }
-    }
-  });
+    });
+  }else{
+    merchantQuery.getMerchanByID(1,function(err,result){
+      if (err)
+        callback('ERROR', { message: 'Fail  getLeaderboard' });
+      else{
+        if(result.group){
+          var query = User.find({group:result.group}, 'phoneID name doxs', {sort: {doxs: -1}});
+          query.limit(15);
+          query.exec(function (err, people) {
+            if (err) return handleError(err);
+            else if(people){
+              callback(null, people);
+            }
+            else{
+              console.log("users not found");
+              callback("USERS NOT FOUND", null);
+            }
+          });
+        }else{
+          callback(null,[]);
+        }
+      }
+    });
+  }
 };
 
 exports.inviteFriend = function(payload, callback){
