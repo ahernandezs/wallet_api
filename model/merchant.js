@@ -15,7 +15,8 @@ var merchantSchema =  new Schema({
 	imgUrl: String,
 	usersConnected:Number,
 	environment : String,
-	open: String
+	open: String,
+	group: String
 });
 
 module.exports = mongoose.model('Merchant', merchantSchema);  
