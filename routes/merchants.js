@@ -5,7 +5,8 @@ var updateOrder = require('../routes/flows/updateOrder-flow');
 
 exports.merchants =  function(req, res){
   console.log('execute GET method merchants!');
-  merchantQuery.getMerchands(function(err, result){
+  var phoneID = req.headers['x-phoneid'];
+  merchantQuery.getMerchands(phoneID, function(err, result){
     res.json(result);
   })
 };

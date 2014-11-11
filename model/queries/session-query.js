@@ -63,8 +63,8 @@ exports.updateSession = function(session, info, callback) {
     });
 };
 
-exports.getSessions = function(callback){
-    Session.find({}, function(err, res){
+exports.getSessions = function(group, callback){
+    Session.find({group: group}, function(err, res){
         callback(null, res.length);
     });
 }

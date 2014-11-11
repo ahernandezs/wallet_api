@@ -1,4 +1,5 @@
 var Merchant = require('../merchant');
+var User = require('../user');
 var sessionQuery = require('./session-query');
 var config = require('../../config.js');
 var async = require('async');
@@ -47,10 +48,16 @@ exports.updateMerchanByID = function(payload, callback) {
     });
 };
 
-exports.getMerchands = function(callback){
+exports.getMerchands = function(phoneID, callback){
+
     async.waterfall([
       function(callback){
-        sessionQuery.getSessions(function(err, users){
+        User.findOne({'phoneID': phoneID }, 'group', function (err, user) {
+        callback(null, user.group);
+        });
+      },
+      function(group, callback){
+        sessionQuery.getSessions(group, function(err, users){
           callback(null, users);
         });
       },
