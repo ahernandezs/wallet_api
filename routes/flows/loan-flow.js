@@ -21,8 +21,10 @@ exports.createLoanFlow = function(payload,callback) {
         console.log( 'Find loans for this user' );
         loanQuery.findUserLoans(payload.body.phoneID, function(err, result) {
             console.log(result);
-           if (err)
+           if (err && err === 'ERROR')
                callback('ERROR', { statusCode : 1, additionalInfo : result.message });
+            else if (err && err === 'STOP')
+                callback( 'ERROR', { statusCode : 2, additionalInfo : result.message } );
             else
                 callback(null);
         });
