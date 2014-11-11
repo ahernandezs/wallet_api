@@ -34,7 +34,7 @@ exports.getCredentials = function(session, callback) {
                 } else if (credentials === null)
                     callback('ERROR', response);
                 else
-                    callback(null, { data: { phoneID : session.phoneID, pin : credentials.pin } });
+                    callback(null, { data: { phoneID : session.phoneID, pin : credentials.pin, group : credentials.group } });
             });
         }
     ], function(err, result) {
