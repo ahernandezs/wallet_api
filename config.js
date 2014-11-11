@@ -60,7 +60,7 @@ config.messages.facebook =	{
 								name:'Amdocs Wallet',
 								caption:'I just bought a coffee',
 								description:'Just downloaded my Amdocs Wallet at Mobile Money Global! Looking forward to the delicous coffee at the fully cashless Amdocs Café, now open at Grand Wyndham, Istanbul',
-								link:'http://goo.gl/IRbh4z'
+								link:' http://amdocs.com/MFS'
 							};
 config.doxs = {};
 
