@@ -16,7 +16,7 @@ exports.getCredentials = function(session, callback) {
     console.log( 'Getting credentials' );
     async.waterfall([
         function(callback) {
-            Session.findOne( { 'token': session.sessionid }, 'phoneID pin', function(err, credentials) {
+            Session.findOne( { 'token': session.sessionid }, 'phoneID pin group', function(err, credentials) {
                 if (err) {
                     callback( 'ERROR', { message: 'Something went wrong' } );
                     console.log(err.message);
@@ -27,7 +27,7 @@ exports.getCredentials = function(session, callback) {
             });
         },
         function(response, callback) {
-            Session.findOne( { 'phoneID': session.phoneID }, 'pin', function(err, credentials) {
+            Session.findOne( { 'phoneID': session.phoneID }, 'pin group', function(err, credentials) {
                 if (err) {
                     callback( 'ERROR', { message: 'Something went wrong' } );
                     console.log(err.message);
@@ -51,6 +51,7 @@ exports.updateSession = function(session, info, callback) {
     json.token = info.token;
     json.phoneID = info.phoneID;
     json.pin = info.pin;
+    json.group = info.group;
     var conditions = { _id : info._id };
     Session.update( conditions, json, null, function(err, result) {
         if (err) {
