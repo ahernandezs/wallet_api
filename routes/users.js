@@ -195,13 +195,13 @@ exports.regenerate = function(req, res, callback) {
 
 exports.getLeaderboard = function(req, res){
   var phoneID = req.headers['x-phoneid'];
-  if(phoneID){}
+  if(phoneID){
     Userquery.getLeaderboard(phoneID,function(err,result){
       var result = {url_base: config.S3.url, users: result}
       res.json(result);
     });
   }else{
-      Userquery.getLeaderboard(function(err,result){
+      Userquery.getLeaderboard(null,function(err,result){
       var result = {url_base: config.S3.url, users: result}
       res.json(result);
     });
