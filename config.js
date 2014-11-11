@@ -1,4 +1,11 @@
 var config = {};
+var winston = require('winston');
+
+winston.colors = {
+    info: 'green',
+    warn: 'yellow',
+    error: 'red'
+};
 
 config.sendGrid = {};
 config.sendGrid.user = 'dannywf@anzen.com.mx';
@@ -25,7 +32,7 @@ config.merchants.errMsg = 'Something went wrong';
 config.merchants.emptyMsg = 'merchant not found ';
 
 config.S3 = {};
-config.S3.url = 'https://s3-us-west-1.amazonaws.com/amdocs-images/profile/';
+config.S3.url = process.env.AS3_IMAGES;
 
 config.messages = {};
 config.messages.status = { READ : 'READ' ,NOTREAD : 'NOTREAD', DELIVERED: 'DELIVERED'};
@@ -81,5 +88,13 @@ config.mail.bodyPin= 'Thank you for registering with Amdocs wallet! Your pin num
 config.mail.bodyFin='Now you can buy a coffee or just send a coffee to a friend, also you can share your buy in your social networks, all these actions give you Dox points, with Dox points you could win some amazing prizes.';
 config.mail.regards='Thanks!';
 config.mail.footer='Amdocs wallet Team';
+
+config.logger = new (winston.Logger)({
+    transports: [
+        new (winston.transports.Console)({ colorize: 'true', handleExceptions: true }),
+        new (winston.transports.File)({ filename: 'amdocs.log', handleExceptions: true })
+    ],
+    exitOnError: false
+});
 
 module.exports = config;

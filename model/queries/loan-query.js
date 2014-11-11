@@ -1,5 +1,7 @@
 var Loan = require('../loan');
+var utils = require('../../utils/convert');
 var config = require('../../config.js');
+var logger = config.logger;
 
 exports.getLoans = function(merchantID, callback) {
     console.log( 'getLoans from MongoDB with status: ' + config.loans.status );
@@ -8,15 +10,15 @@ exports.getLoans = function(merchantID, callback) {
         if (err) {
             response = { statusCode: 1, additionalInfo: config.loans.errMsg };
             callback("ERROR: " + err.message, response);
-            console.log(err.message);
+            logger.error(err.message);
         } else if (loans.length === 0) {
             response = { statusCode: 0, additionalInfo: config.loans.emptyMsg }
             callback(null, response);
-            console.log(config.loans.emptyMsg);
+            logger.warn(config.loans.emptyMsg);
         } else {
             response = { statusCode: 0, additionalInfo: loans };
             callback(null, response);
-            console.log(response);
+            logger.info( utils.JSONtoString(response) );
         }
     });
 };

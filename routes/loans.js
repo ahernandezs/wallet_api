@@ -4,6 +4,8 @@ var loan = require('./flows/loan-flow');
 var loanQuery = require('../model/queries/loan-query');
 
 var urbanService = require('../services/urban-service');
+var config = require('../config.js');
+var logger = config.logger;
 
 exports.getLoans = function(req, res) {
     console.log('POST method getLoans');

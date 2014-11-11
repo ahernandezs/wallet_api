@@ -10,15 +10,13 @@ var doxsService = require('../../services/doxs-service');
 var transferFlow = require('./transfer-flow');
 var soapurl = process.env.SOAP_URL;
 var config = require('../../config.js');
+var logger = config.logger;
 var ReceiptQuery = require('../../model/queries/receipt-query');
 var transacctionQuery = require('../../model/queries/transacction-query');
 
 exports.buyFlow = function(payload,callback) {
-
-	//var transferDoxs = {phoneID:payload.phoneID,amount:200 ,type:3};
 	var order = payload.order;
 	var dateTime;
-	//var buy = {sessionid:'', target:'buy coffe', type:1, amount:payload.order.total};
 	var buy = {sessionid:'', target:'airtime', type:1, amount:5};
 	var balance = {sessionid:'',type:1};
     var notification = {message:'There is a new order!', phoneID: payload.phoneID}
@@ -36,7 +34,7 @@ exports.buyFlow = function(payload,callback) {
 				soap.createClient(soapurl, function(err, client) {
 				client.transfer(request, function(err, result) {
 					if(err) {
-						console.log(err);
+						logger.error(err);
 						return new Error(err);
 					} else {
 						var response = result.transferReturn;
@@ -45,7 +43,6 @@ exports.buyFlow = function(payload,callback) {
 							callback("ERROR", response);
 						}
 						else{
-							//sessionUser.loginFlow({phoneID:payload.phoneID , pin :payload.pin },function(err,result){
 							callback(null,payload.sessionid);
 						}
 					}
@@ -56,7 +53,7 @@ exports.buyFlow = function(payload,callback) {
 		function(sessionid,callback){
 			payload['action']='payment';
 			doxsService.saveDoxs(payload, function(err, result){
-				console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
+				logger.info('Transfer result: '+JSON.stringify(result)+'\n\n');
 				if(err) {
 					return new Error(err);
 				} else {
@@ -67,22 +64,21 @@ exports.buyFlow = function(payload,callback) {
 
 		function(sessionid, callback){
 			var updateDoxs = {sessionid:sessionid, phoneID: payload.phoneID, operation: 'payment'};
-			console.log('Saving doxs in mongo');
+			logger.info('Saving doxs in mongo');
 			Userquery.putDoxs(updateDoxs, function(err,result){
-				console.log(sessionid);
+				logger.info(sessionid);
 				callback(null,sessionid);
 			});
 		},
         
         function(sessionid, callback) {
-            console.log('search user by phoneID');
+            logger.info('search user by phoneID');
               Userquery.findUserByPhoneID(payload.phoneID,function(err,result){
                 if(err){
                     var response = { statusCode:1 ,  additionalInfo : err };
                     callback('ERROR',response);
                   }
                   else{
-                    console.log(result);
                     order.customerName = result.name;
                     order.customerImage = config.S3.url + payload.phoneID +'.png',
                     order.merchantId = payload.merchantID;
@@ -92,16 +88,16 @@ exports.buyFlow = function(payload,callback) {
         },
 
 		function(sessionid,callback){
-			console.log('Saving order '+JSON.stringify(order));
+			logger.info('Saving order '+JSON.stringify(order));
 			Orderquery.putOrder(order, function(err,result){
 				orderID = result.order;
-				console.log('Order saving result: '+JSON.stringify(result)+'\n\n');
+				logger.info('Order saving result: '+JSON.stringify(result)+'\n\n');
 				callback(null, sessionid);
 			});
 		},
 
 		function(sessionid,callback){
-			console.log('search merchant by phoneID');
+			logger.info('search merchant by phoneID');
 			merchantQuery.getMerchanByID(1,function(err,result){
 				if(err){
 					var response = { statusCode:1 ,  additionalInfo : err };
@@ -132,7 +128,7 @@ exports.buyFlow = function(payload,callback) {
         },
 
 		function(sessionid, callback){
-			console.log('balance e-wallet');
+			logger.info('balance e-wallet');
 			var  request = { sessionid: sessionid, type: 1  };
 			var request = {balanceRequest: request};
 			soap.createClient(soapurl, function(err, client) {
@@ -153,7 +149,7 @@ exports.buyFlow = function(payload,callback) {
 		},
 
 		function(sessionid,currentMoney ,callback){
-			console.log('Get product image');
+			logger.info('Get product image');
 			productQuery.getProduct(payload.order.products[0].name ,function(err,result){
 				if(err){
 					var response = { statusCode:1 ,  additionalInfo : result };
@@ -167,7 +163,7 @@ exports.buyFlow = function(payload,callback) {
 		},
 
 		function(sessionid,currentMoney, callback){
-			console.log('balance Points');
+			logger.info('balance Points');
 			var  request = { sessionid: sessionid, type: 3  };
 			var request = {balanceRequest: request};
 			soap.createClient(soapurl, function(err, client) {
@@ -194,7 +190,7 @@ exports.buyFlow = function(payload,callback) {
 								facebook:config.messages.facebook,
 								picture : imageProduct
 							};
-							console.log(config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')));
+							logger.info(config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')));
 							response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
 						}
 						else
@@ -205,7 +201,7 @@ exports.buyFlow = function(payload,callback) {
 			});
 		},
 		function(response, callback) {
-			    console.log('Create receipt buy');
+			    logger.info('Create receipt buy');
 			    data = forReceipt.payload;
 			    var receipt = {};
 			    receipt.emitter = data.phoneID;
@@ -227,7 +223,7 @@ exports.buyFlow = function(payload,callback) {
 			
 		},
 		function(balance,receipt, callback) {
-			console.log( 'Create  transacction money' );
+			logger.info( 'Create  transacction money' );
 			var transacction = {};
 			transacction.title = 'Amdocs cafe ';
 			transacction.type = 'MONEY',
@@ -239,12 +235,12 @@ exports.buyFlow = function(payload,callback) {
 			transacction.description ='Order No '+ orderID;
 			transacctionQuery.createTranssaction(transacction, function(err, result) {
 				if (err)
-					console.log('Error to create transacction');
+					logger.error('Error to create transacction');
 				else{
-					console.log(result);
+					logger.info(result);
 				}
 			});
-			console.log( 'Create  transacction DOX' );
+			logger.info( 'Create  transacction DOX' );
 			var transacction = {};
 			transacction.title = 'Amdocs cafe ';
 			transacction.type = 'DOX',
@@ -258,7 +254,7 @@ exports.buyFlow = function(payload,callback) {
 				if (err)
 					callback('ERROR', err);
 				else{
-					console.log(result);
+					logger.info(result);
 					callback(null, balance);
 				}
 			});
