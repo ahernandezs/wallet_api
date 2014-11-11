@@ -24,7 +24,7 @@ exports.createLoanFlow = function(payload,callback) {
            if (err && err === 'ERROR')
                callback('ERROR', { statusCode : 1, additionalInfo : result.message });
             else if (err && err === 'STOP')
-                callback( 'ERROR', { statusCode : 2, additionalInfo : result.message } );
+                callback( 'ERROR', { statusCode : 4, additionalInfo : result.message } );
             else
                 callback(null);
         });
