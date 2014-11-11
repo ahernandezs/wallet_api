@@ -57,7 +57,7 @@ exports.loginFlow = function(payload,callback) {
       soap.createClient(soapurl, function(err, client) {
         if(err) {
           console.log(err);
-          var response = { statusCode:1 ,  additionalInfo : err };
+          var response = { statusCode: 3 ,  additionalInfo : 'Service Unavailable' };
           callback(err,response);
         }else
         callback(null);
