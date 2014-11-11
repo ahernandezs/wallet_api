@@ -215,9 +215,9 @@ exports.forgotPIN = function(req, res){
     forgotPin.requestPinFlow(phoneID,function(err,result){
         console.log(result);
         if(err)
-            res.json({ statusCode : 1, message : result});
+            res.json({ statusCode : 1, additionalInfo : result});
         else
-            res.json({statusCode : 0, message :  result});
+            res.json({statusCode : 0, additionalInfo :  result});
     });
 };
 
