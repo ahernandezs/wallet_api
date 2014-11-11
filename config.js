@@ -38,7 +38,7 @@ config.messages = {};
 config.messages.status = { READ : 'READ' ,NOTREAD : 'NOTREAD', DELIVERED: 'DELIVERED'};
 config.messages.type = { TRANSFER:'TRANSFER' , GIFT : 'GIFT' , BUY :'BUY' ,LOAN :'LOAN', COUPON: 'COUPON' };
 config.messages.transferMsg = 'You have received money from ';
-config.messages.giftMsg = 'You have received a coffee gift!!!';
+config.messages.giftMsg = '[sender] has gifted you an Amdocs Café voucher!';
 config.messages.loanRequestMsg = 'You have requested a loan for €';
 config.messages.loanRejectedMsg = 'Build up your Dox score to be elegible for a loan';
 config.messages.loanRejectedOneMsg = 'Sorry, you need to wait ';
@@ -49,7 +49,7 @@ config.messages.transferFund = 'You have sent a Transfer to ';
 config.messages.coupon = {};
 config.messages.coupon.message = 'Congratulations! You are today’s winner of “Don’t Miss a Beat with DOX” promotion! We will be in touch shortly, along with your Beats Studio headsets!';
 config.messages.coupon.title = 'Congratulations! You won a prize!!'
-config.messages.inviteError = 'Sorry! Your invitations have expired!'
+config.messages.inviteError = 'Sorry! You have exceeded your number of invitations!'
 
 config.messages.twitter = { message :'I just bought a {0} from AmdocsCafe at {1} !!!!' , url :''};
 config.messages.twitter1 = 'I just bought a ';
