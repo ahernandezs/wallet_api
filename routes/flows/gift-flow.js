@@ -158,6 +158,7 @@ exports.sendGift = function(payload,callback) {
         function(sessionid, response, callback){
             console.log('Save message in DB');
             var title = config.messages.giftMsg;
+            title = title.replace('[sender]', name.name);
             var extraData = { action :1, giftID: orderID , additionalInfo: payload.additionalInfo };
             payload.extra = {extra : extraData} ;
             payload.status = config.messages.status.NOTREAD;
@@ -201,7 +202,8 @@ exports.sendGift = function(payload,callback) {
 			console.log('sending push');
 			//var additionalInfo = { phoneID: payload.phoneID, name: name.name, avatar: config.S3.url + payload.phoneID +'.png', order:orderID, date:dateTime,message:payload.message};
 			//console.log(additionalInfo);
-			var title = 'You have received a coffee gift!';
+			var title = config.messages.giftMsg;
+            title = title.replace('[sender]', name.name);
 			var message = payload.message;
 			payload.message = title;
 			var extraData = { action :2,additionalInfo:payload.additionalInfo,_id:messageID};
@@ -235,6 +237,8 @@ exports.sendGift = function(payload,callback) {
 		},
         function(balance, receipt, message, additionalInfo, callback) {
             console.log( 'Create second receipt, this one for the receiver' );
+            var title = config.messages.giftMsg;
+            title = title.replace('[sender]', name.name);
             var newReceipt = {};
             newReceipt.emitter = receiver;
             newReceipt.receiver = emitter;
@@ -244,7 +248,7 @@ exports.sendGift = function(payload,callback) {
             var temp = JSON.parse(additionalInfo);
             delete temp.doxAdded;
             newReceipt.additionalInfo = JSON.stringify(temp);
-            newReceipt.title = 'You have received a gift!';
+            newReceipt.title = title;
             newReceipt.date = dateTime;
             newReceipt.type = 'GIFT';
             newReceipt.status = 'NEW';
