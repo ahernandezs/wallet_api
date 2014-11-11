@@ -53,13 +53,13 @@ exports.updateReceiptByOrder = function(payload,callback){
 };
 
 exports.getReceiptByOrderID = function(orderID,callback){
-  Receipt.find({'orderID':orderID},'_id emitter receiver title amount date type status additionalInfo',{sort: {date: -1}},function (err, receipt) {
+  console.log('Get receipt by orderID'+ orderID);
+  Receipt.findOne({'orderID':orderID},'emitter receiver title date type status additionalInfo',function (err, receipt) {
        if (err) callback('ERROR', err);
        else if(receipt){
           console.log('Get order');
           console.log(receipt);
-          console.log(receipt[0]);
-          callback(null, receipt[0]);
+          callback(null, receipt);
       }
       else{
           console.log("receipt not found");
@@ -69,13 +69,12 @@ exports.getReceiptByOrderID = function(orderID,callback){
 };
 
 exports.getReceiptByID = function(receiptID,callback){
-  Receipt.find({'_id':receiptID},'_id emitter receiver title amount date type status additionalInfo',{sort: {date: -1}},function (err, receipt) {
+  Receipt.findOne({'_id':receiptID},'_id emitter receiver title amount date type status additionalInfo',function (err, receipt) {
        if (err) callback('ERROR', err);
        else if(receipt){
           console.log('Get order');
           console.log(receipt);
-          console.log(receipt[0]);
-          callback(null, receipt[0]);
+          callback(null, receipt);
       }
       else{
           console.log("receipt not found");
