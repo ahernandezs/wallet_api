@@ -7,6 +7,7 @@ var merchant = require('./routes/merchants')
 var message = require('./routes/messages');
 var transacction = require('./routes/transacctions');
 var loan = require('./routes/loans');
+var spa = require('./routes/spa');
 var urbanService = require('./services/urban-service');
 var fs = require('fs');
 var app = express();
@@ -103,6 +104,10 @@ app.post('/api/receipt', wallet.getReceipts);
 app.put('/api/receiptStatus', product.changeReceiptStatus);
 
 app.post('/api/coupon', wallet.setCoupon);
+
+// SPA operations
+app.get('/api/spa/users', spa.getUsers);
+app.get('/api/spa/transactions/:phoneID,:type', spa.getTransactions);
 
 app.listen( process.env.PORT  || 3000);
 console.log('Listening on port 3000');
