@@ -149,7 +149,7 @@ exports.registerFlow = function(payload,callback) {
                 });
             });
         } else {
-            sessionUser.loginFlow({phoneID:payload.phoneID , pin :payload.pin },function(err,result){
+            sessionUser.loginFlow({phoneID:payload.phoneID , pin :payload.pin, group : payload.group },function(err,result){
                 callback(null, result);
             });
         }
