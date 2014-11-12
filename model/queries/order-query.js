@@ -58,31 +58,41 @@ exports.updateOrderbyOrderID = function(payload,callback){
 };
 
 exports.getOrders =  function(merchantID, callback) {
-	var conditionsDeliveredAndCanceled = {$or: [	{'status':config.orders.status.DELIVERED },
-								{'status':config.orders.status.CANCELED}]}
-    var  deliveredAndCanceled = Order.find(conditionsDeliveredAndCanceled, 'orderId _id customerImage customerName date status products userId');
-	deliveredAndCanceled.limit(10);
-	deliveredAndCanceled.exec(function (err1, ordersDeliveredAndCanceled) {
+	var conditionsCanceled= { 'status':config.orders.status.CANCELED }
+	var  canceled = Order.find(conditionsCanceled, 'orderId _id customerImage customerName date status products userId');
+	canceled.sort({orderId: -1});
+	canceled.limit(10);
 
-		var response = { statusCode: 0 };
-		var conditions = {$or: [{'status':config.orders.status.NEW },
-								{'status':config.orders.status.IN_PROGRESS},
-								{'status':config.orders.status.READY}]};
-		Order.find(conditions, 'orderId _id customerImage customerName date status products userId', function(err, orders)  {
-	        if (err) {
-	            response = { statusCode: 1, additionalInfo: config.orders.errMsg };
-	            callback("ERROR: " + JSON.stringify(err.message), response);
-	        } else {
-				if(orders.length != 0){
-					var ordersMerge = ordersDeliveredAndCanceled.concat(orders);
-					response.additionalInfo = ordersMerge;
-	            }
-	            if(response.additionalInfo.length === 0){
-		            response = { statusCode: 0, additionalInfo: config.orders.emptyMsg }
-		            callback(null, response);
-	            }else
-		            callback(null, response);
-	        }
+	canceled.exec(function (err1, ordersCanceled) {
+
+		var conditionsDelivered= { 'status':config.orders.status.DELIVERED }
+		var  delivered = Order.find(conditionsDelivered, 'orderId _id customerImage customerName date status products userId');
+		delivered.sort({orderId: -1});
+		delivered.limit(10);
+		delivered.exec(function (err1, ordersDelivered) {
+
+			var response = { statusCode: 0 };
+			var conditions = {$or: [{'status':config.orders.status.NEW },
+			{'status':config.orders.status.IN_PROGRESS},
+			{'status':config.orders.status.READY}]};
+			Order.find(conditions, 'orderId _id customerImage customerName date status products userId', function(err, orders)  {
+				if (err) {
+					response = { statusCode: 1, additionalInfo: config.orders.errMsg };
+					callback("ERROR: " + JSON.stringify(err.message), response);
+				} else {
+					if(orders.length != 0){
+						ordersCanceled = ordersCanceled.concat(ordersDelivered);
+						var ordersMerge = ordersCanceled.concat(orders);
+						response.additionalInfo = ordersMerge;
+					}
+					if(response.additionalInfo.length === 0){
+						response = { statusCode: 0, additionalInfo: config.orders.emptyMsg }
+						callback(null, response);
+					}else
+					callback(null, response);
+				}
+			});
 		});
 	});
+
 };
