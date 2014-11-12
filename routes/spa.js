@@ -4,6 +4,8 @@ var config = require('../config.js');
 var logger = config.logger;
 var User = require('../model/user');
 var Transaction = require('../model/transacction');
+var Receipt = require('../model/receipt');
+var Loan = require('../model/loan');
 
 exports.getUsers = function(req, res) {
     logger.info( 'Getting all the users' );
@@ -25,5 +27,27 @@ exports.getTransactions = function(req, res) {
            res.json( { statusCode : 1, additionalInfo : 'There was an error' } );
         else
             res.json( { statusCode : 0, additionalInfo : trans } );
+    });
+};
+
+exports.getReceipts = function(req, res) {
+    var phoneID = req.param('phoneID');
+    console.log( 'Getting Receipts for user: ' + phoneID );
+    Receipt.find( { 'emitter' : phoneID }, 'amount date type status receiver', { sort : { date : -1 } }, function(err, receipts) {
+        if (err)
+            res.json( { statusCode : 1, additionalInfo : 'There was an error' } );
+        else
+            res.json( { statusCode : 0, additionalInfo : receipts } );
+    });
+};
+
+exports.getLoans =  function(req, res) {
+    var phoneID = req.param('phoneID');
+    console.log( 'Getting Loans for user: ' + phoneID );
+    Loan.find( { 'phoneID' : phoneID }, 'amount date status merchantID', { sort : { date : -1 } }, function(err, loans) {
+        if (err)
+            res.json( { statusCode : 1, additionalInfo : 'There was an error' } );
+        else
+            res.json( { statusCode : 0, additionalInfo : loans } );
     });
 };
