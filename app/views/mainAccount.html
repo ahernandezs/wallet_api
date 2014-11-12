@@ -1,0 +1,24 @@
+<div class="col-md-12">
+  <div class="row">
+      <div class="col-md-6">
+        <h2><font color="white">Table of Contents</font></h2>
+      </div><!--End col-md-6-->
+      <div class="col-md-6">
+        <button class="btn btn-default pull-right" ng-click="logOut()"> Log out </button>
+      </div><!--End col-md-6 num2-->
+  </div><!--End row-->
+    
+    <div class="well">
+      <table ng-table class="table">
+        <tr ng-repeat="user in users">
+          <td data-title="'Id'">{{user.id}}</td>
+          <td data-title="'Class Name'">{{user.className}}</td>
+          <td data-title="'Method Name'">{{user.methodName}}</td>
+          <td data-title="'Elapsed Time'">{{user.elapsedTime}}</td>
+          <td data-title="'Created at'">{{user.createdAt}}</td>
+        </tr>
+      </table>
+      <highchart id="chart1" config="chart"></highchart>
+    </div>
+</div>
+
