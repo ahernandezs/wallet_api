@@ -5,7 +5,8 @@ angular.module('pantallasAdministradorApp', [
   'ngResource',
   'ngSanitize',
   'ngRoute',
-  'ngTable'
+  'ngTable',
+  'ui.bootstrap'
 ])
   .config(function ($routeProvider) {
     $routeProvider
