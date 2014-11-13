@@ -9,13 +9,18 @@
   </div>
   <div><br></div>
   <div class="well">
-    <table ng-table class='table'>
-      <tr ng-repeat="user in users" ng-click="user.$selected = !user.$selected; detail(user)">
-        <td data-title="'Name'">{{user.name}}</td>
-        <td data-title="'Company'">{{user.company}}</td>
+    <table ng-table="tableParams" class="table">
+    <form class="form-inline">
+         <div class="form-group">
+            <input ng-model="query" type="text" placeholder="Filter by name, company or email" autofocus class="form-control">
+        </div>
+    </form>
+      <tr ng-repeat="user in $data | filter:query" ng-click="user.$selected = !user.$selected; detail(user)">
+        <td data-title="'Name'" sortable="'name'">{{user.name}}</td>
+        <td data-title="'Company'" sortable="'company'">{{user.company}}</td>
         <td data-title="'Group'">{{user.group}}</td>
         <td data-title="'Email'">{{user.email}}</td>
-        <td data-title="'Doxs'">{{user.doxs}}</td>
+        <td data-title="'Doxs'" sortable="'doxs'">{{user.doxs}}</td>
       </tr>
     </table>
   </div>
