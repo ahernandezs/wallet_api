@@ -62,7 +62,7 @@ exports.getMerchands = function(phoneID, callback){
         });
       },
       function(users, callback){
-        Merchant.find({}function(err,data){
+        Merchant.find({},function(err,data){
           data[0].usersConnected = users;
           callback(null, data);
         }).sort({id:1});
