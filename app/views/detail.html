@@ -11,58 +11,59 @@
       </div>
   </div>
   <div><br></div>
-
-  <h3>Loans</h3>
-  <div class="well">
-    <table ng-table class='table'>
-      <tr ng-repeat="loan in loans">
-        <td data-title="'Date'">{{loan.date}}</td>
-        <td data-title="'Amount'">{{loan.amount}}</td>
-        <td data-title="'Status'">{{loan.status}}</td>
-      </tr>
-    </table>
-  </div>
-
-  <h3>Receipts</h3>
-  <div class="well">
-    <table ng-table class='table'>
-      <tr ng-repeat="receipt in receipts">
-        <td data-title="'Date'">{{receipt.date}}</td>
-        <td data-title="'Amount'">{{receipt.amount}}</td>
-        <td data-title="'Status'">{{receipt.status}}</td>
-        <td data-title="'Type'">{{receipt.type}}</td>
-        <!--td data-title="'Receiver'">{{receipt.receiver}}</td-->
-      </tr>
-    </table>
-  </div>
-
-  <h3>Doxs transactions</h3>
-  <div class="well">
-    <table ng-table class='table'>
-      <tr ng-repeat="dox in doxs">
-        <td data-title="'Title'">{{dox.title}}</td>
-        <td data-title="'Type'">{{dox.type}}</td>
-        <td data-title="'Date'">{{dox.date}}</td>
-        <td data-title="'Amount'">{{dox.amount}}</td>
-        <td data-title="'operation'">{{dox.operation}}</td>
-        <td data-title="'description'">{{dox.description}}</td>
-      </tr>
-    </table>
-  </div>
-
-  <h3>Money transactions</h3>
-  <div class="well">
-    <table ng-table class='table'>
-      <tr ng-repeat="money in moneys">
-        <td data-title="'Title'">{{money.title}}</td>
-        <td data-title="'Type'">{{money.type}}</td>
-        <td data-title="'Date'">{{money.date}}</td>
-        <td data-title="'Amount'">{{money.amount}}</td>
-        <td data-title="'operation'">{{money.operation}}</td>
-        <td data-title="'description'">{{money.description}}</td>
-      </tr>
-    </table>
-  </div>
-
+  <tabset justified="true">
+    <tab heading="Loans">
+      <div class="well">
+        <table ng-table class='table'>
+          <tr ng-repeat="loan in loans">
+            <td data-title="'Date'">{{loan.date}}</td>
+            <td data-title="'Amount'">{{loan.amount}}</td>
+            <td data-title="'Status'">{{loan.status}}</td>
+          </tr>
+        </table>
+      </div>
+    </tab>
+    <tab heading="Receipts">
+      <div class="well">
+        <table ng-table class='table'>
+          <tr ng-repeat="receipt in receipts">
+            <td data-title="'Date'">{{receipt.date}}</td>
+            <td data-title="'Amount'">{{receipt.amount}}</td>
+            <td data-title="'Status'">{{receipt.status}}</td>
+            <td data-title="'Type'">{{receipt.type}}</td>
+            <!--td data-title="'Receiver'">{{receipt.receiver}}</td-->
+          </tr>
+        </table>
+      </div>
+    </tab>
+    <tab heading="Doxs Transactions">
+      <div class="well">
+        <table ng-table class='table'>
+          <tr ng-repeat="dox in doxs">
+            <td data-title="'Title'">{{dox.title}}</td>
+            <td data-title="'Type'">{{dox.type}}</td>
+            <td data-title="'Date'">{{dox.date}}</td>
+            <td data-title="'Amount'">{{dox.amount}}</td>
+            <td data-title="'operation'">{{dox.operation}}</td>
+            <td data-title="'description'">{{dox.description}}</td>
+          </tr>
+        </table>
+      </div>
+    </tab>
+    <tab heading="Doxs Transactions">
+      <div class="well">
+        <table ng-table class='table'>
+          <tr ng-repeat="money in moneys">
+            <td data-title="'Title'">{{money.title}}</td>
+            <td data-title="'Type'">{{money.type}}</td>
+            <td data-title="'Date'">{{money.date}}</td>
+            <td data-title="'Amount'">{{money.amount}}</td>
+            <td data-title="'operation'">{{money.operation}}</td>
+            <td data-title="'description'">{{money.description}}</td>
+          </tr>
+        </table>
+      </div>
+    </tab>
+  </tabset>
 </div>
 
