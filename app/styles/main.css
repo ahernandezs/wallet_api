@@ -83,3 +83,8 @@ body {
     border: 1px solid #000;
 }
 }
+
+/* Overwrite hover for table elements */
+.table-hover {
+    background: #FFFFFF;
+}
