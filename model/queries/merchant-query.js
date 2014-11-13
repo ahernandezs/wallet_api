@@ -62,10 +62,10 @@ exports.getMerchands = function(phoneID, callback){
         });
       },
       function(users, callback){
-        Merchant.find(function(err,data){
+        Merchant.find({}function(err,data){
           data[0].usersConnected = users;
           callback(null, data);
-        });
+        }).sort({id:1});
       },
       function(data, callback){
         dateTime = new Date().getHours();
@@ -73,8 +73,8 @@ exports.getMerchands = function(phoneID, callback){
 
         //var openTime = parseInt(tmp[0].replace(':00', '').replace(' ', ''));
         //var closeTime = parseInt(tmp[1].replace(':00', '').replace(' ', ''));
-        var openTime = parseInt(tmp[0].replace('am', '').replace(' ', ''));
-        var closeTime = parseInt(tmp[1].replace('pm', '').replace(' ', '')) + 12;
+        //var openTime = parseInt(tmp[0].replace('am', '').replace(' ', ''));
+        //var closeTime = parseInt(tmp[1].replace('pm', '').replace(' ', '')) + 12;
 
         /*if(dateTime>=openTime && dateTime<=closeTime){
             data[0].open = 1;
