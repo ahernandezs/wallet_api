@@ -11,13 +11,15 @@ angular.module('pantallasAdministradorApp', [
     $routeProvider
       .when('/login', {
         templateUrl: 'views/login.html',
-        controller: 'LoginCtrl',
-        url: 'login'
+        controller: 'LoginCtrl'
       })
-       .when('/mainAccount', {
+       .when('/main', {
         templateUrl: 'views/mainAccount.html',
-        controller: 'MainAccountCtrl',
-        url: 'main'
+        controller: 'MainAccountCtrl'
+      })
+       .when('/detail/:phoneId', {
+        templateUrl: 'views/detail.html',
+        controller: 'detailCtrl'
       })
       .otherwise({
         redirectTo: '/login'

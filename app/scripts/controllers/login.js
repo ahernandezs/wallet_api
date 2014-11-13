@@ -5,7 +5,7 @@ angular.module('pantallasAdministradorApp')
 	$scope.login=function(username,password){
 		if(username=='admin@amdocs.com' && password=='admin321'){
 			$rootScope.isAuthenticated = true;
-			$location.path('/mainAccount');
+			$location.path('/main');
 		}else{
 			$scope.errorMessage = 'User / Password Invalid';
 		}
