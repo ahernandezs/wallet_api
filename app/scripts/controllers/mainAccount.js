@@ -10,13 +10,10 @@ angular.module('pantallasAdministradorApp')
             method: 'GET',
         }).
           success(function(data, status, headers) {
-            console.log('Usuarios: '+data.additionalInfo.length);
             $scope.users = data.additionalInfo;
         }).
           error(function(data, status) {
             $scope.errorMessage = data.message;
-            $scope.status = status;
-            $scope.buttonStatus("Entrar", false);
         });
     }
 
@@ -25,8 +22,8 @@ angular.module('pantallasAdministradorApp')
         $location.path('/login');
 	 };
 
-     $scope.detail = function(user){
-        $location.path('/detail/'+user.phoneID);
-     }
+    $scope.detail = function(user){
+      $location.path('/detail/'+user.phoneID);
+    }
 
 }]);
