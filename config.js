@@ -89,6 +89,15 @@ config.mail.bodyFin='Now you can buy a coffee or just send a coffee to a friend,
 config.mail.regards='Thanks!';
 config.mail.footer='Amdocs wallet Team';
 
+config.mailInvite = {}
+config.mailInvite.header = 'Hey there,';
+config.mailInvite.bodyInit = 'Check out the Amdocs Mobile Wallet  - it\'s really cool, and gives you FREE 5 Euros to enjoy specialty coffee drinks at the Amdocs Café !';
+config.mailInvite.bodyMid = 'To download the app , simply click on below link from your mobile device - ';
+config.mailInvite.bodyEnd = '(iOS and Android supported)';
+config.mailInvite.footer = 'Cheers,';
+
+
+
 config.logger = new (winston.Logger)({
     transports: [
         new (winston.transports.Console)({ colorize: 'true', handleExceptions: true }),
