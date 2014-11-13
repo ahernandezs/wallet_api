@@ -62,10 +62,14 @@ exports.getMerchands = function(phoneID, callback){
         });
       },
       function(users, callback){
-        Merchant.find({},function(err,data){
+
+        var  query = Merchant.find();
+        query.sort({id:1});
+        query.exec(function(err,data){
+          console.log(data[0]);
           data[0].usersConnected = users;
           callback(null, data);
-        }).sort({id:1});
+        });
       },
       function(data, callback){
         dateTime = new Date().getHours();
