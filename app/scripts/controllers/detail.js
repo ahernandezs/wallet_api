@@ -1,32 +1,32 @@
 'use strict';
 
 angular.module('pantallasAdministradorApp')
-  .controller('MainAccountCtrl', ['$scope', '$rootScope', '$location', '$http', function ($scope, $rootScope, $location, $http) {
+  .controller('detailCtrl', ['$scope', '$rootScope', '$location', '$http', '$routeParams', function ($scope, $rootScope, $location, $http, $routeParams) {
+    
     if($rootScope.isAuthenticated == null || $rootScope.isAuthenticated == false){
         $location.path('/login');
     }else{
+
         $http({
-            url: '/api/spa/users',
+            url: '/api/spa/loans/'+$routeParams.phoneId,
             method: 'GET',
         }).
           success(function(data, status, headers) {
-            console.log('Usuarios: '+data.additionalInfo.length);
-            $scope.users = data.additionalInfo;
+            $scope.loans = data.additionalInfo;
         }).
           error(function(data, status) {
             $scope.errorMessage = data.message;
             $scope.status = status;
             $scope.buttonStatus("Entrar", false);
         });
-    }
 
-    $scope.logOut = function(){
+
+
+    };
+
+    $scope.logOut=function(){
         $rootScope.isAuthenticated = false;
         $location.path('/login');
 	 };
-
-     $scope.detail = function(user){
-        $location.path('/detail/'+user.phoneID);
-     }
 
 }]);
