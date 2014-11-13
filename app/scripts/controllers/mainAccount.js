@@ -27,7 +27,6 @@ angular.module('pantallasAdministradorApp')
                     $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
                 }
             });
-            //$scope.users = data.additionalInfo;
         }).
           error(function(data, status) {
             $scope.errorMessage = data.message;
