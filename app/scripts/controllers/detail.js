@@ -20,7 +20,7 @@ angular.module('pantallasAdministradorApp')
                 count: 10,
                 sorting: {
                     date: 'asc'
-                }
+                },
             }, {
                 total: $scope.loans.length,
                 getData: function($defer, params) {

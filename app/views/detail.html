@@ -15,7 +15,12 @@
     <tab heading="Loans">
       <div class="well">
         <table ng-table="tableParamsloans" class='table'>
-          <tr ng-repeat="loan in loans">
+          <form class="form-inline">
+               <div class="form-group">
+                  <input ng-model="queryLoans" type="text" placeholder="Filter by date, amount or status" autofocus class="form-control">
+              </div>
+          </form>
+          <tr ng-repeat="loan in loans | filter:queryLoans">
             <td data-title="'Date'" sortable="'date'">{{loan.date}}</td>
             <td data-title="'Amount'" sortable="'amount'">{{loan.amount}}</td>
             <td data-title="'Status'" sortable="'status'">{{loan.status}}</td>
@@ -26,7 +31,12 @@
     <tab heading="Receipts">
       <div class="well">
         <table ng-table="tableParamsreceipts" class='table'>
-          <tr ng-repeat="receipt in receipts">
+          <form class="form-inline">
+               <div class="form-group">
+                  <input ng-model="queryReceipts" type="text" placeholder="Filter by date, amount, status or type" autofocus class="form-control">
+              </div>
+          </form>
+          <tr ng-repeat="receipt in receipts | filter:queryReceipts">
             <td data-title="'Date'" sortable="'date'">{{receipt.date}}</td>
             <td data-title="'Amount'" sortable="'amount'">{{receipt.amount}}</td>
             <td data-title="'Status'" sortable="'status'">{{receipt.status}}</td>
@@ -39,7 +49,12 @@
     <tab heading="Doxs Transactions">
       <div class="well">
         <table ng-table="tableParamsdoxs" class='table'>
-          <tr ng-repeat="dox in doxs">
+          <form class="form-inline">
+               <div class="form-group">
+                  <input ng-model="queryDoxs" type="text" placeholder="Filter by date, amount, status or type" autofocus class="form-control">
+              </div>
+          </form>
+          <tr ng-repeat="dox in doxs | filter:queryDoxs">
             <td data-title="'Title'" sortable="'title'">{{dox.title}}</td>
             <td data-title="'Type'" sortable="'type'">{{dox.type}}</td>
             <td data-title="'Date'" sortable="'date'">{{dox.date}}</td>
@@ -53,7 +68,12 @@
     <tab heading="Money Transactions">
       <div class="well">
         <table ng-table="tableParamsmoney" class='table'>
-          <tr ng-repeat="money in moneys">
+          <form class="form-inline">
+               <div class="form-group">
+                  <input ng-model="queryMoney" type="text" placeholder="Filter by date, amount, status or type" autofocus class="form-control">
+              </div>
+          </form>
+          <tr ng-repeat="money in moneys | filter:queryMoney">
             <td data-title="'Title'" sortable="'title'">{{money.title}}</td>
             <td data-title="'Type'" sortable="'type'">{{money.type}}</td>
             <td data-title="'Date'" sortable="'date'">{{money.date}}</td>
