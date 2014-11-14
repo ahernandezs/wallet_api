@@ -87,4 +87,5 @@ body {
 /* Overwrite hover for table elements */
 .table-hover {
     background: #FFFFFF;
+    cursor: pointer;
 }
