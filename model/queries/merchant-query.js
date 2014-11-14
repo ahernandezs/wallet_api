@@ -52,14 +52,20 @@ exports.getMerchands = function(phoneID, callback){
 
     async.waterfall([
       function(callback){
-        User.findOne({'phoneID': phoneID }, 'group', function (err, user) {
-        callback(null, user.group);
-        });
+        if(phoneID)
+            User.findOne({'phoneID': phoneID }, 'group', function (err, user) {
+                if(user.group)
+                    callback(null, user.group);
+            });
+        else
+            callback(null,config.group.env.INTERNAL);
       },
       function(group, callback){
-        sessionQuery.getSessions(group, function(err, users){
-          callback(null, users);
-        });
+        if(group){
+            sessionQuery.getSessions(group, function(err, users){
+              callback(null, users);
+            });
+        }
       },
       function(users, callback){
 
