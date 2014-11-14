@@ -69,3 +69,10 @@ exports.getSessions = function(group, callback){
         callback(null, res.length);
     });
 }
+
+exports.getSession = function(phoneID, callback){
+    Session.findOne({'phoneID': phoneID}, function(err, session){
+        console.log('getSession  '+ JSON.stringify(session));
+        callback(null, session);
+    });
+}

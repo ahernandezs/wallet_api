@@ -251,8 +251,14 @@ exports.regenerate = function(request, res, callback) {
         function(data, callback) {
             console.log( 'is there a session?: ' + data.session );
             request.phoneID = phoneID;
-            if (data.session)
-                callback('STOP', request.sessionid);
+            if (data.session){
+                session.getSession(phoneID,function(err,result){
+                    if (err)
+                      callback('ERROR', err);
+                    else
+                      callback('STOP', result.token);
+                });
+            }
             else
                 session.getCredentials(request, function(err, result) {
                     if (err === 'ERROR')
