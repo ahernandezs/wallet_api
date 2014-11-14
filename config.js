@@ -11,6 +11,9 @@ config.sendGrid = {};
 config.sendGrid.user = 'dannywf@anzen.com.mx';
 config.sendGrid.password = 'Anzen7924';
 
+config.group ={}
+config.group.env = {INTERNAL: 'INTERNAL' , PUBLIC : 'PUBLIC'};
+
 config.orders = {};
 config.orders.status = {NEW : 'NEW' ,IN_PROGRESS : 'IN PROGRESS' , READY : 'READY' , DELIVERED : 'DELIVERED' , CANCELED : 'CANCELED' };
 config.orders.errMsg = 'Something went wrong';
