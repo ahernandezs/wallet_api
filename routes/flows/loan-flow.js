@@ -261,7 +261,7 @@ var updateLoanFlow = exports.updateLoanFlow = function(payload,callback){
       console.log(notification);
       urbanService.singlePush(notification, function(err, result) {
         if(err){
-          var response = { statusCode:1 ,  additionalInfo : result };
+          var response = { statusCode:1 ,  result };
           callback('ERROR',response);
         }
         else{
