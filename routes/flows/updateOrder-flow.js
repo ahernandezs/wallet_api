@@ -73,7 +73,7 @@ exports.updateOrderFlow = function(payload,callback) {
 			if(status === config.orders.status.READY){
 				urbanService.singlePush(message, function(err, result) {
 					if (err) {
-						var response = { statusCode: 3, additionalInfo: err };
+						var response = { statusCode: 3, result };
 						callback('ERROR', response);
 					}else{
 						var response = { statusCode: 0, additionalInfo: 'Update order successful' };
