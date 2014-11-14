@@ -149,8 +149,13 @@ exports.registerFlow = function(payload,callback) {
                 });
             });
         } else {
-            sessionUser.loginFlow({phoneID:payload.phoneID , pin :payload.pin, group : payload.group },function(err,result){
-                callback(null, result);
+            if(payload.group)
+              sessionUser.loginFlow({phoneID:payload.phoneID , pin :payload.pin, group : payload.group },function(err,result){
+              callback(null, result);
+            });
+            else
+              sessionUser.loginFlow({phoneID:payload.phoneID , pin :payload.pin, group : config.group.env.INTERNAL },function(err,result){
+              callback(null, result);
             });
         }
     },

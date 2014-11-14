@@ -8,6 +8,7 @@ var wallet = require('../wallet');
 var session =  require('../../model/queries/session-query');
 var msgQuery =  require('../../model/queries/message-query');
 var user =  require('../users');
+var config = require('../../config.js');
 
 
 exports.loginFlow = function(payload,callback) {
@@ -49,7 +50,14 @@ exports.loginFlow = function(payload,callback) {
           callback(null);
         });
       else
-        callback(null);
+        Userquery.singleUpdateUser({phoneID:payload.phoneID, group: config.group.env.INTERNAL},function (err,result) {
+          if(err) {
+            console.log(err);
+            var response = { statusCode:1 ,  additionalInfo : err };
+            callback(err,response);
+          }else
+          callback(null);
+        });
     },
     function(callback){
       console.log('Validate connection');
@@ -85,7 +93,12 @@ exports.loginFlow = function(payload,callback) {
         data.phoneID = payload.phoneID;
         data.pin = payload.pin;
         data.token = sessionid;
-        data.group = payload.group;
+
+        if(payload.group)
+          data.group = payload.group;
+        else
+          data.group = config.group.env.INTERNAL;
+
         session.createSession(data, function(err, result) {
             if (err)
                 callback('ERROR', result.message);
