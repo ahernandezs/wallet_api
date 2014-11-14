@@ -93,6 +93,7 @@ exports.getBalance = function(req, res) {
   console.log( req.headers['x-auth-token'] );
   balance.balanceFlow(req.headers['x-auth-token'], function(err, result) {
     if(result.statusCode === 0){
+      res.setHeader('X-AUTH-TOKEN', result.sessionid);
       delete result.sessionid;
     }
     res.json(result);
@@ -103,10 +104,17 @@ exports.buyFlow = function(req, res){
   console.log('execute POST method buyFlow');
   console.log(req.headers['x-auth-token']);
   var json = req.body;
+  json['sessionid']= req.headers['x-auth-token'];
   BuyFlow.buyFlow(req.body,function(err,result){
     if(err) {
       res.send(500);
     } 
+    //else 
+      //console.log(result);
+    //else if(result.statusCode === 0){
+      //res.setHeader('X-AUTH-TOKEN', result.sessionid);
+      //delete result.sessionid;
+    //}
     res.json(result);
   });
 };
@@ -124,6 +132,7 @@ exports.transferFunds = function(req, res) {
       function(callback){
         TransferFlow.transferFunds(values, function(err, result) {
             if (result.statusCode === 0) {
+                res.setHeader( 'x-auth-token', result.sessionid );
                 delete result.sessionid;
             }
             callback(null, result);
@@ -150,6 +159,7 @@ exports.sendGift = function(req, res){
   var json = req.body;
   console.log(json);
   console.log(req.headers['x-auth-token']);
+  json['sessionid']= req.headers['x-auth-token'];
   GiftFlow.sendGift(req.body, function(err,result){
     if(err) {
       console.log('Error');
@@ -159,6 +169,7 @@ exports.sendGift = function(req, res){
     console.log('Finish Gift');
     console.log(result);
     if(result.statusCode === 0){
+      res.setHeader('X-AUTH-TOKEN', result.sessionid);
       delete result.sessionid;
     }
     res.json(result);
@@ -375,6 +386,7 @@ exports.updateReceipt = function(req, res){
 exports.setCoupon = function(req, res){
   console.log('execute POST method setCoupon');
   var json = req.body;
+  json['sessionid']= req.headers['x-auth-token'];
   couponService.setCoupon(json, function(err,result){
       if(err) {
         res.send(500);

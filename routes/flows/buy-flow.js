@@ -29,7 +29,7 @@ exports.buyFlow = function(payload,callback) {
 
 	async.waterfall([
 		function(callback){
-			var requestSoap = { sessionid:payload.sessionid, to: config.username, amount : payload.order.total , type: 1 };
+			var requestSoap = { sessionid: payload.sessionid, to: config.username, amount : payload.order.total , type: 1 };
 			var request = { transferRequest: requestSoap };
 				soap.createClient(soapurl, function(err, client) {
 				client.transfer(request, function(err, result) {
@@ -39,6 +39,7 @@ exports.buyFlow = function(payload,callback) {
 					} else {
 						var response = result.transferReturn;
 						if(response.result != 0){
+							console.log(response);
 							var response = { statusCode:1 ,  additionalInfo : result };
 							callback("ERROR", response);
 						}
@@ -261,7 +262,8 @@ exports.buyFlow = function(payload,callback) {
 		},
 
     ], function (err, result) {
-      if(err){      
+      if(err){
+      	console.log('Error  --->' + JSON.stringify(result));
         callback("Error! "+err,result);    
       }else{
         callback(null,result);    
