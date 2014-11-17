@@ -17,12 +17,13 @@ angular.module('pantallasAdministradorApp')
                     name: 'asc'
                 }
             }, {
-                total: data.additionalInfo.length,
+                total: data.additionalInfo.users.length,
                 getData: function($defer, params) {
-                    
+                    $rootScope.countPublic = data.additionalInfo.public;
+                    $rootScope.countInternal = data.additionalInfo.internal;
                     var orderedData = params.sorting() ?
-                                        $filter('orderBy')(data.additionalInfo, params.orderBy()) :
-                                        data.additionalInfo;
+                                        $filter('orderBy')(data.additionalInfo.users, params.orderBy()) :
+                                        data.additionalInfo.users;
 
                     $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
                 }
