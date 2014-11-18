@@ -103,18 +103,9 @@ exports.createLoanFlow = function(payload,callback) {
       additionalInfo = extraData.loan;
       loan.extra = {extra : extraData} ;
       console.log(loan);
-      urbanService.singlePush2Merchant(loan, function(err, result) {
-        if(err){
-          var response = { statusCode:1 ,  additionalInfo : 'Error to create loan' };
-          callback('ERROR',response);
-        }
-        else{
-          var response = { statusCode:0 ,  additionalInfo : 'Loan sent Successful ' };
-          callback(null,response, loan);
-        }
-      });
+      callback(null, loan);
     },
-      function(response, loan, callback) {
+      function(loan, callback) {
         console.log( 'Create Receipt Transfer' );
           data = forReceipt;
           var receipt = {};

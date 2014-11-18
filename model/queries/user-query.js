@@ -326,6 +326,7 @@ exports.updateSession = function(user, callback) {
 exports.getLeaderboard = function(phoneIDUser,callback){
 
   if(phoneIDUser){
+      console.log( 'by phoneID' );
     User.findOne({phoneID:phoneIDUser},'group',function(err,result){
       if (err)
         callback('ERROR', { message: 'Fail  getLeaderboard' });
@@ -349,6 +350,7 @@ exports.getLeaderboard = function(phoneIDUser,callback){
       }
     });
   }else{
+      console.log( 'by merchantID' );
     merchantQuery.getMerchanByID(1,function(err,result){
       if (err)
         callback('ERROR', { message: 'Fail  getLeaderboard' });
