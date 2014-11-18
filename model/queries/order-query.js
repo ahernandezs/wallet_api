@@ -87,7 +87,7 @@ exports.getOrders =  function(merchantID, callback) {
 			var response = { statusCode: 0 };
 			var conditions = {$or: [{'status':config.orders.status.NEW },{'status':config.orders.status.READY}]};
 			var ordenes = Order.find(conditions, 'orderId _id customerImage customerName date status products userId');
-			ordenes.sort({date: -1});
+			ordenes.sort({date: 1});
 			ordenes.exec(function (err, orders){
 
 				if (err) {
