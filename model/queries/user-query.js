@@ -261,7 +261,7 @@ exports.getUsers = function(parameters,callback){
     User.findOne({'phoneID': parameters.phoneID }, 'group', function (err, user) {
       if (err) return handleError(err);
       else if(user){
-        User.find({group:user.group }, 'phoneID name email lastSession', { sort : { name : 1 }}, function (err, people) {
+        User.find({group:user.group }, 'phoneID name email lastSession company', { sort : { name : 1 }}, function (err, people) {
           if (err) return handleError(err);
           else if(people){
             callback(null, people);
@@ -273,7 +273,7 @@ exports.getUsers = function(parameters,callback){
         });
       }// end else if
       else{
-        User.find({}, 'phoneID name email lastSession', { sort : { name : 1 }}, function (err, people) {
+        User.find({}, 'phoneID name email lastSession company', { sort : { name : 1 }}, function (err, people) {
           if (err) return handleError(err);
           else if(people){
             callback(null, people);
@@ -287,7 +287,7 @@ exports.getUsers = function(parameters,callback){
     });
   }//end of if
   else{
-    User.find({}, 'phoneID name email lastSession', { sort : { name : 1 }}, function (err, people) {
+    User.find({group:'INTERNAL'}, 'phoneID name email lastSession company', { sort : { name : 1 }}, function (err, people) {
       if (err) return handleError(err);
       else if(people){
         callback(null, people);
