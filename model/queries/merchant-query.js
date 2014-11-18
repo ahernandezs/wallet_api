@@ -83,7 +83,7 @@ exports.getMerchands = function(phoneID, callback){
 
 
         var openTime = parseInt(tmp[0].replace('am', '').replace(' ', ''));
-        var closeTime = parseInt(tmp[1].replace('pm', '').replace(' ', '')) + 12;
+        var closeTime = parseInt(tmp[1].replace('pm', '').replace(' ', '')) + 13;
 
         if(dateTime>=openTime && dateTime<closeTime){
             data[0].open = 1;

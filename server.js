@@ -112,5 +112,5 @@ app.get('/api/spa/receipts/:phoneID', spa.getReceipts);
 app.get('/api/spa/loans/:phoneID', spa.getLoans);
 
 app.listen( process.env.PORT  || 3000);
-console.log('Listening on port 3000');
+console.log('Listening on port 3000, server time set to '+new Date());
 
