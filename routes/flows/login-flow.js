@@ -9,6 +9,7 @@ var session =  require('../../model/queries/session-query');
 var msgQuery =  require('../../model/queries/message-query');
 var user =  require('../users');
 var config = require('../../config.js');
+var logger = config.logger;
 
 
 exports.loginFlow = function(payload,callback) {
@@ -18,13 +19,13 @@ exports.loginFlow = function(payload,callback) {
 
       Userquery.confirmPin(payload.phoneID, function(err, person) {
         if(err){
-          console.log(err);
+          logger.error(err);
           var response = { statusCode:1 ,  additionalInfo : err };
           callback(err,response);
         }
         else {
           if(person.pin === payload.pin){
-            console.log('You have been logged in');
+            logger.info('You have been logged in');
             info.email = person.email;
             info.company = person.company;
             info.name = person.name;
@@ -32,7 +33,7 @@ exports.loginFlow = function(payload,callback) {
             callback(null);
           } else{
             var response = { statusCode:1 ,  additionalInfo : 'INVALID PIN' };
-            console.log(response);
+            logger.error(response);
             callback('ERROR',response);
           }
         }
@@ -43,7 +44,7 @@ exports.loginFlow = function(payload,callback) {
       if(payload.group)
         Userquery.singleUpdateUser({phoneID:payload.phoneID, group: payload.group},function (err,result) {
           if(err) {
-            console.log(err);
+            logger.error(err);
             var response = { statusCode:1 ,  additionalInfo : err };
             callback(err,response);
           }else
@@ -52,7 +53,7 @@ exports.loginFlow = function(payload,callback) {
       else
         Userquery.singleUpdateUser({phoneID:payload.phoneID, group: config.group.env.INTERNAL},function (err,result) {
           if(err) {
-            console.log(err);
+            logger.error(err);
             var response = { statusCode:1 ,  additionalInfo : err };
             callback(err,response);
           }else
@@ -60,11 +61,11 @@ exports.loginFlow = function(payload,callback) {
         });
     },
     function(callback){
-      console.log('Validate connection');
+      logger.info('Validate connection');
       var response = null;
       soap.createClient(soapurl, function(err, client) {
         if(err) {
-          console.log(err);
+          logger.error(err);
           var response = { statusCode: 3 ,  additionalInfo : 'Service Unavailable' };
           callback(err,response);
         }else
@@ -72,12 +73,12 @@ exports.loginFlow = function(payload,callback) {
       });
     },
     function(callback){
-      console.log('Create Session');
+      logger.info('Create Session');
       var response = null;
       soap.createClient(soapurl, function(err, client) {
         client.createsession({}, function(err, result) {
           if(err) {
-            console.log(err);
+            logger.error(err);
             var response = { statusCode:1 ,  additionalInfo : err };
             callback(err,response);
           } else {
@@ -88,7 +89,7 @@ exports.loginFlow = function(payload,callback) {
       });
     },
     function(sessionid, callback) {
-        console.log( 'Register Session' );
+        logger.info( 'Register Session' );
         var data = {};
         data.phoneID = payload.phoneID;
         data.pin = payload.pin;
@@ -115,15 +116,15 @@ exports.loginFlow = function(payload,callback) {
         });
     },
     function(sessionid, callback){
-      console.log('Create hashpin');
+      logger.info('Create hashpin');
       var hashpin = payload.phoneID.toLowerCase() + payload.pin ;
       hashpin = sessionid + crypto.createHash('sha1').update(hashpin).digest('hex').toLowerCase();
       hashpin = crypto.createHash('sha1').update(hashpin).digest('hex').toUpperCase();
-      console.log(hashpin);
+      logger.info(hashpin);
       callback(null, sessionid, hashpin);
     },
     function(sessionid, hashpin, callback){
-      console.log('Login');
+      logger.info('Login');
       var  request = { sessionid: sessionid, initiator: payload.phoneID , pin: hashpin  };
       var request = {loginRequest: request};
       soap.createClient(soapurl, function(err, client) {
@@ -132,7 +133,7 @@ exports.loginFlow = function(payload,callback) {
             return new Error(err);
           } else {
             var response = result.loginReturn;
-            console.log(response);
+            logger.info(response);
             if(response.result  === 0 )
               var response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : response };       
             else
@@ -145,22 +146,22 @@ exports.loginFlow = function(payload,callback) {
     },
 
     function(sessionid,callback){
-      console.log('Search NotRead msgs connection');
+      logger.info('Search NotRead msgs connection');
       var response = null;
       msgQuery.getMessagesNoRead(payload.phoneID, function(err, result) {
         if(err) {
-          console.log(err);
+          logger.error(err);
           var response = { statusCode:1 ,  additionalInfo : err };
           callback(err,response);
         }else{
-          console.log(result.length);
+          logger.info(result.length);
           callback(null,sessionid,result.length);
         }
       });
     },
 
     function(sessionid,length,callback){
-      console.log('balance e-wallet');
+      logger.info('balance e-wallet');
       var request = { sessionid: sessionid, type: 1  };
       var request = {balanceRequest: request};
       soap.createClient(soapurl, function(err, client) {
@@ -180,7 +181,7 @@ exports.loginFlow = function(payload,callback) {
       });
     },
     function(sessionid,currentMoney,length,callback){
-      console.log('balance Points');
+      logger.info('balance Points');
       var  request = { sessionid: sessionid, type: 3  };
       var request = {balanceRequest: request};
       soap.createClient(soapurl, function(err, client) {
@@ -201,7 +202,7 @@ exports.loginFlow = function(payload,callback) {
       });
     },
     ], function (err, result) {
-      console.log(result);
+      logger.info(result);
       if(err){      
         callback(err,result);    
       }else{
@@ -215,7 +216,7 @@ exports.regenerate = function(request, res, callback) {
     delete request.phoneID;
     async.waterfall([
         function(callback) {
-            console.log( 'Calculate session lifetime' );
+            logger.info( 'Calculate session lifetime' );
             User.findOne({ phoneID : phoneID }, 'lastSession', function(err, data) {
                 if (err)
                     callback('ERROR', data);
@@ -226,13 +227,13 @@ exports.regenerate = function(request, res, callback) {
                         var startDate = moment( data.lastSession, 'YYYY-M-DD HH:mm:ss' );
                         var endDate = moment( dateTime, 'YYYY-M-DD HH:mm:ss' );
                         var difference = endDate.diff(startDate, 'minutes');
-                        console.log(difference + ' minutes');
+                        logger.info(difference + ' minutes');
                         if (difference > 4)
                             callback(null, true);
                         else
                             callback(null, false);
                     } catch (e) {
-                        console.log(e);
+                        logger.warn(e);
                         callback(null, true);
                     }
                 }
@@ -240,7 +241,7 @@ exports.regenerate = function(request, res, callback) {
         },
         function(getBalance, callback) {
             if (getBalance) {
-                console.log( 'Getting balance' );
+                logger.info( 'Getting balance' );
                 wallet.balance(request, function(err, response) {
                     if (err)
                         callback('ERROR', response );
@@ -262,7 +263,7 @@ exports.regenerate = function(request, res, callback) {
             }
         },
         function(data, callback) {
-            console.log( 'is there a session?: ' + data.session );
+            logger.info( 'is there a session?: ' + data.session );
             request.phoneID = phoneID;
             if (data.session){
                 session.getSession(phoneID,function(err,result){
