@@ -15,6 +15,7 @@ var transacctionQuery = require('../model/queries/transacction-query');
 var Userquery = require('../model/queries/user-query');
 var soapurl = process.env.SOAP_URL;
 var config = require('../config.js');
+var logger = config.logger;
 
 exports.sell =  function(req, res){
   console.log('execute POST method sell');
@@ -55,15 +56,15 @@ exports.transfer =  function(req, res){
 };
 
 exports.buy =  function(req, res){
-  console.log('execute POST method buy');
-  console.log(req.body);
+  logger.info('execute POST method buy');
+  logger.info(req.body);
   var request = {transferRequest: req.body};
   soap.createClient(soapurl, function(err, client) {
     client.transfer(request, function(err, result) {
       if(err) {
         res.send(500);
       } else {
-        console.log(result);
+        logger.info(result);
 
         var response = result.transfer;
         res.json(response);
@@ -101,20 +102,14 @@ exports.getBalance = function(req, res) {
 };
 
 exports.buyFlow = function(req, res){
-  console.log('execute POST method buyFlow');
-  console.log(req.headers['x-auth-token']);
+  logger.info('execute POST method buyFlow');
+  logger.info(req.headers['x-auth-token']);
   var json = req.body;
   json['sessionid']= req.headers['x-auth-token'];
   BuyFlow.buyFlow(req.body,function(err,result){
     if(err) {
       res.send(500);
-    } 
-    //else 
-      //console.log(result);
-    //else if(result.statusCode === 0){
-      //res.setHeader('X-AUTH-TOKEN', result.sessionid);
-      //delete result.sessionid;
-    //}
+    }
     res.json(result);
   });
 };

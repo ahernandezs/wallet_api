@@ -29,9 +29,9 @@ exports.updateLoan = function(req, res) {
 };
 
 exports.createLoan = function(req, res) {
-    console.log('POST method create Loans');
-    console.log(req.body);
-    console.log( req.headers['x-auth-token'] );
+    logger.info('POST method create Loans');
+    logger.info(req.body);
+    logger.info( req.headers['x-auth-token'] );
     req.headers.sessionid = req.headers['x-auth-token'];
     var payload = {};
     payload.body = req.body;

@@ -6,6 +6,7 @@ var sessionUser = require('./flows/login-flow');
 var forgotPin = require('./flows/forgotPin-flow');
 var awsS3 = require('../services/aws-service');
 var config = require('../config.js');
+var logger = config.logger;
 var soap = require('soap');
 var soapurl = process.env.SOAP_URL;
 
@@ -177,14 +178,14 @@ exports.getUsers = function(req, res){
 };
 
 exports.regenerate = function(req, res, callback) {
-    console.log( 'POST method regenerate (session)' );
+    logger.info( 'POST method regenerate (session)' );
     var request = {};
     request.sessionid = req.headers['x-auth-token'];
     request.phoneID = req.headers['x-phoneid'];
     request.type = 1;
     sessionUser.regenerate(request, res, function(err, result) {
         if (err === 'ERROR') {
-            console.log(result);
+            logger.error(result);
             callback('ERROR', result);
         } else if (err !== 'STOP')
             callback(null, result);
