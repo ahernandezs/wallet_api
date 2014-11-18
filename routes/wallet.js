@@ -315,7 +315,7 @@ exports.getReceipts = function(req, res){
 }
 
 exports.doxInfo = function(req, res) {
-    console.log( 'GET method doxInfo' );
+    logger.info( 'GET method doxInfo' );
     doxInfoQuery.getDoxInfo( function(err, result) {
         if (err)
             res.json( {statusCode : 1, message: result} );
