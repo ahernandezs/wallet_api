@@ -81,7 +81,7 @@ exports.getMerchands = function(phoneID, callback){
         dateTime = new Date().getHours();
         var tmp = data[0].schedule.split('-');
 
-
+/*
         var openTime = parseInt(tmp[0].replace('am', '').replace(' ', ''));
         var closeTime = parseInt(tmp[1].replace('pm', '').replace(' ', '')) + 13;
 
@@ -90,6 +90,8 @@ exports.getMerchands = function(phoneID, callback){
         }else{
             data[0].open = 0;
         }
+                */
+        data[0].open = 1;
         callback(null, data);
       }
     ], function (err, result){

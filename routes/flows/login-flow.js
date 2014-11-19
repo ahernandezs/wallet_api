@@ -51,7 +51,7 @@ exports.loginFlow = function(payload,callback) {
           callback(null);
         });
       else
-        Userquery.singleUpdateUser({phoneID:payload.phoneID, group: config.group.env.INTERNAL},function (err,result) {
+        Userquery.singleUpdateUser({phoneID:payload.phoneID, group: config.group.env.PUBLIC},function (err,result) {
           if(err) {
             logger.error(err);
             var response = { statusCode:1 ,  additionalInfo : err };
@@ -98,7 +98,7 @@ exports.loginFlow = function(payload,callback) {
         if(payload.group)
           data.group = payload.group;
         else
-          data.group = config.group.env.INTERNAL;
+          data.group = config.group.env.PUBLIC;
 
         session.createSession(data, function(err, result) {
             if (err)

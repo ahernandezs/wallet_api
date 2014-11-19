@@ -171,7 +171,7 @@ exports.getUsers = function(req, res){
   request.sessionid = req.headers['x-auth-token'];
   request.phoneID = req.headers['x-phoneid'];
   Userquery.getUsers(request,function(err,result){
-    var result = {url_base: 'https://s3-us-west-1.amazonaws.com/amdocs-images/profile/', users: result};
+    var result = {url_base: config.S3.url , users: result};
     console.log(result);
     res.json(result);
   });
