@@ -148,16 +148,19 @@ exports.registerFlow = function(payload,callback) {
                     }
                 });
             });
-        } else {
-            if(payload.group)
+          } else {
+            if(payload.group){
               sessionUser.loginFlow({phoneID:payload.phoneID , pin :payload.pin, group : payload.group },function(err,result){
-              callback(null, result);
-            });
-            else
-              sessionUser.loginFlow({phoneID:payload.phoneID , pin :payload.pin, group : config.group.env.INTERNAL },function(err,result){
-              callback(null, result);
-            });
-        }
+                callback(null, result);
+
+              });
+            }
+            else{
+              sessionUser.loginFlow({phoneID:payload.phoneID , pin :payload.pin, group : config.group.env.PUBLIC },function(err,result){
+                callback(null, result);
+              });
+            }
+          }
     },
     ], function (err, result) {
       console.log(result);
