@@ -247,7 +247,7 @@ exports.requestMoney = function(req, res){
         if(err)
             res.json({ statusCode : 1, additionalInfo : result});
         else
-            res.json({statusCode : 0, additionalInfo :  result});
+            res.json(result);
     });
 
 }
