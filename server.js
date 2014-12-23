@@ -88,6 +88,8 @@ app.get('/api/receipts', interceptorHeader, wallet.getReceipts);
 app.put('/api/receipt', wallet.updateReceipt);
 app.get('/api/doxInfo', interceptorHeader, wallet.doxInfo);
 app.post('/api/invitefriend', interceptorHeader, user.inviteFriend);
+app.post('/api/requestMoney',interceptorHeader, user.requestMoney);
+
 //Merchant operations
 //app.put('/api/order', merchant.putOrder);
 app.put('/api/order', merchant.updateOrder);
@@ -102,9 +104,7 @@ app.put('/api/loan', loan.updateLoan);
 app.get('/api/leaderboard',user.getLeaderboard);
 app.post('/api/receipt', wallet.getReceipts);
 app.put('/api/receiptStatus', product.changeReceiptStatus);
-
 app.post('/api/coupon', wallet.setCoupon);
-
 // SPA operations
 app.get('/api/spa/users', spa.getUsers);
 app.get('/api/spa/transactions/:phoneID/:type', spa.getTransactions);
