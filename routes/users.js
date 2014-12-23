@@ -4,6 +4,7 @@ var Userquery = require('../model/queries/user-query');
 var anzenUser = require('./flows/register-flow');
 var sessionUser = require('./flows/login-flow');
 var forgotPin = require('./flows/forgotPin-flow');
+var requestMoney = require('./flows/requestMoney-flow');
 var awsS3 = require('../services/aws-service');
 var config = require('../config.js');
 var logger = config.logger;
@@ -235,4 +236,18 @@ exports.inviteFriend = function(req, res){
         res.json(result);
     }
   });
+}
+
+exports.requestMoney = function(req, res){
+  req.body.sessionid = req.headers['x-auth-token'];
+  req.body.phoneID = req.headers['x-phoneid'];
+
+      requestMoney.requestMoneyFlow(req.body,function(err,result){
+        console.log(result);
+        if(err)
+            res.json({ statusCode : 1, additionalInfo : result});
+        else
+            res.json({statusCode : 0, additionalInfo :  result});
+    });
+
 }
