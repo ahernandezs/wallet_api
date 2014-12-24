@@ -65,6 +65,10 @@ config.messages.facebook =	{
 								description:'Just downloaded my Amdocs Wallet at Mobile Money Global! Looking forward to the delicous coffee at the fully cashless Amdocs Café, now open at Grand Wyndham, Istanbul',
 								link:' http://amdocs.com/MFS'
 							};
+
+config.requests = {};
+config.requests.status = { NEW : 'NEW', ACCEPTED : 'ACCEPTED', REJECTED: 'REJECTED' };
+
 config.doxs = {};
 
 config.doxs.linking = 500; //link to twitter/facebook

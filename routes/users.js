@@ -237,10 +237,9 @@ exports.inviteFriend = function(req, res){
         res.json(result);
     }
   });
-}
+};
 
 exports.requestMoney = function(req, res){
-  req.body.sessionid = req.headers['x-auth-token'];
   req.body.phoneID = req.headers['x-phoneid'];
 
       requestMoney.requestMoneyFlow(req.body,function(err,result){
@@ -265,4 +264,16 @@ exports.sendMessage = function(req, res){
             res.json(result);
     });
 
-}
+};
+
+exports.resolveRquest = function(req, res) {
+    req.body.phoneID = req.headers['x-phoneid'];
+    
+    requestMoney.resolveRequestFlow(req.body, function(err, result) {
+        console.log( result );
+        if (err === 'ERROR')
+            res.json( { statusCode : 1, additionalInfo : result } );
+        else
+            res.json( { statusCode : 0, additionalInfo : result } );
+    });
+};
