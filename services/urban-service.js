@@ -10,6 +10,7 @@ exports.singlePush = function(req, callback) {
 	console.log("phoneID: " + req.phoneID);
 	UserQuery.findAppID(req.phoneID, function(err,result) {
 		var deviceID = null;
+		console.log('Mensaje'+req.message);
 		var payload = {
 			'notification': {
 				'alert': req.message

@@ -89,6 +89,7 @@ app.put('/api/receipt', wallet.updateReceipt);
 app.get('/api/doxInfo', interceptorHeader, wallet.doxInfo);
 app.post('/api/invitefriend', interceptorHeader, user.inviteFriend);
 app.post('/api/requestMoney',interceptorHeader, user.requestMoney);
+app.post('/api/message',interceptorHeader, user.sendMessage);
 
 //Merchant operations
 //app.put('/api/order', merchant.putOrder);
