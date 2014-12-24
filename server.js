@@ -90,6 +90,7 @@ app.get('/api/doxInfo', interceptorHeader, wallet.doxInfo);
 app.post('/api/invitefriend', interceptorHeader, user.inviteFriend);
 app.post('/api/requestMoney',interceptorHeader, user.requestMoney);
 app.post('/api/message',interceptorHeader, user.sendMessage);
+app.post('/api/resolveRequest', interceptorHeader, user.resolveRquest);
 
 //Merchant operations
 //app.put('/api/order', merchant.putOrder);

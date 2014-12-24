@@ -10,6 +10,7 @@ var ReceiptQuery = require('../../model/queries/receipt-query');
 var transferFlow = require('./transfer-flow');
 var transacctionQuery = require('../../model/queries/transacction-query');
 var messageQuery = require('../../model/queries/message-query');
+var requestQuery = require('../../model/queries/request-query');
 var soapurl = process.env.SOAP_URL;
 var config = require('../../config.js');
 
@@ -38,8 +39,9 @@ exports.requestMoneyFlow = function(payload,callback) {
             var message = {};
             message.status = config.messages.status.NOTREAD;
             message.type = config.messages.type.REQUEST_MONEY;
-            message.title = 'You have received transfer request from ' + senderName;
-            message.phoneID = payload.destinatary;
+            var requestMsg = 'You have received a money transfer request from ' + senderName;
+            message.title = 'You have received a money transfer request from ' + senderName;
+            message.phoneID = payload.destinitary;
             message.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
             message.message = requestMessage.message;
             message.additionalInfo = JSON.stringify({phoneID:payload.phoneID , name: senderName  , avatar :senderAvatar ,  amount : requestMessage.amount , message : requestMessage.message });
@@ -53,11 +55,26 @@ exports.requestMoneyFlow = function(payload,callback) {
                     var extraData = {   action: 6, additionalInfo :  message.additionalInfo ,
                                     _id:result._id };
                     payload.extra = { extra:extraData};
-                    callback(null, payload);
+                    callback(null, payload, requestMsg);
                 }
             });
         },
-
+        
+        function (message, requestMsg, callback)
+        {
+            console.log('Save requestMoney in DB');
+            message.message = requestMsg;
+            var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+            var data = { sender : payload.phoneID, destinatary : payload.destinitary, amount : payload.amount,
+                            message : requestMsg, status : config.requests.status.NEW , date : dateTime};
+            requestQuery.createRequest(data, function(err, result) {
+                if (err)
+                    callback('ERROR', { statusCode : 1, additionalInfo : 'The answer could not be sent.' });
+                else
+                    callback(null, message);
+            });
+        },
+        
         function(message, callback) {
             console.log('Send push notification');
             urbanService.singlePush(message, function(err, result) {
@@ -74,8 +91,7 @@ exports.requestMoneyFlow = function(payload,callback) {
 				callback(null,result);
 			}
 		});
-}
-
+};
 
 exports.requestMoneyConfirm = function(payload,callback) {
     var requestMessage = payload;
@@ -140,4 +156,27 @@ exports.requestMoneyConfirm = function(payload,callback) {
                 callback(null,result);    
             }
         });
-}
+};
+
+exports.resolveRequestFlow = function(payload, callback) {
+    console.log( payload );
+    // If NOT accepted
+    if( payload.answer === 'REJECTED' ) {
+        callback('STOP', 'The answer was sent correctly.');
+    } else {
+        async.waterfall([
+            function(callback) {
+                console.log('Getting receiver from message info');
+            }
+        ],
+             function (err, result) {
+                if (err) {
+                    console.log('Error  --->' + JSON.stringify(result));
+                    callback("Error! " + err, result);    
+                } else {
+                    callback(null,result);    
+                }
+            }
+        );
+    }
+};
