@@ -36,22 +36,20 @@ exports.requestMoneyFlow = function(payload,callback) {
 		function(senderName,senderAvatar,callback){
             console.log('Save message in DB');
             var message = {};
-            var title = config.messages.transferMsg + senderName;
-            //message = extraData;
             message.status = config.messages.status.NOTREAD;
             message.type = config.messages.type.REQUEST_MONEY;
-            message.title = 'You have received a  request transfer from ' + senderName;
+            message.title = 'You have received transfer request from ' + senderName;
             message.phoneID = payload.destinatary;
             message.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
             message.message = requestMessage.message;
-            message.additionalInfo = JSON.stringify({name: senderName  , avatar :senderAvatar ,  amount : requestMessage.amount , message : requestMessage.message });
+            message.additionalInfo = JSON.stringify({phoneID:payload.phoneID , name: senderName  , avatar :senderAvatar ,  amount : requestMessage.amount , message : requestMessage.message });
             messageQuery.createMessage(requestMessage.phoneID,message, function(err, result) {
                 if (err) {
                     var response = { statusCode: 1, additionalInfo: result };
                     callback('ERROR', response);
                 } else {
-                    payload.phoneID = payload.destinitary;
-                    payload.message = title;
+                    payload.phoneID = payload.destinatary;
+                    payload.message = message.title;
                     var extraData = {   action: 6, additionalInfo :  message.additionalInfo ,
                                     _id:result._id };
                     payload.extra = { extra:extraData};
