@@ -277,3 +277,16 @@ exports.resolveRquest = function(req, res) {
             res.json( { statusCode : 0, additionalInfo : result } );
     });
 };
+
+
+exports.getSocialFeeds = function(req, res) {
+    req.body.phoneID = req.headers['x-phoneid'];
+    
+    requestMoney.resolveRequestFlow(req.body, function(err, result) {
+        console.log( result );
+        if (err === 'ERROR')
+            res.json( { statusCode : 1, additionalInfo : result } );
+        else
+            res.json( { statusCode : 0, additionalInfo : result } );
+    });
+};

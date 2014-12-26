@@ -1,4 +1,7 @@
+var async = require('async');
 var transacction = require('../transacction');
+var config = require('../../config.js');
+
 
 exports.getTransacctions = function(phoneIDToSearch, callback) {
     console.log( 'Get Transacctions' );
@@ -51,4 +54,52 @@ exports.createTranssaction = function(data, callback) {
     else
         callback(null, 'The Transacction was created successfully');
 };
-    
+
+exports.getTransacctionsSocialFeed = function(callback) {
+    console.log( 'Get Transacctions' );
+    //compras
+    //regalos 
+    //transferencias
+    async.waterfall([
+
+        function(callback){
+            var conditionsBuys = { 'operation':config.messages.type.BUY };
+            var buys = transacction.find(conditionsBuys, 'title description amount date operation');
+            buys.sort({date: -1});
+            buys.limit(10);
+            buys.exec(function (err1, buyTransactions) {
+                callback(null,buyTransactions);
+            });
+        },
+
+        function(buyTransactions, callback){
+            var conditionsTransfers = { 'operation':config.messages.type.TRANSFER }
+            var transfers = transacction.find(conditionsTransfers, 'title description amount date operation');
+            transfers.sort({date: -1});
+            transfers.limit(10);
+            transfers.exec(function (err1, transferTransactions) {
+                callback(null, buyTransactions, transferTransactions);
+            });
+        },
+        
+        function(buyTransactions, transferTransactions, callback){
+            var conditionsGifts = { 'operation':config.messages.type.GIFT };
+            var gifts = transacction.find(conditionsGifts, 'title description amount date operation');
+            gifts.sort({date: -1});
+            gifts.limit(10);
+            gifts.exec(function (err1, giftsTransactions) {
+                callback(null,buyTransactions, transferTransactions,giftsTransactions);
+            });
+        },
+
+        function(buyTransactions, transferTransactions,giftsTransactions, callback){
+            var resulTransactions = buyTransactions.concat(transferTransactions);
+            resulTransactions = resulTransactions.concat(giftsTransactions)
+            response = { statusCode: 0, additionalInfo: resulTransactions }
+            callback(null, response);
+        }
+
+        ], function (err, result){
+            callback(null,result);
+        });
+};
