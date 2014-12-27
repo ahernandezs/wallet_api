@@ -42,7 +42,6 @@ exports.updateMessage = function(message,callback){
     });
 }
 
-
 exports.getMessagesNoRead = function(phoneID, callback) {
     console.log( 'Getting NOREAD messages  : ' + phoneID);
     Message.find({ 'phoneID': phoneID , 'status' :'NOTREAD' }, ' title type message status additionalInfo date', function (err, msgs) {
