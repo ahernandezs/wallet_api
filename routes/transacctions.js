@@ -70,7 +70,7 @@ exports.getSocialFeeds = function(req, res) {
           res.send(500);
         } else {
           if(result && result.length != 0 ){ 
-            var response = { statusCode: 0, additionalInfo: result };
+            var response = result;
             console.log(response);
             res.json(response);
           }else{
