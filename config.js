@@ -39,7 +39,7 @@ config.S3.url = process.env.AS3_IMAGES;
 
 config.messages = {};
 config.messages.status = { READ : 'READ' ,NOTREAD : 'NOTREAD', DELIVERED: 'DELIVERED'};
-config.messages.type = { TRANSFER:'TRANSFER' , GIFT : 'GIFT' , BUY :'BUY' ,LOAN :'LOAN', COUPON: 'COUPON' , REQUEST_MONEY : 'REQUEST_MONEY' };
+config.messages.type = { TRANSFER:'TRANSFER' , GIFT : 'GIFT' , BUY :'BUY' ,LOAN :'LOAN', COUPON: 'COUPON' , REQUEST_MONEY : 'REQUEST_MONEY' , MESSAGE : 'MESSAGE' };
 config.messages.transferMsg = 'You have received money from ';
 config.messages.giftMsg = '[sender] has gifted you an Amdocs Café voucher!';
 config.messages.loanRequestMsg = 'You have requested a loan for €';

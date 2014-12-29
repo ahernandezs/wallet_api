@@ -1,5 +1,5 @@
 var transacctionQuery = require('../model/queries/transacction-query');
-var vsessionQuery = require('../model/queries/session-query');
+var sessionQuery = require('../model/queries/session-query');
 
 exports.getTransacctionsHistory = function(req,res){
   console.log('execute GET method getTransacctionsHistory');
@@ -70,7 +70,7 @@ exports.getSocialFeeds = function(req, res) {
           res.send(500);
         } else {
           if(result && result.length != 0 ){ 
-            var response = { statusCode: 0, additionalInfo: result };
+            var response = result;
             console.log(response);
             res.json(response);
           }else{
