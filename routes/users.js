@@ -267,12 +267,16 @@ exports.sendMessage = function(req, res){
 };
 
 exports.resolveRquest = function(req, res) {
+    req.headers.sessionid = req.headers['x-auth-token'];
+    req.headers.phoneID = req.headers['x-phoneid'];
     req.body.phoneID = req.headers['x-phoneid'];
     
-    requestMoney.resolveRequestFlow(req.body, function(err, result) {
+    requestMoney.resolveRequestFlow(req.body, req.headers, function(err, result) {
         console.log( result );
-        if (err === 'ERROR')
+        if (err)
             res.json( { statusCode : 1, additionalInfo : result } );
+        else if (req.body.answer === config.requests.status.ACCEPTED)
+            res.json( result );
         else
             res.json( { statusCode : 0, additionalInfo : result } );
     });
