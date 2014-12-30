@@ -168,27 +168,31 @@ exports.resolveRequestFlow = function(payload, header, callback) {
                 }
             },
             function(balance, username, avatar, callback) {
-                console.log('Save message in DB');
                 var message = {};
-                message.status = config.messages.status.NOTREAD;
-                message.type = config.messages.type.REQUEST_MONEY;
-                message.title = 'Your money transfer request ' + username + ' has been ' + payload.answer;
-                message.phoneID = payload.destinatary;
-                message.date = dateTime;
-                message.message = payload.message;
+                message.title = 'Your money request to ' + username + ' was ' + payload.answer;
                 message.additionalInfo = JSON.stringify({ phoneID: payload.phoneID, name: username, avatar: avatar, message: payload.message });
-                messageQuery.createMessage(message.phoneID, message, function(err, result) {
-                    if (err) {
-                        var response = { statusCode: 1, additionalInfo: result };
-                        callback('ERROR', response);
-                    } else {
-                        payload.phoneID = payload.destinatary;
-                        payload.message = message.title;
-                        var extraData = {   action: 6, additionalInfo : message.additionalInfo, _id : result._id };
-                        payload.extra = { extra:extraData };
-                        callback(null, payload, balance);
-                    }
-                });
+                var messageID;
+                if(!accepted) {
+                    console.log('Save message in DB');
+                    message.status = config.messages.status.NOTREAD;
+                    message.type = config.messages.type.REQUEST_MONEY;
+                    message.phoneID = payload.destinatary;
+                    message.date = dateTime;
+                    message.message = payload.message;
+                    
+                    messageQuery.createMessage(message.phoneID, message, function(err, result) {
+                        if (err) {
+                            var response = { statusCode: 1, additionalInfo: result };
+                            callback('ERROR', response);
+                        } else
+                            messageID = result._id;
+                    });   
+                }
+                payload.phoneID = payload.destinatary;
+                payload.message = message.title;
+                var extraData = {   action: 6, additionalInfo : message.additionalInfo, _id : messageID };
+                payload.extra = { extra:extraData };
+                callback(null, payload, balance);
             },
             function(pushData, balance, callback) {
                 console.log( 'send push notification.' );
