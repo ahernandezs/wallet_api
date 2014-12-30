@@ -16,10 +16,10 @@ var config = require('../../config.js');
 
 exports.requestMoneyFlow = function(payload,callback) {
 	var requestMessage = payload;
+    var dateTime;
 
 	async.waterfall([
 		function(callback) {
-            console.log('Imprimiendo');
             console.log(requestMessage);
 		    console.log('Get sender in db ' + requestMessage.phoneID);
             Userquery.getName(requestMessage.phoneID,function(err,user){
@@ -53,7 +53,7 @@ exports.requestMoneyFlow = function(payload,callback) {
         {
             console.log('Save requestMoney in DB');
             var requestMsg = 'You have sent a money transfer request to ' + receiverName;
-            var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+            dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
             var data = { sender : payload.phoneID, destinatary : payload.destinatary, amount : payload.amount,
                             message : requestMsg, status : config.requests.status.NEW , date : dateTime};
             requestQuery.createRequest(data, function(err, result) {
@@ -73,7 +73,7 @@ exports.requestMoneyFlow = function(payload,callback) {
             message.phoneID = payload.destinatary;
             message.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
             message.message = requestMessage.message;
-            message.additionalInfo = JSON.stringify({phoneID:payload.phoneID, name: senderName, avatar :senderAvatar,  amount : requestMessage.amount, message : requestMessage.message, requestID : requestID });
+            message.additionalInfo = JSON.stringify({phoneID:payload.phoneID, name: senderName, avatar :senderAvatar,  amount : requestMessage.amount, message : requestMessage.message, requestID : requestID  });
             messageQuery.createMessage(requestMessage.phoneID, message, function(err, result) {
                 if (err) {
                     var response = { statusCode: 1, additionalInfo: result };
@@ -84,15 +84,15 @@ exports.requestMoneyFlow = function(payload,callback) {
                     var extraData = {   action: 6, additionalInfo :  message.additionalInfo ,
                                     _id:result._id };
                     payload.extra = { extra:extraData};
-                    callback(null, payload);
+                    callback(null, payload,requestID);
                 }
             });
         },
         
-        function(message, callback) {
+        function(message,requestID, callback) {
             console.log('Send push notification');
             urbanService.singlePush(message, function(err, result) {
-                var response = { statusCode: 0, additionalInfo: 'request-money message was sent successful' };
+                var response = { statusCode: 0, additionalInfo: { msg:'request-money message was sent successful', 'requestID' : requestID , 'dateTime' : dateTime}};
                 callback(null,response);
             });
         }
