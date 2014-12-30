@@ -50,7 +50,8 @@ config.messages.loanAcceptedMsg = 'Congratulations! Your Insta-Loan has been app
 config.messages.action = {TRANSFER:1 , GIFT :2 , BUY :3 ,LOAN : 4, COUPON: 5 };
 config.messages.transferFund = 'You have sent a Transfer to ';
 config.messages.coupon = {};
-config.messages.coupon.message = 'Congratulations! You are today’s winner of “Don’t Miss a Beat with DOX” promotion! We will be in touch shortly, along with your Beats Studio headsets!';
+config.messages.coupon.message = 'Congratulations! You are today’s winner of “Don’t Miss a  surprise gift with DOX” promotion! We will be in touch shortly ;
+//, along with your Beats Studio headsets!';
 config.messages.coupon.title = 'Congratulations! You won a prize!!'
 config.messages.inviteError = 'Sorry! You have exceeded your number of invitations!'
 
