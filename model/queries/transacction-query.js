@@ -1,5 +1,6 @@
 var async = require('async');
 var transacction = require('../transacction');
+var user = require('../user');
 var config = require('../../config.js');
 
 
@@ -63,13 +64,88 @@ exports.getTransacctionsSocialFeed = function(callback) {
     async.waterfall([
 
         function(callback){
-            var conditionsBuys = { 'operation':config.messages.type.BUY };
-            var buys = transacction.find(conditionsBuys, 'title description amount date operation type');
+
+            var o = {};
+            var map = function () { 
+                var output = {title:this.title, 
+                              description:this.description,
+                              amount:this.amount, 
+                              date:this.date,
+                              operation:this.operation, 
+                              type:this.date,
+                              phoneID:this.phoneID ,
+                              name:null
+                }
+                  emit(this.phoneID,output); 
+            }
+
+            var mapUser = function(){
+                var output ={ title:null, 
+                              description:null,
+                              amount:null, 
+                              date:null,
+                              operation:null, 
+                              type:null,
+                              phoneID:this.phoneID,
+                              avatar:null,
+                              name:this.name,
+                }
+                emit(this.phoneID,output);
+            }
+
+            var reduce = function (k, values) {
+                var outs={ title:null , description:null , amount:null, operation:null, type:null ,name:null, avatar:null };
+                
+                values.forEach(function(v){
+                   if(outs.title == null) outs.title = v.title;
+                   if(outs.description == null) outs.description = v.description;
+                   if(outs.amount == null) outs.amount = v.amount;
+                   if(outs.operation == null) outs.operation = v.operation;
+                   if(outs.type == null) outs.type = v.type;
+                   if(outs.phoneID == null) { 
+                    outs.phoneID = v.phoneID;
+                    outs.avatar = 'http' + v.phoneID;
+                    }
+                   if(outs.name == null) outs.name = v.name;
+                });
+                return outs;
+            }
+            o.query = 
+            //, name : user.findOne({phoneID:this.phoneID}).name };
+            o.verbose = true; // default is false, provide stats on the job
+
+
+            // a promise is returned so you may instead write
+            transacction.mapReduce({
+                map: map,
+                reduce: reduce , 
+                query : { operation:'TRANSFER' },
+                limit: 10,
+                out : {reduce : "Talent_Testimonials"} ,
+                //out : { reduce : "Talent_Testimonials"}
+            }, function (err, results, stats) {
+              console.log("map reduce took %d ms", stats);
+              console.log(results);
+               user.mapReduce({
+                map: mapUser,
+                reduce: reduce ,
+                out : {reduce : "Talent_Testimonials"}
+                //query : { 'phoneID': this.phoneID }
+                }, function (err, results, stats) {
+                    console.log(results);
+                    callback(null,results);
+                });
+            });
+
+            
+
+           /* var conditionsBuys = { 'operation':config.messages.type.BUY };
+            var buys = transacction.find(conditionsBuys, 'title description amount date operation type phoneID');
             buys.sort({date: -1});
             buys.limit(10);
             buys.exec(function (err1, buyTransactions) {
                 callback(null,buyTransactions);
-            });
+            });*/
         },
 
         function(buyTransactions, callback){
