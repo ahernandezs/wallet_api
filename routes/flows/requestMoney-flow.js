@@ -170,8 +170,8 @@ exports.resolveRequestFlow = function(payload, header, callback) {
             function(balance, username, avatar, callback) {
                 var message = {};
                 message.title = 'Your money request to ' + username + ' was ' + payload.answer;
+                message.additionalInfo = JSON.stringify({ phoneID: payload.phoneID, name: username, avatar: avatar, message: payload.message });
                 var messageID;
-                
                 if(!accepted) {
                     console.log('Save message in DB');
                     message.status = config.messages.status.NOTREAD;
