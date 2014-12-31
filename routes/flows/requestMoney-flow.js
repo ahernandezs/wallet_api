@@ -175,7 +175,7 @@ exports.resolveRequestFlow = function(payload, header, callback) {
                 if(!accepted) {
                     console.log('Save message in DB');
                     message.status = config.messages.status.NOTREAD;
-                    message.type = config.messages.type.REQUEST_MONEY;
+                    message.type = config.messages.type.MESSAGE;
                     message.phoneID = payload.destinatary;
                     message.date = dateTime;
                     message.message = payload.message;

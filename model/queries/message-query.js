@@ -15,14 +15,16 @@ exports.getMessages = function(phoneID, callback) {
     console.log( 'Getting messages: ' + phoneID);
 
     var tmp = {};
-    var condiciones = {$and: [  {'phoneID': phoneID } ] };
+    var condiciones = { $and:[ {'phoneID': phoneID }, 
+                        
+                        {'title': { $not : new RegExp('REJECTED') }, 'status' : 'NOTREAD' } ]};
 
     Message.find(condiciones, ' title type message status additionalInfo date', {sort: {date: -1}}, function (err, msgs) {
 
       if (err) callback('ERROR', err);
       else if(msgs){
         tmp = msgs;
-      }
+      }23
         callback(null, tmp);
     });
 };
