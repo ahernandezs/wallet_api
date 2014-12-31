@@ -1,6 +1,6 @@
 var async = require('async');
 var transacction = require('../transacction');
-var user = require('../user');
+var User = require('../user');
 var config = require('../../config.js');
 
 
@@ -64,113 +64,75 @@ exports.getTransacctionsSocialFeed = function(callback) {
     async.waterfall([
 
         function(callback){
-
-            var o = {};
-            var map = function () { 
-                var output = {title:this.title, 
-                              description:this.description,
-                              amount:this.amount, 
-                              date:this.date,
-                              operation:this.operation, 
-                              type:this.date,
-                              phoneID:this.phoneID ,
-                              name:null
-                }
-                  emit(this.phoneID,output); 
-            }
-
-            var mapUser = function(){
-                var output ={ title:null, 
-                              description:null,
-                              amount:null, 
-                              date:null,
-                              operation:null, 
-                              type:null,
-                              phoneID:this.phoneID,
-                              avatar:null,
-                              name:this.name,
-                }
-                emit(this.phoneID,output);
-            }
-
-            var reduce = function (k, values) {
-                var outs={ title:null , description:null , amount:null, operation:null, type:null ,name:null, avatar:null };
-                
-                values.forEach(function(v){
-                   if(outs.title == null) outs.title = v.title;
-                   if(outs.description == null) outs.description = v.description;
-                   if(outs.amount == null) outs.amount = v.amount;
-                   if(outs.operation == null) outs.operation = v.operation;
-                   if(outs.type == null) outs.type = v.type;
-                   if(outs.phoneID == null) { 
-                    outs.phoneID = v.phoneID;
-                    outs.avatar = 'http' + v.phoneID;
-                    }
-                   if(outs.name == null) outs.name = v.name;
-                });
-                return outs;
-            }
-            o.query = 
-            //, name : user.findOne({phoneID:this.phoneID}).name };
-            o.verbose = true; // default is false, provide stats on the job
-
-
-            // a promise is returned so you may instead write
-            transacction.mapReduce({
-                map: map,
-                reduce: reduce , 
-                query : { operation:'TRANSFER' },
-                limit: 10,
-                out : {reduce : "Talent_Testimonials"} ,
-                //out : { reduce : "Talent_Testimonials"}
-            }, function (err, results, stats) {
-              console.log("map reduce took %d ms", stats);
-              console.log(results);
-               user.mapReduce({
-                map: mapUser,
-                reduce: reduce ,
-                out : {reduce : "Talent_Testimonials"}
-                //query : { 'phoneID': this.phoneID }
-                }, function (err, results, stats) {
-                    console.log(results);
-                    callback(null,results);
-                });
-            });
-
-            
-
-           /* var conditionsBuys = { 'operation':config.messages.type.BUY };
+            var buyTransactionsFinal = [];
+            var conditionsBuys = { 'operation':config.messages.type.BUY };
             var buys = transacction.find(conditionsBuys, 'title description amount date operation type phoneID');
             buys.sort({date: -1});
             buys.limit(10);
             buys.exec(function (err1, buyTransactions) {
-                callback(null,buyTransactions);
-            });*/
+                console.log('print elements');
+                buyTransactions.forEach(function(v){
+                    var tmp = v.toObject();
+                       User.findOne({'phoneID': v.phoneID }, 'name', function (err, user) {
+                        tmp.name = user.name;
+                        tmp.avatar = config.S3.url + v.phoneID+'.png';
+                        console.log(tmp);
+                        buyTransactionsFinal.push(tmp);
+                      });
+
+
+                });
+                callback(null,buyTransactionsFinal);
+            });
         },
 
         function(buyTransactions, callback){
+            var transferTransactionsFinal = [];
             var conditionsTransfers = { 'operation':config.messages.type.TRANSFER }
-            var transfers = transacction.find(conditionsTransfers, 'title description amount date operation type');
+            var transfers = transacction.find(conditionsTransfers, 'title description amount date operation type phoneID');
             transfers.sort({date: -1});
             transfers.limit(10);
             transfers.exec(function (err1, transferTransactions) {
-                callback(null, buyTransactions, transferTransactions);
+                transferTransactions.forEach(function(v){
+                    var tmp = v.toObject();
+                       User.findOne({'phoneID': v.phoneID }, 'name', function (err, user) {
+                        tmp.name = user.name;
+                        tmp.avatar = config.S3.url + v.phoneID+'.png';
+                        console.log(tmp);
+                        transferTransactionsFinal.push(tmp);
+                      });
+
+
+                });
+                callback(null, buyTransactions, transferTransactionsFinal);
             });
         },
         
         function(buyTransactions, transferTransactions, callback){
+            var giftsTransactionsFinal = [];
             var conditionsGifts = { 'operation':config.messages.type.GIFT };
-            var gifts = transacction.find(conditionsGifts, 'title description amount date operation type');
+            var gifts = transacction.find(conditionsGifts, 'title description amount date operation type phoneID');
             gifts.sort({date: -1});
             gifts.limit(10);
             gifts.exec(function (err1, giftsTransactions) {
-                callback(null,buyTransactions, transferTransactions,giftsTransactions);
+                giftsTransactions.forEach(function(v){
+                    var tmp = v.toObject();
+                       User.findOne({'phoneID': v.phoneID }, 'name', function (err, user) {
+                        tmp.name = user.name;
+                        tmp.avatar = config.S3.url + v.phoneID+'.png';
+                        console.log(tmp);
+                        giftsTransactionsFinal.push(tmp);
+                      });
+
+
+                });
+                callback(null,buyTransactions, transferTransactions,giftsTransactionsFinal);
             });
         },
 
         function(buyTransactions, transferTransactions,giftsTransactions, callback){
             var resulTransactions = buyTransactions.concat(transferTransactions);
-            resulTransactions = resulTransactions.concat(giftsTransactions)
+            resulTransactions = resulTransactions.concat(giftsTransactions);
             resulTransactions.sort(compare);
             response = { statusCode: 0, additionalInfo: resulTransactions }
             callback(null, response);
