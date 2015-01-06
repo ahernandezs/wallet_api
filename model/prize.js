@@ -7,4 +7,3 @@ var prizeSchema = new Schema({
 });
 
 module.exports = mongoose.model('Prize', prizeSchema);
-

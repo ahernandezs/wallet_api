@@ -1,4 +1,5 @@
 var async = require('async');
+var request = require('request'); // include request module
 var transacction = require('../transacction');
 var User = require('../user');
 var config = require('../../config.js');
@@ -70,20 +71,27 @@ exports.getTransacctionsSocialFeed = function(callback) {
             buys.sort({date: -1});
             buys.limit(10);
             buys.exec(function (err1, buyTransactions) {
-                console.log('print elements');
-                buyTransactions.forEach(function(v){
-                    var tmp = v.toObject();
-                       User.findOne({'phoneID': v.phoneID }, 'name', function (err, user) {
+            console.log('print elements');
+
+            buyTransactions.forEach(function(v){
+                   User.findOne({'phoneID': v.phoneID }, 'name', function (err, user) {
+                    request(config.S3.url + v.phoneID+'.png', function (err, resp) {
+                        var tmp = v.toObject();
+                        if (resp.statusCode === 200)
+                            tmp.avatar = config.S3.url + v.phoneID+'.png';
+                        else
+                            tmp.avatar = config.S3.url +'unnamed.png';
+
                         tmp.name = user.name;
-                        tmp.avatar = config.S3.url + v.phoneID+'.png';
-                        console.log(tmp);
                         buyTransactionsFinal.push(tmp);
-                      });
-
-
-                });
-                callback(null,buyTransactionsFinal);
+                        if(buyTransactionsFinal.length === buyTransactions.length){
+                            console.log('DONE transactions');
+                            callback(null,buyTransactionsFinal);
+                        }
+                    }); 
+                  });
             });
+        });
         },
 
         function(buyTransactions, callback){
@@ -94,18 +102,25 @@ exports.getTransacctionsSocialFeed = function(callback) {
             transfers.limit(10);
             transfers.exec(function (err1, transferTransactions) {
                 transferTransactions.forEach(function(v){
-                    var tmp = v.toObject();
-                       User.findOne({'phoneID': v.phoneID }, 'name', function (err, user) {
+                   User.findOne({'phoneID': v.phoneID }, 'name', function (err, user) {
+                    request(config.S3.url + v.phoneID+'.png', function (err, resp) {
+                        var tmp = v.toObject();
+                        if (resp.statusCode === 200)
+                            tmp.avatar = config.S3.url + v.phoneID+'.png';
+                        else
+                            tmp.avatar = config.S3.url +'unnamed.png';
+
                         tmp.name = user.name;
-                        tmp.avatar = config.S3.url + v.phoneID+'.png';
-                        console.log(tmp);
                         transferTransactionsFinal.push(tmp);
-                      });
-
-
+                        if(transferTransactionsFinal.length === transferTransactions.length){
+                            console.log('DONE buys');
+                            callback(null,buyTransactions,transferTransactionsFinal);
+                        }
+                    });
                 });
-                callback(null, buyTransactions, transferTransactionsFinal);
             });
+        });
+
         },
         
         function(buyTransactions, transferTransactions, callback){
@@ -116,18 +131,25 @@ exports.getTransacctionsSocialFeed = function(callback) {
             gifts.limit(10);
             gifts.exec(function (err1, giftsTransactions) {
                 giftsTransactions.forEach(function(v){
-                    var tmp = v.toObject();
-                       User.findOne({'phoneID': v.phoneID }, 'name', function (err, user) {
+                   User.findOne({'phoneID': v.phoneID }, 'name', function (err, user) {
+                    request(config.S3.url + v.phoneID+'.png', function (err, resp) {
+                        var tmp = v.toObject();
+                        if (resp.statusCode === 200)
+                            tmp.avatar = config.S3.url + v.phoneID+'.png';
+                        else
+                            tmp.avatar = config.S3.url +'unnamed.png';
+
                         tmp.name = user.name;
-                        tmp.avatar = config.S3.url + v.phoneID+'.png';
-                        console.log(tmp);
                         giftsTransactionsFinal.push(tmp);
-                      });
-
-
+                        if(giftsTransactionsFinal.length === giftsTransactions.length){
+                            console.log('DONE gifts');
+                            callback(null,buyTransactions, transferTransactions,giftsTransactionsFinal);
+                        }
+                    });
                 });
-                callback(null,buyTransactions, transferTransactions,giftsTransactionsFinal);
             });
+        });
+
         },
 
         function(buyTransactions, transferTransactions,giftsTransactions, callback){
