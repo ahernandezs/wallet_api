@@ -16,6 +16,8 @@ var config = require('../../config.js');
 
 exports.requestMoneyFlow = function(payload,callback) {
 	var requestMessage = payload;
+    var phoneIDOrigin = requestMessage.phoneID;
+    var receiverName;
     var dateTime;
 
 	async.waterfall([
@@ -43,6 +45,7 @@ exports.requestMoneyFlow = function(payload,callback) {
                     callback('ERROR', response);
                 } else {
                     console.log(config.S3.url);
+                    receiverName = user.name;
                     callback(null, user.name, senderName, senderAvatar);
                 }
 
@@ -101,9 +104,9 @@ exports.requestMoneyFlow = function(payload,callback) {
         function(response, callback) {
             console.log( 'Create Receipt Transfer' );
             var receipt = {};
-            receipt.emitter = payload.phoneID;
+            receipt.emitter = phoneIDOrigin;
             receipt.amount = payload.amount;
-            receipt.message = "You have requested for money of €"+ payload.amount;
+            receipt.message = "You have requested €"+ payload.amount + ' to '  + receiverName ;
             receipt.additionalInfo = response.additionalInfo;
             receipt.title = receipt.message;
             receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
