@@ -17,7 +17,8 @@ var receiptSchema = new Schema({
     additionalInfo: String,
     orderID:Number,
     owner : Number,
-    loanID: String
+    loanID: String,
+    isRequestMoney :Number
 });
 
 module.exports = mongoose.model('Receipt', receiptSchema);
