@@ -16,6 +16,7 @@ var config = require('../../config.js');
 
 exports.requestMoneyFlow = function(payload,callback) {
 	var requestMessage = payload;
+    var phoneIDOrigin = requestMessage.phoneID;
     var dateTime;
 
 	async.waterfall([
@@ -101,7 +102,7 @@ exports.requestMoneyFlow = function(payload,callback) {
         function(response, callback) {
             console.log( 'Create Receipt Transfer' );
             var receipt = {};
-            receipt.emitter = payload.phoneID;
+            receipt.emitter = phoneIDOrigin;
             receipt.amount = payload.amount;
             receipt.message = "You have requested for money of €"+ payload.amount;
             receipt.additionalInfo = response.additionalInfo;
