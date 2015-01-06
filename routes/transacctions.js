@@ -71,7 +71,6 @@ exports.getSocialFeeds = function(req, res) {
         } else {
           if(result && result.length != 0 ){ 
             var response = result;
-            console.log(response);
             res.json(response);
           }else{
             var empty = [];
