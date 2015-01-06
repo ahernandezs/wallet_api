@@ -95,7 +95,32 @@ exports.requestMoneyFlow = function(payload,callback) {
                 var response = { statusCode: 0, additionalInfo: { msg:'request-money message was sent successful', 'requestID' : requestID , 'dateTime' : dateTime}};
                 callback(null,response);
             });
-        }
+        },
+
+        //create Receipt LOAN
+        function(response, callback) {
+            console.log( 'Create Receipt Transfer' );
+            var receipt = {};
+            receipt.emitter = payload.phoneID;
+            receipt.amount = payload.amount;
+            receipt.message = "You have requested for money of €"+ payload.amount;
+            receipt.additionalInfo = response.additionalInfo;
+            receipt.title = receipt.message;
+            receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+            receipt.type = config.messages.type.LOAN;
+            receipt.isRequestMoney = 1;
+            receipt.status = 'NEW';
+            ReceiptQuery.createReceipt(receipt, function(err, result) {
+                if (err)
+                    callback('ERROR', { statusCode : 1, additionalInfo : result.message });
+                else {
+                    callback(null, response);
+                }
+            });
+        },
+
+
+
 
 		], function (err, result) {
 			if(err){
