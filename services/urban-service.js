@@ -36,7 +36,14 @@ exports.singlePush = function(req, callback) {
 
 		payload['audience'] = deviceID;
 		console.log(payload);
-		if(result.environment && (result.environment === 'PRODUCTION')){
+
+		if(result.appID === '0'){
+			console.log('Notification sent correctly');
+			var response = { statusCode: 0 ,  message: 'Notification sent correctly' };
+			callback(null, response);
+		}
+
+		else if(result.environment && (result.environment === 'PRODUCTION')){
 			uaStore.pushNotification('/api/push', payload, function(error) {
 				if (error) {
 					console.log('Error to send notification' + error);
