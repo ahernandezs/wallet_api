@@ -196,6 +196,11 @@ exports.resolveRequestFlow = function(payload, header, callback) {
                 }
             },
             function(balance, username, avatar, callback) {
+
+                messageQuery.deleteMessage(payload.messageID, function(error,result){
+                    console.log('delete message');
+                });
+                //PUT READ
                 var message = {};
                 message.title = 'Your money request to ' + username + ' was ' + payload.answer;
                 message.additionalInfo = JSON.stringify({ phoneID: payload.phoneID, name: username, avatar: avatar, message: payload.message });
