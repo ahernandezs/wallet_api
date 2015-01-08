@@ -54,6 +54,23 @@ exports.updateMessage = function(message,callback){
     });
 }
 
+
+exports.deleteMessage = function(messageID,callback){
+    console.log( 'delete message in MongoDB');
+    console.log(messageID);
+    var conditions = { _id : messageID };
+    Message.findOneAndRemove(conditions, function(err, result) {
+        if (err) {
+            console.log( 'Failed remove message : ' + err );
+            callback( 'ERROR', { message: 'Failed remove message' } );
+        } else {
+            console.log( 'Successful remove message' );
+            callback( null, result );
+        }
+    });
+}
+
+
 exports.getMessagesNoRead = function(phoneID, callback) {
     console.log( 'Getting NOREAD messages  : ' + phoneID);
     Message.find({ 'phoneID': phoneID , 'status' :'NOTREAD' }, ' title type message status additionalInfo date', function (err, msgs) {
