@@ -75,20 +75,14 @@ exports.getTransacctionsSocialFeed = function(callback) {
 
             buyTransactions.forEach(function(v){
                    User.findOne({'phoneID': v.phoneID }, 'name', function (err, user) {
-                    request(config.S3.url + v.phoneID+'.png', function (err, resp) {
                         var tmp = v.toObject();
-                        if (resp.statusCode === 200)
-                            tmp.avatar = config.S3.url + v.phoneID+'.png';
-                        else
-                            tmp.avatar = config.S3.url +'unnamed.png';
-
+                        tmp.avatar = config.S3.url + v.phoneID+'.png';
                         tmp.name = user.name;
                         buyTransactionsFinal.push(tmp);
                         if(buyTransactionsFinal.length === buyTransactions.length){
                             console.log('DONE transactions');
                             callback(null,buyTransactionsFinal);
                         }
-                    }); 
                   });
             });
         });
@@ -103,20 +97,14 @@ exports.getTransacctionsSocialFeed = function(callback) {
             transfers.exec(function (err1, transferTransactions) {
                 transferTransactions.forEach(function(v){
                    User.findOne({'phoneID': v.phoneID }, 'name', function (err, user) {
-                    request(config.S3.url + v.phoneID+'.png', function (err, resp) {
                         var tmp = v.toObject();
-                        if (resp.statusCode === 200)
-                            tmp.avatar = config.S3.url + v.phoneID+'.png';
-                        else
-                            tmp.avatar = config.S3.url +'unnamed.png';
-
+                        tmp.avatar = config.S3.url + v.phoneID+'.png';
                         tmp.name = user.name;
                         transferTransactionsFinal.push(tmp);
                         if(transferTransactionsFinal.length === transferTransactions.length){
                             console.log('DONE buys');
                             callback(null,buyTransactions,transferTransactionsFinal);
                         }
-                    });
                 });
             });
         });
@@ -132,20 +120,14 @@ exports.getTransacctionsSocialFeed = function(callback) {
             gifts.exec(function (err1, giftsTransactions) {
                 giftsTransactions.forEach(function(v){
                    User.findOne({'phoneID': v.phoneID }, 'name', function (err, user) {
-                    request(config.S3.url + v.phoneID+'.png', function (err, resp) {
                         var tmp = v.toObject();
-                        if (resp.statusCode === 200)
-                            tmp.avatar = config.S3.url + v.phoneID+'.png';
-                        else
-                            tmp.avatar = config.S3.url +'unnamed.png';
-
+                        tmp.avatar = config.S3.url + v.phoneID+'.png';
                         tmp.name = user.name;
                         giftsTransactionsFinal.push(tmp);
                         if(giftsTransactionsFinal.length === giftsTransactions.length){
                             console.log('DONE gifts');
                             callback(null,buyTransactions, transferTransactions,giftsTransactionsFinal);
                         }
-                    });
                 });
             });
         });
