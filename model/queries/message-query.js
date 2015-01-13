@@ -15,26 +15,14 @@ exports.getMessages = function(phoneID, callback) {
     console.log( 'Getting messages: ' + phoneID);
 
     var tmp = {};
-    var condiciones = { $and:[ {'phoneID': phoneID }]};
+    var condiciones = {$and: [  {'phoneID': phoneID } ] };
 
     Message.find(condiciones, ' title type message status additionalInfo date', {sort: {date: -1}}, function (err, msgs) {
 
       if (err) callback('ERROR', err);
-      else if(msgs) {
+      else if(msgs){
         tmp = msgs;
       }
-        var title;
-        var status;
-        var index;
-        for (var i = 0; i < tmp.length; i++) {
-            title = tmp[i].title;
-            status = tmp[i].status;
-            index = title.toString().search('REJECTED');
-            
-            if (index > 0 && (status === config.messages.status.READ) ) {
-                tmp.splice(i, 1);
-            }
-        }
         callback(null, tmp);
     });
 };
