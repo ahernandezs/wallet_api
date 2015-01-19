@@ -131,7 +131,8 @@ exports.sendInvitation= function(friend, callback){
 		from:      'no-reply@amdocswallet.com',
 		subject:   'Check out the Amdocs Mobile Wallet!',
         text:       config.mailInvite.header + '\n\n'+ config.mailInvite.bodyInit + '\n\n'
-                    + config.mailInvite.bodyMid + '\n\n'
+                    + config.mailInvite.bodyMid1 + '\n\n'
+                    + config.mailInvite.bodyMid2 + '\n\n'
                     + friend.url + '\n\n'
                     + config.mailInvite.bodyEnd + '\n\n'
                     + config.mailInvite.footer + '\n\n'

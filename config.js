@@ -59,7 +59,7 @@ config.messages.twitter = { message :'I just bought a {0} from AmdocsCafe at {1}
 config.messages.twitter1 = 'I just bought a ';
 config.messages.twitter2 = ' from AmdocsCafe at ';
 config.messages.twitterURL = '';
-config.messages.twitterMsg = 'Having a great time at #mmglobal in Istanbul, enjoying the delicious coffee bought with my #AmdocsWallet! ';
+config.messages.twitterMsg = 'Having a great time at #mmasia in Jakarta, enjoying the delicious coffee bought with my #AmdocsWallet! ';
 config.messages.facebook =	{
 								name:'Amdocs Wallet',
 								caption:'I just bought a coffee',
@@ -99,8 +99,9 @@ config.mail.footer='Amdocs wallet Team';
 
 config.mailInvite = {}
 config.mailInvite.header = 'Hey there,';
-config.mailInvite.bodyInit = 'Check out the Amdocs Mobile Wallet  - it\'s really cool, and gives you FREE 5 Euros to enjoy specialty coffee drinks at the Amdocs Café !';
-config.mailInvite.bodyMid = 'To download the app , simply click on below link from your mobile device - ';
+config.mailInvite.bodyInit = 'Check out the Amdocs Mobile Wallet  - it\'s really awesome with FREE 50,000 Rp to get you started with some delicious drinks at the fully cashless Amdocs Café !';
+config.mailInvite.bodyMid1 = 'The most active wallet user will also win an iPhone 6!';
+config.mailInvite.bodyMid2 = 'To download the app , simply click on below link from your mobile device - ';
 config.mailInvite.bodyEnd = '(iOS and Android supported)';
 config.mailInvite.footer = 'Cheers,';
 
