@@ -1,6 +1,7 @@
 var async = require('async');
 var soap = require('soap');
 var crypto = require('crypto');
+var moment = require('moment-timezone');
 var Orderquery = require('../../model/queries/order-query');
 var productQuery = require('../../model/queries/product-query');
 var Userquery = require('../../model/queries/user-query');
@@ -176,7 +177,7 @@ exports.buyFlow = function(payload,callback) {
 						var twitterMsg = {};
 						//twitterMsg = config.messages.twitter1 + payload.order.products[0].name + config.messages.twitter2 + new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') +'!!!';
 						//var twitterMsg = config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''));
-                        dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+                        dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
 						var twitterMsg = config.messages.twitterMsg + dateTime.substr(11, 5);
 						config.messages.twitter.message = twitterMsg;
 						if(response.result  === '0' ) {
@@ -210,7 +211,7 @@ exports.buyFlow = function(payload,callback) {
 			    receipt.title = 'You have bought a coffee of € ' + data.order.total;
 			    receipt.additionalInfo = JSON.stringify(response.additionalInfo);
 			    receipt.amount = data.order.total;
-			    receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+			    receipt.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
 			    receipt.type = 'BUY';
 			    receipt.status = 'NEW';
 			    receipt.orderID = orderID;

@@ -1,4 +1,5 @@
 var async = require('async');
+var moment = require('moment-timezone');
 var User = require('../user');
 var config = require('../../config.js');
 var balance = require('../../routes/flows/balance-flow');
@@ -84,7 +85,7 @@ exports.updateUser = function(payload,callback){
       if(payload.profileCompleted === 1 || payload.profileCompleted === "1" ){
         var transacction = {};
         transacction.title = 'Update Profile';
-        transacction.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+        transacction.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
         transacction.type = 'DOX',
         transacction.amount = config.doxs.profile;
         transacction.description = 'You had earned some doxs points for completing your profile!'
@@ -314,7 +315,7 @@ exports.getName = function(phoneID,callback){
 
 exports.updateSession = function(user, callback) {
   console.log( 'Adding timestamp to session' );
-  var now = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+  var now = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
   User.update( { 'phoneID' : user.phoneID }, { $set : { 'lastSession' : now } }, function(err, result) {
     if (err)
       callback('ERROR', { message: 'Failed updating session' });
@@ -383,9 +384,7 @@ console.log('invite friend');
   async.waterfall([
 
     function(callback){
-
-      var hoy = new Date();
-      fecha = hoy.toISOString().split('T');
+      var fecha = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
 
       var pattern = "^"+fecha[0];
       var re = new RegExp(pattern);
@@ -452,7 +451,7 @@ console.log('invite friend');
         var transacction = {};
         transacction.title = 'Friend invited';
         transacction.type = 'DOX',
-        transacction.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+        transacction.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
         transacction.amount = config.doxs.invite;
         transacction.operation = 'INVITE';
         transacction.phoneID = payload.phoneID;

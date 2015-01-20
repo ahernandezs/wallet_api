@@ -3,6 +3,7 @@ var User = require('../user');
 var sessionQuery = require('./session-query');
 var config = require('../../config.js');
 var async = require('async');
+var moment = require('moment-timezone');
 
 
 exports.getMerchanByID = function(merchantID, callback) {
@@ -78,8 +79,9 @@ exports.getMerchands = function(phoneID, callback){
         });
       },
       function(data, callback){
-        dateTime = new Date().getHours();
-        var tmp = data[0].schedule.split('-');
+        var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
+        //dateTime = new Date().getHours();
+        //var tmp = data[0].schedule.split('-');
 
 /*
         var openTime = parseInt(tmp[0].replace('am', '').replace(' ', ''));

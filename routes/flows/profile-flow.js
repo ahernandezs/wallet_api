@@ -1,4 +1,5 @@
 var async = require('async');
+var moment = require('moment-timezone');
 var config = require('../../config.js');
 var User = require('../../model/user');
 var transacctionQuery = require('../../model/queries/transacction-query');
@@ -11,7 +12,7 @@ exports.updateProfile = function(payload,callback) {
 	        
 	        var transacction = {};
 	        transacction.title = 'Update Profile';
-	        transacction.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+	        transacction.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
 	        transacction.type = 'DOX',
 	        transacction.amount = config.doxs.profile;
 	        transacction.description = 'You had earned some doxs points for completing your profile!'

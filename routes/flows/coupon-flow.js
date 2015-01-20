@@ -1,4 +1,5 @@
 var async = require('async');
+var moment = require('moment-timezone');
 var soap = require('soap');
 var soapurl = process.env.SOAP_URL;
 var config = require('../../config.js');
@@ -10,7 +11,8 @@ var urbanService = require('../../services/urban-service');
 
 exports.setCoupon = function(payload,callback) {
 
-    var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+    var dateTime = dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
+
     var prize = {};
 
 	async.waterfall([
