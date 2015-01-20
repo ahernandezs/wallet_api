@@ -1,5 +1,6 @@
 var async = require('async');
 var soap = require('soap');
+var moment = require('moment-timezone');
 var crypto = require('crypto');
 var Userquery = require('../../model/queries/user-query');
 var User = require('../../model/user');
@@ -222,7 +223,7 @@ exports.regenerate = function(request, res, callback) {
                     callback('ERROR', data);
                 else {
                     try {
-                        var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+                        var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
                         var moment = require('moment');
                         var startDate = moment( data.lastSession, 'YYYY-M-DD HH:mm:ss' );
                         var endDate = moment( dateTime, 'YYYY-M-DD HH:mm:ss' );

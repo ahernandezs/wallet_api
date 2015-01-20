@@ -1,4 +1,5 @@
 var async = require('async');
+var moment = require('moment-timezone');
 var config = require('../../config.js');
 var orderQuery = require('../../model/queries/order-query');
 var messageQuery = require('../../model/queries/message-query');
@@ -6,7 +7,7 @@ var receiptQuery = require('../../model/queries/receipt-query');
 var urbanService = require('../../services/urban-service');
 
 exports.updateOrderFlow = function(payload,callback) {
-	var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+	var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
 	var status = payload.status;
 	async.waterfall([
 		function(callback){

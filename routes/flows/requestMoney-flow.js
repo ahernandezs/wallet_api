@@ -1,6 +1,7 @@
 var async = require('async');
 var soap = require('soap');
 var crypto = require('crypto');
+var moment = require('moment-timezone');
 var Orderquery = require('../../model/queries/order-query');
 var productQuery = require('../../model/queries/product-query');
 var Userquery = require('../../model/queries/user-query');
@@ -56,7 +57,7 @@ exports.requestMoneyFlow = function(payload,callback) {
         {
             console.log('Save requestMoney in DB');
             var requestMsg = 'You have sent a money transfer request to ' + receiverName;
-            dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+            dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
             var data = { sender : payload.phoneID, destinatary : payload.destinatary, amount : payload.amount,
                             message : requestMsg, status : config.requests.status.NEW , date : dateTime};
             requestQuery.createRequest(data, function(err, result) {
@@ -74,7 +75,7 @@ exports.requestMoneyFlow = function(payload,callback) {
             message.type = config.messages.type.REQUEST_MONEY;
             message.title = 'You have received a money transfer request from ' + senderName;
             message.phoneID = payload.destinatary;
-            message.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+            message.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
             message.message = requestMessage.message;
             message.additionalInfo = JSON.stringify({phoneID:payload.phoneID, name: senderName, avatar :senderAvatar,  amount : requestMessage.amount, message : requestMessage.message, requestID : requestID  });
             messageQuery.createMessage(requestMessage.phoneID, message, function(err, result) {
@@ -109,7 +110,7 @@ exports.requestMoneyFlow = function(payload,callback) {
             receipt.message = "You have requested €"+ payload.amount + ' from '  + receiverName ;
             receipt.additionalInfo = response.additionalInfo;
             receipt.title = receipt.message;
-            receipt.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+            receipt.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
             receipt.type = config.messages.type.LOAN;
             receipt.isRequestMoney = 1;
             receipt.status = 'NEW';
@@ -138,7 +139,7 @@ exports.requestMoneyFlow = function(payload,callback) {
 exports.resolveRequestFlow = function(payload, header, callback) {
     console.log( payload );
     var accepted = ( payload.answer === config.requests.status.ACCEPTED ) ? true : false;
-    var dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+    var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
         async.waterfall([
            function(callback) {
                console.log('Get sender in db ' + payload.phoneID);

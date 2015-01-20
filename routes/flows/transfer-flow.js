@@ -1,6 +1,7 @@
 var async = require('async');
 var soap = require('soap');
 var crypto = require('crypto');
+var moment = require('moment-timezone');
 var Userquery = require('../../model/queries/user-query');
 var messageQuery = require('../../model/queries/message-query');
 var sessionQuery = require('../../model/queries/session-query');
@@ -177,7 +178,7 @@ exports.transferFunds = function(data, callback) {
                                 var response = { statusCode: 1, additionalInfo: result };
                                 callback('ERROR', response);
                             } else {
-                                dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+                                dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
                                 senderName = result.name;
                                 addInfo = {transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime };
                                 additionalInfoReceiver = JSON.stringify({transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime });

@@ -1,6 +1,7 @@
 var async = require('async');
 var soap = require('soap');
 var crypto = require('crypto');
+var moment = require('moment-timezone');
 var Orderquery = require('../../model/queries/order-query');
 var productQuery = require('../../model/queries/product-query');
 var Userquery = require('../../model/queries/user-query');
@@ -41,7 +42,7 @@ exports.sendMessage = function(payload,callback) {
             message.type = config.messages.type.MESSAGE;
             message.title = 'You have received message  from ' + senderName;
             message.phoneID = payload.destinatary;
-            message.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+            message.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
             message.message = requestMessage.message;
             message.additionalInfo = JSON.stringify({ name: senderName  , avatar :senderAvatar ,  amount : requestMessage.amount , message : requestMessage.message });
             messageQuery.createMessage(requestMessage.phoneID,message, function(err, result) {

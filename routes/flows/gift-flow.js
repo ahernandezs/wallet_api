@@ -1,6 +1,7 @@
 var async = require('async');
 var soap = require('soap');
 var crypto = require('crypto');
+var moment = require('moment-timezone');
 var Orderquery = require('../../model/queries/order-query');
 var productQuery = require('../../model/queries/product-query');
 var Userquery = require('../../model/queries/user-query');
@@ -28,7 +29,7 @@ exports.sendGift = function(payload,callback) {
 
 	async.waterfall([
 		function(callback){
-			dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+			dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
 			var payloadBody= payload.body;
 			forReceipt.payload = payloadBody;
 			Userquery.getName(payload.phoneID, function(err, resp) {
@@ -118,7 +119,7 @@ exports.sendGift = function(payload,callback) {
 					} else {
 						var response = result.balanceReturn;
 						if(response.result  === '0' ) {
-							dateTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+							dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
 							var balance = { current : currentMoney , dox : response.current , doxAdded:config.doxs.gift,  order : orderID ,  status :'NEW' , date: dateTime } ;
 							response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
 						}else{

@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var moment = require('moment-timezone');
 var User = require('../model/user');
 var soap = require('soap');
 var async = require('async');
@@ -252,7 +253,7 @@ exports.activity = function(req, res){
     function(result, callback){
       if(actualizar){
         var transacction = {};
-        transacction.date = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
+        transacction.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
         transacction.type = 'DOX',
         transacction.description = 'You had earned some doxs points for your social activity!'
         transacction.operation = action + ' - ' + socialNetwork;
