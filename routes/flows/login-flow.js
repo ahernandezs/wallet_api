@@ -223,7 +223,7 @@ exports.regenerate = function(request, res, callback) {
                     callback('ERROR', data);
                 else {
                     try {
-                        var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
+                        var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
                         var moment = require('moment');
                         var startDate = moment( data.lastSession, 'YYYY-M-DD HH:mm:ss' );
                         var endDate = moment( dateTime, 'YYYY-M-DD HH:mm:ss' );

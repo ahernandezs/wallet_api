@@ -75,7 +75,7 @@ exports.findUserLoans = function(phoneID, callback) {
         
         try {
             var lastLoan = loans[ loans.length -1 ];
-            var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
+            var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
             var startDate = moment( lastLoan.date, 'YYYY-M-DD HH:mm:ss' );
             var endDate = moment( dateTime, 'YYYY-M-DD HH:mm:ss' );
             var difference = endDate.diff(startDate, 'minutes');

@@ -178,7 +178,7 @@ exports.transferFunds = function(data, callback) {
                                 var response = { statusCode: 1, additionalInfo: result };
                                 callback('ERROR', response);
                             } else {
-                                dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
+                                dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
                                 senderName = result.name;
                                 addInfo = {transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime };
                                 additionalInfoReceiver = JSON.stringify({transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime });

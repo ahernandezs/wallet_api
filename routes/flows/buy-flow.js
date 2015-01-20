@@ -81,6 +81,7 @@ exports.buyFlow = function(payload,callback) {
                     callback('ERROR',response);
                   }
                   else{
+                  	order.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
                     order.customerName = result.name;
                     order.customerImage = config.S3.url + payload.phoneID +'.png',
                     order.merchantId = payload.merchantID;
@@ -175,9 +176,9 @@ exports.buyFlow = function(payload,callback) {
 					} else {
 						var response = result.balanceReturn;
 						var twitterMsg = {};
-						//twitterMsg = config.messages.twitter1 + payload.order.products[0].name + config.messages.twitter2 + new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '') +'!!!';
-						//var twitterMsg = config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''));
-                        dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
+						//twitterMsg = config.messages.twitter1 + payload.order.products[0].name + config.messages.twitter2 + new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '').substring(0,19); +'!!!';
+						//var twitterMsg = config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '').substring(0,19););
+                        dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
 						var twitterMsg = config.messages.twitterMsg + dateTime.substr(11, 5);
 						config.messages.twitter.message = twitterMsg;
 						if(response.result  === '0' ) {
@@ -192,7 +193,7 @@ exports.buyFlow = function(payload,callback) {
 								facebook:config.messages.facebook,
 								picture : imageProduct
 							};
-							logger.info(config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')));
+							logger.info(config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '').substring(0,19)));
 							response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
 						}
 						else
@@ -211,7 +212,7 @@ exports.buyFlow = function(payload,callback) {
 			    receipt.title = 'You have bought a coffee of € ' + data.order.total;
 			    receipt.additionalInfo = JSON.stringify(response.additionalInfo);
 			    receipt.amount = data.order.total;
-			    receipt.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
+			    receipt.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
 			    receipt.type = 'BUY';
 			    receipt.status = 'NEW';
 			    receipt.orderID = orderID;

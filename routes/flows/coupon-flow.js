@@ -11,7 +11,7 @@ var urbanService = require('../../services/urban-service');
 
 exports.setCoupon = function(payload,callback) {
 
-    var dateTime = dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
+    var dateTime = dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
 
     var prize = {};
 

@@ -85,7 +85,7 @@ exports.updateUser = function(payload,callback){
       if(payload.profileCompleted === 1 || payload.profileCompleted === "1" ){
         var transacction = {};
         transacction.title = 'Update Profile';
-        transacction.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
+        transacction.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
         transacction.type = 'DOX',
         transacction.amount = config.doxs.profile;
         transacction.description = 'You had earned some doxs points for completing your profile!'
@@ -315,7 +315,7 @@ exports.getName = function(phoneID,callback){
 
 exports.updateSession = function(user, callback) {
   console.log( 'Adding timestamp to session' );
-  var now = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
+  var now = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
   User.update( { 'phoneID' : user.phoneID }, { $set : { 'lastSession' : now } }, function(err, result) {
     if (err)
       callback('ERROR', { message: 'Failed updating session' });
@@ -384,7 +384,7 @@ console.log('invite friend');
   async.waterfall([
 
     function(callback){
-      var fecha = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
+      var fecha = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
 
       var pattern = "^"+fecha[0];
       var re = new RegExp(pattern);
@@ -451,7 +451,7 @@ console.log('invite friend');
         var transacction = {};
         transacction.title = 'Friend invited';
         transacction.type = 'DOX',
-        transacction.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
+        transacction.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
         transacction.amount = config.doxs.invite;
         transacction.operation = 'INVITE';
         transacction.phoneID = payload.phoneID;

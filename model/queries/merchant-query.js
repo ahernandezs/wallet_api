@@ -79,7 +79,7 @@ exports.getMerchands = function(phoneID, callback){
         });
       },
       function(data, callback){
-        var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
+        var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
         //dateTime = new Date().getHours();
         //var tmp = data[0].schedule.split('-');
 

@@ -12,7 +12,7 @@ exports.updateProfile = function(payload,callback) {
 	        
 	        var transacction = {};
 	        transacction.title = 'Update Profile';
-	        transacction.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
+	        transacction.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
 	        transacction.type = 'DOX',
 	        transacction.amount = config.doxs.profile;
 	        transacction.description = 'You had earned some doxs points for completing your profile!'
