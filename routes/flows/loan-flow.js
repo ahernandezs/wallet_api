@@ -35,7 +35,7 @@ exports.createLoanFlow = function(payload,callback) {
       logger.info('saving loan in DB');
       var loan = payload.body;
       var merchantID = loan.merchantID;
-      loan.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
+      loan.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
       loan.status = config.loans.status.NEW;
       loan.customerImage = config.S3.url + loan.phoneID +'.png';
       logger.info(loan);
@@ -117,7 +117,7 @@ exports.createLoanFlow = function(payload,callback) {
           receipt.message = "You have requested a loan of €"+ receipt.amount;
           receipt.additionalInfo = additionalInfo;
           receipt.title = receipt.message;
-          receipt.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
+          receipt.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
           receipt.type = 'LOAN';
           receipt.status = 'NEW';
           receipt.loanID = loan._id;
@@ -162,13 +162,13 @@ var updateLoanFlow = exports.updateLoanFlow = function(payload,callback){
   var loanID = payload.body._id;
     var receiver;
     var tranStatus = payload.body.status;
-    var dateTime =  moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
+    var dateTime =  moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
     var receiptID;
   async.waterfall([
     function(callback) {
       var loan = payload.body;
       logger.info(loan);
-      loan.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
+      loan.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
       loanQuery.updateLoan(loan, function(err, result) {
         if (err) {
           var response = { statusCode:1 ,  additionalInfo : err };

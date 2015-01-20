@@ -7,7 +7,7 @@ var receiptQuery = require('../../model/queries/receipt-query');
 var urbanService = require('../../services/urban-service');
 
 exports.updateOrderFlow = function(payload,callback) {
-	var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
+	var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
 	var status = payload.status;
 	async.waterfall([
 		function(callback){

@@ -29,7 +29,7 @@ exports.sendGift = function(payload,callback) {
 
 	async.waterfall([
 		function(callback){
-			dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
+			dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
 			var payloadBody= payload.body;
 			forReceipt.payload = payloadBody;
 			Userquery.getName(payload.phoneID, function(err, resp) {
@@ -93,6 +93,7 @@ exports.sendGift = function(payload,callback) {
                   }
                   else{
                     console.log(result);
+                    order.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
                     order.customerName = result.name;
                     order.customerImage = config.S3.url + receiver +'.png',
                     order.merchantId = payload.merchantID;
@@ -119,7 +120,7 @@ exports.sendGift = function(payload,callback) {
 					} else {
 						var response = result.balanceReturn;
 						if(response.result  === '0' ) {
-							dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
+							dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
 							var balance = { current : currentMoney , dox : response.current , doxAdded:config.doxs.gift,  order : orderID ,  status :'NEW' , date: dateTime } ;
 							response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
 						}else{
@@ -170,7 +171,7 @@ exports.sendGift = function(payload,callback) {
 			var fbinfo = config.messages.facebook;
 			fbinfo.picture = imageProduct;
 
-            //var twitterMsg = config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, ''));
+            //var twitterMsg = config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '').substring(0,19););
 			var twitterMsg = config.messages.twitterMsg + dateTime.substr(11, 5);
 			config.messages.twitter.message = twitterMsg;
             payload.additionalInfo = JSON.stringify( {

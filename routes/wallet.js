@@ -253,7 +253,7 @@ exports.activity = function(req, res){
     function(result, callback){
       if(actualizar){
         var transacction = {};
-        transacction.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '');
+        transacction.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
         transacction.type = 'DOX',
         transacction.description = 'You had earned some doxs points for your social activity!'
         transacction.operation = action + ' - ' + socialNetwork;
