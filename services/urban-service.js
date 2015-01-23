@@ -3,7 +3,7 @@ var UA = require('urban-airship');
 var merchantQuery = require('../model/queries/merchant-query');
 var config = require('../config.js');
 var uaStore = new UA('eHiXHtSFTYK4aaWcTAnehQ', 'nv8zr5nTS0imBwWE7a3H4Q', 'nv8zr5nTS0imBwWE7a3H4Q');
-var ua = new UA('4RZ6Xlf7Q7i8fqeag8Bh6g', 'QHgOFp6uQjaAFPi11qqYGw', 'QHgOFp6uQjaAFPi11qqYGw');
+var ua = new UA('hFpvLBGETsSVLY2tC6FaPA', 'ViVxuLf3RbmdGN0jriH_kA', '941-u9dDSUOtlJsFwlEacg');
 
 
 exports.singlePush = function(req, callback) {
