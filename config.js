@@ -16,23 +16,23 @@ config.group.env = {INTERNAL: 'INTERNAL' , PUBLIC : 'PUBLIC'};
 
 config.orders = {};
 config.orders.status = {NEW : 'NEW' ,IN_PROGRESS : 'IN PROGRESS' , READY : 'READY' , DELIVERED : 'DELIVERED' , CANCELED : 'CANCELED' };
-config.orders.errMsg = 'Something went wrong';
+config.orders.errMsg = 'Ha ocurrido un error';
 config.orders.emptyMsg = 'There are no ' + config.orders.status + ' orders';
 
 config.loans = {};
 config.loans.status = {NEW : 'NEW' ,ACCEPTED : 'ACCEPTED' , REJECTED : 'REJECTED' };
-config.loans.errMsg = 'Something went wrong';
+config.loans.errMsg = 'Ha ocurrido un error';
 config.loans.emptyMsg = 'There are no ' + config.loans.status + ' loans';
 
 config.products = {};
 config.products.status = 'IN STOCK';
-config.products.errMsg = 'Something went wrong';
-config.products.emptyMsg = 'There are no products ' + config.products.status;
-config.products.emptyInventory = 'The inventory is empty';
+config.products.errMsg = 'Ha ocurrido un error';
+config.products.emptyMsg = 'No existen productos ' + config.products.status;
+config.products.emptyInventory = 'El inventario esta vacio';
 
 config.merchants = {};
-config.merchants.errMsg = 'Something went wrong';
-config.merchants.emptyMsg = 'merchant not found ';
+config.merchants.errMsg = 'Ha ocurrido un error';
+config.merchants.emptyMsg = 'El distribuidor no existe ';
 
 config.S3 = {};
 config.S3.url = process.env.AS3_IMAGES;
@@ -40,13 +40,13 @@ config.S3.url = process.env.AS3_IMAGES;
 config.messages = {};
 config.messages.status = { READ : 'READ' ,NOTREAD : 'NOTREAD', DELIVERED: 'DELIVERED'};
 config.messages.type = { TRANSFER:'TRANSFER' , GIFT : 'GIFT' , BUY :'BUY' ,LOAN :'LOAN', COUPON: 'COUPON' , REQUEST_MONEY : 'REQUEST_MONEY' , MESSAGE : 'MESSAGE' };
-config.messages.transferMsg = 'You have received money from ';
-config.messages.giftMsg = '[sender] has gifted you an Amdocs Café voucher!';
-config.messages.loanRequestMsg = 'You have requested a loan for €';
-config.messages.loanRejectedMsg = 'Build up your Dox score to be elegible for a loan';
-config.messages.loanRejectedOneMsg = 'Sorry! Since you recently availed a loan, you need to wait another ';
-config.messages.loanRejectedTwoMsg = ' minutes to become eligible for a new loan!';
-config.messages.loanAcceptedMsg = 'Congratulations! Your Insta-Loan is approved!';
+config.messages.transferMsg = 'Ha recibido dinero de ';
+config.messages.giftMsg = '[sender] te ha regalado un voucher de Amdocs Cafe!';
+config.messages.loanRequestMsg = 'Ha solicitado un prestamo por €';
+config.messages.loanRejectedMsg = 'Genera puntos DOX y poder ser eligible para un prestamo';
+config.messages.loanRejectedOneMsg = 'Lo sentimos! Tiene un prestamo reciente, necesita esperar para solicitar otro ';
+config.messages.loanRejectedTwoMsg = ' minutos y ser elegible para un prestamo!';
+config.messages.loanAcceptedMsg = 'Felicitaciones! Tu prestamo ha sido aprovado!';
 config.messages.action = {TRANSFER:1 , GIFT :2 , BUY :3 ,LOAN : 4, COUPON: 5 };
 config.messages.transferFund = 'You have sent a Transfer to ';
 config.messages.coupon = {};
