@@ -71,7 +71,8 @@ exports.getTransacctionsSocialFeed = function(callback) {
             buys.sort({date: -1});
             buys.limit(10);
             buys.exec(function (err1, buyTransactions) {
-            console.log('print elements');
+            if(buyTransactions.length === 0)
+                callback(null,null);
 
             buyTransactions.forEach(function(v){
                    User.findOne({'phoneID': v.phoneID }, 'name', function (err, user) {
@@ -95,6 +96,9 @@ exports.getTransacctionsSocialFeed = function(callback) {
             transfers.sort({date: -1});
             transfers.limit(10);
             transfers.exec(function (err1, transferTransactions) {
+            if(transferTransactions.length === 0)
+                callback(null,buyTransactions,null);
+
                 transferTransactions.forEach(function(v){
                    User.findOne({'phoneID': v.phoneID }, 'name', function (err, user) {
                         var tmp = v.toObject();
@@ -118,7 +122,10 @@ exports.getTransacctionsSocialFeed = function(callback) {
             gifts.sort({date: -1});
             gifts.limit(10);
             gifts.exec(function (err1, giftsTransactions) {
-                giftsTransactions.forEach(function(v){
+            if(giftsTransactions.length === 0)
+                callback(null,buyTransactions,null);
+
+                  giftsTransactions.forEach(function(v){
                    User.findOne({'phoneID': v.phoneID }, 'name', function (err, user) {
                         var tmp = v.toObject();
                         tmp.avatar = config.S3.url + v.phoneID+'.png';
@@ -135,8 +142,14 @@ exports.getTransacctionsSocialFeed = function(callback) {
         },
 
         function(buyTransactions, transferTransactions,giftsTransactions, callback){
-            var resulTransactions = buyTransactions.concat(transferTransactions);
-            resulTransactions = resulTransactions.concat(giftsTransactions);
+            var resulTransactions = {};
+            if(buyTransactions)
+                resulTransactions = buyTransactions;
+            if(transferTransactions)
+                resulTransactions = resulTransactions.concat(transferTransactions);
+            if(giftsTransactions)
+                resulTransactions = resulTransactions.concat(giftsTransactions);
+
             resulTransactions.sort(compare);
             response = { statusCode: 0, additionalInfo: resulTransactions }
             callback(null, response);
