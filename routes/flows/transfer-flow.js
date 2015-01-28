@@ -243,7 +243,7 @@ exports.transferFunds = function(data, callback) {
                     callback('ERROR', response);
                 }
                 else
-                    console.log('Obteniendo Balance');
+                    console.log('Getting Balance');
                     result.additionalInfo.doxAdded = config.doxs.p2p;
                     console.log(result.additionalInfo);
                     callback(null,result);
@@ -258,7 +258,7 @@ exports.transferFunds = function(data, callback) {
             receipt.amount = data.payload.amount;
             receipt.message = msg;
             receipt.additionalInfo = data.payload.additionalInfo;
-            receipt.title = 'You have sent a Transfer of € '+ receipt.amount + ' to ' + beneficiaryName;
+            receipt.title = 'Has enviado una transferencia de € '+ receipt.amount + ' a ' + beneficiaryName;
             receipt.date = dateTime;
             receipt.type = 'TRANSFER';
             receipt.status = 'DELIVERED';
@@ -299,7 +299,7 @@ exports.transferFunds = function(data, callback) {
         function(balance,receipt, callback) {
             console.log( 'Create History transaction for emitter' );
             var transacction = {};
-            transacction.title = 'Transfer fund';
+            transacction.title = 'Transferencia';
             transacction.type = 'MONEY',
             transacction.date = dateTime;
             transacction.amount = (-1) * receipt.amount;
@@ -322,7 +322,7 @@ exports.transferFunds = function(data, callback) {
         function(balance,receipt, callback) {
             console.log( 'Create  transacction DOX' );
             var transacction = {};
-            transacction.title = 'Transfer fund';
+            transacction.title = 'Transferencia';
             transacction.type = 'DOX',
             transacction.date = dateTime;
             transacction.amount = config.doxs.p2p;
@@ -345,7 +345,7 @@ exports.transferFunds = function(data, callback) {
         function(balance, receipt) {
             console.log( 'Create History transaction for receiver' );
             var transaction = {};
-            transaction.title = 'Transfer fund';
+            transaction.title = 'Transferencia';
             transaction.type = 'MONEY';
             transaction.date = dateTime;
             transaction.amount = receipt.amount;

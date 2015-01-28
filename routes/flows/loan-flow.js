@@ -114,7 +114,7 @@ exports.createLoanFlow = function(payload,callback) {
           receipt.emitter = data.payload.phoneID;
           receipt.receiver = 'merchant';
           receipt.amount = data.payload.amount;
-          receipt.message = "You have requested a loan of €"+ receipt.amount;
+          receipt.message = "Has solicitado un prestamo por €"+ receipt.amount;
           receipt.additionalInfo = additionalInfo;
           receipt.title = receipt.message;
           receipt.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
@@ -127,7 +127,7 @@ exports.createLoanFlow = function(payload,callback) {
             else {
                 forResult.statusCode = 0;
                 forResult.additionalInfo.type = 'LOAN';
-                forResult.additionalInfo.title = 'You have requested a loan';
+                forResult.additionalInfo.title = 'Has solicitado  un préstamo';
                 forResult.additionalInfo.date = receipt.date;
                 forResult.additionalInfo.status = receipt.status;
                 forResult.additionalInfo.amount = receipt.amount;
@@ -229,7 +229,7 @@ var updateLoanFlow = exports.updateLoanFlow = function(payload,callback){
       else{
         logger.info('REJECTED');
         loan.message = config.messages.loanRejectedMsg;
-        loan.title = 'Your loan for €' + loan.amount + ' was rejected' ;
+        loan.title = 'Tu pŕestamo por €' + loan.amount + ' fue rechazado' ;
       }
 
       loan.additionalInfo = JSON.stringify({ _id : loanID , sender: 1 , status: loan.status ,date:dateTime });
@@ -269,7 +269,7 @@ var updateLoanFlow = exports.updateLoanFlow = function(payload,callback){
         else {
             logger.info( 'Create History transaction' );
             var transacction = {};
-            transacction.title = 'Transfer fund';
+            transacction.title = 'Transferencia';
             transacction.type = 'MONEY',
             transacction.date = loan.date;
             transacction.amount = loan.amount;
@@ -277,7 +277,7 @@ var updateLoanFlow = exports.updateLoanFlow = function(payload,callback){
             transacction.operation = 'LOAN';
             transacction.phoneID = receiver;
             userQuery.findAppID(receiver,function(err,result){
-              transacction.description ='From amdocs Cafe';
+              transacction.description ='From Stand AGS Nasoft';
               transacctionQuery.createTranssaction(transacction, function(err, result) {
                 if (err)
                   callback('ERROR', err);
