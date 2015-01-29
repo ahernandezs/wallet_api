@@ -73,7 +73,7 @@ exports.getOrders =  function(merchantID, callback) {
 		},
 
 		function(ordersCanceled, callback){
-			var conditionsDelivered= { 'status':config.orders.status.DELIVERED }
+			var conditionsDelivered= { 'status':config.orders.status.ENTREGADA }
 			var delivered = Order.find(conditionsDelivered, 'orderId _id customerImage customerName date status products userId');
 			delivered.sort({orderId: -1});
 			delivered.limit(10);
@@ -85,7 +85,7 @@ exports.getOrders =  function(merchantID, callback) {
 		function(ordersCanceled, ordersDelivered, callback){
 
 			var response = { statusCode: 0 };
-			var conditions = {$or: [{'status':config.orders.status.NEW },{'status':config.orders.status.READY}]};
+			var conditions = {$or: [{'status':config.orders.status.NUEVA },{'status':config.orders.status.READY}]};
 			var ordenes = Order.find(conditions, 'orderId _id customerImage customerName date status products userId');
 			ordenes.sort({date: -1});
 			ordenes.exec(function (err, orders){

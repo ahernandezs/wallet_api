@@ -6,7 +6,7 @@ var logger = config.logger;
 
 exports.getLoans = function(merchantID, callback) {
     console.log( 'getLoans from MongoDB with status: ' + config.loans.status );
-    Loan.find({ 'merchantID': merchantID , 'status': config.loans.status.NEW }, '_id amount customerImage customerName status date', function(err, loans)  {
+    Loan.find({ 'merchantID': merchantID , 'status': config.loans.status.NUEVO }, '_id amount customerImage customerName status date', function(err, loans)  {
         var response;
         if (err) {
             response = { statusCode: 1, additionalInfo: config.loans.errMsg };
@@ -69,7 +69,7 @@ exports.getLoan = function(loanID,callback){
 };
 
 exports.findUserLoans = function(phoneID, callback) {
-    Loan.find( { "phoneID" : phoneID, "status" : "ACCEPTED" }, function(err, loans) {
+    Loan.find( { "phoneID" : phoneID, "status" : "ACEPTADO" }, function(err, loans) {
         if (err)
            callback('ERROR', { message : 'Something went wrong' });
         

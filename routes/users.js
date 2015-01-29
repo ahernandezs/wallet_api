@@ -275,7 +275,7 @@ exports.resolveRquest = function(req, res) {
         console.log( result );
         if (err)
             res.json( { statusCode : 1, additionalInfo : result } );
-        else if (req.body.answer === config.requests.status.ACCEPTED)
+        else if (req.body.answer === config.requests.status.ACEPTADO)
             res.json( result );
         else
             res.json( { statusCode : 0, additionalInfo : result } );

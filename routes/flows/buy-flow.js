@@ -187,7 +187,7 @@ exports.buyFlow = function(payload,callback) {
 								dox: response.current,
 								doxAdded: config.doxs.payment,
 								order: orderID,
-								status:'NEW',
+								status:'NUEVA',
 								date:dateTime,
 								twitter: config.messages.twitter,
 								facebook:config.messages.facebook,
@@ -214,7 +214,7 @@ exports.buyFlow = function(payload,callback) {
 			    receipt.amount = data.order.total;
 			    receipt.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
 			    receipt.type = 'BUY';
-			    receipt.status = 'NEW';
+			    receipt.status = 'NUEVA';
 			    receipt.orderID = orderID;
 			    ReceiptQuery.createReceipt(receipt, function(err, result) {
 			        if (err)

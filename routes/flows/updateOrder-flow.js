@@ -71,7 +71,7 @@ exports.updateOrderFlow = function(payload,callback) {
             });
 		},
 		function(message, callback){
-			if(status === config.orders.status.READY){
+			if(status === config.orders.status.LISTA){
 				urbanService.singlePush(message, function(err, result) {
 					if (err) {
 						var response = { statusCode: 3, additionalInfo: 'Error to send notification' };
