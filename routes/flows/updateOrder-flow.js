@@ -4,7 +4,7 @@ var config = require('../../config.js');
 var orderQuery = require('../../model/queries/order-query');
 var messageQuery = require('../../model/queries/message-query');
 var receiptQuery = require('../../model/queries/receipt-query');
-var urbanService = require('../../services/urban-service');
+var urbanService = require('../../services/notification-service');
 
 exports.updateOrderFlow = function(payload,callback) {
 	var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;

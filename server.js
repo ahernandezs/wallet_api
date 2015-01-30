@@ -8,7 +8,7 @@ var message = require('./routes/messages');
 var transacction = require('./routes/transacctions');
 var loan = require('./routes/loans');
 var spa = require('./routes/spa');
-var urbanService = require('./services/urban-service');
+var urbanService = require('./services/notification-service');
 var fs = require('fs');
 var app = express();
 app.use(express.json());
