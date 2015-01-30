@@ -138,7 +138,7 @@ exports.requestMoneyFlow = function(payload,callback) {
 
 exports.resolveRequestFlow = function(payload, header, callback) {
     console.log( payload );
-    var accepted = ( payload.answer === config.requests.status.ACEPTADO ) ? true : false;
+    var accepted = ( payload.answer === config.requests.status.ACCEPTED ) ? true : false;
     var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
         async.waterfall([
            function(callback) {

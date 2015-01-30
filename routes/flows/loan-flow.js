@@ -36,7 +36,7 @@ exports.createLoanFlow = function(payload,callback) {
       var loan = payload.body;
       var merchantID = loan.merchantID;
       loan.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
-      loan.status = config.loans.status.NUEVO;
+      loan.status = config.loans.status.NEW;
       loan.customerImage = config.S3.url + loan.phoneID +'.png';
       logger.info(loan);
       forReceipt.payload = payload.body;
@@ -139,7 +139,7 @@ exports.createLoanFlow = function(payload,callback) {
 
       function(response, loanId, callback){
 
-        var carga = {body:{"_id" : loanId, "status" : "ACEPTADO"}};
+        var carga = {body:{"_id" : loanId, "status" : "ACCEPTED"}};
 
         updateLoanFlow(carga, function(err, result) {
           callback(null, result);
@@ -200,7 +200,7 @@ var updateLoanFlow = exports.updateLoanFlow = function(payload,callback){
     },
 
     function(notification,loan,callback) {
-        if ( loan.status === config.loans.status.ACEPTADO ) {
+        if ( loan.status === config.loans.status.ACCEPTED ) {
           logger.info('Performing transfer');
           logger.info(loan);
           var payloadTransfer = { amount : loan.amount ,  phoneID : notification.phoneID };
@@ -221,7 +221,7 @@ var updateLoanFlow = exports.updateLoanFlow = function(payload,callback){
     },
     function(sessionid,loan,callback){
       logger.info('Save message in DB');
-      if( tranStatus === config.loans.status.ACEPTADO ){
+      if( tranStatus === config.loans.status.ACCEPTED ){
         logger.info('ACCEPTED');
         loan.message = config.messages.loanAcceptedMsg;
         loan.title = loan.message;
@@ -264,7 +264,7 @@ var updateLoanFlow = exports.updateLoanFlow = function(payload,callback){
       })
     },
     function(response, loan, callback) {
-        if ( tranStatus === config.loans.status.RECHAZADO )
+        if ( tranStatus === config.loans.status.REJECTED )
             callback(null, response);
         else {
             logger.info( 'Create History transaction' );

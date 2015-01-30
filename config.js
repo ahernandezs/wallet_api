@@ -15,12 +15,12 @@ config.group ={}
 config.group.env = {INTERNAL: 'INTERNAL' , PUBLIC : 'PUBLIC'};
 
 config.orders = {};
-config.orders.status = {NUEVA : 'NUEVA' ,EN_PROGRESO : 'EN_PROGRESO' , LISTA : 'LISTA' , ENTREGADA : 'ENTREGADA' , CANCELADA : 'CANCELADA' };
+config.orders.status = {NEW : 'NEW' ,IN_PROGRESS : 'IN PROGRESS' , READY : 'READY' , DELIVERED : 'DELIVERED' , CANCELED : 'CANCELED' };
 config.orders.errMsg = 'Ha ocurrido un error';
 config.orders.emptyMsg = 'No hay ' + config.orders.status + ' ordenes';
 
 config.loans = {};
-config.loans.status = {NUEVO : 'NUEVO' ,ACEPTADO : 'ACEPTADO' , RECHAZADO : 'RECHAZADO' };
+config.loans.status = {NEW : 'NEW' ,ACCEPTED : 'ACCEPTED' , REJECTED : 'REJECTED' };
 config.loans.errMsg = 'Ha ocurrido un error';
 config.loans.emptyMsg = 'No hay ' + config.loans.status + ' prestamos';
 
@@ -68,7 +68,7 @@ config.messages.facebook =	{
 							};
 
 config.requests = {};
-config.requests.status = { NUEVO : 'NUEVO', ACEPTADO : 'ACEPTADO', RECHAZADO: 'RECHAZADO' };
+config.requests.status = { NEW : 'NEW', ACCEPTED : 'ACCEPTED', REJECTED: 'REJECTED' };
 
 config.doxs = {};
 
