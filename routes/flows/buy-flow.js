@@ -209,7 +209,7 @@ exports.buyFlow = function(payload,callback) {
 			    var receipt = {};
 			    receipt.emitter = data.phoneID;
 			    receipt.receiver = 'merchant';
-			    receipt.title = 'Ha comprado una margarita de $ ' + data.order.total;
+			    receipt.title = 'Has comprado una margarita de $ ' + data.order.total;
 			    receipt.additionalInfo = JSON.stringify(response.additionalInfo);
 			    receipt.amount = data.order.total;
 			    receipt.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
@@ -228,14 +228,14 @@ exports.buyFlow = function(payload,callback) {
 		function(balance,receipt, callback) {
 			logger.info( 'Create  transacction money' );
 			var transacction = {};
-			transacction.title = 'Amdocs cafe ';
+			transacction.title = 'Stand AGS Nasoft ';
 			transacction.type = 'MONEY',
 			transacction.date = dateTime;
 			transacction.amount = (-1) * receipt.amount;
 			transacction.additionalInfo = receipt.additionalInfo;
 			transacction.operation = 'BUY';
 			transacction.phoneID = receipt.emitter;
-			transacction.description ='Order No '+ orderID;
+			transacction.description ='Orden No '+ orderID;
 			transacctionQuery.createTranssaction(transacction, function(err, result) {
 				if (err)
 					logger.error('Error to create transacction');
@@ -245,14 +245,14 @@ exports.buyFlow = function(payload,callback) {
 			});
 			logger.info( 'Create  transacction DOX' );
 			var transacction = {};
-			transacction.title = 'Amdocs cafe ';
+			transacction.title = 'Stand AGS Nasoft ';
 			transacction.type = 'DOX',
 			transacction.date = dateTime;
 			transacction.amount = config.doxs.payment;
 			transacction.additionalInfo = receipt.additionalInfo;
 			transacction.operation = 'BUY';
 			transacction.phoneID = receipt.emitter;
-			transacction.description ='Order No '+ orderID;
+			transacction.description ='Orden No '+ orderID;
 			transacctionQuery.createTranssaction(transacction, function(err, result) {
 				if (err)
 					callback('ERROR', err);

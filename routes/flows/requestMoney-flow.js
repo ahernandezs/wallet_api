@@ -56,7 +56,7 @@ exports.requestMoneyFlow = function(payload,callback) {
         function (receiverName, senderName, senderAvatar, callback)
         {
             console.log('Save requestMoney in DB');
-            var requestMsg = 'Has enviado una solicitud de transferencia de dinero para  ' + receiverName;
+            var requestMsg = 'Has recibido una solicitud de dinero de  ' + receiverName;
             dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
             var data = { sender : payload.phoneID, destinatary : payload.destinatary, amount : payload.amount,
                             message : requestMsg, status : config.requests.status.NEW , date : dateTime};
@@ -73,7 +73,7 @@ exports.requestMoneyFlow = function(payload,callback) {
             var message = {};
             message.status = config.messages.status.NOTREAD;
             message.type = config.messages.type.REQUEST_MONEY;
-            message.title = 'Has enviado una solicitud de transferencia de dinero para ' + senderName;
+            message.title = 'Has recibido una solicitud de dinero de ' + senderName;
             message.phoneID = payload.destinatary;
             message.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
             message.message = requestMessage.message;

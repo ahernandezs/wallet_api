@@ -17,7 +17,7 @@ exports.getMessages = function(phoneID, callback) {
     var tmp = {};
     var condiciones = {$and: [  {'phoneID': phoneID } ] };
 
-    Message.find(condiciones, ' title type message status additionalInfo date', {sort: {date: -1}}, function (err, msgs) {
+    Message.find(condiciones, ' title type message status additionalInfo date', {sort: {date: 1}}, function (err, msgs) {
 
       if (err) callback('ERROR', err);
       else if(msgs){
