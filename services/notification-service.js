@@ -24,7 +24,7 @@ exports.singlePush = function(req, callback) {
 			};
 			client.post("http://cp.pushwoosh.com/json/1.3/createMessage", args, function(data,response) {
 				console.log('APPID');
-				console.log(requestWrapper.notifications.devices);
+				//console.log(requestWrapper.notifications.devices);
 				console.log('Response Push -->');
 			    console.log(JSON.parse(data));
 			    var responseStatus = JSON.parse(data);
@@ -124,7 +124,7 @@ exports.singlePush2Merchant = function(req, callback) {
 			};
 			client.post("http://cp.pushwoosh.com/json/1.3/createMessage", args, function(data,response) {
 				console.log('APPID');
-				console.log(requestWrapper.notifications.devices);
+				//console.log(requestWrapper.notifications.devices);
 				console.log('Response Push -->');
 			    console.log(JSON.parse(data));
 			    var responseStatus = JSON.parse(data);
