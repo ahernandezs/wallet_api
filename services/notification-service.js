@@ -24,7 +24,18 @@ exports.singlePush = function(req, callback) {
 			};
 			client.post("http://cp.pushwoosh.com/json/1.3/createMessage", args, function(data,response) {
 				console.log('Response Push -->');
-			    console.log(data);
+			    console.log(JSON.parse(data));
+			    var responseStatus = JSON.parse(data);
+			    if(responseStatus.status_code === 200){
+			    	console.log('Notification sent correctly');
+					var response = { statusCode: 0 ,  message: 'Notification sent correctly' };
+					callback(null, response);	
+			    }
+			    else{
+					console.log('Error to send notification');
+					var response =  { statusCode: 1 ,  message: 'Error to send notification' };
+					callback("ERROR", response);
+		    	}
 			});
 		}
 	});
@@ -111,7 +122,18 @@ exports.singlePush2Merchant = function(req, callback) {
 			};
 			client.post("http://cp.pushwoosh.com/json/1.3/createMessage", args, function(data,response) {
 				console.log('Response Push -->');
-			    console.log(data);
+			    console.log(JSON.parse(data));
+			    var responseStatus = JSON.parse(data);
+			    if(responseStatus.status_code === 200){
+			    	console.log('Notification sent correctly');
+					var response = { statusCode: 0 ,  message: 'Notification sent correctly' };
+					callback(null, response);	
+			    }
+			    else{
+					console.log('Error to send notification');
+					var response =  { statusCode: 1 ,  message: 'Error to send notification' };
+					callback("ERROR", response);
+		    	}
 			});
 		}
 	});
