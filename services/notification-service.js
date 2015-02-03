@@ -15,34 +15,19 @@ exports.singlePush = function(req, callback) {
 			callback(null, response);
 		}
 		else{
-			var options = {
-			  host: 'cp.pushwoosh.com',
-			  path: '/json/1.3/createMessage',
-			  method: 'POST'
+			var Client = require('node-rest-client').Client;
+			var client = new Client();
+			// set content-type header and data as json in args parameter
+			var args = {
+			  data:  requestWrapper ,
+			  headers:{"Content-Type": "application/json"}
 			};
-			var httpRequest = https.request(options, function(res) {  
-			  console.log('starting request');
-			  res.on('data', function (chunk) {
-			    console.log('RESPONSE: ' + chunk);
-			    var responseStatus = JSON.parse(chunk);
-			    if(responseStatus.status_code === 200){
-			    	console.log('Notification sent correctly');
-					var response = { statusCode: 0 ,  message: 'Notification sent correctly' };
-					callback(null, response);	
-			    }
-			    else{
-					console.log('Error to send notification');
-					var response =  { statusCode: 1 ,  message: 'Error to send notification' };
-					callback("ERROR", response);
-			    }
-			  });
-			})
-			console.log('Payload messsage ' + JSON.stringify(requestWrapper));
-			httpRequest.write(JSON.stringify(requestWrapper));
-			httpRequest.end();
+			client.post("http://cp.pushwoosh.com/json/1.3/createMessage", args, function(data,response) {
+				console.log('Response Push -->');
+			    console.log(data);
+			});
 		}
 	});
-
 };
 
 buildPayload = function(req,callback){
@@ -70,7 +55,6 @@ buildPayload = function(req,callback){
 		var requestWrapper = {'request': request};
 		if(req.extra){
 			requestWrapper.request.notifications[0].data = req.extra;
-			console.log(req.extra);
 		}
 
 		callback(null,requestWrapper);
@@ -118,32 +102,17 @@ exports.singlePush2Merchant = function(req, callback) {
 			callback(null, response);
 		}
 		else{
-			var options = {
-			  host: 'cp.pushwoosh.com',
-			  path: '/json/1.3/createMessage',
-			  method: 'POST'
+			var Client = require('node-rest-client').Client;
+			var client = new Client();
+			// set content-type header and data as json in args parameter
+			var args = {
+			  data:  requestWrapper ,
+			  headers:{"Content-Type": "application/json"}
 			};
-
-			var httpRequest = https.request(options, function(res) {  
-			  console.log('starting request');
-			  res.on('data', function (chunk) {
-			    console.log('RESPONSE: ' + chunk);
-			    var responseStatus = JSON.parse(chunk);
-			    if(responseStatus.status_code === 200){
-			    	console.log('Notification sent correctly');
-					var response = { statusCode: 0 ,  message: 'Notification sent correctly' };
-					callback(null, response);	
-			    }
-			    else{
-					console.log('Error to send notification');
-					var response =  { statusCode: 1 ,  message: 'Error to send notification' };
-					callback("ERROR", response);
-			    }
-			  });
-			})
-			console.log('Payload messsage ' + JSON.stringify(requestWrapper));
-			httpRequest.write(JSON.stringify(requestWrapper));
-			httpRequest.end();
+			client.post("http://cp.pushwoosh.com/json/1.3/createMessage", args, function(data,response) {
+				console.log('Response Push -->');
+			    console.log(data);
+			});
 		}
 	});
 };
