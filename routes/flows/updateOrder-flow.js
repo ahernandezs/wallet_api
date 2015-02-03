@@ -46,7 +46,7 @@ exports.updateOrderFlow = function(payload,callback) {
 			var message = {};
 			message.phoneID = receipt.emitter;
 
-			if(status === READY){
+			if(status === 'READY'){
 				message.title = 'Tu  orden No ' + payload.orderID +  ' está  ' + status;
 				message.message = 'Tu orden No ' + payload.orderID +  ' está ' + status;
 			}else{
