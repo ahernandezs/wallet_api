@@ -6,7 +6,7 @@ exports.crateTimeStamp = function(sender,message, callback){
 		else {
 			sendgrid.send({
 				to:        mail.receiver,
-				from:      'no-reply@amdocswallet.com',
+				from:      'no-reply@nasoftwallet.com',
 				subject:   mail.subject,
 				text:      mail.text
 			}, function(err, json) {

@@ -3,7 +3,7 @@ var async = require('async');
 var loan = require('./flows/loan-flow');
 var loanQuery = require('../model/queries/loan-query');
 
-var urbanService = require('../services/urban-service');
+var urbanService = require('../services/notification-service');
 var config = require('../config.js');
 var logger = config.logger;
 

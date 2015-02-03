@@ -5,7 +5,7 @@ var moment = require('moment-timezone');
 var Orderquery = require('../../model/queries/order-query');
 var productQuery = require('../../model/queries/product-query');
 var Userquery = require('../../model/queries/user-query');
-var urbanService = require('../../services/urban-service');
+var urbanService = require('../../services/notification-service');
 var doxsService = require('../../services/doxs-service');
 var ReceiptQuery = require('../../model/queries/receipt-query');
 var transferFlow = require('./transfer-flow');
@@ -224,7 +224,7 @@ exports.sendGift = function(payload,callback) {
 			receipt.amount = payload.order.total;
 			receipt.message = message;
 			receipt.additionalInfo = additionalInfo;
-			receipt.title = " You have gifted a coffee";
+			receipt.title = " Has regalado una margarita";
 			receipt.date = dateTime;
 			receipt.type = 'GIFT';
 			receipt.status = 'NEW';
@@ -266,7 +266,7 @@ exports.sendGift = function(payload,callback) {
 			console.log( 'Create  transacction Money' );
 			var receiver;
 			var transacction = {};
-			transacction.title = 'Coffee gift';
+			transacction.title = 'Bebida de regalo';
 			transacction.type = 'MONEY',
 			transacction.date = dateTime;
 			transacction.amount = (-1) * receipt.amount;
@@ -274,7 +274,7 @@ exports.sendGift = function(payload,callback) {
 			transacction.operation = 'GIFT';
 			transacction.phoneID = emitter;
 			Userquery.findAppID(receipt.receiver,function(err,result){
-				transacction.description ='To ' + result.name;
+				transacction.description ='A ' + result.name;
 				receiver = result.name;
 				transacctionQuery.createTranssaction(transacction, function(err, result) {
 					if (err)
@@ -282,14 +282,14 @@ exports.sendGift = function(payload,callback) {
 					else{
 						console.log( 'Create  transacction DOX' );
 						var transacction = {};
-						transacction.title = 'Coffee gift';
+						transacction.title = 'Bebida de regalo';
 						transacction.type = 'DOX',
 						transacction.date = dateTime;
 						transacction.amount = config.doxs.gift;
 						transacction.additionalInfo = receipt.additionalInfo;
 						transacction.operation = 'GIFT';
 						transacction.phoneID = emitter;
-						transacction.description ='To ' + receiver;
+						transacction.description ='A ' + receiver;
 						transacctionQuery.createTranssaction(transacction, function(err, result) {
 							if (err)
 								callback('ERROR', err);
@@ -300,7 +300,7 @@ exports.sendGift = function(payload,callback) {
                                 balance.additionalInfo.avatar = config.S3.url + emitter +'.png';
                                 balance.additionalInfo.name = receiver;
                                 balance.additionalInfo.amount = receipt.amount;
-                                balance.title = 'You have sent a gift';
+                                balance.title = 'Has enviado un regalo';
                                 balance.additionalInfo.product = payload.order.products[0].name;
 								callback(null, balance);
 							}

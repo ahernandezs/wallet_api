@@ -4,7 +4,7 @@ var config = require('../../config.js');
 var orderQuery = require('../../model/queries/order-query');
 var messageQuery = require('../../model/queries/message-query');
 var receiptQuery = require('../../model/queries/receipt-query');
-var urbanService = require('../../services/urban-service');
+var urbanService = require('../../services/notification-service');
 
 exports.updateOrderFlow = function(payload,callback) {
 	var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
@@ -45,7 +45,7 @@ exports.updateOrderFlow = function(payload,callback) {
 			console.log(receipt);
 			var message = {};
 			message.phoneID = receipt.emitter;
-			message.title = 'Your order No ' + payload.orderID +  ' is ' + status;
+			message.title = 'Tu  orden No ' + payload.orderID +  ' está  ' + status;
 			message.type = receipt.type;
 			message.status = 'NOTREAD';
 			var additionalInfoJSON = JSON.parse(receipt.additionalInfo);

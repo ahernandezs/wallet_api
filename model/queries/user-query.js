@@ -334,7 +334,7 @@ exports.getLeaderboard = function(phoneIDUser,callback){
       else{
         if(result.group){
           var query = User.find({group:result.group}, 'phoneID name doxs', {sort: {doxs: -1}});
-          query.limit(25);
+          query.limit(10);
           query.exec(function (err, people) {
             if (err) return handleError(err);
             else if(people){

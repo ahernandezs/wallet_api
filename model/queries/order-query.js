@@ -85,7 +85,7 @@ exports.getOrders =  function(merchantID, callback) {
 		function(ordersCanceled, ordersDelivered, callback){
 
 			var response = { statusCode: 0 };
-			var conditions = {$or: [{'status':config.orders.status.NEW },{'status':config.orders.status.READY}]};
+			var conditions = {$or: [{'status':config.orders.status.NEW },{'status':config.orders.status.NEW}]};
 			var ordenes = Order.find(conditions, 'orderId _id customerImage customerName date status products userId');
 			ordenes.sort({date: -1});
 			ordenes.exec(function (err, orders){
@@ -99,8 +99,10 @@ exports.getOrders =  function(merchantID, callback) {
 						var ordersMerge = ordersCanceled.concat(orders);
 						response.additionalInfo = ordersMerge;
 					}
-					if(response.additionalInfo.length === 0){
-						response = { statusCode: 0, additionalInfo: config.orders.emptyMsg }
+
+					if(response.additionalInfo === 0 || !response.additionalInfo  ){
+						console.log('empty orders');
+						response = { statusCode: 0, additionalInfo: [] }
 						callback(null, response);
 					}else
 					callback(null, response);

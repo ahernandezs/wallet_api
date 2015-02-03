@@ -6,7 +6,7 @@ var Orderquery = require('../../model/queries/order-query');
 var productQuery = require('../../model/queries/product-query');
 var Userquery = require('../../model/queries/user-query');
 var merchantQuery = require('../../model/queries/merchant-query');
-var urbanService = require('../../services/urban-service');
+var urbanService = require('../../services/notification-service');
 var doxsService = require('../../services/doxs-service');
 var transferFlow = require('./transfer-flow');
 var soapurl = process.env.SOAP_URL;
@@ -209,7 +209,7 @@ exports.buyFlow = function(payload,callback) {
 			    var receipt = {};
 			    receipt.emitter = data.phoneID;
 			    receipt.receiver = 'merchant';
-			    receipt.title = 'You have bought a coffee of € ' + data.order.total;
+			    receipt.title = 'Has comprado una margarita de $ ' + data.order.total;
 			    receipt.additionalInfo = JSON.stringify(response.additionalInfo);
 			    receipt.amount = data.order.total;
 			    receipt.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
@@ -228,14 +228,14 @@ exports.buyFlow = function(payload,callback) {
 		function(balance,receipt, callback) {
 			logger.info( 'Create  transacction money' );
 			var transacction = {};
-			transacction.title = 'Amdocs cafe ';
+			transacction.title = 'Stand AGS Nasoft ';
 			transacction.type = 'MONEY',
 			transacction.date = dateTime;
 			transacction.amount = (-1) * receipt.amount;
 			transacction.additionalInfo = receipt.additionalInfo;
 			transacction.operation = 'BUY';
 			transacction.phoneID = receipt.emitter;
-			transacction.description ='Order No '+ orderID;
+			transacction.description ='Orden No '+ orderID;
 			transacctionQuery.createTranssaction(transacction, function(err, result) {
 				if (err)
 					logger.error('Error to create transacction');
@@ -245,14 +245,14 @@ exports.buyFlow = function(payload,callback) {
 			});
 			logger.info( 'Create  transacction DOX' );
 			var transacction = {};
-			transacction.title = 'Amdocs cafe ';
+			transacction.title = 'Stand AGS Nasoft ';
 			transacction.type = 'DOX',
 			transacction.date = dateTime;
 			transacction.amount = config.doxs.payment;
 			transacction.additionalInfo = receipt.additionalInfo;
 			transacction.operation = 'BUY';
 			transacction.phoneID = receipt.emitter;
-			transacction.description ='Order No '+ orderID;
+			transacction.description ='Orden No '+ orderID;
 			transacctionQuery.createTranssaction(transacction, function(err, result) {
 				if (err)
 					callback('ERROR', err);
