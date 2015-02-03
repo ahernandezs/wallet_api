@@ -228,7 +228,7 @@ exports.buyFlow = function(payload,callback) {
 		function(balance,receipt, callback) {
 			logger.info( 'Create  transacction money' );
 			var transacction = {};
-			transacction.title = 'Stand AGS Nasoft ';
+			transacction.title = 'Compra en Stand AGS Nasoft ';
 			transacction.type = 'MONEY',
 			transacction.date = dateTime;
 			transacction.amount = (-1) * receipt.amount;
@@ -245,7 +245,7 @@ exports.buyFlow = function(payload,callback) {
 			});
 			logger.info( 'Create  transacction DOX' );
 			var transacction = {};
-			transacction.title = 'Stand AGS Nasoft ';
+			transacction.title = 'Compra en Stand AGS Nasoft';
 			transacction.type = 'DOX',
 			transacction.date = dateTime;
 			transacction.amount = config.doxs.payment;
