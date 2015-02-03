@@ -6,10 +6,24 @@ var sessionUser = require('./login-flow');
 var soapurl = process.env.SOAP_URL;
 var config = require('../../config.js');
 
+
+
+function endsWith(str, suffix) {
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+}
+
 exports.registerFlow = function(payload,callback) {
     var transfer = true;
   async.waterfall([
     function(callback){
+
+      var end = 'MX'
+      console.log('Validation PhoneID--------------');
+      console.log(endsWith(payload.phoneID, end));
+      if(!endsWith(payload.phoneID, end))
+        return new Error();
+      console.log('Validation PhoneID--------------');
+
       console.log('Validate connection');
       var response = null;
       soap.createClient(soapurl, function(err, client) {

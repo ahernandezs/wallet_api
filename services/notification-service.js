@@ -23,8 +23,6 @@ exports.singlePush = function(req, callback) {
 			  headers:{"Content-Type": "application/json"}
 			};
 			client.post("http://cp.pushwoosh.com/json/1.3/createMessage", args, function(data,response) {
-				console.log('APPID');
-				//console.log(requestWrapper.notifications.devices);
 				console.log('Response Push -->');
 			    console.log(JSON.parse(data));
 			    var responseStatus = JSON.parse(data);
@@ -69,7 +67,6 @@ buildPayload = function(req,callback){
 		if(req.extra){
 			requestWrapper.request.notifications[0].data = req.extra;
 		}
-
 		callback(null,requestWrapper);
 	});
 }
@@ -123,8 +120,6 @@ exports.singlePush2Merchant = function(req, callback) {
 			  headers:{"Content-Type": "application/json"}
 			};
 			client.post("http://cp.pushwoosh.com/json/1.3/createMessage", args, function(data,response) {
-				console.log('APPID');
-				//console.log(requestWrapper.notifications.devices);
 				console.log('Response Push -->');
 			    console.log(JSON.parse(data));
 			    var responseStatus = JSON.parse(data);

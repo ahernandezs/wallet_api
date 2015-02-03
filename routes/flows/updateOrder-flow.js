@@ -47,13 +47,18 @@ exports.updateOrderFlow = function(payload,callback) {
 			message.phoneID = receipt.emitter;
 
 			if(status === 'READY'){
-				message.title = 'Tu  orden No ' + payload.orderID +  ' está  ' + status;
-				message.message = 'Tu orden No ' + payload.orderID +  ' está ' + status;
-			}else{
-				message.title = 'Tu  orden No ' + payload.orderID +  ' ha sido  ' + status;
-				message.message = 'Tu orden No ' + payload.orderID +  ' ha sido ' + status;
+				message.title = 'Tu  orden No ' + payload.orderID +  ' está  LISTA';
+				message.message = 'Tu orden No ' + payload.orderID +  ' está LISTA';
+			}else if(status === 'IN_PROGRESS') {
+				message.title = 'Tu  orden No ' + payload.orderID +  ' está EN PROGRESO ';
+				message.message = 'Tu orden No ' + payload.orderID + ' está EN PROGRESO ';
+			}else if(status === 'DELIVERED'){
+				message.title = 'Tu  orden No ' + payload.orderID +  ' ha sido  ENTREGADA';
+				message.message = 'Tu orden No ' + payload.orderID +  ' ha sido ENTREGADA';
+			}else if(status === 'CANCELED'){
+				message.title = 'Tu  orden No ' + payload.orderID +  ' ha sido  CANCELADA';
+				message.message = 'Tu orden No ' + payload.orderID +  ' ha sido CANCELADA';
 			}
-
 
 
 			message.type = receipt.type;

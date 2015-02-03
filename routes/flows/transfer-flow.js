@@ -307,7 +307,7 @@ exports.transferFunds = function(data, callback) {
             transacction.operation = 'TRANSFER';
             transacction.phoneID = receipt.receiver;
             Userquery.findAppID(receipt.emitter,function(err,result){
-                transacction.description ='To ' + result.name;
+                transacction.description ='A ' + result.name;
                 transacctionQuery.createTranssaction(transacction, function(err, result) {
                     if (err)
                         callback('ERROR', err);
@@ -330,7 +330,7 @@ exports.transferFunds = function(data, callback) {
             transacction.operation = 'TRANSFER';
             transacction.phoneID = receipt.receiver;
             Userquery.findAppID(receipt.emitter,function(err,result){
-                transacction.description ='To ' + result.name;
+                transacction.description ='A ' + result.name;
                 forReturn.name = result.name;
                 transacctionQuery.createTranssaction(transacction, function(err, result) {
                     if (err)
@@ -353,7 +353,7 @@ exports.transferFunds = function(data, callback) {
             transaction.operation = 'TRANSFER';
             transaction.phoneID = receipt.emitter;
             Userquery.findAppID(receipt.receiver, function(err, result) {
-                transaction.description = 'From ' + result.name;
+                transaction.description = 'De ' + result.name;
                 transacctionQuery.createTranssaction(transaction, function(err, result) {
                     if (err)
                         callback('ERROR', err);

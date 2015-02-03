@@ -123,7 +123,7 @@ exports.getTransacctionsSocialFeed = function(callback) {
             gifts.limit(10);
             gifts.exec(function (err1, giftsTransactions) {
             if(giftsTransactions.length === 0)
-                callback(null,buyTransactions,null);
+                callback(null,buyTransactions,transferTransactions,null);
 
                   giftsTransactions.forEach(function(v){
                    User.findOne({'phoneID': v.phoneID }, 'name', function (err, user) {
@@ -150,7 +150,9 @@ exports.getTransacctionsSocialFeed = function(callback) {
             if(giftsTransactions)
                 resulTransactions = resulTransactions.concat(giftsTransactions);
 
-            resulTransactions.sort(compare);
+            if(resulTransactions.constructor === Array)
+                resulTransactions.sort(compare);
+            
             response = { statusCode: 0, additionalInfo: resulTransactions }
             callback(null, response);
         }

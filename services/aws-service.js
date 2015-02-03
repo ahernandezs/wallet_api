@@ -4,7 +4,7 @@ AWS.config.loadFromPath('config.json');
 var s3 = new AWS.S3(); 
 
 var fs = require('fs');
-var bucket_name = 'amdocs-images'; // AwsSum also has the API for this if you need to create the buckets
+var bucket_name = 'nasoft-images'; // AwsSum also has the API for this if you need to create the buckets
 
 exports.uploadImage2S3 = function(req,callback){
     var base64Str = req.text;
