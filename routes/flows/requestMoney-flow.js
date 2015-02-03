@@ -107,7 +107,7 @@ exports.requestMoneyFlow = function(payload,callback) {
             var receipt = {};
             receipt.emitter = phoneIDOrigin;
             receipt.amount = payload.amount;
-            receipt.message = "Has solicitado  €"+ payload.amount + ' de '  + receiverName ;
+            receipt.message = "Has realizado una petición de dinero por  €"+ payload.amount + ' a '  + receiverName ;
             receipt.additionalInfo = response.additionalInfo;
             receipt.title = receipt.message;
             receipt.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
@@ -203,7 +203,7 @@ exports.resolveRequestFlow = function(payload, header, callback) {
                 });
                 //PUT READ
                 var message = {};
-                message.title = 'Su solicitud de dinero a ' + username + ' fue ' + payload.answer;
+                message.title = 'Tu solicitud de dinero a ' + username + ' fue ' + payload.answer;
                 message.additionalInfo = JSON.stringify({ phoneID: payload.phoneID, name: username, avatar: avatar, message: payload.message });
                 var messageID;
                 if(!accepted) {

@@ -224,7 +224,7 @@ exports.sendGift = function(payload,callback) {
 			receipt.amount = payload.order.total;
 			receipt.message = message;
 			receipt.additionalInfo = additionalInfo;
-			receipt.title = " Has regalado una margarita";
+			receipt.title = " Has enviado una margarita de regalo";
 			receipt.date = dateTime;
 			receipt.type = 'GIFT';
 			receipt.status = 'NEW';
@@ -300,7 +300,7 @@ exports.sendGift = function(payload,callback) {
                                 balance.additionalInfo.avatar = config.S3.url + emitter +'.png';
                                 balance.additionalInfo.name = receiver;
                                 balance.additionalInfo.amount = receipt.amount;
-                                balance.title = 'Has enviado un regalo';
+                                balance.title = 'Has enviado una margarita regalo';
                                 balance.additionalInfo.product = payload.order.products[0].name;
 								callback(null, balance);
 							}

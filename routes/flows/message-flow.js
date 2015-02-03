@@ -19,7 +19,7 @@ exports.sendMessage = function(payload,callback) {
 
 	async.waterfall([
 		function(callback) {
-            console.log('Imprimiendo');
+            console.log('Request message');
             console.log(requestMessage);
 		    console.log('Get sender in db ' + requestMessage.phoneID);
             Userquery.getName(requestMessage.phoneID,function(err,user){
@@ -40,7 +40,7 @@ exports.sendMessage = function(payload,callback) {
             //message = extraData;
             message.status = config.messages.status.NOTREAD;
             message.type = config.messages.type.MESSAGE;
-            message.title = 'Has recibido un mensaje de' + senderName;
+            message.title = 'Has recibido un mensaje de ' + senderName;
             message.phoneID = payload.destinatary;
             message.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
             message.message = requestMessage.message;
