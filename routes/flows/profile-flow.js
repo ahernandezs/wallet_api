@@ -15,7 +15,7 @@ exports.updateProfile = function(payload,callback) {
 	        transacction.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
 	        transacction.type = 'DOX',
 	        transacction.amount = config.doxs.profile;
-	        transacction.description = 'Ha ganado algunos puntos DOX por completar su perfil!'
+	        transacction.description = '¡Has ganado algunos puntos DOX por completar tu perfil!'
 	        transacction.operation = 'Actualización de perfil';
 	        transacction.phoneID = payload.phoneID;	
 	        transacctionQuery.createTranssaction(transacction, function(err, result) {

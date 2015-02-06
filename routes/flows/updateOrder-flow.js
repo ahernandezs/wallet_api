@@ -45,14 +45,28 @@ exports.updateOrderFlow = function(payload,callback) {
 			console.log(receipt);
 			var message = {};
 			message.phoneID = receipt.emitter;
-			message.title = 'Tu  orden No ' + payload.orderID +  ' está  ' + status;
+
+			if(status === 'READY'){
+				message.title = 'Tu  orden No ' + payload.orderID +  ' está  LISTA';
+				message.message = 'Tu orden No ' + payload.orderID +  ' está LISTA';
+			}else if(status === 'IN_PROGRESS') {
+				message.title = 'Tu  orden No ' + payload.orderID +  ' está EN PROGRESO ';
+				message.message = 'Tu orden No ' + payload.orderID + ' está EN PROGRESO ';
+			}else if(status === 'DELIVERED'){
+				message.title = 'Tu  orden No ' + payload.orderID +  ' ha sido  ENTREGADA';
+				message.message = 'Tu orden No ' + payload.orderID +  ' ha sido ENTREGADA';
+			}else if(status === 'CANCELED'){
+				message.title = 'Tu  orden No ' + payload.orderID +  ' ha sido  CANCELADA';
+				message.message = 'Tu orden No ' + payload.orderID +  ' ha sido CANCELADA';
+			}
+
+
 			message.type = receipt.type;
 			message.status = 'NOTREAD';
 			var additionalInfoJSON = JSON.parse(receipt.additionalInfo);
 			additionalInfoJSON.status = status;
 			message.additionalInfo =  JSON.stringify(additionalInfoJSON);
 			message.date = dateTime;
-			message.message = 'Your order No ' + payload.orderID +  ' is ' + status;
             messageQuery.createMessage(message.phoneID,message, function(err, result) {
                 if (err) {
                     var response = { statusCode: 1, additionalInfo: err };

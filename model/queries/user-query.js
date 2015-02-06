@@ -84,12 +84,12 @@ exports.updateUser = function(payload,callback){
     function(callback){
       if(payload.profileCompleted === 1 || payload.profileCompleted === "1" ){
         var transacction = {};
-        transacction.title = 'Update Profile';
+        transacction.title = 'Actualización de perfil';
         transacction.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
         transacction.type = 'DOX',
         transacction.amount = config.doxs.profile;
-        transacction.description = 'You had earned some doxs points for completing your profile!'
-        transacction.operation = 'Update profile';
+        transacction.description = 'Has ganado algunos puntos  por completar tu perfil!'
+        transacction.operation = 'Actualización de perfil';
         transacction.phoneID = payload.phoneID;
         transacctionQuery.createTranssaction(transacction, function(err, result) {
 
@@ -449,13 +449,13 @@ console.log('invite friend');
     function(callback) {
         console.log( 'Saving transaction in mongo' );
         var transacction = {};
-        transacction.title = 'Friend invited';
+        transacction.title = 'Amigo invitado';
         transacction.type = 'DOX',
         transacction.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
         transacction.amount = config.doxs.invite;
         transacction.operation = 'INVITE';
         transacction.phoneID = payload.phoneID;
-        transacction.description ='Invited a friend to install amdocs wallet';
+        transacction.description ='Invitaste a un amigo a instalar AGS NASOFT Wallet';
         transacctionQuery.createTranssaction(transacction, function(err, result) {
             if (err)
                 callback('ERROR', err);

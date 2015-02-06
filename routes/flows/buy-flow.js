@@ -20,7 +20,7 @@ exports.buyFlow = function(payload,callback) {
 	var dateTime;
 	var buy = {sessionid:'', target:'airtime', type:1, amount:5};
 	var balance = {sessionid:'',type:1};
-    var notification = {message:'There is a new order!', phoneID: payload.phoneID}
+    var notification = {message:'¡Hay una nueva orden!', phoneID: payload.phoneID}
 	var orderID;
 	var response;
     var forReceipt = {};
@@ -114,7 +114,7 @@ exports.buyFlow = function(payload,callback) {
 			});
 		},
 		function(sessionid,callback) {
-			var message = 'There is a new order!';
+			var message = '¡Hay una nueva orden!';
 			notification.message = message;
 			var extraData = { action : 3 , order : JSON.stringify(order) };
 			additionalInfo = extraData.order;
@@ -228,7 +228,7 @@ exports.buyFlow = function(payload,callback) {
 		function(balance,receipt, callback) {
 			logger.info( 'Create  transacction money' );
 			var transacction = {};
-			transacction.title = 'Stand AGS Nasoft ';
+			transacction.title = 'Compra en Stand AGS Nasoft ';
 			transacction.type = 'MONEY',
 			transacction.date = dateTime;
 			transacction.amount = (-1) * receipt.amount;
@@ -245,7 +245,7 @@ exports.buyFlow = function(payload,callback) {
 			});
 			logger.info( 'Create  transacction DOX' );
 			var transacction = {};
-			transacction.title = 'Stand AGS Nasoft ';
+			transacction.title = 'Compra en Stand AGS Nasoft';
 			transacction.type = 'DOX',
 			transacction.date = dateTime;
 			transacction.amount = config.doxs.payment;

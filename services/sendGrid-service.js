@@ -28,8 +28,8 @@ exports.sendRegisterMessage= function(user, callback){
     var email = new sendgrid.Email({
         to:         user.email,
         from:       'no-reply@nasoftwallet.com',
-        subject:    'Welcome to Amdocs Wallet',
-        text:       'hello'
+        subject:    'Bienvenido a AGS NASOFT Wallet',
+        text:       'hola'
     });
     
     async.waterfall([
@@ -129,7 +129,7 @@ exports.sendInvitation= function(friend, callback){
     var email = new sendgrid.Email({
 		to:        friend.email,
 		from:      'no-reply@nasoftwallet.com',
-		subject:   'Check out the Amdocs Mobile Wallet!',
+		subject:   'Echale un vistazo a la AGS NASOFT Wallet!',
         text:       config.mailInvite.header + '\n\n'+ config.mailInvite.bodyInit + '\n\n'
                     + config.mailInvite.bodyMid1 + '\n\n'
                     + config.mailInvite.bodyMid2 + '\n\n'

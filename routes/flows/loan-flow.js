@@ -114,7 +114,7 @@ exports.createLoanFlow = function(payload,callback) {
           receipt.emitter = data.payload.phoneID;
           receipt.receiver = 'merchant';
           receipt.amount = data.payload.amount;
-          receipt.message = "Has solicitado un prestamo por €"+ receipt.amount;
+          receipt.message = "Has solicitado un préstamo por €"+ receipt.amount;
           receipt.additionalInfo = additionalInfo;
           receipt.title = receipt.message;
           receipt.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
@@ -229,7 +229,7 @@ var updateLoanFlow = exports.updateLoanFlow = function(payload,callback){
       else{
         logger.info('REJECTED');
         loan.message = config.messages.loanRejectedMsg;
-        loan.title = 'Tu pŕestamo por €' + loan.amount + ' fue rechazado' ;
+        loan.title = 'Tu préstamo por €' + loan.amount + ' fue rechazado' ;
       }
 
       loan.additionalInfo = JSON.stringify({ _id : loanID , sender: 1 , status: loan.status ,date:dateTime });
@@ -277,7 +277,7 @@ var updateLoanFlow = exports.updateLoanFlow = function(payload,callback){
             transacction.operation = 'LOAN';
             transacction.phoneID = receiver;
             userQuery.findAppID(receiver,function(err,result){
-              transacction.description ='From Stand AGS Nasoft';
+              transacction.description ='De Stand AGS Nasoft';
               transacctionQuery.createTranssaction(transacction, function(err, result) {
                 if (err)
                   callback('ERROR', err);
