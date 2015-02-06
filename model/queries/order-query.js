@@ -99,7 +99,7 @@ exports.getOrders =  function(merchantID, callback) {
 						var ordersMerge = ordersCanceled.concat(orders);
 						response.additionalInfo = ordersMerge;
 					}
-					if(response.additionalInfo.length === 0){
+					if(!(response.additionalInfo) || response.additionalInfo.length === 0){
 						response = { statusCode: 0, additionalInfo: config.orders.emptyMsg }
 						callback(null, response);
 					}else
