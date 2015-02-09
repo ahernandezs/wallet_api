@@ -125,8 +125,13 @@ exports.resetPin = function(req, res){
 exports.validate = function(req, res){
   console.log('execute POST method validate');
   console.log(req.body);
+  console.log('Search phoneID');
+  req.body.phoneID = req.body.phoneID +'ES';
+  console.log(req.body.phoneID);
   Userquery.validateUser(req.body.phoneID, function(err,result){
-    res.json(result);
+    var resultWithID = JSON.parse(JSON.stringify(result));
+    resultWithID.countryID = 'ES';
+    res.json(resultWithID);
   });
 };
 

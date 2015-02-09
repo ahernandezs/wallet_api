@@ -7,7 +7,7 @@ var crypto = require('crypto');
 var ReceiptQuery = require('../../model/queries/receipt-query');
 var PrizeQuery = require('../../model/queries/prize-query');
 var messageQuery = require('../../model/queries/message-query');
-var urbanService = require('../../services/urban-service');
+var urbanService = require('../../services/notification-service');
 
 exports.setCoupon = function(payload,callback) {
 
