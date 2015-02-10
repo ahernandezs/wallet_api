@@ -48,11 +48,11 @@ buildPayload = function(req,callback){
 
 		var request = {};
 		if(result.environment  && result.environment === PRODUCTION)
-			request.application = '9C1F3-89B95';
+			request.application = '2739D-ACE37';
 		else
-			request.application = '7E9D7-A1E6B';
+			request.application = '8AF81-19402';
 
-		request.auth = 'TwMGS2EoXPu9iDcbGncSHrcePHFClrVvkX8aCBRbBaorJYDEd0f8rZbrj912uTgPuiaqfMl856nLK9Xw90tj';
+		request.auth = 'Cwo07DWkNLLPE79PRpBiSuFPEJmhMsgZnMWpAe5js3uIaAMMaRhYaaYN4rdLlSA0pspaiXSFR7EMRQYMfxFi';
 		var notifications = [];
 		var devices = [];
 		//appID
@@ -82,11 +82,11 @@ buildMerchantPayload = function(req,callback){
 
 			var request = {};
 			if(result.environment  && result.environment === PRODUCTION)
-				request.application = '9C1F3-89B95';
+				request.application = '2739D-ACE37';
 			else
-				request.application = '7E9D7-A1E6B';
+				request.application = '8AF81-19402';
 
-			request.auth = 'TwMGS2EoXPu9iDcbGncSHrcePHFClrVvkX8aCBRbBaorJYDEd0f8rZbrj912uTgPuiaqfMl856nLK9Xw90tj';
+			request.auth = 'Cwo07DWkNLLPE79PRpBiSuFPEJmhMsgZnMWpAe5js3uIaAMMaRhYaaYN4rdLlSA0pspaiXSFR7EMRQYMfxFi';
 			var notifications = [];
 			var devices = [];
 			//appID
