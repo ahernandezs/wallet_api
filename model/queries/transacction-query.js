@@ -4,6 +4,29 @@ var transacction = require('../transacction');
 var User = require('../user');
 var config = require('../../config.js');
 
+exports.findUserTransfers = function(phoneID, callback) {
+    Loan.find( { "phoneID" : phoneID, type:'MONEY', operation:'TRANSFER'  }, function(err, transfers) {
+        if (err)
+           callback('ERROR', { message : 'Something went wrong' });
+
+        try {
+            var lastLoan = transfers[ transfers.length -1 ];
+            var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
+            var startDate = moment( lastLoan.date, 'YYYY-M-DD HH:mm:ss' );
+            var endDate = moment( dateTime, 'YYYY-M-DD HH:mm:ss' );
+            var difference = endDate.diff(startDate, 'minutes');
+            console.log(difference + ' minutes');
+
+            if (difference < 60)
+                callback('STOP', { message : config.messages.loanRejectedOneMsg + (30 - difference) + config.messages.loanRejectedTwoMsg });
+            else
+                callback(null, transfers);
+        } catch (e) {
+            console.log(e);
+            callback(null, transfers);
+        }
+    });
+};
 
 exports.getTransacctions = function(phoneIDToSearch, callback) {
     console.log( 'Get Transacctions' );
