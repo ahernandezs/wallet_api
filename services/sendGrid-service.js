@@ -47,14 +47,14 @@ exports.sendRegisterMessage= function(user, callback){
         function(html, callback) {
             html = html.replace('1234', user.pin);
             email.setHtml(html);
-            
-            sendgrid.send(email, function(err, json) {
-                if (err) {
-                    callback('ERROR', err);
-                } else {
-                    callback(null, json);
-                }
-            });
+           //sendgrid.send(email, function(err, json) {
+           //     if (err) {
+           //         callback('ERROR', err);
+           //     } else {
+           //         callback(null, json);
+           //     }
+          //  });
+	   callback(null,'');
         }
     ], function (err, result) {
         if(err){      
@@ -121,7 +121,7 @@ function createMail (sender,message,callback){
 				console.log(result);
 				callback(null,emailMessage);
 			}
-		});
+	});
 };
 
 exports.sendInvitation= function(friend, callback){
@@ -139,7 +139,7 @@ exports.sendInvitation= function(friend, callback){
                     + friend.sender+ '\n\n'
     });
 
-    sendgrid.send(email, function(err, json) {
+sendgrid.send(email, function(err, json) {
         if (err) {
             callback('ERROR', err);
         } else {
