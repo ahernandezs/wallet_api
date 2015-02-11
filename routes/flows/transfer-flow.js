@@ -113,6 +113,18 @@ exports.transferFunds = function(data, callback) {
     var mainUser = data.header.phoneID;
 
     async.waterfall([
+        
+        function(callback) {
+            transacctionQuery.findUserTransfers(mainUser, function(err,transfers){
+                if(err){
+                    var response = { statusCode: 1, additionalInfo: err };
+                    callback('ERROR', response);
+                }
+                else
+                    callback(null);
+            });
+        },
+
         function(callback) {
             console.log('Do transfer in wallet');
             console.log(data.body);
