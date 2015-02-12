@@ -3,7 +3,35 @@ var request = require('request'); // include request module
 var transacction = require('../transacction');
 var User = require('../user');
 var config = require('../../config.js');
+var moment = require('moment-timezone');
 
+exports.findUserTransfers = function(phoneID, callback) {
+    var date = new Date(moment().tz(process.env.TZ));
+    var current_hour = (date.getHours() < 10) ? '0'+date.getHours() : date.getHours();
+    var current_year = date.getFullYear();
+    var current_month = (date.getMonth() < 10) ? '0'+date.getMonth() : date.getMonth(); 
+    var current_day = (date.getDay() < 10) ? '0'+date.getDay() : date.getDay(); 
+
+    var date = moment().tz(process.env.TZ).format("YYYY-MM-DD");
+    var time = moment().tz(process.env.TZ).format("HH");
+    var  initDate = date + ' ' + time +':00:00';
+    var  endDate =  date + ' ' + time +':59:00';
+    console.log('Init date '+ initDate);
+    console.log('End date '+ endDate );
+
+    var conditions = { "phoneID" : phoneID, type:'MONEY', operation:'TRANSFER',  date:{
+              $gte: initDate,
+              $lt: endDate }};
+    var transactions = transacction.find(conditions, 'title description amount date operation type phoneID');
+    transactions.limit(5);
+    transactions.exec(function (err1, transactions) {
+        if(transactions.length === 5)
+            callback(config.messages.transferRejectedOneMsg,null);
+        else
+            callback(null,transactions);
+
+    });
+};
 
 exports.getTransacctions = function(phoneIDToSearch, callback) {
     console.log( 'Get Transacctions' );
