@@ -6,47 +6,27 @@ var config = require('../../config.js');
 var moment = require('moment-timezone');
 
 exports.findUserTransfers = function(phoneID, callback) {
-    transacction.find( { "phoneID" : phoneID, type:'MONEY', operation:'TRANSFER'  }, function(err, transfers) { 
-        console.log('Search transacctions');
-        try {
-            var lastTransfer = transfers[ transfers.length -1 ];
-            var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
-            var startDate = moment( lastTransfer.date, 'YYYY-M-DD HH:mm:ss' );
-            var endDate = moment( dateTime, 'YYYY-M-DD HH:mm:ss' );
-            var difference = endDate.diff(startDate, 'minutes');
-            console.log(difference + ' minutes');
+    var date = new Date(moment().tz(process.env.TZ).format());
+    var current_hour = (date.getHours() < 10) ? '0'+date.getHours() : date.getHours();
+    var current_year = date.getFullYear();
+    var current_month = (date.getMonth() < 10) ? '0'+date.getMonth() : date.getMonth(); 
+    var current_day = (date.getDay() < 10) ? '0'+date.getDay() : date.getDay(); 
+    var  initDate = current_year + '-' + current_month + '-' + current_day + ' ' + current_hour +':00:00';
+    var  endDate = current_year + '-' + current_month + '-' + current_day + ' ' + current_hour +':59:00';
+    console.log('Init date '+ initDate);
+    console.log('End date '+ endDate );
 
-            if (difference < 60)
-                callback('STOP', { message : config.messages.transferRejectedOneMsg + (60 - difference) + config.messages.transferRejectedTwoMsg });
-            else
-                callback(null, transfers);
-        } catch (e) {
-            console.log(e);
-            callback(null, transfers);
-        }
-    });
+    var conditions = { "phoneID" : phoneID, type:'MONEY', operation:'TRANSFER',  date:{
+              $gte: initDate,
+              $lt: endDate }};
+    var transactions = transacction.find(conditions, 'title description amount date operation type phoneID');
+    transactions.limit(5);
+    transactions.exec(function (err1, transactions) {
+        if(transactions.length === 5)
+            callback(config.messages.transferRejectedOneMsg,null);
+        else
+            callback(null,transactions);
 
-
-    var conditions = { "phoneID" : phoneID, type:'MONEY', operation:'TRANSFER'  };
-    var gifts = transacction.find(conditions, 'title description amount date operation type phoneID');
-    gifts.sort({date: -1});
-    gifts.limit(10);
-    gifts.exec(function (err1, transactions) {
-        if(transactions.length === 0)
-            callback(null,buyTransactions,transferTransactions,null);
-
-        transactions.forEach(function(v){
-         User.findOne({'phoneID': v.phoneID }, 'name', function (err, user) {
-            var tmp = v.toObject();
-            tmp.avatar = config.S3.url + v.phoneID+'.png';
-            tmp.name = user.name;
-            giftsTransactionsFinal.push(tmp);
-            if(giftsTransactionsFinal.length === transactions.length){
-                console.log('DONE gifts');
-                callback(null,buyTransactions, transferTransactions,giftsTransactionsFinal);
-            }
-        });
-     });
     });
 };
 
