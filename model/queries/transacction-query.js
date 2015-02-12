@@ -6,13 +6,16 @@ var config = require('../../config.js');
 var moment = require('moment-timezone');
 
 exports.findUserTransfers = function(phoneID, callback) {
-    var date = new Date(moment().tz(process.env.TZ).format());
+    var date = new Date(moment().tz(process.env.TZ));
     var current_hour = (date.getHours() < 10) ? '0'+date.getHours() : date.getHours();
     var current_year = date.getFullYear();
     var current_month = (date.getMonth() < 10) ? '0'+date.getMonth() : date.getMonth(); 
     var current_day = (date.getDay() < 10) ? '0'+date.getDay() : date.getDay(); 
-    var  initDate = current_year + '-' + current_month + '-' + current_day + ' ' + current_hour +':00:00';
-    var  endDate = current_year + '-' + current_month + '-' + current_day + ' ' + current_hour +':59:00';
+
+    var date = moment().tz(process.env.TZ).format("YYYY-MM-DD");
+    var time = moment().tz(process.env.TZ).format("HH");
+    var  initDate = date + ' ' + time +':00:00';
+    var  endDate =  date + ' ' + time +':59:00';
     console.log('Init date '+ initDate);
     console.log('End date '+ endDate );
 
