@@ -12,7 +12,6 @@ var merchantQuery = require('../../model/queries/merchant-query');
 var sessionQuery = require('./session-query');
 var enviromentQuery = require('./enviroment-query');
 var transacction = require('../transacction');
-
 var soap = require('soap');
 var soapurl = process.env.SOAP_URL;
 var Userquery = require('../../model/queries/user-query');
