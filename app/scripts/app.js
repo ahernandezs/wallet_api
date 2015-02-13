@@ -22,6 +22,13 @@ angular.module('pantallasAdministradorApp', [
         templateUrl: 'views/detail.html',
         controller: 'detailCtrl'
       })
+       .when('/leaderboard', {
+        templateUrl: 'views/leaderboard.html',
+        controller: 'LeaderBoardCtrl'
+      })
+      .when('/websockets', {
+        templateUrl: 'views/webSocket.html'
+      })
       .otherwise({
         redirectTo: '/login'
       });

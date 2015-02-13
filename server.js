@@ -1,5 +1,6 @@
 var express = require('express')
 var url = require("url");
+var http = require("http");
 var user =  require('./routes/users');
 var wallet = require('./routes/wallet');
 var product = require('./routes/products');
@@ -11,9 +12,12 @@ var spa = require('./routes/spa');
 var urbanService = require('./services/notification-service');
 var fs = require('fs');
 var app = express();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.static(__dirname + '/app'));
+server.listen(8081);
 
 // ## CORS middleware
 var allowCrossDomain = function(req, res, next) {
