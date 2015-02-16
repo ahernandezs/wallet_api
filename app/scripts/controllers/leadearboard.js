@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('pantallasAdministradorApp')
-.controller('LeaderBoardCtrl', ['$scope', '$rootScope', '$location','$http','$filter', 'ngTableParams', function ($scope, $rootScope, $location ,$http , $filter, ngTableParams){
+.controller('LeaderBoardCtrl', ['$scope', '$rootScope', '$location','$http','$filter', 'ngTableParams','$timeout',function ($scope, $rootScope, $location ,$http , $filter, ngTableParams,$timeout){
 
     $http({
         url: '/api/leaderboard',
@@ -9,7 +9,7 @@ angular.module('pantallasAdministradorApp')
     }).
       success(function(data, status, headers) {
         console.log('Incoming Message Init' + JSON.stringify(data));
-        $scope.tableParams = new ngTableParams({
+        $scope['tableParams']  = new ngTableParams({
             page: 1,
             count: 25,
             sorting: {
@@ -18,11 +18,23 @@ angular.module('pantallasAdministradorApp')
         }, {
             total: data.users.length,
             getData: function($defer, params) {
+                        /*
                         //var orderedData = params.sorting() ?
                          //                   $filter('orderBy')(data.users, params.orderBy()) :
                          //                   data.users;
                          params.settings({ counts: data.length > 10 ? [10, 25, 50] : []});
-                         $defer.resolve(data.users);
+                         $defer.resolve(data.users);*/
+                                     // use build-in angular filter
+                          var filteredData = params.filter() ?
+                                  $filter('filter')(data, params.filter()) :
+                                  data;
+                          var orderedData = params.sorting() ?
+                                  $filter('orderBy')(filteredData, params.orderBy()) :
+                                  data;
+
+                          params.total(orderedData.length); // set total for recalc pagination
+                          $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+
                      }
                  });
     }).
@@ -38,49 +50,39 @@ angular.module('pantallasAdministradorApp')
 
   socket.on('update_event', function (payload) {
     console.log('Incoming Message' + JSON.stringify(payload));
-    //$scope.tableParams = null;
-    //$scope.tableParams.reload();
-    //$scope.reset();
-    $scope.tableParams = new ngTableParams({
-        page: 1,
-        count: 25,
-        sorting: {
-            dox: 'asc'
-        }
-    }, {
-        total: payload.users.length,
-        getData: function($defer, params) {
-            var data =  payload.users;
-            var orderedData = data;
-            params.settings({ counts: payload.length > 10 ? [10, 25, 50] : []});
-            $defer.resolve(orderedData);
-        }
-    });
+    $scope['tableParams'] = {reload:function(){},settings:function(){return {}}};
+    $scope['tableParams'].settings().$scope = scope;
+    $timeout(reset, 1000);
   })
 
-  $scope.reset=function(){
+  var reset = function(){
     console.log('Reset ....');
+    $scope['tableParams'] = null;
       $http({
         url: '/api/leaderboard',
         method: 'GET',
     }).
-      success(function(payload, status, headers) {
-        $scope.tableParams = new ngTableParams({
+      success(function(data, status, headers) {
+        $scope['tableParams'] = new ngTableParams({
             page: 1,
             count: 25,
-            sorting: {
-                dox: 'asc'
-            }
         }, {
-            total: payload.users.length,
+            total: data.users.length,
             getData: function($defer, params) {
-                    var data =  payload.users;
-                    var orderedData = data;
-                    params.settings({ counts: payload.length > 10 ? [10, 25, 50] : []});
-                    $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-                 }
+                      /*var orderedData = params.sorting() ?
+                                        $filter('orderBy')(data.users, params.orderBy()) :
+                                        data.users;
+                      //params.settings({ counts: data.length > 10 ? [10, 25, 50] : []});
+                      params.total(orderedData.length); // set total for recalc pagination
+                      $defer.resolve(orderedData.users)*/
+                                  // use build-in angular filter
+                            var filteredData = params.filter() ?
+                            $filter('filter')(data, params.filter()) :data;
+                            var orderedData = params.sorting() ? $filter('orderBy')(filteredData, params.orderBy()) :data;
+                            params.total(orderedData.length); // set total for recalc pagination
+                            $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+                     }
              });
-        $scope.tableParams.settings().$scope = $scope;
     }).
       error(function(data, status) {
         $scope.errorMessage = data.message;
@@ -88,10 +90,8 @@ angular.module('pantallasAdministradorApp')
   }
 
   $scope.doSearch = function () {
-    $scope.tableParams.reload();
+    $scope['tableParams'].reload();
     }
-
-$scope.tableParams.reload();
 }]);
 
 
