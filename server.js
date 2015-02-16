@@ -10,6 +10,7 @@ var transacction = require('./routes/transacctions');
 var loan = require('./routes/loans');
 var spa = require('./routes/spa');
 var urbanService = require('./services/notification-service');
+var userQuery = require('./model/queries/user-query');
 var fs = require('fs');
 var app = express();
 var server = require('http').Server(app);
@@ -17,7 +18,44 @@ var io = require('socket.io')(server);
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.static(__dirname + '/app'));
-server.listen(8081);
+server.listen(8082);
+
+// usernames which are currently connected
+var usersockets = {};
+io.on('connection', function (socket) {
+		// when the client emits 'adduser', this listens and executes
+		socket.on('adduser', function(username){
+		// we store the username in the socket session for this client
+		console.log('Add user for websockets' + username);
+		socket.username = username;
+		usersockets[username] = socket.id;
+	});
+});
+
+var mubsub = require('mubsub');
+
+var client = mubsub(process.env.MONGOLAB_URI || process.env.MONGOHQ_URL ||   'mongodb://localhost/amdocs');
+var channel = client.channel('test');
+console.log('subscribe client');
+
+client.on('error', console.error);
+channel.on('error', console.error);
+
+channel.subscribe('leaderboard_update', function (message) {
+    console.log('Incomming message' + JSON.stringify(message)); // => 'bar'
+	if(usersockets){
+		var socketid = usersockets[6666];
+		console.log(usersockets);
+		if(socketid) {
+			userQuery.getLeaderboard(null,function(err,users){
+				io.sockets.connected[socketid].emit('update_event', {'users': users});
+			});
+		} else {
+			console.log("This user is not connected " + message);
+		}
+	}
+});
+
 
 // ## CORS middleware
 var allowCrossDomain = function(req, res, next) {
