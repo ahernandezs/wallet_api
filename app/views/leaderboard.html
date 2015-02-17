@@ -1,11 +1,12 @@
 <style> 
 img {
-   width: 120px;
-   height: 100px;
+   width: 50px;
+   height: 50px;
 }
 </style>
   <div class="well row">
-    <div class="col-md-12">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
       <table ng-table="tableParams" class="table table-hover">
         <tr ng-repeat="user in $data | filter:query" ng-click="user.$selected = !user.$selected; detail(user)">
           <td data-title="'Current Leader'" style="font-size: 25pt" >
@@ -16,5 +17,5 @@ img {
         </tr>
       </table>
     </div>
+    <div class="col-md-1"></div>
   </div>
-<button ng-click="doSearch()">Search</button>

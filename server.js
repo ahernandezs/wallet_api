@@ -35,7 +35,7 @@ io.on('connection', function (socket) {
 var mubsub = require('mubsub');
 
 var client = mubsub(process.env.MONGOLAB_URI || process.env.MONGOHQ_URL ||   'mongodb://localhost/amdocs');
-var channel = client.channel('test');
+var channel = client.channel('leaderboard_channel');
 console.log('subscribe client');
 
 client.on('error', console.error);

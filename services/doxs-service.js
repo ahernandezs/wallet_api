@@ -4,14 +4,14 @@ var config = require('../config.js');
 var mubsub = require('mubsub');
 var userQuery = require('../model/queries/user-query');
 
-var client = mubsub('mongodb://localhost:27017/amdocs');
-var channel = client.channel('test');
+var client = mubsub(process.env.MONGOLAB_URI || process.env.MONGOHQ_URL ||   'mongodb://localhost/amdocs');
+var channel = client.channel('leaderboard_channel');
 
 client.on('error', console.error);
 channel.on('error', console.error);
 
 exports.saveDoxs = function(payload,callback) {
-	console.log('Trasnfering DOX ....');
+	console.log('Transfering DOX ....');
     var transferDoxs = {phoneID:payload.phoneID,amount:config.doxs[payload.action] ,type:3};
     transferFlow.transferFlow({transferRequest: transferDoxs}, function(err,result){
         console.log('Transfer doxs result: '+JSON.stringify(result)+'\n\n');
