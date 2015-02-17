@@ -1,34 +1,37 @@
-<div>
-
-  <div class="row">
-      <div class="col-md-6">
-        <img src="https://s3-us-west-1.amazonaws.com/amdocs-images/mail/logo.png" alt="amdocs">
-      </div>
-      <div class="col-md-6">
-        <button class="btn btn-default pull-right" ng-click="logOut()"> Log out </button>
-      </div>
-  </div>
-  <div class="row">
-      <div class="col-md-12">
-          <div ng-include="'views/header.html'"></div>
-      </div>
-  </div>
-  <div><br></div>
-  <div class="well">
-    <table ng-table="tableParams" class="table table-hover">
-    <form class="form-inline">
-         <div class="form-group">
-            <input ng-model="query" type="text" placeholder="Filter by name, company, group or email" autofocus class="form-control">
+<div class="row">
+  <div class="col-md-1"></div>
+  <div class="col-md-10">
+    <div class="content row">
+        <div class="col-md-6">
+          <img src="https://s3-us-west-1.amazonaws.com/amdocs-images/mail/logo.png" alt="amdocs">
         </div>
-    </form>
-      <tr ng-repeat="user in $data | filter:query" ng-click="user.$selected = !user.$selected; detail(user)">
-        <td data-title="'Name'" sortable="'name'">{{user.name}}</td>
-        <td data-title="'Company'" sortable="'company'">{{user.company}}</td>
-        <td data-title="'Group'">{{user.group}}</td>
-        <td data-title="'Email'">{{user.email}}</td>
-        <td data-title="'Doxs'" sortable="'doxs'">{{user.doxs}}</td>
-      </tr>
-    </table>
+        <div class="col-md-6">
+          <button class="btn btn-default pull-right" ng-click="logOut()"> Log out </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div ng-include="'views/header.html'"></div>
+        </div>
+    </div>
+    <div><br></div>
+    <div class="well">
+      <table ng-table="tableParams" class="table table-hover">
+      <form class="form-inline">
+           <div class="form-group">
+              <input ng-model="query" type="text" placeholder="Filter by name, company, group or email" autofocus class="form-control">
+          </div>
+      </form>
+        <tr ng-repeat="user in $data | filter:query" ng-click="user.$selected = !user.$selected; detail(user)">
+          <td data-title="'Name'" sortable="'name'">{{user.name}}</td>
+          <td data-title="'Company'" sortable="'company'">{{user.company}}</td>
+          <td data-title="'Group'">{{user.group}}</td>
+          <td data-title="'Email'">{{user.email}}</td>
+          <td data-title="'Doxs'" sortable="'doxs'">{{user.doxs}}</td>
+        </tr>
+      </table>
+    </div>
   </div>
+  <div class="col-md-1"> </div>
 </div>
 

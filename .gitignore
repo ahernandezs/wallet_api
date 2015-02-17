@@ -16,4 +16,3 @@ build
 
 node_modules
 .elasticbeanstalk/
-bower_components/

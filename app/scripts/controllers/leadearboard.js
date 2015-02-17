@@ -4,31 +4,54 @@ angular.module('pantallasAdministradorApp')
 .controller('LeaderBoardCtrl', ['$scope', '$rootScope', '$location','$http','$filter', 'ngTableParams','$timeout',function ($scope, $rootScope, $location ,$http , $filter, ngTableParams,$timeout){
   var dataset;
 
+  $http({
+      url: '/api/leaderboard',
+      method: 'GET',
+  }).
+    success(function(data, status, headers) {
+      dataset = data;
+      $scope.tableParams = new ngTableParams({
+          page: 1,
+          count: 10,
+          sorting: {
+              dox: 'asc'
+          }
+      }, {
+          total: data.users.length,
+          getData: function($defer, params) {
+              var orderedData = params.sorting() ?
+                                  $filter('orderBy')(data.users, params.orderBy()) :
+                                  data.users;
+               params.settings({ counts: data.length > 10 ? [10, 25, 50] : []});
+              $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+          }
+      });
+  }).
+    error(function(data, status) {
+      $scope.errorMessage = data.message;
+  });
+
 
   var socket = io.connect('http://localhost:8082');
   socket.on('connect', function(){
-      // call the server-side function 'adduser' and send one parameter (value of prompt)
       socket.emit('adduser', 6666);
   });
 
   socket.on('update_event', function (payload) {
     console.log('Incoming Message');
-    //$scope['tableParams'] = {reload:function(){},settings:function(){return {}}};
-    //$scope['tableParams'].settings().$scope = scope;
-    //$timeout(reset, 3000);
-    $http({
-        url: '/api/leaderboard',
-        method: 'GET',
-    }).
-      success(function(data, status, headers) {
-        dataset = data;
-        $scope.tableParams.reload();
-    }).
-      error(function(data, status) {
-        $scope.errorMessage = data.message;
+      $http({
+          url: '/api/leaderboard',
+          method: 'GET',
+      }).
+        success(function(data, status, headers) {
+          dataset = data;
+          $scope.tableParams.reload();
+      }).
+        error(function(data, status) {
+          $scope.errorMessage = data.message;
+      });
     });
-    //$scope.tableParams.reload();
-    });
+
 
    $scope.tableParams = new ngTableParams({
        page: 1, // show first page
@@ -46,7 +69,7 @@ angular.module('pantallasAdministradorApp')
                 console.log('inside timeout')
                 if(dataset){
                   params.total(dataset.users.length);
-                // set new data
+                  //params.settings({ counts: data.length > 10 ? [10, 25, 50] : []});
                   $defer.resolve(dataset.users);
                 }
             }, 500);
@@ -55,10 +78,6 @@ angular.module('pantallasAdministradorApp')
            $data: {}
        }
    });
-
-  $scope.doSearch = function () {
-    $scope.tableParams.reload();
-    }
 
 }]);
 

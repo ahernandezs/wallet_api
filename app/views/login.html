@@ -1,23 +1,23 @@
-<div class="container col-md-12">
-  <div class="col-md-3"></div>
-  <div class="col-md-6">
-      <br>
-      <div>
-        <img src="https://s3-us-west-1.amazonaws.com/amdocs-images/mail/logo.png" alt="amdocs">
+<div class="row">
+  <div class="col-md-5"></div>
+  <div class="col-md-2">
+    <br>
+    <div>
+      <img src="https://s3-us-west-1.amazonaws.com/amdocs-images/mail/logo.png" alt="amdocs">
+    </div>
+    <div><br></div>
+    <div class="well content">
+      <div class="alert alert-danger" ng-if="errorMessage">
+        {{errorMessage}}
       </div>
-      <div><br></div>
-      <div class="well">
-        <div class="alert alert-danger" ng-if="errorMessage">
-          {{errorMessage}}
-        </div>
-        <form ng-submit="login(username, password)">
+      <form ng-submit="login(username, password)">
         <input type="email" class="form-control" placeholder="Enter email" ng-model="username">
         <br>
         <input type="password" class="form-control" placeholder="Password" ng-model="password">
         <br>
         <button class="btn btn-success btn-block" type="submit"> Entrar </button>
-        </form>
+      </form>
     </div>
   </div>
+  <div class="col-md-5"></div>
 </div>
-
