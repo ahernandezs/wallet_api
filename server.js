@@ -12,6 +12,7 @@ var spa = require('./routes/spa');
 var urbanService = require('./services/notification-service');
 var userQuery = require('./model/queries/user-query');
 var fs = require('fs');
+var ip = require('ip').address();
 var app = express();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
