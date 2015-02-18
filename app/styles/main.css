@@ -1,6 +1,7 @@
 /* Space out content a bit */
 /*body {
-  padding:20px 0;
+  padding:1.5em;
+  position: relative;
 }*/
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
@@ -78,41 +79,45 @@
   .login{
      background-color: #ffffff;
   }
-  .table{
-    border-collapse: collapse;
-    border: 1px solid #efefef;
-  }
-  .table thead .header{
+  .wrappertable{
+    position: absolute;
+    width:96%;
+    left:2%;
+    top:2%;
+    bottom:2%;
+    -moz-border-radius: 30px;
+    -webkit-border-radius: 30px;
+    -ms-border-radius: 30px;
+    -o-border-radius: 30px;
     background:#abb401;
+  }
+  .wrappertable .table{
+    border:none;
     color:white;
-    font-size:1.2em;
-    border-bottom: 1px solid #efefef;
+    border-collapse: collapse;
+    border-radius: 30px;
+    
   }
-  .table tfoot .ng-table-pager{
-    margin-top: 10px;
+  .wrappertable .table thead th{
+    font-size: 3em;
+    border:none !important;
+    text-transform: uppercase;
   }
-  .table tfoot .btn-default{
-    background:#6a6a6c;
-    color:white;
-    border-radius: 0;
-    box-shadow:none;
-    border:1px solid white;
+  .wrappertable .table tfoot{
+    display: none;
   }
-  .table tfoot .btn-default.active{
-    background:#ff8f00;
-  }
-  .table td{
-    border-bottom: 1px solid #efefef;
+  .wrappertable .table td{
+    border:none !important;
     vertical-align: middle !important;
+    background:#abb401 !important;
   }
-  .table td:last-child{
-    color:#abb401;
-    font-size: 1.5em;
-    text-align: center;
+  .wrappertable .table td img, .wrappertable .table td div{
+    float:left;
   }
-  .table img{
-    width:50px;
-    height: auto;
+  .wrappertable .table img{
+    width:80px;
+    height: 80px;
+    margin: 10px 30px;
     border:1px solid #efefef;
     border-radius: 50%;
     -moz-border-radius: 50%;
@@ -120,14 +125,21 @@
     -ms-border-radius: 50%;
     -o-border-radius: 50%;
   }
-  .table img + span{
-    font-weight: bold;
-    font-size:1.1em;
-    margin-left: 20px;
+  .wrappertable .table td div{
+    margin-top: 12px;
+    padding: 0 30px 10px 10px;
+    border-bottom: 1px solid white;
   }
-}
-
-/* Overwrite hover for table elements */
-.table-hover {
-    background:#fff;
+  .wrappertable .table td div span{
+    font-weight: bold;
+    font-size: 2em;
+    letter-spacing: 1px;
+  }
+  .wrappertable .table td div span + span:before{
+    content:"Dox Ranking: ";
+  }
+  .wrappertable .table td div span + span{
+    display: block;
+    font-size: 1.2em;
+  }
 }
