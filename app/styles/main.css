@@ -1,9 +1,73 @@
-/* Space out content a bit */
-/*body {
-  padding:1.5em;
-  position: relative;
-}*/
-
+/* LOGIN */
+.logo{
+  margin:50px 0;
+}
+.well.content{
+  border:none;
+  background: #f5f5f5;
+  box-shadow: none;
+}
+.well.content input{
+  margin-bottom: 5px;
+  box-shadow: none;
+  border:1px solid #efefef;
+}
+.well.content button{
+  margin-top: 25px;
+  background:#ff8e00;
+  color:white;
+  font-size: 16px;
+  transition:0.3s;
+  -moz-transition:0.3s;
+  -webkit-transition:0.3s;
+}
+.well.content button:active, .well.content button:hover{
+  background:#ff7e00;
+  box-shadow:none;
+}
+/* HEADER */
+.menu{
+  padding-top: 20px;
+}
+.menuItem{
+  padding: 5px 20px;
+  color:#ff8e00;
+  font-weight: bold;
+  font-size:0.9em;
+  text-decoration: none;
+  transition:0.3s;
+  -moz-transition:0.3s;
+  -webkit-transition:0.3s;
+}
+.menuItem:active, .menuItem:hover, .menuItem.active{
+  text-decoration: none;
+  color: #ff7e00;
+  border-bottom: 3px solid #ff7e00;
+}
+.menuItem + button{
+  margin-left: 80px;
+  background:#ff8e00;
+  color:white;
+  font-size: 16px;
+  padding-left: 25px;
+  padding-right: 25px;
+  transition:0.3s;
+  -moz-transition:0.3s;
+  -webkit-transition:0.3s;
+}
+.menuItem + button:hover, .menuItem + button:active{
+  color:white;
+  background:#ff7e00;
+  box-shadow:none;
+  
+}
+.usertype .pull-right{
+  margin: 15px 0;
+}
+.usertype .pull-right span{
+  color:#666;
+  margin-right: 20px;
+}
 /* Everything but the jumbotron gets side spacing for mobile first views */
 .header,
 .marketing,
@@ -80,6 +144,7 @@
      background-color: #ffffff;
   }
   .wrappertable{
+    overflow: hidden;
     position: absolute;
     width:96%;
     left:2%;
