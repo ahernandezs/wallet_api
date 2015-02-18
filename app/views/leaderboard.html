@@ -1,15 +1,27 @@
-<div class="well row">
-  <div class="col-md-1"></div>
-  <div class="col-md-10">
-    <table ng-table="tableParams" class="table table-hover">
-      <tr ng-repeat="user in $data | filter:query" ng-click="user.$selected = !user.$selected; detail(user)">
-        <td data-title="'Current Leader'">
-          <img fallback-src="https://s3-us-west-1.amazonaws.com/amdocs-images/profile/profile.png"  ng-src="https://s3-us-west-1.amazonaws.com/amdocs-images/profile/{{user.phoneID}}.png"/>
-          <span>{{user.name}}</span>
-         </td>
-        <td data-title="'Doxs'">{{user.doxs}}</td>
-      </tr>
-    </table>
-  </div>
-  <div class="col-md-1"></div>
+<div class="wrappertable">
+<table ng-table="tableParams" class="table table-hover">
+      <thead>
+        <tr><th colspan="2">Ranking Dox | Top 10</th></tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="user in $data | filter:query" ng-click="user.$selected = !user.$selected; detail(user)">
+          <td>
+            <i></i>
+            <img fallback-src="https://s3-us-west-1.amazonaws.com/amdocs-images/profile/profile.png"  ng-src="https://s3-us-west-1.amazonaws.com/amdocs-images/profile/{{user.phoneID}}.png"/>
+            <div>
+              <span>{{user.name}}</span>
+              <span>{{user.doxs}}</span>
+            </div>
+          </td>
+          <td>
+            <img fallback-src="https://s3-us-west-1.amazonaws.com/amdocs-images/profile/profile.png"  ng-src="https://s3-us-west-1.amazonaws.com/amdocs-images/profile/{{user.phoneID}}.png"/>
+            <div>
+              <span>{{user.name}}</span>
+              <span>{{user.doxs}}</span>
+            </div>
+          </td>
+          <!--<td data-title="'Doxs'">{{user.doxs}}</td>-->
+        </tr>
+      </tbody>
+</table>
 </div>
