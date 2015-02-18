@@ -19,7 +19,6 @@ var io = require('socket.io')(server);
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.static(__dirname + '/app'));
-server.listen(8082);
 
 // usernames which are currently connected
 var usersockets = {};
@@ -156,7 +155,7 @@ app.get('/api/spa/users', spa.getUsers);
 app.get('/api/spa/transactions/:phoneID/:type', spa.getTransactions);
 app.get('/api/spa/receipts/:phoneID', spa.getReceipts);
 app.get('/api/spa/loans/:phoneID', spa.getLoans);
-
-app.listen( process.env.PORT  || 3000);
+console.log(process.env);
+server.listen(process.env.PORT  || 3000);
 console.log('Listening on port 3000, server time set to '+new Date());
 
