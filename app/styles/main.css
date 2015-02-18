@@ -1,8 +1,7 @@
 /* Space out content a bit */
-body {
-  padding-top: 20px;
-  padding-bottom: 20px;
-}
+/*body {
+  padding:20px 0;
+}*/
 
 /* Everything but the jumbotron gets side spacing for mobile first views */
 .header,
@@ -76,16 +75,59 @@ body {
   .jumbotron {
     border-bottom: 0;
   }
-  .login {
+  .login{
      background-color: #ffffff;
   }
-  .table {
-    border: 1px solid #000;
-}
+  .table{
+    border-collapse: collapse;
+    border: 1px solid #efefef;
+  }
+  .table thead .header{
+    background:#abb401;
+    color:white;
+    font-size:1.2em;
+    border-bottom: 1px solid #efefef;
+  }
+  .table tfoot .ng-table-pager{
+    margin-top: 10px;
+  }
+  .table tfoot .btn-default{
+    background:#6a6a6c;
+    color:white;
+    border-radius: 0;
+    box-shadow:none;
+    border:1px solid white;
+  }
+  .table tfoot .btn-default.active{
+    background:#ff8f00;
+  }
+  .table td{
+    border-bottom: 1px solid #efefef;
+    vertical-align: middle !important;
+  }
+  .table td:last-child{
+    color:#abb401;
+    font-size: 1.5em;
+    text-align: center;
+  }
+  .table img{
+    width:50px;
+    height: auto;
+    border:1px solid #efefef;
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+  }
+  .table img + span{
+    font-weight: bold;
+    font-size:1.1em;
+    margin-left: 20px;
+  }
 }
 
 /* Overwrite hover for table elements */
 .table-hover {
-    background: #FFFFFF;
-    cursor: pointer;
+    background:#fff;
 }
