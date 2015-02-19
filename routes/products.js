@@ -43,3 +43,11 @@ exports.changeReceiptStatus = function(req, res){
         res.json(result);
     });
 }
+
+exports.products2 =  function(req, res){
+  console.log('POST method products');
+  console.log(req.body);
+    Productquery.getProductsDiscount(req.body.merchantID, function(err, result) {
+        res.json(result);
+    });
+};
