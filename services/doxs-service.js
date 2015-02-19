@@ -15,7 +15,9 @@ exports.saveDoxs = function(payload,callback) {
     var transferDoxs = {phoneID:payload.phoneID,amount:config.doxs[payload.action] ,type:3};
     transferFlow.transferFlow({transferRequest: transferDoxs}, function(err,result){
         console.log('Transfer doxs result: '+JSON.stringify(result)+'\n\n');
-        channel.publish('leaderboard_update',{result:'OK'});
+        setTimeout(function() {
+			channel.publish('leaderboard_update',{result:'OK'});
+		}, 3000);
 		callback(null,result);
     });
 }
