@@ -110,6 +110,7 @@ app.get('/api/forgotpin',user.forgotPIN);
 app.post('/api/validate',user.validate);
 app.post('/api/register', user.register);
 app.post('/api/products', product.products);
+app.post('/api/products2', product.products);
 app.post('/api/registerMerchant',merchant.register);
 app.post('/api/login', user.login);
 app.post('/api/updateprofile', user.updateProfile);
@@ -155,7 +156,7 @@ app.get('/api/spa/users', spa.getUsers);
 app.get('/api/spa/transactions/:phoneID/:type', spa.getTransactions);
 app.get('/api/spa/receipts/:phoneID', spa.getReceipts);
 app.get('/api/spa/loans/:phoneID', spa.getLoans);
-console.log(process.env);
+
 server.listen(process.env.PORT  || 3000);
 console.log('Listening on port 3000, server time set to '+new Date());
 
