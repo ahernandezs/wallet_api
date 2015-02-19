@@ -35,7 +35,7 @@ angular.module('pantallasAdministradorApp')
                       $scope.errorMessage = data.message;
                   });
                 }
-            }, 500);
+            }, 10);
         },
        $scope: {
            $data: {}
@@ -80,3 +80,11 @@ angular.module('pantallasAdministradorApp')
     }
     return fallbackSrc;
 });
+
+angular.module('pantallasAdministradorApp')
+.filter('slice', function() {
+  return function(arr, start, end) {
+    return (arr || []).slice(start, end);
+  };
+});
+
