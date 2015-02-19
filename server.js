@@ -44,15 +44,11 @@ channel.on('error', console.error);
 channel.subscribe('leaderboard_update', function (message) {
     console.log('Incomming message' + JSON.stringify(message)); // => 'bar'
 	if(usersockets){
-		var socketid = usersockets[6666];
+		//var socketid = usersockets[6666];
 		console.log(usersockets);
-		if(socketid) {
-			userQuery.getLeaderboard(null,function(err,users){
-				io.sockets.connected[socketid].emit('update_event', {'users': users});
-			});
-		} else {
-			console.log("This user is not connected " + message);
-		}
+		userQuery.getLeaderboard(null,function(err,users){
+			io.sockets.emit('update_event', {'users': users});
+		});
 	}
 });
 
@@ -110,7 +106,7 @@ app.get('/api/forgotpin',user.forgotPIN);
 app.post('/api/validate',user.validate);
 app.post('/api/register', user.register);
 app.post('/api/products', product.products);
-app.post('/api/products2', product.products);
+app.post('/api/products2', product.products2);
 app.post('/api/registerMerchant',merchant.register);
 app.post('/api/login', user.login);
 app.post('/api/updateprofile', user.updateProfile);
