@@ -1,39 +1,43 @@
-
-<div class="wrappertable">
-<table ng-table="tableParams" class="table table-hover">
-      <thead>
+<div class="wrappertable gradient">
+  <table ng-table="tableParams" class="table table-hover">
+    <thead>
         <tr><th colspan="2">Ranking Dox | Top 10</th></tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="user in $data | slice:0:4">
-          <td>
-            <i>{{$index +1}}</i>
-            <img fallback-src="https://s3-us-west-1.amazonaws.com/amdocs-images/profile/profile.png"  ng-src="https://s3-us-west-1.amazonaws.com/amdocs-images/profile/{{user.phoneID}}.png"/>
-            <div>
-              <span>{{user.name}}</span>
-              <span>{{user.doxs}}</span>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-</table>
-</div>
-<div class="wrappertable">
-<table ng-table="tableParams" class="table table-hover">
-      <thead>
-        <tr><th colspan="2">Ranking Dox | Top 10</th></tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="user in $data | slice:5:10">
-          <td>
-            <i>{{$index +5}}</i>
-            <img fallback-src="https://s3-us-west-1.amazonaws.com/amdocs-images/profile/profile.png"  ng-src="https://s3-us-west-1.amazonaws.com/amdocs-images/profile/{{user.phoneID}}.png"/>
-            <div>
-              <span>{{user.name}}</span>
-              <span>{{user.doxs}}</span>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-</table>
+    </thead>
+    <tbody>
+      <tr>
+        <td> <!-- tabla 1 -->
+          <table ng-table="tableParams">
+            <tbody>
+              <tr ng-repeat="user in $data | slice:0:5">
+                <td>
+                  <i>{{$index +1}}</i>
+                  <img fallback-src="https://s3-us-west-1.amazonaws.com/amdocs-images/profile/profile.png"  ng-src="https://s3-us-west-1.amazonaws.com/amdocs-images/profile/{{user.phoneID}}.png"/>
+                  <div>
+                    <span>{{user.name}}</span>
+                    <span>{{user.doxs}}</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+        <td><!-- tabla 2 -->
+          <table ng-table="tableParams">
+            <tbody>
+              <tr ng-repeat="user in $data | slice:6:10">
+                <td>
+                  <i>{{$index +6}}</i>
+                  <img fallback-src="https://s3-us-west-1.amazonaws.com/amdocs-images/profile/profile.png"  ng-src="https://s3-us-west-1.amazonaws.com/amdocs-images/profile/{{user.phoneID}}.png"/>
+                  <div>
+                    <span>{{user.name}}</span>
+                    <span>{{user.doxs}}</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>

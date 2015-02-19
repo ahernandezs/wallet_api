@@ -18,14 +18,13 @@
             <div ng-include="'views/header.html'" class="usertype"></div>
         </div>
     </div>
-    
-    <div class="well">
-      <table ng-table="tableParams" class="table table-hover">
-      <form class="form-inline">
-           <div class="form-group">
+    <form class="form-inline">
               <input ng-model="query" type="text" placeholder="Filter by name, company, group or email" autofocus class="form-control">
-          </div>
+
       </form>
+    <div class="main">
+      <table ng-table="tableParams">
+      
         <tr ng-repeat="user in $data | filter:query" ng-click="user.$selected = !user.$selected; detail(user)">
           <td data-title="'Name'" sortable="'name'">{{user.name}}</td>
           <td data-title="'Company'" sortable="'company'">{{user.company}}</td>
