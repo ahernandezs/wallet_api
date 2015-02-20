@@ -24,7 +24,7 @@ exports.getProducts =  function(merchantID, callback) {
 
 exports.getProductsDiscount =  function(merchantID, callback) {
     console.log( 'getProducts discount from MongoDB with status: ' + config.products.status );
-    Product2.find({}, 'name', function(err, products)  {
+    Product2.find({}, '_id name description url cost status discount', function(err, products)  {
         var response;
         if (err) {
             response = { statusCode: 1, additionalInfo: config.products.errMsg };
