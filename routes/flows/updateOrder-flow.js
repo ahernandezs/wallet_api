@@ -54,6 +54,14 @@ exports.updateOrderFlow = function(payload,callback) {
 					additionalInfoJSON.status = status;
 					messageUpdate.message =  'Your order No ' + payload.orderID +  ' is ' + status;
 					messageUpdate.additionalInfo = JSON.stringify(additionalInfoJSON);
+					var actionType ;
+					if(messageUpdate.type === config.messages.type.BUY) actionType = config.messages.action.BUY;
+					else if(messageUpdate.type === config.messages.type.GIFT) actionType = config.messages.action.GIFT;
+					else if(messageUpdate.type === config.messages.type.LOAN) actionType = config.messages.action.LOAN;
+					else if(messageUpdate.type === config.messages.type.TRANSFER) actionType = config.messages.action.TRANSFER;
+					else if(messageUpdate.type === config.messages.type.COUPON) actionType = config.messages.action.COUPON;
+					var extraData = {   action: actionType, additionalInfo : messageUpdate.additionalInfo, _id: messageUpdate._id};
+					messageUpdate.extra = {extra : extraData} ;
 		            messageQuery.updateMessageByOrderID(messageUpdate, function(err, result) {
 						if (err){
 							console.log(err);
