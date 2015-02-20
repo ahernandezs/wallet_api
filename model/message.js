@@ -9,6 +9,7 @@ var messageSchema =  new Schema({
 	message:String ,
 	status:String ,
 	additionalInfo:String ,
+	orderID:Number,
 	date:String
 });
 

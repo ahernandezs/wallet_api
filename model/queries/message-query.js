@@ -72,3 +72,27 @@ exports.getMessagesNoRead = function(phoneID, callback) {
       }
   });
 };
+
+exports.getMessageByOrderID = function(orderID, callback) {
+    console.log( 'Getting message : ' + orderID);
+
+    var conditions = {'orderID': orderID };
+
+    Message.findOne(conditions, 'title type message status additionalInfo date orderID', {sort: {date: -1}}, function (err, msg) {
+      if (err) callback('ERROR', err);
+      else
+        callback(null, msg);
+    });
+};
+
+exports.updateMessageByOrderID = function(payload,callback){
+  console.log(payload);
+  delete payload._id
+  var conditions = {orderID: payload.orderID};
+  Message.update(conditions, payload, null, function(err, result) {
+    if
+      (err) callback('ERROR', err);
+    else
+      callback(null, result);
+  });
+};

@@ -40,12 +40,16 @@ exports.getMerchanByAppID = function(appID, callback) {
 
 
 exports.updateMerchanByID = function(payload, callback) {
-    console.log( 'Update Merchan with ID: ' + payload.id);
-    var conditions ={ id : payload.id};
-    var payload = payload;
-    Merchant.update(conditions, payload, null, function(err, result) {
-        if (err) callback("ERROR", { statusCode: 1,  message: 'register failed' });
-        callback(null, { statusCode: 0 ,  additionalInfo: 'register succesful' });
+    console.log( 'Update Merchan with ID: ' + payload.appID);
+    var MerchantToPersist = new Merchant(payload);
+    console.log('Merchant to persist ' + JSON.stringify(payload));
+
+    MerchantToPersist.save(function (err) {
+      if (err){
+        console.log(err);
+        callback("ERROR", { statusCode: 1,  additionalInfo: 'Error to register merchants' });
+        }
+      else callback(null, { statusCode: 0 ,  additionalInfo: 'merchant registered correctly' });
     });
 };
 
