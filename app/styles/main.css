@@ -276,7 +276,7 @@ ul.nav li a:hover{
     
   }
   .wrappertable .table thead th{
-    font-size: 3em;
+    font-size: 2.5em;
     letter-spacing: 3px;
     border:none !important;
     text-transform: uppercase;
@@ -286,8 +286,8 @@ ul.nav li a:hover{
     background: none;
   }
   .wrappertable .table table td, .wrappertable .table table td:hover{
-    padding-top: 25px;
-    padding-bottom: 25px;
+    padding-top: 14px;
+    padding-bottom: 14px;
     background: none !important;
   }
   .wrappertable .table tfoot, .wrappertable .table table thead{
@@ -304,8 +304,8 @@ ul.nav li a:hover{
   .wrappertable .table td i{
     font-style: normal;
     font-weight: bold;
-    font-size: 4em;
-    line-height: 1.5em;
+    font-size: 3em;
+    line-height: 2em;
   }
   .wrappertable .table img{
     width:80px;
@@ -325,7 +325,7 @@ ul.nav li a:hover{
   }
   .wrappertable .table td div span{
     font-weight: bold;
-    font-size: 2.5em;
+    font-size: 2.2em;
     letter-spacing: 1px;
   }
   .wrappertable .table td div span + span:before{
@@ -334,7 +334,7 @@ ul.nav li a:hover{
   }
   .wrappertable .table td div span + span{
     display: block;
-    font-size: 1.7em;
+    font-size: 1.5em;
     color:#333333;
   }
 }
