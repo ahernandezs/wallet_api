@@ -47,14 +47,13 @@ exports.sendRegisterMessage= function(user, callback){
         function(html, callback) {
             html = html.replace('1234', user.pin);
             email.setHtml(html);
-           //sendgrid.send(email, function(err, json) {
-           //     if (err) {
-           //         callback('ERROR', err);
-           //     } else {
-           //         callback(null, json);
-           //     }
-          //  });
-	   callback(null,'');
+            sendgrid.send(email, function(err, json) {
+                if (err) {
+                    callback('ERROR', err);
+                } else {
+                    callback(null, json);
+                }
+            });
         }
     ], function (err, result) {
         if(err){      

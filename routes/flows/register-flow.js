@@ -15,7 +15,7 @@ exports.registerFlow = function(payload,callback) {
   async.waterfall([
     function(callback){
 
-      var end = 'MX'
+      var end = 'ID'
       console.log('Validation PhoneID--------------');
       console.log(endsWith(payload.phoneID, end));
       if(endsWith(payload.phoneID, end))
