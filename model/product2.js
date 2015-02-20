@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var product3Schema = new Schema({
+var discountSchema = new Schema({
     merchantId: Number,
 	name: String,
     url: String,
@@ -11,4 +11,4 @@ var product3Schema = new Schema({
 	status: String
 });
 
-module.exports = mongoose.model('Product3', product3Schema);
+module.exports = mongoose.model('Discount', discountSchema);
