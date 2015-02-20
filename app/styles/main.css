@@ -338,3 +338,26 @@ ul.nav li a:hover{
     color:#333333;
   }
 }
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none){
+  .wrappertable .table thead th{
+    font-size: 2.5em;
+  }
+   .wrappertable .table table td, .wrappertable .table table td:hover{
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .wrappertable .table td i{
+    font-size: 3em;
+    line-height: 2em;
+  }
+  .wrappertable .table img{
+    width:70px;
+    height: 70px;
+  }
+  .wrappertable .table td div span{
+    font-size: 1.8em;
+  }
+  .wrappertable .table td div span + span{
+    font-size: 1.2em;
+  }
+}
