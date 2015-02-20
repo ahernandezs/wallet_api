@@ -9,6 +9,7 @@ var https = require('https');
 exports.singlePush = function(req, callback) {
 	console.log("phoneID: " + req.phoneID);
 	buildPayload(req, function(err,requestWrapper) {
+		console.log(JSON.stringify(requestWrapper));
 		if(!requestWrapper){
 			console.log('Notification sent correctly, not exist APPID linked');
 			var response = { statusCode: 0 ,  message: 'Notification sent correctly' };
@@ -69,6 +70,8 @@ buildPayload = function(req,callback){
 		request.notifications = notifications;
 		var requestWrapper = {'request': request};
 		if(req.extra){
+			console.log('extra');
+			console.log(req.extra);
 			requestWrapper.request.notifications[0].data = req.extra;
 		}
 		callback(null,requestWrapper,result.environment);
