@@ -41,7 +41,7 @@ angular.module('pantallasAdministradorApp')
            $data: {}
        }
    });
-  var socket = io.connect('http://localhost:3000');
+  var socket = io.connect('amdocs.anzen.io');
   socket.on('connect', function(){
       socket.emit('adduser',createGUID());
   });
