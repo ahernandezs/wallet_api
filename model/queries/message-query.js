@@ -60,17 +60,19 @@ exports.deleteMessage = function(messageID,callback){
 
 
 exports.getMessagesNoRead = function(phoneID, callback) {
-    console.log( 'Getting NOREAD messages  : ' + phoneID);
-    Message.find({ 'phoneID': phoneID , 'status' :'NOTREAD' }, ' title type message status additionalInfo date', function (err, msgs) {
-        if (err) callback('ERROR', err);
-        else if(msgs){
-          callback(null, msgs);
+    console.log( 'Getting messages: ' + phoneID);
+
+    var tmp = {};
+    var condiciones = {$and: [ {'phoneID': phoneID },{message:{ $ne: '' }}] };
+
+    Message.find(condiciones, ' title type message status additionalInfo date', {sort: {date: -1}}, function (err, msgs) {
+
+      if (err) callback('ERROR', err);
+      else if(msgs){
+        tmp = msgs;
       }
-      else{
-          console.log("messages not found");
-          callback("messages not found", null);
-      }
-  });
+        callback(null, tmp);
+    });
 };
 
 exports.getMessageByOrderID = function(orderID, callback) {

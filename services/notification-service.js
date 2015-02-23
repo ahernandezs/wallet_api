@@ -9,13 +9,13 @@ var https = require('https');
 exports.singlePush = function(req, callback) {
 	console.log("phoneID: " + req.phoneID);
 	buildPayload(req, function(err,requestWrapper) {
-		console.log(JSON.stringify(requestWrapper));
 		if(!requestWrapper){
 			console.log('Notification sent correctly, not exist APPID linked');
 			var response = { statusCode: 0 ,  message: 'Notification sent correctly' };
 			callback(null, response);
 		}
 		else{
+			console.log(JSON.stringify(requestWrapper));
 			var Client = require('node-rest-client').Client;
 			var client = new Client();
 			// set content-type header and data as json in args parameter
@@ -25,7 +25,6 @@ exports.singlePush = function(req, callback) {
 			};
 			client.post("http://cp.pushwoosh.com/json/1.3/createMessage", args, function(data,response) {
 				console.log('Response Push -->');
-			    console.log(JSON.parse(data));
 			    var responseStatus = JSON.parse(data);
 			    if(responseStatus.status_code === 200){
 			    	console.log('Notification sent correctly');
@@ -70,8 +69,6 @@ buildPayload = function(req,callback){
 		request.notifications = notifications;
 		var requestWrapper = {'request': request};
 		if(req.extra){
-			console.log('extra');
-			console.log(req.extra);
 			requestWrapper.request.notifications[0].data = req.extra;
 		}
 		callback(null,requestWrapper,result.environment);
@@ -107,7 +104,6 @@ buildMerchantPayload = function(req,callback){
 			var requestWrapper = {'request': request};
 			if(req.extra){
 				requestWrapper.request.notifications[0].data = req.extra;
-				console.log(req.extra);
 			}
 
 			callback(null,requestWrapper,result.environment);

@@ -42,8 +42,6 @@ exports.updateOrderFlow = function(payload,callback) {
 			});
 		},
 		function(receipt,callback){
-			console.log(receipt);
-
             messageQuery.getMessageByOrderID(payload.orderID, function(err,result){
                 if (err) {
                     var response = { statusCode: 1, additionalInfo: err };
