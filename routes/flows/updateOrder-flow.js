@@ -51,6 +51,7 @@ exports.updateOrderFlow = function(payload,callback) {
 					var additionalInfoJSON = JSON.parse(receipt.additionalInfo);
 					additionalInfoJSON.status = status;
 					messageUpdate.message =  'Your order No ' + payload.orderID +  ' is ' + status;
+					messageUpdate.title = messageUpdate.message;
 					messageUpdate.additionalInfo = JSON.stringify(additionalInfoJSON);
 					var actionType ;
 					if(messageUpdate.type === config.messages.type.BUY) actionType = config.messages.action.BUY;
