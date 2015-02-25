@@ -277,7 +277,7 @@ ul.nav li a:hover{
     color:white;
     border-collapse: collapse;
     background: none;
-    margin-top: 120px;
+    margin-top: 130px;
   }
   .wrappertable .table thead, .wrappertable .table thead th{
     border:none;
@@ -304,10 +304,10 @@ ul.nav li a:hover{
     float:left;
     display: block;
   }
-  .item.primeros{
+  .item.itemtop{
     background: #65646a;
     height: 120px;
-    margin:5px 0;
+    margin:7px 0;
     min-width:650px; 
   }
   .item{
@@ -327,23 +327,23 @@ ul.nav li a:hover{
    .wrappertable .table .tableDer .item{
       margin:10px 0;
    }
-  .wrappertable .table td .item.primeros i{
+  .wrappertable .table td .item.itemtop i{
     font-size:4.5em;
-    margin-top: 30px;
+    margin-top: 27px;
   }
   .wrappertable .table td i{
     font-family: Helvetica;
     font-style: normal;
     font-size:4em;
     line-height: 0.8em;
-    padding: 0 40px 0 20px;
+    padding: 0 50px 0 10px;
     padding-top: 15px;
-    margin: 20px 0 0 -10px;
+    margin: 20px 0 0 -20px;
     display: block;
     background: #f18903;
     position: absolute;
   }
-  .wrappertable .table .item.primeros img{
+  .wrappertable .table .item.itemtop img{
     width: 140px;
     height: 140px;
     margin-top: -15px;
@@ -364,7 +364,7 @@ ul.nav li a:hover{
     width: 80%;
     float: right;
   }
-  .wrappertable .table td .item.primeros div .name{font-size: 2.5em;margin-left: 80px}
+  .wrappertable .table td .item.itemtop div .name{font-size: 2.5em;margin-left: 90px}
   .wrappertable .table td div .name{
     margin-left: 70px;
     font-weight: bold;
@@ -377,7 +377,7 @@ ul.nav li a:hover{
     color:white;
     font-family: Helvetica;
   }
-  .wrappertable .table td .item.primeros div span + span{
+  .wrappertable .table td .item.itemtop div span + span{
     font-size:3.5em;
   }
   .wrappertable .table td div span + span{
