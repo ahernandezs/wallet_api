@@ -6,7 +6,7 @@ var updateOrder = require('../routes/flows/updateOrder-flow');
 exports.merchants =  function(req, res){
   console.log('execute GET method merchants! ' + JSON.stringify(req.headers));
   var phoneID = req.headers['x-phoneid'];
-  merchantQuery.getMerchands(phoneID, function(err, result){
+  merchantQuery.getMerchants(phoneID, function(err, result){
     res.json(result);
   })
 };
@@ -46,7 +46,7 @@ exports.getOrders = function(req, res) {
 exports.register = function(req, res) {
   console.log( 'execute POST method updateMerchant' );
   console.log( req.body );
-  merchantQuery.updateMerchanByID(req.body , function(err,result){
+  merchantQuery.updateMerchantByID(req.body , function(err,result){
     if(err) {
       res.send(500);
     } else {

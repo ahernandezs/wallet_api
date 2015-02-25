@@ -100,7 +100,7 @@ exports.singlePush2Merchant = function(req, callback) {
 	payload['audience'] = deviceID;
 
 	console.log(payload);
-	merchantQuery.getMerchanByAppID(req.appID,function(err,result) {
+	merchantQuery.getMerchantByAppID(req.appID,function(err,result) {
 		if(result.environment && (result.environment === 'PRODUCTION')){
 			uaStore.pushNotification('/api/push', payload, function(error) {
 				if (error) {
