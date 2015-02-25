@@ -64,7 +64,7 @@ exports.createLoanFlow = function(payload,callback) {
       },
     function(loan,merchantID,callback){
       logger.info('search merchant by phoneID');
-      merchantQuery.getMerchanByID(merchantID,function(err,result){
+      merchantQuery.getMerchantByID(merchantID,function(err,result){
         if(err){
             var response = { statusCode:1 ,  additionalInfo : err };
             callback('ERROR',response);

@@ -98,21 +98,6 @@ exports.buyFlow = function(payload,callback) {
 				callback(null, sessionid);
 			});
 		},
-
-		function(sessionid,callback){
-			logger.info('search merchant by phoneID');
-			merchantQuery.getMerchanByID(1,function(err,result){
-				if(err){
-					var response = { statusCode:1 ,  additionalInfo : err };
-					callback('ERROR',response);
-				}
-				else{
-					notification.OS = result.OS;
-					notification.appID = result.appID;
-					callback(null,sessionid);
-				}
-			});
-		},
 		function(sessionid,callback) {
 			var message = 'There is a new order!';
 			notification.message = message;

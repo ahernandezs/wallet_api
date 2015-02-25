@@ -351,7 +351,7 @@ exports.getLeaderboard = function(phoneIDUser,callback){
     });
   }else{
       console.log( 'by merchantID' );
-    merchantQuery.getMerchanByID(1,function(err,result){
+    merchantQuery.getMerchantByID(1,function(err,result){
       if (err)
         callback('ERROR', { message: 'Fail  getLeaderboard' });
       else{

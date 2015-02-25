@@ -1,4 +1,5 @@
 var Merchant = require('../merchant');
+var MerchantNotification = require('../merchantNotification');
 var User = require('../user');
 var sessionQuery = require('./session-query');
 var config = require('../../config.js');
@@ -6,7 +7,7 @@ var async = require('async');
 var moment = require('moment-timezone');
 
 
-exports.getMerchanByID = function(merchantID, callback) {
+exports.getMerchantByID = function(merchantID, callback) {
     console.log( 'Get Merchan By ID: ' + merchantID);
     Merchant.find({ 'id': merchantID }, 'appID OS group', function(err, merchant)  {
         var response;
@@ -22,26 +23,26 @@ exports.getMerchanByID = function(merchantID, callback) {
     });
 };
 
-exports.getMerchanByAppID = function(appID, callback) {
-    console.log( 'Get Merchan By AppID: ' + appID);
-    Merchant.find({ 'appID': appID }, 'appID OS environment', function(err, merchant)  {
+exports.getMerchantsNotifications = function(callback) {
+    console.log( 'Get Merchants for notifications');
+    MerchantNotification.find({}, 'appID OS environment', function(err, merchants)  {
         var response;
         if (err) {
             response = { statusCode: 1, additionalInfo: config.merchants.errMsg };
             callback("ERROR: " + err.message, response);
-        } else if (merchant.length === 0) {
+        } else if (merchants.length === 0) {
             response = { statusCode: 0, additionalInfo: config.merchants.emptyMsg }
             callback(null, response);
         } else {
-            callback(null, merchant[0]);
+            callback(null, merchants);
         }
     });
 };
 
 
-exports.updateMerchanByID = function(payload, callback) {
+exports.updateMerchantByID = function(payload, callback) {
     console.log( 'Update Merchan with ID: ' + payload.appID);
-    var MerchantToPersist = new Merchant(payload);
+    var MerchantToPersist = new MerchantNotification(payload);
     console.log('Merchant to persist ' + JSON.stringify(payload));
 
     MerchantToPersist.save(function (err) {
@@ -53,7 +54,7 @@ exports.updateMerchanByID = function(payload, callback) {
     });
 };
 
-exports.getMerchands = function(phoneID, callback){
+exports.getMerchants = function(phoneID, callback){
 
     async.waterfall([
       function(callback){
