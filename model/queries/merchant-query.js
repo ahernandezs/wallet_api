@@ -44,13 +44,22 @@ exports.updateMerchantByID = function(payload, callback) {
     console.log( 'Update Merchan with ID: ' + payload.appID);
     var MerchantToPersist = new MerchantNotification(payload);
     console.log('Merchant to persist ' + JSON.stringify(payload));
-
-    MerchantToPersist.save(function (err) {
-      if (err){
-        console.log(err);
-        callback("ERROR", { statusCode: 1,  additionalInfo: 'Error to register merchants' });
+    MerchantNotification.find({appID:payload.appID}, 'appID', function(err, merchants)  {
+        var response;
+        if (err) {
+            response = { statusCode: 1, additionalInfo: config.merchants.errMsg };
+            callback("ERROR: " + err.message, response);
+        } else if (merchants.length === 0) {//if not exist user
+            MerchantToPersist.save(function (err) {
+              if (err){
+                console.log(err);
+                callback("ERROR", { statusCode: 1,  additionalInfo: 'Error to register merchants' });
+                }
+              else callback(null, { statusCode: 0 ,  additionalInfo: 'merchant registered correctly' });
+            });
+        } else { //if exist merchant
+            callback(null, { statusCode: 0 ,  additionalInfo: 'merchant registered already' });
         }
-      else callback(null, { statusCode: 0 ,  additionalInfo: 'merchant registered correctly' });
     });
 };
 
