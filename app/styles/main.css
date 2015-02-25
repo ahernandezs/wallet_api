@@ -1,3 +1,17 @@
+/* FONTS */
+@font-face {
+  font-family: 'Helvetica';
+  src: url('../fonts/helvetica/HelveticaNeueLTPro-BdCn.eot?#iefix') format('embedded-opentype'), 
+       url('../fonts/helvetica/HelveticaNeueLTPro-BdCn.woff') format('woff'), 
+       url('../fonts/helvetica/HelveticaNeueLTPro-BdCn.ttf')  format('truetype');
+}
+@font-face {
+  font-family: 'Liquidcrystal';
+  src: url('../fonts/liquidcrystal/LiquidCrystal-Bold.eot?#iefix') format('embedded-opentype'), 
+       url('../fonts/liquidcrystal/LiquidCrystal-Bold.woff') format('woff'), 
+       url('../fonts/liquidcrystal/LiquidCrystal-Bold.ttf')  format('truetype');
+}
+
 /* LOGIN */
 .logo{
   margin:50px 0;
@@ -250,39 +264,28 @@ ul.nav li a:hover{
   }
   .wrappertable{
     position: absolute;
-    width:96%;
-    left:2%;
-    top:2%;
-    /*bottom:2%;*/
-    -moz-border-radius: 30px;
-    -webkit-border-radius: 30px;
-    -ms-border-radius: 30px;
-    -o-border-radius: 30px;
-    background: rgba(221,233,1,1);
-    background: -moz-radial-gradient(center, ellipse cover, rgba(221,233,1,1) 0%, rgba(171,180,1,1) 100%);
-    background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, rgba(221,233,1,1)), color-stop(100%, rgba(171,180,1,1)));
-    background: -webkit-radial-gradient(center, ellipse cover, rgba(221,233,1,1) 0%, rgba(171,180,1,1) 100%);
-    background: -o-radial-gradient(center, ellipse cover, rgba(221,233,1,1) 0%, rgba(171,180,1,1) 100%);
-    background: -ms-radial-gradient(center, ellipse cover, rgba(221,233,1,1) 0%, rgba(171,180,1,1) 100%);
-    background: radial-gradient(ellipse at center, rgba(221,233,1,1) 0%, rgba(171,180,1,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dde901', endColorstr='#abb401', GradientType=1 );
+    right:0;
+    left:0;
+    top:0;
+    bottom:0;
+    background:url(../images/bg.png) no-repeat;
+    background-size: cover;
   }
   .wrappertable .table{
+    width: 100%;
     border:none;
     color:white;
     border-collapse: collapse;
-    border-radius: 30px;
     background: none;
-    
+    margin-top: 120px;
   }
-  .wrappertable .table thead th{
-    font-size: 2.5em;
-    letter-spacing: 3px;
-    border:none !important;
-    text-transform: uppercase;
+  .wrappertable .table thead, .wrappertable .table thead th{
+    border:none;
   }
+  .wrappertable .table .tableDer{margin-top: 50px}
   .wrappertable .table table{
-    margin: 0 0 0 50px;
+    width: 50%;
+    margin: 0 0 0 70px;
     background: none;
   }
   .wrappertable .table table td, .wrappertable .table table td:hover{
@@ -301,17 +304,38 @@ ul.nav li a:hover{
     float:left;
     display: block;
   }
+  .item{
+    margin:12px 0;
+    min-width:600px; 
+    width:100%;
+    height: 100px;
+    position: relative;
+    background: #a6adb5;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+  }
+   .wrappertable .table .tableDer .item{
+      margin:10px 0;
+   }
   .wrappertable .table td i{
+    font-family: Helvetica;
     font-style: normal;
-    font-weight: bold;
-    font-size: 3em;
-    line-height: 2em;
+    font-size:4em;
+    line-height: 0.8em;
+    padding: 0 40px 0 20px;
+    padding-top: 15px;
+    margin: 20px 0 0 -10px;
+    display: block;
+    background: #f18903;
+    position: absolute;
   }
   .wrappertable .table img{
-    width:80px;
-    height: 80px;
-    margin: 10px 50px;
-    border:1px solid #efefef;
+    width:120px;
+    height: 120px;
+    border:2px solid white;
+    position: absolute;
+    margin:-15px 0 0 55px;
     border-radius: 50%;
     -moz-border-radius: 50%;
     -webkit-border-radius: 50%;
@@ -319,23 +343,31 @@ ul.nav li a:hover{
     -o-border-radius: 50%;
   }
   .wrappertable .table td div{
-    margin-top: 5px;
-    padding: 0 30px 8px 8px;
-    border-bottom: 1px solid white;
+    width: 80%;
+    float: right;
   }
-  .wrappertable .table td div span{
+  .wrappertable .table td div .name{
+    margin-left: 70px;
     font-weight: bold;
-    font-size: 2.2em;
+    font-size: 2em;
     letter-spacing: 1px;
   }
   .wrappertable .table td div span + span:before{
     content:"DOX Ranking: ";
-    font-size: 0.9em;
+    font-size: 0.5em;
+    color:white;
+    font-family: Helvetica;
   }
   .wrappertable .table td div span + span{
+    border-radius: 0 0 10px 0;
+    padding: 0 20px;
+    text-align: right;
+    background:#09262d;
     display: block;
-    font-size: 1.5em;
-    color:#333333;
+    font-size: 3em;
+    letter-spacing: 3px;
+    color:#f18903;
+    font-family: Liquidcrystal;
   }
 }
 @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none){
