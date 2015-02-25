@@ -304,6 +304,12 @@ ul.nav li a:hover{
     float:left;
     display: block;
   }
+  .item.primeros{
+    background: #65646a;
+    height: 120px;
+    margin:5px 0;
+    min-width:650px; 
+  }
   .item{
     margin:12px 0;
     min-width:600px; 
@@ -321,6 +327,10 @@ ul.nav li a:hover{
    .wrappertable .table .tableDer .item{
       margin:10px 0;
    }
+  .wrappertable .table td .item.primeros i{
+    font-size:4.5em;
+    margin-top: 30px;
+  }
   .wrappertable .table td i{
     font-family: Helvetica;
     font-style: normal;
@@ -332,6 +342,11 @@ ul.nav li a:hover{
     display: block;
     background: #f18903;
     position: absolute;
+  }
+  .wrappertable .table .item.primeros img{
+    width: 140px;
+    height: 140px;
+    margin-top: -15px;
   }
   .wrappertable .table img{
     width:120px;
@@ -349,6 +364,7 @@ ul.nav li a:hover{
     width: 80%;
     float: right;
   }
+  .wrappertable .table td .item.primeros div .name{font-size: 2.5em;margin-left: 80px}
   .wrappertable .table td div .name{
     margin-left: 70px;
     font-weight: bold;
@@ -360,6 +376,9 @@ ul.nav li a:hover{
     font-size: 0.5em;
     color:white;
     font-family: Helvetica;
+  }
+  .wrappertable .table td .item.primeros div span + span{
+    font-size:3.5em;
   }
   .wrappertable .table td div span + span{
     border-radius: 0 0 10px 0;
