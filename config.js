@@ -106,7 +106,7 @@ config.mailInvite.bodyEnd = '(iOS and Android supported)';
 config.mailInvite.footer = 'Cheers,';
 
 config.sms = {};
-config.sms.message = 'Check out the Amdocs Mobile Wallet with FREE €5 to buy some drinks at the Amdocs Café. To download the app click here www.goo.gl/B8HdBj. For iOS and Android';
+config.sms.message = 'Check out the Amdocs Mobile Wallet with FREE 5 EUR to buy some drinks at the Amdocs Cafe. Download the iOS and Android app from here www.goo.gl/B8HdBj.';
 config.logger = new (winston.Logger)({
     transports: [
         new (winston.transports.Console)({ colorize: 'true', handleExceptions: true }),
