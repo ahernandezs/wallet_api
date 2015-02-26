@@ -261,13 +261,17 @@ exports.sendMessage = function(req, res){
   req.body.sessionid = req.headers['x-auth-token'];
   req.body.phoneID = req.headers['x-phoneid'];
 
+    if(req.body.message && req.body.message !=''){
       messages.sendMessage(req.body,function(err,result){
         console.log(result);
         if(err)
-            res.json({ statusCode : 1, additionalInfo : result});
+          res.json({ statusCode : 1, additionalInfo : result});
         else
-            res.json(result);
-    });
+          res.json(result);
+      });
+    }
+    else
+      res.json({ statusCode : 0, additionalInfo : 'messager was sent successfully'});
 
 };
 

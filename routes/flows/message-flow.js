@@ -21,14 +21,14 @@ exports.sendMessage = function(payload,callback) {
 		function(callback) {
             console.log('Imprimiendo');
             console.log(requestMessage);
-		    console.log('Get sender in db ' + requestMessage.phoneID);
-            Userquery.getName(requestMessage.phoneID,function(err,user){
+		    console.log('Get sender in db ' + requestMessage.destinatary);
+            Userquery.getName(requestMessage.destinatary,function(err,user){
                 if (err) {
                     var response = { statusCode: 1, additionalInfo: err };
                     callback('ERROR', response);
                 } else {
                     console.log(config.S3.url);
-                    senderAvatar = config.S3.url + payload.phoneID +'.png';
+                    senderAvatar = config.S3.url + payload.destinatary +'.png';
                     callback(null, user.name,senderAvatar);
                 }
 
@@ -45,7 +45,7 @@ exports.sendMessage = function(payload,callback) {
             message.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
             message.message = requestMessage.message;
             message.additionalInfo = JSON.stringify({ name: senderName  , avatar :senderAvatar ,  amount : requestMessage.amount , message : requestMessage.message });
-            messageQuery.createMessage(requestMessage.phoneID,message, function(err, result) {
+            messageQuery.createMessage(requestMessage.destinatary,message, function(err, result) {
                 if (err) {
                     var response = { statusCode: 1, additionalInfo: result };
                     callback('ERROR', response);
@@ -61,7 +61,7 @@ exports.sendMessage = function(payload,callback) {
         },
 
         function(message, callback) {
-            console.log('Send push notification');
+            console.log('Send push notification' + JSON.stringify(message));
             urbanService.singlePush(message, function(err, result) {
                 var response = { statusCode: 0, additionalInfo: ' message was sent successful' };
                 callback(null,response);
