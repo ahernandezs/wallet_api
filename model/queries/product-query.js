@@ -4,8 +4,10 @@ var config = require('../../config.js');
 
 exports.getProducts =  function(merchantID, callback) {
     console.log( 'getProducts from MongoDB with status: ' + config.products.status );
-    Product.find({ 'merchantId': merchantID , 'status': config.products.status }, '_id name description url cost status', function(err, products)  {
-        var response;
+    var query = Product.find({ 'merchantId': merchantID , 'status': config.products.status });
+    query.sort({productID:1});
+    query.exec(function(err,products){
+            var response;
         if (err) {
             response = { statusCode: 1, additionalInfo: config.products.errMsg };
             callback("ERROR: " + err.message, response);
@@ -24,8 +26,10 @@ exports.getProducts =  function(merchantID, callback) {
 
 exports.getProductsDiscount =  function(merchantID, callback) {
     console.log( 'getProducts discount from MongoDB with status: ' + config.products.status );
-    Product2.find({}, '_id name description url cost status discount', function(err, products)  {
-        var response;
+    var query =  Product2.find({}, 'productID name description url cost status discount');
+    query.sort({productID:1});
+    query.exec(function(err,products){
+            var response;
         if (err) {
             response = { statusCode: 1, additionalInfo: config.products.errMsg };
             callback("ERROR: " + err.message, response);
