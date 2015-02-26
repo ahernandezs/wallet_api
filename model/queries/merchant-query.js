@@ -93,18 +93,26 @@ exports.getMerchants = function(phoneID, callback){
         });
       },
       function(data, callback){
-        var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
-        dateTime = new Date().getHours();
-        var tmp = data[0].schedule.split('-');
-
-
-        var openTime = parseInt(tmp[0].replace('am', '').replace(' ', ''));
-        var closeTime = parseInt(tmp[1].replace('pm', '').replace(' ', '')) + 13;
-
-        if(dateTime>=openTime && dateTime<closeTime){
+        if(process.env.OPEN_MERCHANT && process.env.OPEN_MERCHANT === 'TRUE' ){
+            console.log('open merchant always');
             data[0].open = 1;
-        }else{
-            data[0].open = 0;
+        }
+
+        else{
+            console.log('open merchant from schedule');
+            var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
+            dateTime = new Date().getHours();
+            var tmp = data[0].schedule.split('-');
+
+
+            var openTime = parseInt(tmp[0].replace('am', '').replace(' ', ''));
+            var closeTime = parseInt(tmp[1].replace('pm', '').replace(' ', '')) + 13;
+
+            if(dateTime>=openTime && dateTime<closeTime){
+                data[0].open = 1;
+            }else{
+                data[0].open = 0;
+            }
         }
 
         callback(null, data);
