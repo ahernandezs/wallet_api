@@ -15,7 +15,8 @@ exports.getMessages = function(phoneID, callback) {
     console.log( 'Getting messages: ' + phoneID);
 
     var tmp = {};
-    var condiciones = {$and: [ {'phoneID': phoneID },{message:{ $ne: '' }}] };
+    var condiciones = {$and: [ { $or : [  {'phoneID': phoneID },{message:{ $ne: '' } } ] }, 
+                              { $or : [  {'phoneID': phoneID },{ type:'GIFT' } ] } ] };
 
     Message.find(condiciones, ' title type message status additionalInfo date', {sort: {date: -1}}, function (err, msgs) {
 
