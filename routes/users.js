@@ -299,3 +299,13 @@ exports.getSocialFeeds = function(req, res) {
             res.json( { statusCode : 0, additionalInfo : result } );
     });
 };
+
+exports.getSMSMessage = function(req, res) {
+    req.body.phoneID = req.headers['x-phoneid'];
+
+    if (req.body.phoneID)
+        res.json( { message : config.sms.message } );
+    else
+        res.json( { statusCode : 1, additionalInfo : 'Error to get message' } );
+
+};

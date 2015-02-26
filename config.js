@@ -52,7 +52,6 @@ config.messages.action = {TRANSFER:1 , GIFT :2 , BUY :3 ,LOAN : 4, COUPON: 5 };
 config.messages.transferFund = 'You have sent a Transfer to ';
 config.messages.coupon = {};
 config.messages.coupon.message = 'Congratulations You are today’s winner of “Highest DOX score of the day wins a Prize” promotion! We will be in touch shortly, along with your prize';
-//config.messages.coupon.message = 'Congratulations! You are today’s winner of “Don’t Miss a  surprise gift with DOX” promotion! We will be in touch shortly' ;
 config.messages.coupon.title = 'Congratulations, You won a prize'
 config.messages.inviteError = 'Sorry, You have exceeded your number of invitations'
 
@@ -98,7 +97,7 @@ config.mail.bodyFin='Now you can buy a coffee or just send a coffee to a friend,
 config.mail.regards='Thanks';
 config.mail.footer='Amdocs wallet Team';
 
-config.mailInvite = {}
+config.mailInvite = {};
 config.mailInvite.header = 'Hey there,';
 config.mailInvite.bodyInit = 'Check out the Amdocs Mobile Wallet  - it\'s really awesome with FREE €5 to get you started with some delicious drinks at the fully cashless Amdocs Café';
 config.mailInvite.bodyMid1 = 'The most active wallet user will also win a Prize';
@@ -106,8 +105,8 @@ config.mailInvite.bodyMid2 = 'To download the app , simply click on below link f
 config.mailInvite.bodyEnd = '(iOS and Android supported)';
 config.mailInvite.footer = 'Cheers,';
 
-
-
+config.sms = {};
+config.sms.message = 'Check out the Amdocs Mobile Wallet with FREE €5 to buy some drinks at the Amdocs Café. To download the app click here www.goo.gl/B8HdBj. For iOS and Android';
 config.logger = new (winston.Logger)({
     transports: [
         new (winston.transports.Console)({ colorize: 'true', handleExceptions: true }),
