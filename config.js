@@ -83,6 +83,7 @@ config.doxs.twitter = 1000;
 config.doxs.facebook = 1000;
 config.doxs.instagram = 1000;
 config.doxs.invite = 1000;
+config.doxs.sms = 1000;
 
 config.prizes = {};
 config.prizes.top = 1;

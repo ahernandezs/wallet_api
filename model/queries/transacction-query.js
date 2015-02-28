@@ -178,11 +178,11 @@ exports.getTransacctionsSocialFeed = function(callback) {
             if(giftsTransactions)
                 resulTransactions = resulTransactions.concat(giftsTransactions);
             if(resulTransactions && resulTransactions.length > 0 ){
-	        resulTransactions.sort(compare);
-		response = { statusCode: 0, additionalInfo:resulTransactions };
-	    }else{
-		response = { statusCode: 0, additionalInfo:[] };
-	    }
+            resulTransactions.sort(compare);
+        response = { statusCode: 0, additionalInfo:resulTransactions };
+        }else{
+        response = { statusCode: 0, additionalInfo:[] };
+        }
             callback(null, response);
         }
 
