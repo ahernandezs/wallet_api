@@ -16,6 +16,18 @@ var soap = require('soap');
 var soapurl = process.env.SOAP_URL;
 var Userquery = require('../../model/queries/user-query');
 
+
+exports.validateSMS = function(phoneID,callback){
+  console.log('Search user in mongoDB ' + phoneID);
+  User.findOne({ 'phoneID': phoneID }, 'name sms', function (err, user) {
+    if (err) return handleError(err);
+      if(user && !user.sms)
+        callback(null, 0);
+      else
+        callback(null,user.sms);
+  });
+};
+
 exports.validateUser = function(phoneID,callback){
 	console.log('Search user in mongoDB');
 	User.findOne({ 'phoneID': phoneID }, 'name 	email pin	phoneID appID', function (err, person) {

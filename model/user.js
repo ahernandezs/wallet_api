@@ -19,7 +19,8 @@ var userSchema = new Schema({
     profileCompleted : Number,
     group : String,
     twitter: String,
-    facebook: String
+    facebook: String,
+    sms:Number
 });
 
 module.exports = mongoose.model('User', userSchema);
