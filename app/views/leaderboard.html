@@ -11,7 +11,7 @@
                       <i>{{$index +1}}</i>
                     <img fallback-src="https://s3-us-west-1.amazonaws.com/amdocs-images/profile/profile.png"  ng-src="https://s3-us-west-1.amazonaws.com/amdocs-images/profile/{{user.phoneID}}.png"/>
                     <div>
-                      <span class="name">{{user.name}}</span>
+                      <span class="name">{{user.name | capitalize}}</span>
                       <span>{{user.doxs}}</span>
                     </div>
                   </div>
@@ -29,7 +29,7 @@
                     <i>{{$index +6}}</i>
                     <img fallback-src="https://s3-us-west-1.amazonaws.com/amdocs-images/profile/profile.png"  ng-src="https://s3-us-west-1.amazonaws.com/amdocs-images/profile/{{user.phoneID}}.png"/>
                     <div>
-                      <span class="name">{{user.name}}</span>
+                      <span class="name">{{user.name| capitalize}}</span>
                       <span>{{user.doxs}}</span>
                     </div>
                   </div>

@@ -11,17 +11,17 @@ function endsWith(str, suffix) {
 }
 
 exports.registerFlow = function(payload,callback) {
-    var transfer = true;
+  var transfer = true;
+  var end = 'ES'
+  console.log('Validation PhoneID--------------');
+  console.log(endsWith(payload.phoneID, end));
+
+  if(!endsWith(payload.phoneID, end)){
+    console.log('User not authorized');
+    callback('ERROR',{statusCode: 1, additionalInfo: "User not authorized for register" });
+  }else
   async.waterfall([
     function(callback){
-
-      var end = 'ID'
-      console.log('Validation PhoneID--------------');
-      console.log(endsWith(payload.phoneID, end));
-      if(endsWith(payload.phoneID, end))
-        return new Error();
-      console.log('Validation PhoneID--------------');
-
       console.log('Validate connection');
       var response = null;
 
