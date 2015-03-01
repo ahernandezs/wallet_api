@@ -18,7 +18,6 @@ exports.getReceipts = function(phoneID, callback){
 	Receipt.find({emitter:phoneID},'_id emitter receiver title amount date type status additionalInfo owner',{sort: {date: -1}},function (err, receipt) {
        if (err) callback('ERROR', err);
        else if(receipt){
-          console.log(receipt);
           callback(null, receipt);
       }
       else{
@@ -58,7 +57,6 @@ exports.getReceiptByOrderID = function(orderID,callback){
        if (err) callback('ERROR', err);
        else if(receipt){
           console.log('Get order');
-          console.log(receipt);
           callback(null, receipt);
       }
       else{
@@ -73,7 +71,6 @@ exports.getReceiptByID = function(receiptID,callback){
        if (err) callback('ERROR', err);
        else if(receipt){
           console.log('Get order');
-          console.log(receipt);
           callback(null, receipt);
       }
       else{

@@ -19,8 +19,6 @@ exports.sendMessage = function(payload,callback) {
 
 	async.waterfall([
 		function(callback) {
-            console.log('Imprimiendo');
-            console.log(requestMessage);
 		    console.log('Get sender in db ' + requestMessage.destinatary);
             Userquery.getName(requestMessage.destinatary,function(err,user){
                 if (err) {
@@ -61,7 +59,7 @@ exports.sendMessage = function(payload,callback) {
         },
 
         function(message, callback) {
-            console.log('Send push notification' + JSON.stringify(message));
+            console.log('Send push notification');
             urbanService.singlePush(message, function(err, result) {
                 var response = { statusCode: 0, additionalInfo: ' message was sent successful' };
                 callback(null,response);

@@ -73,7 +73,6 @@ exports.sendGift = function(payload,callback) {
 						return new Error(err);
 					} else {
 						var response = result.balanceReturn;
-						console.log(response);
 						if(response.result  === '0' )
 							var response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : response };
 						else
@@ -104,7 +103,7 @@ exports.sendGift = function(payload,callback) {
 		function(sessionid,currentMoney, callback){
 				Orderquery.putOrder(order, function(err,result){
 				orderID = result.order;
-				console.log('Order saving result: '+JSON.stringify(result));
+				console.log('Order saving result: ');
 				callback(null,sessionid,currentMoney);
 			});
 		},
@@ -112,7 +111,6 @@ exports.sendGift = function(payload,callback) {
 		function(sessionid,currentMoney, callback){
 			var requestBalance = { sessionid: sessionid, type: 3 };
 			var request = { balanceRequest: requestBalance };
-			console.log(request);
 			soap.createClient(soapurl, function(err, client) {
 				client.balance(request, function(err, result) {
 					if(err) {
@@ -134,7 +132,7 @@ exports.sendGift = function(payload,callback) {
 
 		function(sessionid, response, callback){
 			doxsService.saveDoxs(payloadoxs, function(err, result){
-				console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
+				console.log('Transfer result ');
 				if(err) {
 					return new Error(err);
 				} else {
@@ -217,7 +215,7 @@ exports.sendGift = function(payload,callback) {
 			});
 		},
 		function(balance,payload,emitter,receiver,message,additionalInfo,callback) {
-			console.log( 'Create Receipt Gift for sender: ' + message);
+			console.log( 'Create Receipt Gift for sender ');
 			var receipt = {};
 			receipt.emitter = emitter;
 			receipt.receiver = receiver;
@@ -228,8 +226,7 @@ exports.sendGift = function(payload,callback) {
 			receipt.date = dateTime;
 			receipt.type = 'GIFT';
 			receipt.status = 'NEW';
-            receipt.owner = 1;
-			console.log(receipt);
+		        receipt.owner = 1;
 			ReceiptQuery.createReceipt(receipt, function(err, result) {
 				if (err)
 					callback('ERROR', err);

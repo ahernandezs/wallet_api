@@ -16,12 +16,9 @@ exports.validateOrders = function(userID,callback){
 };
 
 exports.putOrder = function(order,callback){
-    console.log(order);
 	Order.findOne().sort('-orderId').exec( function(err, doc) {
-        console.log(doc);
 		var newOrder = new Order(order);
 		newOrder['orderId'] = doc==null ? 1000 : doc.orderId+1 ;
-        console.log(newOrder);
 		newOrder.save(function (err,result) {
 			if (err){
 		        console.log(err);

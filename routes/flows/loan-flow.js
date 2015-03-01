@@ -131,7 +131,6 @@ exports.createLoanFlow = function(payload,callback) {
                 forResult.additionalInfo.date = receipt.date;
                 forResult.additionalInfo.status = receipt.status;
                 forResult.additionalInfo.amount = receipt.amount;
-                console.log( 'response: ' + JSON.stringify(forResult) );
               callback(null, forResult, loan._id);
             }
           }); 
@@ -167,7 +166,6 @@ var updateLoanFlow = exports.updateLoanFlow = function(payload,callback){
   async.waterfall([
     function(callback) {
       var loan = payload.body;
-      logger.info(loan);
       loan.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
       loanQuery.updateLoan(loan, function(err, result) {
         if (err) {
@@ -181,7 +179,6 @@ var updateLoanFlow = exports.updateLoanFlow = function(payload,callback){
 
     function(loan,callback) {
       logger.info('Complement information');
-      logger.info(loan);
       loanQuery.getLoan(loanID, function(err, result) {
         if (err) {
           logger.info('Error al recuperar Loan');
@@ -202,7 +199,6 @@ var updateLoanFlow = exports.updateLoanFlow = function(payload,callback){
     function(notification,loan,callback) {
         if ( loan.status === config.loans.status.ACCEPTED ) {
           logger.info('Performing transfer');
-          logger.info(loan);
           var payloadTransfer = { amount : loan.amount ,  phoneID : notification.phoneID };
           var payloadTransfer = { transferRequest : payloadTransfer };
           transfer.transferFlow(payloadTransfer,function(err,result) {
@@ -237,7 +233,6 @@ var updateLoanFlow = exports.updateLoanFlow = function(payload,callback){
       loan.status = config.messages.status.NOTREAD;
       loan.type = config.messages.type.LOAN;
       loan.date = dateTime;
-      logger.info(loan);
       messageQuery.createMessage(null,loan, function(err, result) {
         if (err) {
           var response = { statusCode: 1, additionalInfo: result };
@@ -251,7 +246,6 @@ var updateLoanFlow = exports.updateLoanFlow = function(payload,callback){
       notification.message = loan.title;
       var extraData = { action : 4 , additionalInfo : loan.additionalInfo , _id:idMessage };
       notification.extra = {extra : extraData} ;
-      logger.info(notification);
       urbanService.singlePush(notification, function(err, result) {
         if(err){
           var response = { statusCode:1 ,  additionalInfo : result.message };
@@ -292,7 +286,7 @@ var updateLoanFlow = exports.updateLoanFlow = function(payload,callback){
     function(response, callback) {
         var search = { phoneID : receiver, type : 'LOAN', loanID : loanID };
         ReceiptQuery.getLastReceipt(search, function(err, result) {
-            logger.info('receipt ' + JSON.stringify(result));
+            logger.info('receipt ');
             if (err)
                 callback('ERROR', result);
             else

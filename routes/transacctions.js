@@ -17,7 +17,6 @@ exports.getTransacctionsHistory = function(req,res){
         } else {
           if(result && result[0] ){
             var response = { statusCode: 0, additionalInfo: result };
-            console.log(response);
             res.json(response);
           }else{
             var empty = [];
@@ -46,7 +45,6 @@ exports.getTransacctionsDox = function(req,res){
         } else {
           if(result && result[0] ){ 
             var response = { statusCode: 0, additionalInfo: result };
-            console.log(response);
             res.json(response);
           }else{
             var empty = [];

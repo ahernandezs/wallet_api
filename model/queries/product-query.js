@@ -19,7 +19,6 @@ exports.getProducts =  function(merchantID, callback) {
         } else {
             response = { statusCode: 0, additionalInfo: products };
             callback(null, response);
-            console.log(response);
         }
     });
 };
@@ -41,7 +40,6 @@ exports.getProductsDiscount =  function(merchantID, callback) {
         } else {
             response = { statusCode: 0, additionalInfo: products };
             callback(null, response);
-            console.log(response);
         }
     });
 };

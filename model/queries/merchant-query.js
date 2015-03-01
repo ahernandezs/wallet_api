@@ -43,7 +43,7 @@ exports.getMerchantsNotifications = function(callback) {
 exports.updateMerchantByID = function(payload, callback) {
     console.log( 'Update Merchan with ID: ' + payload.appID);
     var MerchantToPersist = new MerchantNotification(payload);
-    console.log('Merchant to persist ' + JSON.stringify(payload));
+    console.log('Merchant to persist ');
     MerchantNotification.find({appID:payload.appID}, 'appID', function(err, merchants)  {
         var response;
         if (err) {
@@ -87,7 +87,6 @@ exports.getMerchants = function(phoneID, callback){
         var  query = Merchant.find();
         query.sort({id:1});
         query.exec(function(err,data){
-          console.log(data[0]);
           data[0].usersConnected = users;
           callback(null, data);
         });

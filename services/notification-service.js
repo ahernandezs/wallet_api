@@ -25,7 +25,7 @@ exports.singlePush = function(req, callback) {
 			  headers:{"Content-Type": "application/json"}
 			};
 			client.post("http://cp.pushwoosh.com/json/1.3/createMessage", args, function(data,response) {
-				console.log('Response Push -->');
+				console.log('Response Push --> ' + data);
 			    var responseStatus = JSON.parse(data);
 			    if(responseStatus.status_code === 200){
 					console.log('Notification sent correctly');
@@ -128,8 +128,7 @@ exports.singlePush2Merchant = function(req, callback) {
 						  headers:{"Content-Type": "application/json"}
 						};
 						client.post("http://cp.pushwoosh.com/json/1.3/createMessage", args, function(data,response) {
-							console.log('Response Push -->');
-						    console.log(JSON.parse(data));
+						    console.log('Response Push --> '+ data);
 						    var responseStatus = JSON.parse(data);
 						    if(responseStatus.status_code === 200){
 								console.log('Notification sent correctly');

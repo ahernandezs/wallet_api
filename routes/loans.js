@@ -9,7 +9,6 @@ var logger = config.logger;
 
 exports.getLoans = function(req, res) {
     console.log('POST method getLoans');
-    console.log( req.body );
     loanQuery.getLoans(req.body.merchantID, function(err, result) {
         res.json(result);
     });
@@ -17,7 +16,6 @@ exports.getLoans = function(req, res) {
 
 exports.updateLoan = function(req, res) {
     console.log('PUT method update Loan');
-    console.log(req.body);
     console.log( req.headers['x-auth-token'] );
     req.headers.sessionid = req.headers['x-auth-token'];
     var payload = {};
@@ -30,7 +28,6 @@ exports.updateLoan = function(req, res) {
 
 exports.createLoan = function(req, res) {
     logger.info('POST method create Loans');
-    logger.info(req.body);
     logger.info( req.headers['x-auth-token'] );
     req.headers.sessionid = req.headers['x-auth-token'];
     var payload = {};

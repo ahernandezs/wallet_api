@@ -10,7 +10,6 @@ exports.balanceFlow = function(sessionid,callback) {
       console.log('balance e-wallet');
       var request = { sessionid: sessionid, type: 1  };
       var request = {balanceRequest: request};
-      console.log(request);
       soap.createClient(soapurl, function(err, client) {
         client.balance(request, function(err, result) {
           if(err) {
@@ -31,7 +30,6 @@ exports.balanceFlow = function(sessionid,callback) {
       console.log('balance Points');
       var  request = { sessionid: sessionid, type: 3  };
       var request = {balanceRequest: request};
-      console.log(request);
       soap.createClient(soapurl, function(err, client) {
         client.balance(request, function(err, result) {
           if(err) {

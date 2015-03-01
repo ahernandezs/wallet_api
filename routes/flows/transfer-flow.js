@@ -127,14 +127,12 @@ exports.transferFunds = function(data, callback) {
 
         function(callback) {
             console.log('Do transfer in wallet');
-            console.log(data.body);
             var payload = data.body;
             msg = payload.message;
             var header = data.header;
             var requestSoap = { sessionid: header.sessionid, to: payload.destiny, amount: payload.amount, type: 1 };
             var request = { transferRequest: requestSoap };
             forReceipt.payload = payload;
-            console.log(request);
             soap.createClient(soapurl, function(err, client) {
                 client.transfer(request, function(err, result) {
                     if (err) {
@@ -177,7 +175,6 @@ exports.transferFunds = function(data, callback) {
             console.log('Get sender in db ' + mainUser);
             var requestSession = { phoneID :  mainUser };
             sessionQuery.getCredentials(requestSession,function(err,user){
-                console.log(user);
                 forReceipt.user = user;
                 var payloadoxs = {phoneID: user.data.phoneID, action: 'gift', type: 3}
                 doxsService.saveDoxs(payloadoxs, function(err, result){
@@ -197,7 +194,6 @@ exports.transferFunds = function(data, callback) {
                                 additionalInfoReceiverJSON = {transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime };
                                 payload.additionalInfo = JSON.stringify({transferID : transid , message : payload.message,amount: payload.amount , doxAdded : config.doxs.p2p  ,name: receipt ,avatar: receiptAvatar , date:dateTime });
                                 payload.date = dateTime;
-                                console.log(payload.extra);
                                 callback(null, sessionid,payload);
                             }                    
                         });
@@ -257,7 +253,6 @@ exports.transferFunds = function(data, callback) {
                 else
                     console.log('Obteniendo Balance');
                     result.additionalInfo.doxAdded = config.doxs.p2p;
-                    console.log(result.additionalInfo);
                     callback(null,result);
             });
         },
@@ -275,7 +270,6 @@ exports.transferFunds = function(data, callback) {
             receipt.type = 'TRANSFER';
             receipt.status = 'DELIVERED';
             receipt.owner = 0;
-            console.log(data.payload);
             ReceiptQuery.createReceipt(receipt, function(err, result) {
                 if (err)
                     callback('ERROR', err);
@@ -299,7 +293,6 @@ exports.transferFunds = function(data, callback) {
             receipt.type = 'TRANSFER';
             receipt.status = 'DELIVERED';
             receipt.owner = 1;
-            console.log(data.payload);
             ReceiptQuery.createReceipt(receipt, function(err, result) {
                 if (err)
                     callback('ERROR', err);
