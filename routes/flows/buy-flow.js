@@ -29,6 +29,18 @@ exports.buyFlow = function(payload,callback) {
     forReceipt.payload = payload;
 
 	async.waterfall([
+
+		function(callback) {
+            Userquery.findUserBuys(payload.phoneID, function(err,transfers){
+                if(err){
+                    var response = { statusCode: 1, additionalInfo: err };
+                    callback('ERROR', response);
+                }
+                else
+                    callback(null);
+            });
+        },
+
 		function(callback){
 			var requestSoap = { sessionid: payload.sessionid, to: config.username, amount : payload.order.total , type: 1 };
 			var request = { transferRequest: requestSoap };
@@ -250,7 +262,7 @@ exports.buyFlow = function(payload,callback) {
     ], function (err, result) {
       if(err){
       	console.log('Error  --->' + JSON.stringify(result));
-        callback("Error! "+err,result);    
+        callback(err,result);
       }else{
         callback(null,result);    
       }

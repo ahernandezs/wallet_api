@@ -28,6 +28,19 @@ exports.sendGift = function(payload,callback) {
     var receiver = payload.beneficiaryPhoneID;
 
 	async.waterfall([
+
+
+		  function(callback) {
+            Userquery.findUserGifts(payload.phoneID, function(err,transfers){
+                if(err){
+                    var response = { statusCode: 1, additionalInfo: err };
+                    callback('ERROR', response);
+                }
+                else
+                    callback(null);
+            });
+        },
+
 		function(callback){
 			dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
 			var payloadBody= payload.body;
@@ -308,10 +321,8 @@ exports.sendGift = function(payload,callback) {
 		}
 		], function (err, result) {
 			if(err){
-				callback("Error! "+err,result);
+				callback(err,result);
 			}else{
-				console.log('waterfall');
-				console.log(result);
 				callback(null,result);
 			}
 		});

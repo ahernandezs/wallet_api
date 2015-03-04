@@ -104,7 +104,7 @@ exports.buyFlow = function(req, res){
   json['sessionid']= req.headers['x-auth-token'];
   BuyFlow.buyFlow(req.body,function(err,result){
     if(err) {
-      res.send(500);
+      console.log(result);
     }
     res.json(result);
   });
@@ -153,8 +153,7 @@ exports.sendGift = function(req, res){
   GiftFlow.sendGift(req.body, function(err,result){
     if(err) {
       console.log('Error');
-      console.log(err);
-      res.send(500);
+      console.log(result);
     }
     console.log('Finish Gift');
     if(result.statusCode === 0){
