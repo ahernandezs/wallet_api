@@ -276,6 +276,7 @@ exports.getUsers = function(parameters,callback){
         User.find({group:user.group }, 'phoneID name email lastSession company', { sort : { name : 1 }}, function (err, people) {
           if (err) return handleError(err);
           else if(people){
+            people.sort(sortstring);
             callback(null, people);
           }
           else{
@@ -288,6 +289,7 @@ exports.getUsers = function(parameters,callback){
         User.find({}, 'phoneID name email lastSession company', { sort : { name : 1 }}, function (err, people) {
           if (err) return handleError(err);
           else if(people){
+            people.sort(sortstring);
             callback(null, people);
           }
           else{
@@ -523,4 +525,12 @@ exports.setSocialNetworks = function(payload, callback){
     console.log(result);
     callback(null);
   });
+}
+
+var sortstring = function (a, b)    {
+    a = a.name.toLowerCase();
+    b = b.name.toLowerCase();
+    if (a > b) return 1;
+    if (a < b) return -1;
+    return 0;
 }

@@ -40,7 +40,6 @@ exports.buyFlow = function(payload,callback) {
 					} else {
 						var response = result.transferReturn;
 						if(response.result != 0){
-							console.log(response);
 							var response = { statusCode:1 ,  additionalInfo : result };
 							callback("ERROR", response);
 						}
@@ -91,7 +90,7 @@ exports.buyFlow = function(payload,callback) {
         },
 
 		function(sessionid,callback){
-			logger.info('Saving order '+JSON.stringify(order));
+			logger.info('Saving order ');
 			Orderquery.putOrder(order, function(err,result){
 				orderID = result.order;
 				logger.info('Order saving result: '+JSON.stringify(result)+'\n\n');

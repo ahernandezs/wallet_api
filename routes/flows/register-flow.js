@@ -63,7 +63,6 @@ exports.registerFlow = function(payload,callback) {
       console.log('Login');
       var  request = { sessionid: sessionid, initiator: config.username, pin: hashpin  };
       var request = {loginRequest: request};
-      console.log(request);
       soap.createClient(soapurl, function(err, client) {
         client.login(request, function(err, result) {
           if(err) {

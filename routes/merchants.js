@@ -4,7 +4,7 @@ var merchantQuery = require('../model/queries/merchant-query');
 var updateOrder = require('../routes/flows/updateOrder-flow');
 
 exports.merchants =  function(req, res){
-  console.log('execute GET method merchants! ' + JSON.stringify(req.headers));
+  console.log('execute GET method merchants! ');
   var phoneID = req.headers['x-phoneid'];
   merchantQuery.getMerchants(phoneID, function(err, result){
     res.json(result);
@@ -12,7 +12,6 @@ exports.merchants =  function(req, res){
 };
 
 exports.getOrderHistory = function(req,res){
-	console.log(req.body)
 	Orderquery.validateOrders(req.body.userID, function(err,result){
 		res.json(result);
 	});
@@ -37,7 +36,6 @@ exports.updateOrder = function(req, res){
 
 exports.getOrders = function(req, res) {
     console.log( 'execute POST method getOrders' );
-    console.log( req.body );
     Orderquery.getOrders(req.body.merchantID, function(err, result) {
         res.json(result);
     });
@@ -45,7 +43,6 @@ exports.getOrders = function(req, res) {
 
 exports.register = function(req, res) {
   console.log( 'execute POST method updateMerchant' );
-  console.log( req.body );
   merchantQuery.updateMerchantByID(req.body , function(err,result){
     if(err) {
       res.send(500);

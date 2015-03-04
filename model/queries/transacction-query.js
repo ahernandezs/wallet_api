@@ -44,7 +44,6 @@ exports.getTransacctions = function(phoneIDToSearch, callback) {
         } else if (transacction.length === 0) {
             console.log('Empty');
             response = { statusCode: 0, additionalInfo: 'Empty' };
-            console.log(response);
             callback(null, response);
         } else {
             console.log('Return Collection');
@@ -64,7 +63,6 @@ exports.getTransacctionsDox = function(phoneIDToSearch, callback) {
             callback("ERROR: " + err.message, response);
         } else if (transacction.length === 0) {
             response = { statusCode: 0, additionalInfo: 'Empty' };
-            console.log(response);
             callback(null, response);
         } else {
             callback(null, transacction);

@@ -9,17 +9,14 @@ exports.getMessages = function(req, res) {
     var payload = {};
     payload.body = req.body;
     payload.header = req.headers;
-    console.log( req.body );
     var request = { sessionid : req.headers.sessionid, phoneID : req.headers['x-phoneid'] };
     sessionQuery.getCredentials(request, function(err,result){
-        console.log(result);
         messageQuery.getMessages(result.data.phoneID,function(err,result) {
             if(err) {
                 res.send(500);
             } else {
                   if(result && result[0] ){
                     var response = { statusCode: 0, additionalInfo: result };
-                    console.log(response);
                     res.json(response);
                   }else{
                     var empty = [];
@@ -38,7 +35,6 @@ exports.updateMessage = function(req, res) {
     var payload = {};
     payload.body = req.body;
     payload.header = req.headers;
-    console.log(req.body);
     messageQuery.updateMessage(req.body,function(err,result){
         if(err) {
             res.send(500);

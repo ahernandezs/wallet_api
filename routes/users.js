@@ -14,7 +14,6 @@ var soapurl = process.env.SOAP_URL;
 
 exports.login =  function(req, res, callback){
   console.log('execute POST method login');
-  console.log(req.body);
   sessionUser.loginFlow(req.body,function(err,result){
       var token = result.sessionid;
       if(result.statusCode === 0){
@@ -179,7 +178,6 @@ exports.getUsers = function(req, res){
   request.phoneID = req.headers['x-phoneid'];
   Userquery.getUsers(request,function(err,result){
     var result = {url_base: config.S3.url , users: result};
-    console.log(result);
     res.json(result);
   });
 };
@@ -205,12 +203,12 @@ exports.getLeaderboard = function(req, res){
   var phoneID = req.headers['x-phoneid'];
   if(phoneID){
     Userquery.getLeaderboard(phoneID,function(err,result){
-      var result = {url_base: config.S3.url, users: result}
+      var result = {url_base:'https://d80mkr1efvy13.cloudfront.net/profile/', users: result}
       res.json(result);
     });
   }else{
       Userquery.getLeaderboard(null,function(err,result){
-      var result = {url_base: config.S3.url, users: result}
+      var result = {url_base:'https://d80mkr1efvy13.cloudfront.net/profile/', users: result}
       res.json(result);
     });
   }

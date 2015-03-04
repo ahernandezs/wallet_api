@@ -1,6 +1,8 @@
 var mailService = require('../../services/sendGrid-service');
 var Message = require('../message');
 var config = require('../../config.js');
+var async = require('async');
+
 
 exports.createMessage = function(sender,message, callback) {
     console.log( 'Persistmessage ');
@@ -14,23 +16,40 @@ exports.createMessage = function(sender,message, callback) {
 exports.getMessages = function(phoneID, callback) {
     console.log( 'Getting messages: ' + phoneID);
 
-    var tmp = {};
-    var condiciones = {$and: [ { $or : [  {'phoneID': phoneID },{message:{ $ne: '' } } ] }, 
-                              { $or : [  {'phoneID': phoneID },{ type:'GIFT' } ] } ] };
+    async.waterfall([
 
-    Message.find(condiciones, ' title type message status additionalInfo date', {sort: {date: -1}}, function (err, msgs) {
+    function(callback){
+      var message = {};
+      var condiciones = { 'phoneID': phoneID , message:{ $ne: '' } };
+      Message.find(condiciones, ' title type message status additionalInfo date', {sort: {date: -1}}, function (err, msgs) {
+        if (err) callback('ERROR', err);
+        else if(msgs){
+          message = msgs;
+          callback(null, message);
+          }
+        });
+    },
 
-      if (err) callback('ERROR', err);
-      else if(msgs){
-        tmp = msgs;
-      }
-        callback(null, tmp);
+    function(emptyMessages, callback){
+      var condiciones = { 'phoneID': phoneID , type : 'GIFT'  };
+      Message.find(condiciones, ' title type message status additionalInfo date', {sort: {date: -1}}, function (err, msgs) {
+        if (err) callback('ERROR', err);
+        else if(msgs && emptyMessages){
+          emptyMessages = emptyMessages.concat(msgs);
+          emptyMessages.sort(compare);
+          callback(null,emptyMessages);
+        }else{
+          callback(null,emptyMessages);
+        }
+      });
+    }
+    ], function (err, result){
+        callback(null,result);
     });
-};
+}
 
 exports.updateMessage = function(message,callback){
     console.log( 'Updating status message in MongoDB');
-    console.log(message);
     var conditions = { _id : message._id };
     Message.update( conditions, { status : message.status }, null, function(err, result) {
         if (err) {
@@ -86,7 +105,6 @@ exports.getMessageByOrderID = function(orderID, callback) {
 };
 
 exports.updateMessageByOrderID = function(payload,callback){
-  console.log(payload);
   delete payload._id
   var conditions = {orderID: payload.orderID};
   Message.update(conditions, payload, null, function(err, result) {
@@ -95,4 +113,13 @@ exports.updateMessageByOrderID = function(payload,callback){
     else
       callback(null, result);
   });
+};
+
+function compare(a,b) {
+    var keyA = new Date(a.date),
+    keyB = new Date(b.date);
+    // Compare the 2 dates
+    if(keyA > keyB) return -1;
+    if(keyA < keyB) return 1;
+    return 0;
 };

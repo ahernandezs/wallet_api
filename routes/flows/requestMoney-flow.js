@@ -23,7 +23,6 @@ exports.requestMoneyFlow = function(payload,callback) {
 
 	async.waterfall([
 		function(callback) {
-            console.log(requestMessage);
 		    console.log('Get sender in db ' + requestMessage.phoneID);
             Userquery.getName(requestMessage.phoneID,function(err,user){
                 if (err) {
@@ -137,7 +136,6 @@ exports.requestMoneyFlow = function(payload,callback) {
 };
 
 exports.resolveRequestFlow = function(payload, header, callback) {
-    console.log( payload );
     var accepted = ( payload.answer === config.requests.status.ACCEPTED ) ? true : false;
     var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
         async.waterfall([
@@ -229,7 +227,7 @@ exports.resolveRequestFlow = function(payload, header, callback) {
                 callback(null, payload, balance);
             },
             function(pushData, balance, callback) {
-                console.log( 'send push notification.' );
+               console.log( 'send push notification.' );
                urbanService.singlePush(pushData, function(err, result) {
                    if (!accepted)
                        callback(null, 'The answer was sent correctly.'); 

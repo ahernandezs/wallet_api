@@ -20,7 +20,6 @@ var logger = config.logger;
 
 exports.sell =  function(req, res){
   console.log('execute POST method sell');
-  console.log(req.body);
   var request = {sellRequest: req.body};
   soap.createClient(soapurl, function(err, client) {
     client.sell(request, function(err, result) {
@@ -29,7 +28,6 @@ exports.sell =  function(req, res){
         res.send(500);
       } else {
         console.log(result);
-
         var response = result.sell;
         res.json(response);
       }
@@ -39,7 +37,6 @@ exports.sell =  function(req, res){
 
 exports.transfer =  function(req, res){
   console.log('execute POST method transfer');
-  console.log(req.body);
   var request = {transferRequest: req.body};
   soap.createClient(soapurl, function(err, client) {
     client.transfer(request, function(err, result) {
@@ -58,7 +55,6 @@ exports.transfer =  function(req, res){
 
 exports.buy =  function(req, res){
   logger.info('execute POST method buy');
-  logger.info(req.body);
   var request = {transferRequest: req.body};
   soap.createClient(soapurl, function(err, client) {
     client.transfer(request, function(err, result) {
@@ -77,7 +73,6 @@ exports.buy =  function(req, res){
 exports.balance = function(request, callback) {
     console.log('execute POST method balance');
     var req = { balanceRequest: request };
-    console.log(request);
     soap.createClient(soapurl, function(err, client) {
         client.balance(req, function(err, result) {
             if(err && result === undefined)
@@ -134,30 +129,12 @@ exports.transferFunds = function(req, res) {
             callback(null, result);
         });
       },
-      /*function(resultBalance, callback){
+      function(resultBalance, callback){
         doxsService.saveDoxs(payloadoxs, function(err, result){
           console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
           callback(null, resultBalance);
         });
-      },*/
-      function(result, callback){
-        if(actualizar){
-          var transacction = {};
-          transacction.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
-          transacction.type = 'DOX',
-          transacction.description = 'You had earned some doxs points for your social activity!'
-          transacction.operation = action + ' - ' + socialNetwork;
-          transacction.title =  action + ' - ' + socialNetwork;
-          transacction.amount = payload.action == 'LINK' ? config.doxs.linking : config.doxs.social;
-          transacction.phoneID = payload.phoneID;
-          transacctionQuery.createTranssaction(transacction, function(err, result) {
-            callback(null, result);
-          });
-        }else{
-            callback(null, result);
-        }
-      },
-
+      }
     ], function (err, result) {
       if(err){
         callback("Error! "+err,result);
@@ -180,7 +157,6 @@ exports.sendGift = function(req, res){
       res.send(500);
     }
     console.log('Finish Gift');
-    console.log(result);
     if(result.statusCode === 0){
       res.setHeader('X-AUTH-TOKEN', result.sessionid);
       delete result.sessionid;
@@ -191,7 +167,6 @@ exports.sendGift = function(req, res){
 
 exports.activity = function(req, res){
   console.log('\n\nExecute POST activity');
-  console.log(JSON.stringify(req.body));
   var payload = req.body;
   var sessionid = req.headers['x-auth-token'];
   var phoneID = req.headers['x-phoneid'];
@@ -200,7 +175,7 @@ exports.activity = function(req, res){
     var action = payload.action.substr(0, 1).toUpperCase() + payload.action.substr(1).toLowerCase();
     var socialNetwork = payload.socialNetwork.substr(0, 1).toUpperCase() + payload.socialNetwork.substr(1).toLowerCase();
 
-  var actualizar = true;
+  var actualizar = false;
 
   if(payload.action ==='SHARED' && payload.socialNetwork ==='SMS'){
       console.log('Sharing SMS for invite friends');
@@ -226,7 +201,6 @@ exports.activity = function(req, res){
         if(actualizar){
           var payloadoxs = {phoneID: payload.phoneID, action: operacion, type: 3}
           console.log('Transfer Dox');
-          console.log(payloadoxs);
           doxsService.saveDoxs(payloadoxs, function(err, result){
             callback(null, operacion);
           });
@@ -393,7 +367,6 @@ exports.getReceipts = function(req, res){
   sessionToken = req.headers['x-auth-token'];
     var request = { sessionid : sessionToken, phoneID : req.headers['x-phoneid'] };
   sessionQuery.getCredentials(request, function(err,credential){
-    console.log(credential);
     receipt.getReceipts(credential.data.phoneID, function(err, result){
       if(err) {
         console.log(err);
@@ -433,7 +406,6 @@ exports.updateReceipt = function(req, res){
       //transfer doxs
       function(phoneId, callback){
         var payloadoxs = {phoneID: phoneId, action: req.body.operation, type: 3}
-        console.log(payloadoxs);
         doxsService.saveDoxs(payloadoxs, function(err, result){
           console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
           if(err) {
@@ -455,7 +427,6 @@ exports.updateReceipt = function(req, res){
       //change status of receipt
       function(res, callback){
         receipt.updateReceipt(req.body, function(err, result){
-            console.log(result);
             callback(null, result);
         });
       },
