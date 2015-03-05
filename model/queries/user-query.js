@@ -16,7 +16,63 @@ var soap = require('soap');
 var soapurl = process.env.SOAP_URL;
 var Userquery = require('../../model/queries/user-query');
 
+exports.findUserGifts = function(phoneID, callback) {
+    var date = new Date(moment().tz(process.env.TZ));
+    var current_hour = (date.getHours() < 10) ? '0'+date.getHours() : date.getHours();
+    var current_year = date.getFullYear();
+    var current_month = (date.getMonth() < 10) ? '0'+date.getMonth() : date.getMonth();
+    var current_day = (date.getDay() < 10) ? '0'+date.getDay() : date.getDay();
 
+    var date = moment().tz(process.env.TZ).format("YYYY-MM-DD");
+    var time = moment()
+    .tz(process.env.TZ).format("HH");
+    var  initDate = date + ' ' + time +':00:00';
+    var  endDate =  date + ' ' + time +':59:00';
+    console.log('Init date '+ initDate);
+    console.log('End date '+ endDate );
+
+    var conditions = { "phoneID" : phoneID, type:'MONEY', operation:'GIFT',  date:{
+              $gte: initDate,
+              $lt: endDate }};
+    var transactions = transacction.find(conditions, 'title description amount date operation type phoneID');
+    transactions.limit(5);
+    transactions.exec(function (err1, transactions) {
+        if(transactions.length === 5)
+            callback(config.messages.giftRejectedOneMsg,null);
+        else
+            callback(null,transactions);
+
+    });
+};
+
+exports.findUserBuys = function(phoneID, callback) {
+    var date = new Date(moment().tz(process.env.TZ));
+    var current_hour = (date.getHours() < 10) ? '0'+date.getHours() : date.getHours();
+    var current_year = date.getFullYear();
+    var current_month = (date.getMonth() < 10) ? '0'+date.getMonth() : date.getMonth();
+    var current_day = (date.getDay() < 10) ? '0'+date.getDay() : date.getDay();
+
+    var date = moment().tz(process.env.TZ).format("YYYY-MM-DD");
+    var time = moment()
+    .tz(process.env.TZ).format("HH");
+    var  initDate = date + ' ' + time +':00:00';
+    var  endDate =  date + ' ' + time +':59:00';
+    console.log('Init date '+ initDate);
+    console.log('End date '+ endDate );
+
+    var conditions = { "phoneID" : phoneID, type:'MONEY', operation:'BUY',  date:{
+              $gte: initDate,
+              $lt: endDate }};
+    var transactions = transacction.find(conditions, 'title description amount date operation type phoneID');
+    transactions.limit(5);
+    transactions.exec(function (err1, transactions) {
+        if(transactions.length === 5)
+            callback(config.messages.buyRejectedOneMsg,null);
+        else
+            callback(null,transactions);
+
+    });
+};
 exports.validateSMS = function(phoneID,callback){
   console.log('Search user in mongoDB ' + phoneID);
   User.findOne({ 'phoneID': phoneID }, 'name sms', function (err, user) {
