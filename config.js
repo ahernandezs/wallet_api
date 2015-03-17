@@ -53,19 +53,19 @@ config.messages.loanAcceptedMsg = 'Congratulations,Your Instan-Loan is approved'
 config.messages.action = {TRANSFER:1 , GIFT :2 , BUY :3 ,LOAN : 4, COUPON: 5 };
 config.messages.transferFund = 'You have sent a Transfer to ';
 config.messages.coupon = {};
-config.messages.coupon.message = 'Congratulations You are today’s winner of “Highest DOX score of the day wins an iPhone 6” promotion! We will be in touch shortly, along with your iPhone6 ';
-config.messages.coupon.title = 'Congratulations, You won an iPhone6'
-config.messages.inviteError = 'Sorry, You have exceeded your number of invitations'
+config.messages.coupon.message = 'Congratulations You are today’s winner of “Highest DOX score of the day wins a prize” promotion! We will be in touch shortly, along with your prize';
+config.messages.coupon.title = 'Congratulations, You won a prize';
+config.messages.inviteError = 'Sorry, You have exceeded your number of invitations';
 
 config.messages.twitter = { message :'I just bought a {0} from AmdocsCafe at {1}' , url :''};
 config.messages.twitter1 = 'I just bought a ';
 config.messages.twitter2 = ' from AmdocsCafe at ';
 config.messages.twitterURL = '';
-config.messages.twitterMsg = 'Having a great time at #MWC15 in Barcelona, enjoying the delicious coffee bought with my #AmdocsWallet';
+config.messages.twitterMsg = 'Having a great time, enjoying the delicious coffee bought with my #AmdocsWallet';
 config.messages.facebook =	{
 								name:'Amdocs Wallet',
 								caption:'I just bought a coffee',
-								description:'Just downloaded my Amdocs Wallet at Mobile World Congress 2015 Looking forward to the delicous coffee at the fully cashless Amdocs Café, now open at Fira Gran Via, Barcelona',
+								description:'Just downloaded my Amdocs Wallet  looking forward to the delicous coffee at the fully cashless Amdocs Café',
 								link:'http://amdocs.com/MFS'
 							};
 
@@ -103,7 +103,7 @@ config.mail.footer='Amdocs wallet Team';
 config.mailInvite = {};
 config.mailInvite.header = 'Hey there,';
 config.mailInvite.bodyInit = 'Check out the Amdocs Mobile Wallet  - it\'s really awesome with FREE €5 to get you started with some delicious drinks at the fully cashless Amdocs Café';
-config.mailInvite.bodyMid1 = 'The most active wallet user will also win an iPhone 6';
+config.mailInvite.bodyMid1 = 'The most active wallet user will also win a prize';
 config.mailInvite.bodyMid2 = 'To download the app , simply click on below link from your mobile device - ';
 config.mailInvite.bodyEnd = '(iOS and Android supported)';
 config.mailInvite.footer = 'Cheers,';
