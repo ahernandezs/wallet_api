@@ -7,6 +7,7 @@ var product = require('./routes/products');
 var merchant = require('./routes/merchants')
 var message = require('./routes/messages');
 var payments_mts = require('./routes/payments-mts');
+var payments_bmx = require('./routes/payments-bmx');
 var transacction = require('./routes/transacctions');
 var loan = require('./routes/loans');
 var spa = require('./routes/spa');
@@ -157,6 +158,10 @@ app.get('/api/spa/loans/:phoneID', spa.getLoans);
 
 //Integration wih MTS for transacctions
 app.post('/api/payments/funds', payments_mts.payment);
+//Integratio with BMX payments
+app.post('/api/payments/login', payments_bmx.login);
+app.post('/api/payments/challenge', payments_bmx.challenge);
+app.post('/api/payments/payment', payments_bmx.payment);
 
 
 
