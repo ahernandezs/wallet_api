@@ -6,6 +6,7 @@ var wallet = require('./routes/wallet');
 var product = require('./routes/products');
 var merchant = require('./routes/merchants')
 var message = require('./routes/messages');
+var payments_mts = require('./routes/payments-mts');
 var transacction = require('./routes/transacctions');
 var loan = require('./routes/loans');
 var spa = require('./routes/spa');
@@ -153,6 +154,11 @@ app.get('/api/spa/users', spa.getUsers);
 app.get('/api/spa/transactions/:phoneID/:type', spa.getTransactions);
 app.get('/api/spa/receipts/:phoneID', spa.getReceipts);
 app.get('/api/spa/loans/:phoneID', spa.getLoans);
+
+//Integration wih MTS for transacctions
+app.post('/api/payments/funds', payments_mts.payment);
+
+
 
 server.listen(process.env.PORT  || 3000);
 console.log('Listening on port 3000, server time set to '+new Date());
