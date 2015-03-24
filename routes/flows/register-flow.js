@@ -11,8 +11,8 @@ function endsWith(str, suffix) {
 }
 
 exports.registerFlow = function(payload,callback) {
-  var transfer = true;
-  var end = 'ES'
+  var transfer = false;
+  var end = 'BX'
   var userBlock1 = '357963053783385ES';
   var userBlock2 = '358240050218148ES';
 
