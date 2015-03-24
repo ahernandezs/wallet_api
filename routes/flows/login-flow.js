@@ -171,7 +171,7 @@ exports.loginFlow = function(payload,callback) {
             return new Error(err);
           } else {
             var response = result.balanceReturn;
-            if(response.result  === '0' )
+            if(response.result  === 0 )
               var response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : response };
             else
               var response = { statusCode:1 ,  additionalInfo : response };
@@ -191,7 +191,7 @@ exports.loginFlow = function(payload,callback) {
             return new Error(err);
           } else {
             var response = result.balanceReturn;
-            if(response.result  === '0' ) {
+            if(response.result  === 0 ) {
               var balance = { current : currentMoney , dox : response.current ,unreadMsgs :length } ;
               response = { statusCode: 0, sessionid : sessionid, additionalInfo : balance, userInfo : info };
             }
