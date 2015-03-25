@@ -161,7 +161,7 @@ app.post('/api/payments/funds', payments_mts.payment);
 //Integratio with BMX payments
 app.post('/api/payments/login', payments_bmx.login);
 app.post('/api/payments/challenge', payments_bmx.challenge);
-app.post('/api/payments/payment', payments_bmx.payment);
+app.post('/api/payments/fundsbmx', payments_bmx.payment);
 
 server.listen(process.env.PORT  || 3000);
 console.log('Listening on port 3000, server time set to '+new Date());

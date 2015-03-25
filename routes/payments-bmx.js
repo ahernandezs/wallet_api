@@ -9,7 +9,7 @@ exports.login =  function(req, res){
   var payload = req.body;
   console.log('Payload'+JSON.stringify(payload));
   console.log('URL base ' + url_base);
-  if(payload.user && payload.reference && payload.concept && payload.amount){
+  if(payload.user && payload.password && payload.amount){
     var response = {statusCode:1, additionalInfo:'Invalid parameters or missing parameters'};
     res.json(response);
   }
@@ -17,8 +17,8 @@ exports.login =  function(req, res){
     rest.post(url_base + '/login', {
       data: { usuario : payload.user,
               password : payload.password,
-              referencia : payload.reference,
-              concepto : payload.concept,
+              referencia : '140-ABC83',
+              concepto : 'Transfer funds to Wallet',
               monto: payload.amount },
         }).on('complete', function(data, response) {
         if(data){
