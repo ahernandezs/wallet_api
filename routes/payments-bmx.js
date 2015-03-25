@@ -36,7 +36,7 @@ exports.challenge =  function(req, res){
   console.log('execute POST MTS challenge ');
   var payload = req.body;
   console.log('Payload'+JSON.stringify(payload));
-  if(payload.reference && payload.session_set){
+  if(payload.response && payload.session_set){
     var response = {statusCode:1, additionalInfo:'Invalid parameters or missing parameters'};
     res.json(response);
   }
@@ -67,7 +67,7 @@ exports.payment =  function(req, res){
   }
   else{
   rest.post(url_base + '/pago', {
-    data: { cuenta_cargo : charge_account,
+    data: { cuenta_cargo : payload.charge_account,
             session_set: payload.session_set },
       }).on('complete', function(data, response) {
       if(data){
