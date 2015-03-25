@@ -8,7 +8,7 @@ exports.login =  function(req, res){
   console.log('execute POST BMX login ');
   var payload = req.body;
   console.log('Payload'+JSON.stringify(payload));
-  console.log('URL base ' + url_base )
+  console.log('URL base ' + url_base);
   rest.post(url_base + '/login', {
     data: { usuario : payload.user,
             password : payload.password,
@@ -28,19 +28,37 @@ exports.login =  function(req, res){
 
 exports.challenge =  function(req, res){
   console.log('execute POST MTS challenge ');
+  var payload = req.body;
+  console.log('Payload'+JSON.stringify(payload));
   rest.post(url_base + '/challenge', {
     data: { response: payload.response,
             session_set: payload.session_set },
       }).on('complete', function(data, response) {
-      console.log(response);
-  })
+      if(data){
+        console.log(data);
+        response = {statusCode:0, additionalInfo:data};
+        res.json(response);
+      }else{
+        response = {statusCode:1, additionalInfo:data};
+        res.json(response);
+      }
+  });
 };
 
 exports.payment =  function(req, res){
   console.log('execute POST MTS payment ');
-  rest.post(url_base + '/challenge', {
-    data: { cuenta_cargo : charge_account },
+  var payload = req.body;
+  console.log('Payload'+JSON.stringify(payload));
+  rest.post(url_base + '/pago', {
+    data: { cuenta_cargo : charge_account,
+            session_set: payload.session_set },
       }).on('complete', function(data, response) {
-      console.log(response);
-  })
+      if(data){
+        response = {statusCode:0, additionalInfo:data};
+        res.json(response);
+      }else{
+        response = {statusCode:1, additionalInfo:data};
+        res.json(response);
+      }
+    })
 };
