@@ -64,7 +64,7 @@ exports.transferFundFromCard =  function(payload,callback) {
                 else{
                   parseString((((result['soapenv:Envelope'])['soapenv:Body'])[0]['ventaResponse'])[0]['ventaReturn'][0]['_'], function (err, resultJSON) {
                     if(resultJSON.Transaccion.ventaResponse[0].aprobada){
-                      responsePayload = resultJSON.Transaccion.ventaResponse[0].aprobada;
+                      responsePayload = resultJSON.Transaccion.ventaResponse[0].aprobada[0];
                       response = {statusCode:0 , additionalInfo: responsePayload };
                       callback(null); 
                     }else{
