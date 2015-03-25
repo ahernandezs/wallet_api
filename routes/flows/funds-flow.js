@@ -156,3 +156,7 @@ exports.transferFundFromCard =  function(payload,callback) {
     });
 };
 
+
+exports.transferFundsToWallet =  function(payload,callback) {
+
+}
