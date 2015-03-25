@@ -7,6 +7,8 @@ var url_base = process.env.REST_URL_BMX;
 exports.login =  function(req, res){
   console.log('execute POST BMX login ');
   var payload = req.body;
+  console.log('Payload'+JSON.stringify(payload));
+  console.log('URL base ' + url_base )
   rest.post(url_base + '/login', {
     data: { usuario : payload.user,
             password : payload.password,
@@ -14,7 +16,13 @@ exports.login =  function(req, res){
             concepto : payload.concept,
             monto: payload.amount },
       }).on('complete', function(data, response) {
-      console.log(response);
+      if(data){
+        response = {statusCode:0, additionalInfo:data};
+        res.json(response);
+      }else{
+        response = {statusCode:1, additionalInfo:data};
+        res.json(response);
+      }
   });
 };
 
