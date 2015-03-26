@@ -6,11 +6,15 @@ var random = require('node-random');
 var soapurl = process.env.SOAP_URL_MTS;
 var soapurlUMarket = process.env.SOAP_URL;
 var config = require('../../config.js');
+var balance = require('./balance-flow.js');
+var session = require('../../model/queries/session-query');
 
 exports.transferFundFromCard =  function(payload,callback) {
   var parameters = { params : [] };
   var request = { arg0: parameters };
   var amount,response;
+  var transactionMTS = false;
+  var transactionWallet = false;
 
   async.waterfall([
     function(callback){
@@ -40,6 +44,7 @@ exports.transferFundFromCard =  function(payload,callback) {
         parameters.params.push({"item": ["fiid", "B128"] });
         parameters.params.push({"item": ["indMedioAcceso", "03"] });
 
+        console.log(JSON.stringify(parameters));
         //SET AMOUNT 
         amount  = payload.amount;
         //callback for create client SOAP to MTS service
@@ -58,7 +63,7 @@ exports.transferFundFromCard =  function(payload,callback) {
                 if(err){
                   responsePayload = resultPayment.return.switchResponse;
                   response = {statusCode:1 , additionalInfo: responsePayload };
-                  callback('ERROR',null); 
+                  callback('ERROR',responsePayload);
                 }
                 //if exist a xml valid in response, convert to JSON this content .
                 else{
@@ -66,6 +71,7 @@ exports.transferFundFromCard =  function(payload,callback) {
                     if(resultJSON.Transaccion.ventaResponse[0].aprobada){
                       responsePayload = resultJSON.Transaccion.ventaResponse[0].aprobada[0];
                       response = {statusCode:0 , additionalInfo: responsePayload };
+                      transactionMTS = true;
                       callback(null); 
                     }else{
                       responsePayload = resultJSON.Transaccion.ventaResponse[0];
@@ -90,7 +96,7 @@ exports.transferFundFromCard =  function(payload,callback) {
       soap.createClient(soapurlUMarket, function(err, client) {
         client.createsession({}, function(err, result) {
           if(err) {
-            return new Error(err);
+             callback('ERROR',{statusCode:1 , additionalInfo: err });
           } else {
             console.log(result);
             var response = result.createsessionReturn;
@@ -114,8 +120,7 @@ exports.transferFundFromCard =  function(payload,callback) {
       soap.createClient(soapurlUMarket, function(err, client) {
         client.login(request, function(err, result) {
           if(err) {
-            console.log('Error' + err);
-            return new Error(err);
+            callback('ERROR',{statusCode:1 , additionalInfo: err });
           } else {
             var response = result.loginReturn;
             console.log(response);
@@ -124,6 +129,7 @@ exports.transferFundFromCard =  function(payload,callback) {
         });
       });
     },
+    //do transfer un U-Market
     function(sessionid,callback){
       console.log('Transfer in wallet ');
       var requestSoap = { sessionid:sessionid, to: payload.phoneID, 'amount' : amount , type: 1 };
@@ -131,8 +137,7 @@ exports.transferFundFromCard =  function(payload,callback) {
       soap.createClient(soapurlUMarket, function(err, client) {
           client.transfer(request, function(err, result) {
               if(err) {
-                  console.log(err);
-                  return new Error(err);
+                  callback('ERROR',{statusCode:1 , additionalInfo: err });
               } else {
                   console.log(result);
                   var response = result.transferReturn;
@@ -140,18 +145,50 @@ exports.transferFundFromCard =  function(payload,callback) {
                       var response = { statusCode:1 ,  additionalInfo : result };
                       callback("ERROR", response);
                   } else{
-                      callback(null, result);
+                      callback(null,null);
                   }
               }
           });
       });
     },
+    //do 
+    /*function(callback){
+      console.log('get balance ');
+      session.getSession(payload.phoneID, function(err,result) {
+        console.log('Obteniendo sesion');
+         //if(err) {
+          //  callback('ERROR',{statusCode:1 , additionalInfo: err });
+          //} else {
+            var request = {balanceRequest: { sessionid: result, type: 1 }};
+            soap.createClient(soapurlUMarket, function(err, client) {
+              client.balance(request, function(err, result) {
+                if(err) {
+                  console.log('Obteniendo sesion 3');
+                  return callback('ERROR',{statusCode:1 , additionalInfo: err });
+                } else {
+                  console.log('Obteniendo sesion 4');               
+                  /*var response = result.balanceReturn;
+                  if(response.result  === 0 )
+                    var response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : response };
+                  else
+                    var response = { statusCode:1 ,  additionalInfo : response }; 
+
+                  callback(null,{});
+                }
+              });
+            });
+          //} 
+        });
+    },*/
     ], function (err, result) {
       console.log('Finish Flow');
       if(err){      
-        callback(err,response);    
+        callback(err,result);    
       }else{
-        callback(null,response);    
+          //response.additionalInfo = response;
+          console.log(result);
+          //response.additionalInfo.balance = result;
+          callback(null,response);
       }  
     });
 };
