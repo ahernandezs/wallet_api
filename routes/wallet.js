@@ -93,6 +93,7 @@ exports.getBalance = function(req, res) {
       res.setHeader('X-AUTH-TOKEN', result.sessionid);
       delete result.sessionid;
     }
+    console.log(result);
     res.json(result);
   });
 };

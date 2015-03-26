@@ -53,7 +53,7 @@ config.messages.loanAcceptedMsg = 'Congratulations,Your Instan-Loan is approved'
 config.messages.action = {TRANSFER:1 , GIFT :2 , BUY :3 ,LOAN : 4, COUPON: 5 };
 config.messages.transferFund = 'You have sent a Transfer to ';
 config.messages.coupon = {};
-config.messages.coupon.message = 'Congratulations You are today’s winner of “Highest DOX score of the day wins a prize” promotion! We will be in touch shortly, along with your prize';
+config.messages.coupon.message = 'Congratulations You are today’s winner of “Highest POINTS score of the day wins a prize” promotion! We will be in touch shortly, along with your prize';
 config.messages.coupon.title = 'Congratulations, You won a prize';
 config.messages.inviteError = 'Sorry, You have exceeded your number of invitations';
 
