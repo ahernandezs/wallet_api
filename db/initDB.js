@@ -45,7 +45,7 @@ db.loans.insert({ userId: 12345, merchantId: 1, customerImage: 'http://imgur.com
 db.loans.insert({ userId: 12345, merchantId: 2, customerImage: 'http://imgur.com/image.jpg', customerName: 'Alex', status: 'ACCEPTED', date: '19/09/2014', phoneID : '3123312' });
 
 db.transacctions.remove({});
-db.transacctions.insert({ title:'Amdocs Cafe' , type: 'MONEY' , date:'2014-10-10 07:26:47' , amount:5 , description:'Order No 1981', additionalInfo:'', operation:'BUY' , phoneID : '3123312'});
+db.transacctions.insert({ title:'Banamex Cafe' , type: 'MONEY' , date:'2014-10-10 07:26:47' , amount:5 , description:'Order No 1981', additionalInfo:'', operation:'BUY' , phoneID : '3123312'});
 db.transacctions.insert({ title:'Gift' , type: 'MONEY' , date:'2014-10-10 08:26:47' , amount:-5 , description:'To Juan Perez', additionalInfo:'', operation:'Gift' , phoneID : '3123312' });
 db.transacctions.insert({ title:'Loan Approved' , type: 'MONEY' , date:'2014-10-10 09:26:47' , amount:10 , description:'Reference No 1981', additionalInfo:'', operation:'LOAN' , phoneID : '3123312'});
 db.transacctions.insert({ title:'Transfer Fund' , type: 'MONEY' , date:'2014-10-10 10:26:47' , amount:-5 , description:'To Eduardo Acevedo', additionalInfo:'', operation:'TRANSFER', phoneID : '3123312' });
