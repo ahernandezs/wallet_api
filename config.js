@@ -41,7 +41,7 @@ config.messages = {};
 config.messages.status = { READ : 'READ' ,NOTREAD : 'NOTREAD', DELIVERED: 'DELIVERED'};
 config.messages.type = { TRANSFER:'TRANSFER' , GIFT : 'GIFT' , BUY :'BUY' ,LOAN :'LOAN', COUPON: 'COUPON' , REQUEST_MONEY : 'REQUEST_MONEY' , MESSAGE : 'MESSAGE' };
 config.messages.transferMsg = 'You have received money from ';
-config.messages.giftMsg = '[sender] has gifted you an Amdocs Café voucher';
+config.messages.giftMsg = '[sender] has gifted you an Banamex Café voucher';
 config.messages.loanRequestMsg = 'You have requested a loan for €';
 config.messages.loanRejectedMsg = 'Build up your Dox score to be elegible for a loan';
 config.messages.loanRejectedOneMsg = 'Sorry,Since you recently availed a loan, you need to wait another ';
@@ -57,15 +57,15 @@ config.messages.coupon.message = 'Congratulations You are today’s winner of �
 config.messages.coupon.title = 'Congratulations, You won a prize';
 config.messages.inviteError = 'Sorry, You have exceeded your number of invitations';
 
-config.messages.twitter = { message :'I just bought a {0} from AmdocsCafe at {1}' , url :''};
+config.messages.twitter = { message :'I just bought a {0} from Banamex cafe at {1}' , url :''};
 config.messages.twitter1 = 'I just bought a ';
-config.messages.twitter2 = ' from AmdocsCafe at ';
+config.messages.twitter2 = ' from Banamex cafe at ';
 config.messages.twitterURL = '';
-config.messages.twitterMsg = 'Having a great time, enjoying the delicious coffee bought with my #AmdocsWallet';
+config.messages.twitterMsg = 'Having a great time, enjoying the delicious coffee bought with my #BanamexWallet';
 config.messages.facebook =	{
-								name:'Amdocs Wallet',
+								name:'Banamex Wallet',
 								caption:'I just bought a coffee',
-								description:'Just downloaded my Amdocs Wallet  looking forward to the delicous coffee at the fully cashless Amdocs Café',
+								description:'Just downloaded my Banamex Wallet  looking forward to the delicous coffee at the fully cashless Banamex Café',
 								link:'http://amdocs.com/MFS'
 							};
 
@@ -95,21 +95,21 @@ config.username = 'anzen_01';
 config.pin = '1234';
 
 config.mail = {};
-config.mail.bodyPin= 'Thank you for registering with Amdocs wallet! Your pin number is: ';
+config.mail.bodyPin= 'Thank you for registering with Banamex wallet! Your pin number is: ';
 config.mail.bodyFin='Now you can buy a coffee or just send a coffee to a friend, also you can share your buy in your social networks, all these actions give you Dox points, with Dox points you could win some amazing prizes.';
 config.mail.regards='Thanks';
-config.mail.footer='Amdocs wallet Team';
+config.mail.footer='Banamex wallet Team';
 
 config.mailInvite = {};
 config.mailInvite.header = 'Hey there,';
-config.mailInvite.bodyInit = 'Check out the Amdocs Mobile Wallet  - it\'s really awesome with FREE €5 to get you started with some delicious drinks at the fully cashless Amdocs Café';
+config.mailInvite.bodyInit = 'Check out the Banamex Mobile Wallet  - it\'s really awesome with FREE €5 to get you started with some delicious drinks at the fully cashless Banamex Café';
 config.mailInvite.bodyMid1 = 'The most active wallet user will also win a prize';
 config.mailInvite.bodyMid2 = 'To download the app , simply click on below link from your mobile device - ';
 config.mailInvite.bodyEnd = '(iOS and Android supported)';
 config.mailInvite.footer = 'Cheers,';
 
 config.sms = {};
-config.sms.message = 'Check out the Amdocs Mobile Wallet with FREE 5 EUR to buy some drinks at the Amdocs Cafe. Download the iOS and Android app from here www.goo.gl/B8HdBj.';
+config.sms.message = 'Check out the Banamex Mobile Wallet with FREE 5 EUR to buy some drinks at the Banamex Cafe. Download the iOS and Android app from here www.goo.gl/B8HdBj.';
 config.logger = new (winston.Logger)({
     transports: [
         new (winston.transports.Console)({ colorize: 'true', handleExceptions: true }),

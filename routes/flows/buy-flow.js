@@ -136,7 +136,7 @@ exports.buyFlow = function(payload,callback) {
 						return new Error(err);
 					} else {
 						var response = result.balanceReturn;
-						if(response.result  === '0' )
+						if(response.result  === 0 )
 							var response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : response };
 						else
 							var response = { statusCode:1 ,  additionalInfo : response };
@@ -177,7 +177,7 @@ exports.buyFlow = function(payload,callback) {
                         dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
 						var twitterMsg = config.messages.twitterMsg + dateTime.substr(11, 5);
 						config.messages.twitter.message = twitterMsg;
-						if(response.result  === '0' ) {
+						if(response.result  === 0 ) {
 							var balance = {
 								current: currentMoney,
 								dox: response.current,
