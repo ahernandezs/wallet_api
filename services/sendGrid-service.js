@@ -28,7 +28,7 @@ exports.sendRegisterMessage= function(user, callback){
     var email = new sendgrid.Email({
         to:         user.email,
         from:       'no-reply@amdocswallet.com',
-        subject:    'Welcome to Amdocs Wallet',
+        subject:    'Welcome to Banamex Wallet',
         text:       'hello'
     });
     
@@ -72,7 +72,7 @@ exports.sendForgottenPIN = function(user, callback) {
         subject:    'Forgotten PIN',
         text:       'Dear ' + user.name + ',\n\n' +
                     'Your PIN is ' + user.pin + '.\n\n' +
-                    'Amdocs Wallet Team'
+                    'Banamex Wallet Team'
     }, function(err, json) {
         if (err) {
             callback('ERROR', err);
@@ -128,7 +128,7 @@ exports.sendInvitation= function(friend, callback){
     var email = new sendgrid.Email({
 		to:        friend.email,
 		from:      'no-reply@amdocswallet.com',
-		subject:   'Check out the Amdocs Mobile Wallet!',
+		subject:   'Check out the Banamex Mobile Wallet!',
         text:       config.mailInvite.header + '\n\n'+ config.mailInvite.bodyInit + '\n\n'
                     + config.mailInvite.bodyMid1 + '\n\n'
                     + config.mailInvite.bodyMid2 + '\n\n'
