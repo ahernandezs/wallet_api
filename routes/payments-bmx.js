@@ -68,8 +68,13 @@ exports.payment =  function(req, res){
           }).on('complete', function(data, response) {
           if(data){
             console.log(data);
-            responseBMX = {statusCode:0, additionalInfo:data };
-            callback(null);
+            if(Object.keys(data).length > 1){
+              responseBMX = {statusCode:0, additionalInfo:data };
+              callback(null);
+            }else{
+              responseBMX = {statusCode:1, additionalInfo:'Invalid challenge' };
+              callback('ERROR',responseBMX);
+            }
           }else{
             console.log(data);
             responseBMX = {statusCode:1, additionalInfo:data };

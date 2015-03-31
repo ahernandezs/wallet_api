@@ -160,8 +160,10 @@ exports.transferFundFromCard =  function(payload,callback) {
     },
     ], function (err, result) {
       console.log('Finish Flow');
-      if(err){      
-        callback(err,result);    
+      if(err){
+        console.log('ERROR--------');
+        console.log(result)
+        callback(result,err);
       }else{
           //response.additionalInfo = response;
           console.log(result);
