@@ -31,7 +31,9 @@ exports.sendRegisterMessage= function(user, callback){
         subject:    'Welcome to Banamex Wallet',
         text:       'hello'
     });
-    
+
+    callback(null,'successful');
+    /*
     async.waterfall([
         function(callback) {
             console.log( 'Reading html file' );
@@ -61,7 +63,7 @@ exports.sendRegisterMessage= function(user, callback){
         } else {      
             callback(null,result);    
         }
-    });
+    });*/
 };
 
 exports.sendForgottenPIN = function(user, callback) {
