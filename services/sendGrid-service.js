@@ -31,37 +31,42 @@ exports.sendRegisterMessage= function(user, callback){
         subject:    'Welcome to Amdocs Wallet',
         text:       'hello'
     });
-    
-    async.waterfall([
-        function(callback) {
-            console.log( 'Reading html file' );
-            var fs = require('fs');
-            var __dirname = 'resources';
-            fs.readFile( __dirname + '/index.html', function (err, data) {
-              if (err) {
-                callback('ERROR', 'There was an error sending the email');
-              }
-                callback(null, data.toString());
-            });
-        },
-        function(html, callback) {
-            html = html.replace('1234', user.pin);
-            email.setHtml(html);
-            sendgrid.send(email, function(err, json) {
-                if (err) {
-                    callback('ERROR', err);
-                } else {
-                    callback(null, json);
-                }
-            });
-        }
-    ], function (err, result) {
-        if(err){      
-            callback(err,result);    
-        } else {      
-            callback(null,result);    
-        }
-    });
+    var disableMail = true;
+
+    if(disableMail){
+        async.waterfall([
+            function(callback) {
+                console.log( 'Reading html file' );
+                var fs = require('fs');
+                var __dirname = 'resources';
+                fs.readFile( __dirname + '/index.html', function (err, data) {
+                  if (err) {
+                    callback('ERROR', 'There was an error sending the email');
+                  }
+                    callback(null, data.toString());
+                });
+            },
+            function(html, callback) {
+                html = html.replace('1234', user.pin);
+                email.setHtml(html);
+                sendgrid.send(email, function(err, json) {
+                    if (err) {
+                        callback('ERROR', err);
+                    } else {
+                        callback(null, json);
+                    }
+                });
+            }
+        ], function (err, result) {
+            if(err){
+                callback(err,result);
+            } else {
+                callback(null,result);
+            }
+        });
+    }else{
+        callback(null,null);
+    }
 };
 
 exports.sendForgottenPIN = function(user, callback) {
