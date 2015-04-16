@@ -162,6 +162,7 @@ app.post('/api/payments/funds', payments_mts.payment);
 app.post('/api/payments/login', payments_bmx.login);
 app.post('/api/payments/challenge', payments_bmx.challenge);
 app.post('/api/payments/fundsbmx', payments_bmx.payment);
+app.post('/api/payments/logout', payments_bmx.logoutSession);
 
 server.listen(process.env.PORT  || 3000);
 console.log('Listening on port 3000, server time set to '+new Date());

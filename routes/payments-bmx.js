@@ -7,7 +7,10 @@ var config = require('../config.js');
 var url_base = process.env.REST_URL_BMX;
 var soapurlUMarket = process.env.SOAP_URL;
 
-
+/**
+  Start login process and return  challenge for 2FA
+  @Version 1.1
+**/
 exports.login =  function(req, res){
   console.log('execute POST BMX login ');
   var payload = req.body;
@@ -30,6 +33,9 @@ exports.login =  function(req, res){
     });
 };
 
+/**
+  Receive response challenge after init login and return accounts collection .
+**/
 exports.challenge =  function(req, res){
   console.log('execute POST MTS challenge ');
   var payload = req.body;
@@ -51,6 +57,9 @@ exports.challenge =  function(req, res){
     });
 };
 
+/*
+  Receive index account for load , do payment and return identifier for autorization about operation
+*/
 exports.payment =  function(req, res){
   console.log('execute POST MTS payment ');
   var responseBMX = {};
@@ -154,3 +163,24 @@ exports.payment =  function(req, res){
       }
     });
 };
+
+  /**
+    Destroy sesion from banamex , do this operation before process login/challenge .
+  **/
+  exports.logoutSession =  function(req, res){
+  var payload = req.body;
+  console.log('Payload'+JSON.stringify(payload));
+  console.log('Request'+ JSON.stringify({ session_set: JSON.stringify(payload.session_set) }));
+   rest.post(url_base + '/logout', {
+      data: { session_set: JSON.stringify(payload.session_set) },
+        }).on('complete', function(data, response) {
+        if(data){
+          console.log(data);
+          response = {statusCode:0,additionalInfo:data};
+          res.json(response);
+        }else{
+          response = {statusCode:1, additionalInfo:data};
+          res.json(response);
+        }
+    });
+  }
