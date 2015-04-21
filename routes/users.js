@@ -130,6 +130,7 @@ exports.validate = function(req, res){
   Userquery.validateUser(req.body.phoneID, function(err,result){
     var resultWithID = JSON.parse(JSON.stringify(result));
     resultWithID.countryID = 'ES';
+    resultWithID.currency = config.currency;
     res.json(resultWithID);
   });
 };
