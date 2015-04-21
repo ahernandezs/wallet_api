@@ -14,6 +14,7 @@ var config = require('../../config.js');
 var logger = config.logger;
 var ReceiptQuery = require('../../model/queries/receipt-query');
 var transacctionQuery = require('../../model/queries/transacction-query');
+var citiService = require('../../services/citi-service');
 
 exports.buyFlow = function(payload,callback) {
 	var order = payload.order;
@@ -60,6 +61,15 @@ exports.buyFlow = function(payload,callback) {
 						}
 					}
 				});
+			});
+		},
+
+		/*Create Payment in API citi*/
+		function(sessionid,callback){
+			payload['action']='payment';
+			citiService.payment(payload.order.total, function(err, result){
+				logger.info('Transfer result from citi : '+JSON.stringify(result)+'\n\n');
+				callback(null,sessionid);
 			});
 		},
 
