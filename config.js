@@ -6,7 +6,8 @@ winston.colors = {
     warn: 'yellow',
     error: 'red'
 };
-
+//set question secret for user
+config.question = 'Who was your childhood hero? ';
 config.sendGrid = {};
 config.sendGrid.user = 'dannywf@anzen.com.mx';
 config.sendGrid.password = 'Anzen7924';

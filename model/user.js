@@ -20,6 +20,7 @@ var userSchema = new Schema({
     group : String,
     twitter: String,
     facebook: String,
+    answer:String,
     sms:Number
 });
 

@@ -154,6 +154,9 @@ app.get('/api/spa/transactions/:phoneID/:type', spa.getTransactions);
 app.get('/api/spa/receipts/:phoneID', spa.getReceipts);
 app.get('/api/spa/loans/:phoneID', spa.getLoans);
 
+//services for OFFLA integration
+app.post('/api/offla/validate', user.validateAnswer);
+
 server.listen(process.env.PORT  || 3000);
 console.log('Listening on port 3000, server time set to '+new Date());
 

@@ -97,6 +97,20 @@ exports.validateUser = function(phoneID,callback){
 	});
 };
 
+
+exports.validateAnswer = function(phoneID,answer,callback){
+  console.log('Verify answer to secret question');
+  User.findOne({ 'phoneID': phoneID , 'answer': answer}, 'name  email pin phoneID appID', function (err, person) {
+    if (err) return handleError(err);
+    else if(!person)
+      callback("ERROR", { statusCode: 1 ,  additionalInfo: 'User not exist or answer is not correct' });
+    else{
+      var  response =   { statusCode: 0 ,  additionalInfo: 'response correct' };
+      callback(null, response);
+    }
+  });
+}
+
 exports.createUser = function(user,callback){
   console.log("Saving User in MongoDB");
   var propSessionID = "sessionid";
