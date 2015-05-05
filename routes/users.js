@@ -131,9 +131,20 @@ exports.validate = function(req, res){
     var resultWithID = JSON.parse(JSON.stringify(result));
     resultWithID.countryID = 'ES';
     resultWithID.currency = config.currency;
+    resultWithID.question = config.question;
     res.json(resultWithID);
   });
 };
+
+exports.validateAnswer = function(req, res){
+  console.log('execute POST method validate Answer for secret question');
+  var phoneID = req.headers['x-phoneid'];
+  var answer = req.body.answer;
+  Userquery.validateAnswer(phoneID,answer,function(err,result){
+    var resultWithID = JSON.parse(JSON.stringify(result));
+    res.json(resultWithID);
+  });
+}
 
 exports.putDoxs = function(req, res){
   Userquery.putDoxs(req.body, function(err,result){
