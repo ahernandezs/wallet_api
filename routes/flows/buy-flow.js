@@ -279,3 +279,47 @@ exports.buyFlow = function(payload,callback) {
     });
 };
 
+
+
+exports.notifyMerchantBuy = function(phoneID,payload,callback){
+	console.log('Here');
+	var notification = {message:'There is a new request for buy!', 'phoneID': phoneID };
+	async.waterfall([
+        //get UserName
+		function(callback){
+		console.log('Find user --->')
+			Userquery.findUserByPhoneID(phoneID,function(err,result){
+				console.log(result);
+				callback(null,result);
+			});
+		},
+		//send push notification
+		function(user, callback) {
+			var  order = {};
+			order.name = user.name;
+			order.avatar = config.S3.url + payload.phoneID +'.png';
+			order.amount = payload.amount;
+			order.product = payload.product;
+			var extraData = { action : 6 , buy : JSON.stringify(order) };
+			additionalInfo = extraData.order;
+			notification.extra = {extra : extraData} ;
+			console.log('Send push'+ JSON.stringify(notification));
+			urbanService.singlePush2Merchant(notification, function(err, result) {
+				if(err){
+					var response = { statusCode:1 ,  additionalInfo : result };
+					callback('ERROR',response);
+				}else{
+					var response = { statusCode:0 ,  additionalInfo : result };
+					callback(null,result);
+				}
+			});
+		},
+    ], function (err, result) {
+      if(err){
+		console.log('Error  --->' + JSON.stringify(result));
+        callback(err,result);
+      }else{
+        callback(null,result);
+      }
+    });
+}

@@ -6,6 +6,7 @@ var sessionUser = require('./flows/login-flow');
 var forgotPin = require('./flows/forgotPin-flow');
 var requestMoney = require('./flows/requestMoney-flow');
 var messages = require('./flows/message-flow');
+var buyFlow = require('./flows/buy-flow');
 var awsS3 = require('../services/aws-service');
 var config = require('../config.js');
 var logger = config.logger;
@@ -136,14 +137,33 @@ exports.validate = function(req, res){
   });
 };
 
+
 exports.validateAnswer = function(req, res){
   console.log('execute POST method validate Answer for secret question');
   var phoneID = req.headers['x-phoneid'];
+  console.log('phoneID ' + phoneID);
   var answer = req.body.answer;
+  console.log('answer ' + answer);
   Userquery.validateAnswer(phoneID,answer,function(err,result){
     var resultWithID = JSON.parse(JSON.stringify(result));
     res.json(resultWithID);
   });
+}
+
+exports.validateBuy = function(req, res){
+  console.log('execute POST method validate Buy for OFFLA');
+  var phoneID = req.headers['x-phoneid'];
+  console.log('phoneID ' + phoneID);
+  var payload = req.body;
+  console.log('payload ' + JSON.stringify(payload));
+  buyFlow.notifyMerchantBuy(phoneID,payload,function(err,result){
+    var resultWithID = JSON.parse(JSON.stringify(result));
+    res.json(resultWithID);
+  });
+}
+
+exports.authorize = function(req, res){
+  console.log('execute POST method authorize for OFFLA');
 }
 
 exports.putDoxs = function(req, res){
