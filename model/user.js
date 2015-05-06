@@ -21,7 +21,7 @@ var userSchema = new Schema({
     twitter: String,
     facebook: String,
     answer:String,
-    enabledBuys:String,
+    canPurchase:String,
     sms:Number
 });
 
