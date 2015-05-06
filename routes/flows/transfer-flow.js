@@ -81,7 +81,7 @@ var doxsService = require('../../services/doxs-service');
                             var response = { statusCode:1 ,  additionalInfo : result };
                             callback("ERROR", response);
                         } else{
-                            var response = { statusCode:0 ,  additionalInfo : result };
+                            var response = { statusCode:0 ,  additionalInfo : JSON.stringify(result) };
                             callback(null, response);
                         }
                     }
@@ -143,8 +143,16 @@ exports.transferFunds = function(data, callback) {
                         forReceipt.transferReturn = result;
                         transid = response.transid;
                         if (response.result != 0) {
-                            var response = { statusCode: 1, additionalInfo: result };
-                            callback('ERROR', response);
+                            console.log('Result '+ response.result);
+                            var responseTransfer = {};
+                            if(response.result === 7 ){
+                                console.log('Error de transferencia');
+                                responseTransfer = { statusCode: 1, additionalInfo: "Transaction not allowed" };
+                            }
+                            else{
+                                responseTransfer = { statusCode: 1, additionalInfo: JSON.stringify(result) };
+                            }
+                            callback('ERROR', responseTransfer);
                         } else {
                             payload.phoneID = payload.destiny;
                             delete payload.destiny;

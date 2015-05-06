@@ -351,7 +351,7 @@ exports.notifyMerchantBuy = function(phoneID,payload,callback){
     });
 }
 
-exports.authorizeBuy = function(idOrder,callback){
+exports.authorizeBuy = function(payload,callback){
 	var notification = {message:'There is a new request for buy!', 'phoneID': phoneID };
 	async.waterfall([
         //get UserName
