@@ -279,10 +279,52 @@ exports.buyFlow = function(payload,callback) {
     });
 };
 
-
-
 exports.notifyMerchantBuy = function(phoneID,payload,callback){
-	console.log('Here');
+	console.log('Execute POST notify merchant Buy');
+	var notification = {message:'There is a new request for buy!', 'phoneID': phoneID };
+	async.waterfall([
+        //get UserName
+		function(callback){
+		console.log('Find user --->')
+			Userquery.findUserByPhoneID(phoneID,function(err,result){
+				console.log(result);
+				callback(null,result);
+			});
+		},
+		//send push notification
+		function(user, callback) {
+			var order = payload.order;
+            order.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
+            order.customerName = user.name;
+            order.customerImage = config.S3.url + phoneID +'.png',
+            order.merchantId = payload.merchantID;
+			var extraData = { action : 6 , buy : JSON.stringify(order) };
+			additionalInfo = extraData.order;
+			notification.extra = {extra : extraData} ;
+			console.log('Send push'+ JSON.stringify(notification));
+			urbanService.singlePush2Merchant(notification, function(err, result) {
+				if(err){
+					var response = { statusCode:1 ,  additionalInfo : result };
+					callback('ERROR',response);
+				}else{
+					console.log('')
+					response = {message : 'Your purchase needs to be validated by the merchant. You will be notified when the merchant responses but until then you cannot made more purchases.' , canPurchase : 'NO'}
+					var response = { statusCode:0 ,  additionalInfo : response };
+					callback(null,response);
+				}
+			});
+		},
+    ], function (err, result) {
+      if(err){
+		console.log('Error  --->' + JSON.stringify(result));
+        callback(err,result);
+      }else{
+        callback(null,result);
+      }
+    });
+}
+
+exports.authorizeBuy = function(idOrder,callback){
 	var notification = {message:'There is a new request for buy!', 'phoneID': phoneID };
 	async.waterfall([
         //get UserName
