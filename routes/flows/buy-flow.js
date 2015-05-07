@@ -3,6 +3,7 @@ var soap = require('soap');
 var crypto = require('crypto');
 var moment = require('moment-timezone');
 var Orderquery = require('../../model/queries/order-query');
+var orderQueryTemporal = require('../../model/queries/orderTemporal-query');
 var productQuery = require('../../model/queries/product-query');
 var Userquery = require('../../model/queries/user-query');
 var merchantQuery = require('../../model/queries/merchant-query');
@@ -279,10 +280,78 @@ exports.buyFlow = function(payload,callback) {
     });
 };
 
-
-
 exports.notifyMerchantBuy = function(phoneID,payload,callback){
-	console.log('Here');
+	console.log('Execute POST notify merchant Buy');
+	var order = payload.order;
+	var notification = {message:'Purchase validation request', 'phoneID': phoneID };
+	async.waterfall([
+        //get UserName
+		function(callback){
+		console.log('Find user --->')
+			Userquery.findUserByPhoneID(phoneID,function(err,result){
+				console.log(result);
+				callback(null,result);
+			});
+		},
+		// disabled purchase
+		function(user, callback) {
+			var updatePayload = {};
+			updatePayload.phoneID = phoneID;
+			updatePayload.canPurchase = 'NO';
+			Userquery.updateUserPurchaseFlag(updatePayload, function(err,result){
+			    if(err){
+			      console.log(err);
+			      callback('ERROR',err);
+			    }else{
+			      console.log('Update User correctly');
+			      callback(null,user);
+				}
+			});
+		},
+		//save Temporal Order
+		function(user, callback) {
+			order.customerName = user.name;
+            order.customerImage = config.S3.url + phoneID +'.png',
+            order.merchantId = payload.merchantID;
+			orderQueryTemporal.saveOrder(order, function(err,result){
+				var ID = result.order;
+				console.log('Identificador de orden'+ ID);
+				logger.info('Order saving result: '+JSON.stringify(result)+'\n\n');
+				callback(null, user,ID);
+			});
+
+		},
+		//send push notification
+		function(user,ID,callback) {
+            order.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
+            order.ID = ID;
+			var extraData = { action : 6 , buy : JSON.stringify(order) };
+			additionalInfo = extraData.order;
+			notification.extra = {extra : extraData} ;
+			console.log('Send push'+ JSON.stringify(notification));
+			urbanService.singlePush2Merchant(notification, function(err, result) {
+				if(err){
+					var response = { statusCode:1 ,  additionalInfo : result };
+					callback('ERROR',response);
+				}else{
+					console.log('')
+					response = {message : 'Your purchase needs to be validated by the merchant. You will be notified when the merchant responses but until then you cannot made more purchases.' , canPurchase : 'NO'}
+					var response = { statusCode:0 ,  additionalInfo : response };
+					callback(null,response);
+				}
+			});
+		},
+    ], function (err, result) {
+      if(err){
+		console.log('Error  --->' + JSON.stringify(result));
+        callback(err,result);
+      }else{
+        callback(null,result);
+      }
+    });
+}
+
+exports.authorizeBuy = function(payload,callback){
 	var notification = {message:'There is a new request for buy!', 'phoneID': phoneID };
 	async.waterfall([
         //get UserName

@@ -157,7 +157,7 @@ app.get('/api/spa/loans/:phoneID', spa.getLoans);
 //services for OFFLA integration
 app.post('/api/offla/validateanswer', user.validateAnswer);
 app.post('/api/offla/validatebuy', user.validateBuy);
-app.post('/api/offla/authorize', user.validateAnswer);
+app.post('/api/offla/authorizebuy', user.authorizeBuy);
 
 
 server.listen(process.env.PORT  || 3000);

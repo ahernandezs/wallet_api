@@ -86,7 +86,7 @@ exports.validateSMS = function(phoneID,callback){
 
 exports.validateUser = function(phoneID,callback){
 	console.log('Search user in mongoDB');
-	User.findOne({ 'phoneID': phoneID }, 'name 	email pin	phoneID appID', function (err, person) {
+	User.findOne({ 'phoneID': phoneID }, 'name 	email pin	phoneID appID canPurchase', function (err, person) {
 		if (err) return handleError(err); 
 		else if(!person)
 			callback("ERROR", { statusCode: 1 ,  additionalInfo: 'User is not yet registered' });
@@ -145,6 +145,16 @@ exports.singleUpdateUser = function(payload,callback){
   });
 }
 
+exports.updateUserPurchaseFlag = function(payload,callback){
+    var conditions = { 'phoneID': payload.phoneID }
+    User.update(conditions, payload, null, function(err, result) {
+    if(err){
+      console.log(err);
+      callback('ERROR',err);
+    }else
+      callback(null);
+    });
+}
 exports.updateUser = function(payload,callback){
 
   async.waterfall([
