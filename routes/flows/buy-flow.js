@@ -7,9 +7,12 @@ var orderQueryTemporal = require('../../model/queries/orderTemporal-query');
 var productQuery = require('../../model/queries/product-query');
 var Userquery = require('../../model/queries/user-query');
 var merchantQuery = require('../../model/queries/merchant-query');
+var sessionQuery = require('../../model/queries/session-query')
 var urbanService = require('../../services/notification-service');
 var doxsService = require('../../services/doxs-service');
 var transferFlow = require('./transfer-flow');
+var purchaseFlow = require('./buy-flow');
+var loginFlow = require('./login-flow');
 var soapurl = process.env.SOAP_URL;
 var config = require('../../config.js');
 var logger = config.logger;
@@ -19,6 +22,9 @@ var citiService = require('../../services/citi-service');
 
 exports.buyFlow = function(payload,callback) {
 	var order = payload.order;
+	console.log('--------------');
+	console.log(payload.order);
+	console.log('--------------');
 	var dateTime;
 	var buy = {sessionid:'', target:'airtime', type:1, amount:5};
 	var balance = {sessionid:'',type:1};
@@ -33,19 +39,25 @@ exports.buyFlow = function(payload,callback) {
 	async.waterfall([
 
 		function(callback) {
-            Userquery.findUserBuys(payload.phoneID, function(err,transfers){
-                if(err){
-                    var response = { statusCode: 1, additionalInfo: err };
-                    callback('ERROR', response);
-                }
-                else
-                    callback(null);
-            });
+			console.log('Verify Enable purchase');
+			if(process.env.ENABLE_RULE_PURCHASE === 'TRUE'){
+	            Userquery.findUserBuys(payload.phoneID, function(err,transfers){
+	                if(err){
+	                    var response = { statusCode: 1, additionalInfo: err };
+	                    callback('ERROR', response);
+	                }
+	                else
+	                    callback(null);
+	            });
+			}else
+				callback(null);
         },
 
 		function(callback){
+			console.log('Transfer purchase to merchant');
 			var requestSoap = { sessionid: payload.sessionid, to: config.username, amount : payload.order.total , type: 1 };
 			var request = { transferRequest: requestSoap };
+			console.log(request);
 				soap.createClient(soapurl, function(err, client) {
 				client.transfer(request, function(err, result) {
 					if(err) {
@@ -67,6 +79,7 @@ exports.buyFlow = function(payload,callback) {
 
 		/*Create Payment in API citi*/
 		function(sessionid,callback){
+			console.log('Transfer using API city');
 			payload['action']='payment';
 			citiService.payment(payload.order.total, function(err, result){
 				logger.info('Transfer result from citi : '+JSON.stringify(result)+'\n\n');
@@ -311,8 +324,12 @@ exports.notifyMerchantBuy = function(phoneID,payload,callback){
 		//save Temporal Order
 		function(user, callback) {
 			order.customerName = user.name;
+			order.phoneID = phoneID;
             order.customerImage = config.S3.url + phoneID +'.png',
             order.merchantId = payload.merchantID;
+            console.log('Order to persist');
+            console.log(order)
+            console.log('----------------');
 			orderQueryTemporal.saveOrder(order, function(err,result){
 				var ID = result.order;
 				console.log('Identificador de orden'+ ID);
@@ -352,40 +369,72 @@ exports.notifyMerchantBuy = function(phoneID,payload,callback){
 }
 
 exports.authorizeBuy = function(payload,callback){
-	var notification = {message:'There is a new request for buy!', 'phoneID': phoneID };
+	console.log('Incoming autorization for  autorization' + JSON.stringify(payload));
+	var payloadBuyFlow = {};
+
 	async.waterfall([
-        //get UserName
+		//get Temporal order
 		function(callback){
-		console.log('Find user --->')
-			Userquery.findUserByPhoneID(phoneID,function(err,result){
-				console.log(result);
-				callback(null,result);
-			});
-		},
-		//send push notification
-		function(user, callback) {
-			var  order = {};
-			order.name = user.name;
-			order.avatar = config.S3.url + payload.phoneID +'.png';
-			order.amount = payload.amount;
-			order.product = payload.product;
-			var extraData = { action : 6 , buy : JSON.stringify(order) };
-			additionalInfo = extraData.order;
-			notification.extra = {extra : extraData} ;
-			console.log('Send push'+ JSON.stringify(notification));
-			urbanService.singlePush2Merchant(notification, function(err, result) {
-				if(err){
-					var response = { statusCode:1 ,  additionalInfo : result };
-					callback('ERROR',response);
-				}else{
-					var response = { statusCode:0 ,  additionalInfo : result };
+		console.log('Get Temporal Order');
+			orderQueryTemporal.getOrder(payload.ID,function(err,result){
+				if(err) callback('ERROR',err);
+				else{
 					callback(null,result);
 				}
 			});
 		},
+
+		//enabled flag for purchase
+		function(order,callback){
+			console.log('Enabled flag for purchase ' + order.phoneID);
+			console.log(payload.status);
+			var updateQuery  = {};
+			updateQuery.phoneID = order.phoneID;
+			if(payload.status === 'ACCEPTED'){
+				updateQuery.canPurchase = 'YES';
+				Userquery.updateUserPurchaseFlag(updateQuery,function (err,result) {
+					if(err) callback('ERROR',err);
+					else{
+						if(result === 1)
+							callback(null,order);
+						else{
+							var response = { statusCode:1 ,  additionalInfo : 'Error to update flag purchase' };
+							callback('ERROR',response);
+						}
+					}
+				});
+			}else
+				callback(null,order);
+		},
+
+		//push notification for client
+		function(order,callback){
+            var message = {};
+            var extraData = {};
+            var title = 'Purchase validation';
+            message.message = title;
+            message.phoneID = order.phoneID;
+
+            if(payload.status === 'ACCEPTED')
+				extraData = { status : payload.status , message:'Your purchase was approved. Please check your receipts.' , canPurchase :'YES' };
+
+			else
+				extraData = { status : payload.status , message:'Your purchase was rejected.' , canPurchase :'NO'};
+
+			message.extra = {extra : extraData} ;
+			urbanService.singlePush(message, function(err, result) {
+				if(err){
+				  var response = { statusCode:1 ,  additionalInfo : result.message };
+				  callback('ERROR',response);
+				}
+				else{
+				  var response = { statusCode:0 ,  additionalInfo : result };
+				  callback(null, response, result);
+				}
+			})
+		}
     ], function (err, result) {
       if(err){
-		console.log('Error  --->' + JSON.stringify(result));
         callback(err,result);
       }else{
         callback(null,result);

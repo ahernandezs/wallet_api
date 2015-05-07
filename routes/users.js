@@ -168,9 +168,9 @@ exports.authorizeBuy = function(req, res){
   console.log('phoneID ' + phoneID);
   var payload = req.body;
   console.log('payload ' + JSON.stringify(payload));
-  buyFlow.authorizationtBuy(phoneID,payload,function(err,result){
-    var resultWithID = JSON.parse(JSON.stringify(result));
-    res.json(resultWithID);
+  buyFlow.authorizeBuy(payload,function(err,result){
+    console.log(result);
+    res.json(result);
   });
 }
 

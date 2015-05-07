@@ -12,6 +12,20 @@ exports.createSession = function(session, callback) {
     });
 };
 
+
+exports.getSessionByPhoneID = function(phoneID, callback) {
+    console.log( 'Getting session using phoneID' );
+    Session.findOne( { 'phoneID': phoneID },'token', function(err, result) {
+        if (err)
+            callback('ERROR', 'error to get session token' );
+        else{
+            console.log('Imprimiendo token');
+            console.log(result);
+            callback(null, result);
+        }
+    });
+};
+
 exports.getCredentials = function(session, callback) {
     console.log( 'Getting credentials' );
     async.waterfall([

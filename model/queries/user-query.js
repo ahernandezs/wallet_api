@@ -101,7 +101,7 @@ exports.validateUser = function(phoneID,callback){
 exports.validateAnswer = function(phoneID,answer,callback){
   console.log('Verify answer to secret question');
   User.findOne({ 'phoneID': phoneID , 'answer': answer}, 'name  email pin phoneID appID', function (err, person) {
-    if (err) return handleError(err);
+      if (err) return handleError(err);
     else if(!person)
       callback("ERROR", { statusCode: 1 ,  additionalInfo: 'User not exist or answer is not correct' });
     else{
@@ -146,15 +146,17 @@ exports.singleUpdateUser = function(payload,callback){
 }
 
 exports.updateUserPurchaseFlag = function(payload,callback){
+    console.log('Upatdate user flag' + JSON.stringify(payload));
     var conditions = { 'phoneID': payload.phoneID }
     User.update(conditions, payload, null, function(err, result) {
     if(err){
       console.log(err);
       callback('ERROR',err);
     }else
-      callback(null);
+      callback(null,result);
     });
 }
+
 exports.updateUser = function(payload,callback){
 
   async.waterfall([

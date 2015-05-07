@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 
 var orderSchema =  new Schema({
 	orderId: Number,
+	phoneID: String,
 	userId: String,
     merchantId: Number,
     customerImage: String,
