@@ -335,7 +335,7 @@ exports.notifyMerchantBuy = function(phoneID,payload,callback){
 					callback('ERROR',response);
 				}else{
 					console.log('')
-					response = {message : 'Your purchase needs to be validated by the merchant. You will be notified when the merchant responses but until then you cannot made more purchases.' , canPurchase : 'NO'}
+					response = {message : 'Please approach to the merchant for an additional validation.' , canPurchase : 'NO'}
 					var response = { statusCode:0 ,  additionalInfo : response };
 					callback(null,response);
 				}
