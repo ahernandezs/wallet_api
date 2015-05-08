@@ -14,3 +14,12 @@ exports.saveOrder = function(order,callback){
 	});
 }
 
+exports.getOrder = function (ID,callback) {
+	console.log('Get temporal order '+ID);
+	Order.findOne({ '_id': ID }, 'orderId _id  phoneID customerImage customerName date status products userId total', function (err, order) {
+	    if (err) return handleError(err);
+	    else{
+	    	callback(null,order);
+	    }
+	});
+}
