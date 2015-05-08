@@ -72,6 +72,7 @@ exports.buy =  function(req, res){
 
 exports.balance = function(request, callback) {
     console.log('execute POST method balance');
+    console.log(request);
     var req = { balanceRequest: request };
     soap.createClient(soapurl, function(err, client) {
         client.balance(req, function(err, result) {
