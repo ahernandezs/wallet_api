@@ -17,6 +17,8 @@ exports.login =  function(req, res, callback){
   console.log('execute POST method login');
   sessionUser.loginFlow(req.body,function(err,result){
       var token = result.sessionid;
+      console.log('Token '+ token);
+      console.log(res);
       if(result.statusCode === 0){
         res.setHeader('X-AUTH-TOKEN', result.sessionid);
         delete result.sessionid;

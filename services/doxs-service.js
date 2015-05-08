@@ -13,6 +13,7 @@ channel.on('error', console.error);
 exports.saveDoxs = function(payload,callback) {
 	console.log('Transfering DOX ....');
     var transferDoxs = {phoneID:payload.phoneID,amount:config.doxs[payload.action] ,type:3};
+    console.log(transferDoxs);
     transferFlow.transferFlow({transferRequest: transferDoxs}, function(err,result){
         console.log('Transfer doxs result: '+JSON.stringify(result)+'\n\n');
         setTimeout(function() {

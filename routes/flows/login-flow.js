@@ -4,6 +4,7 @@ var moment = require('moment-timezone');
 var crypto = require('crypto');
 var Userquery = require('../../model/queries/user-query');
 var User = require('../../model/user');
+var UserLoginFlow = require('./login-flow');
 var soapurl = process.env.SOAP_URL;
 var wallet = require('../wallet');
 var session =  require('../../model/queries/session-query');
@@ -193,6 +194,7 @@ exports.loginFlow = function(payload,callback) {
             var response = result.balanceReturn;
             if(response.result  === '0' ) {
               var balance = { current : currentMoney , dox : response.current ,unreadMsgs :length } ;
+              console.log(JSON.stringify(balance));
               response = { statusCode: 0, sessionid : sessionid, additionalInfo : balance, userInfo : info };
             }
             else
@@ -243,6 +245,7 @@ exports.regenerate = function(request, res, callback) {
         function(getBalance, callback) {
             if (getBalance) {
                 logger.info( 'Getting balance' );
+                logger.info(request);
                 wallet.balance(request, function(err, response) {
                     if (err)
                         callback('ERROR', response );
@@ -283,17 +286,25 @@ exports.regenerate = function(request, res, callback) {
                 });
         },
         function(info, callback) {
+            logger.info('Authenticate User');
             info.body = { 'phoneID' : info.phoneID, 'pin' : info.pin, 'continue' : true, 'group': info.group };
-            user.login(info, res, function(result) {
-                if (result.statusCode != 0)
-                    callback('ERROR', result.message);
-                else {
-                    info.token = result.token;
-                    callback(null, info);
+            UserLoginFlow.loginFlow(info, function(err,result) {
+                if(err){
+                  console.log(err);
+                }else {
+                  if (result.statusCode != 0)
+                      callback('ERROR', result.message);
+                  else {
+                      info.token = result.sessionid;
+                      callback(null, info);
+                  }
                 }
             });
         },
         function(info, callback) {
+            console.log('Update Session');
+            console.log(info);
+            console.log(request);
             session.updateSession(request, info, function(err, result) {
                 if (err)
                     callback('ERROR', result.message);
@@ -306,7 +317,9 @@ exports.regenerate = function(request, res, callback) {
     ], function(err, result) {
         if (err) 
             callback(err, result);
-        else
+        else{
+            console.log('Finalize Flow');
             callback(null, result);   
+        }
     });
 };

@@ -25,6 +25,7 @@ exports.buyFlow = function(payload,callback) {
 	console.log('--------------');
 	console.log(payload.order);
 	console.log('--------------');
+	console.log(payload);
 	var dateTime;
 	var buy = {sessionid:'', target:'airtime', type:1, amount:5};
 	var balance = {sessionid:'',type:1};
@@ -78,14 +79,14 @@ exports.buyFlow = function(payload,callback) {
 		},
 
 		/*Create Payment in API citi*/
-		function(sessionid,callback){
+		/*function(sessionid,callback){
 			console.log('Transfer using API city');
 			payload['action']='payment';
 			citiService.payment(payload.order.total, function(err, result){
 				logger.info('Transfer result from citi : '+JSON.stringify(result)+'\n\n');
 				callback(null,sessionid);
 			});
-		},
+		},*/
 
 		function(sessionid,callback){
 			payload['action']='payment';
@@ -405,6 +406,45 @@ exports.authorizeBuy = function(payload,callback){
 				});
 			}else
 				callback(null,order);
+		},
+
+		//get session
+		function(order,callback){
+			if(payload.status === 'ACCEPTED'){
+				console.log('Consult sessionid for ' + order.phoneID);
+				console.log(order);
+				var requestRegenerate = { 'phoneID' : order.phoneID };
+				requestRegenerate.sessionid = '';
+				loginFlow.regenerate(requestRegenerate,null, function (err,result){
+					if(err) callback('ERROR',err);
+					else{
+						callback(null,order,result);
+					}
+				});
+			}else
+				callback(null,order,'');
+		},
+
+		//invoke buy flow
+		function(order,sessionid,callback){
+			if(payload.status === 'ACCEPTED'){
+				console.log('Invoke buy flow');
+				payloadBuyFlow.order =  order ;
+				payloadBuyFlow.sessionid = sessionid;
+				payloadBuyFlow.phoneID = order.phoneID;
+				purchaseFlow.buyFlow(payloadBuyFlow ,function  (err,result) {
+					if(err){
+						console.log(err);
+						callback('ERROR',err);
+					}
+					else{
+						console.log('Result purchase');
+						callback(null,order);
+					}
+				});
+			}else
+				callback(null,order);
+
 		},
 
 		//push notification for client
