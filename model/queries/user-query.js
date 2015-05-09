@@ -355,7 +355,7 @@ exports.getUsers = function(parameters,callback){
     User.findOne({'phoneID': parameters.phoneID }, 'group', function (err, user) {
       if (err) return handleError(err);
       else if(user){
-        User.find({group:user.group }, 'phoneID name email lastSession company', { sort : { name : 1 }}, function (err, people) {
+        /*User.find({group:user.group }, 'phoneID name email lastSession company', { sort : { name : 1 }}, function (err, people) {
           if (err) return handleError(err);
           else if(people){
             people.sort(sortstring);
@@ -365,6 +365,9 @@ exports.getUsers = function(parameters,callback){
             console.log("users not found");
             callback("USERS NOT FOUND", null);
           }
+        });*/
+        getUsersByTeam(function(err,result){
+          callback(null,result);
         });
       }// end else if
       else{
@@ -615,4 +618,34 @@ var sortstring = function (a, b)    {
     if (a > b) return 1;
     if (a < b) return -1;
     return 0;
+}
+
+function getUsersByTeam(callback){
+   async.waterfall([
+
+    //Get all users that start name with 'TEAM'
+    function(callback){
+      var conditionsIncludeTeam= { name: /Team/ };
+      var includeTeamQuery = User.find(conditionsIncludeTeam,'phoneID name email lastSession company');
+      includeTeamQuery.sort({name: 1});
+      includeTeamQuery.exec(function (err1, usersTeam) {
+        console.log('Users with Team');
+        console.log(usersTeam);
+        callback(null,usersTeam);
+      });
+    },
+
+    //Get all users that start name different 'TEAM'
+    function(usersTeam, callback){
+      var conditionsNotIncludeTeam = {name: {"$not": /Team/}};
+      var usersQuery = User.find(conditionsNotIncludeTeam,'phoneID name email lastSession company');
+      usersQuery.sort({name: 1});
+      usersQuery.exec(function (err1, usersWithoutTeam) {
+        callback(null, usersTeam.concat(usersWithoutTeam));
+      });
+    },
+
+    ], function (err, result){
+        callback(null,result);
+    });
 }
