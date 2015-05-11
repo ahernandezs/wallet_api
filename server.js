@@ -6,6 +6,7 @@ var wallet = require('./routes/wallet');
 var product = require('./routes/products');
 var merchant = require('./routes/merchants')
 var message = require('./routes/messages');
+var lendo =  require('./routes/lendo');
 var transacction = require('./routes/transacctions');
 var loan = require('./routes/loans');
 var spa = require('./routes/spa');
@@ -158,6 +159,10 @@ app.get('/api/spa/loans/:phoneID', spa.getLoans);
 app.post('/api/offla/validateanswer', user.validateAnswer);
 app.post('/api/offla/validatebuy', user.validateBuy);
 app.post('/api/offla/authorizebuy', user.authorizeBuy);
+
+//services for LENDDO
+app.post('/api/lenddo/webhook', lendo.notification);
+
 
 
 server.listen(process.env.PORT  || 3000);
