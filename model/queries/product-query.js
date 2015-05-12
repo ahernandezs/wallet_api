@@ -25,11 +25,11 @@ exports.getProducts =  function(merchantID, callback) {
 };
 
 exports.getProductScheduler =  function(merchantID, callback) {
-    console.log( 'getProducts from MongoDB with status: ' + config.products.status );
+    console.log( 'getProducts by Schedule from MongoDB with status: ' + config.products.status );
     timeService.getSchedulerLabel(function(err,timeHour) {
         console.log(timeHour);
         if(timeHour === 'MORNING'){
-            var query = Product.find({ 'merchantId': merchantID , 'status': config.products.status , 'scheduler': 'MORNING' });
+            var query = Product.find({ 'merchantId': merchantID , 'status': config.products.status , 'schedule': 'MORNING' });
             query.sort({productID:1});
             query.exec(function(err,products){
                     var response;
@@ -47,7 +47,7 @@ exports.getProductScheduler =  function(merchantID, callback) {
                 }
             });
         }else{
-            var query = Product.find({ 'merchantId': merchantID , 'status': config.products.status , 'scheduler': 'AFTERNOON' });
+            var query = Product.find({ 'merchantId': merchantID , 'status': config.products.status });
             query.sort({productID:1});
             query.exec(function(err,products){
                     var response;
