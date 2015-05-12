@@ -1,4 +1,4 @@
-
+var moment = require('moment-timezone');
 
 exports.crateTimeStamp = function(sender,message, callback){
 	createMail(sender,message,function(err,mail){
@@ -15,4 +15,15 @@ exports.crateTimeStamp = function(sender,message, callback){
 			});
 		}
 	});
+}
+
+
+exports.getSchedulerLabel = function(callback){
+	var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
+	var hour = new Date().getHours();
+	console.log('Get actual hour '+hour);
+	if ( hour  < 15)
+		callback(null,'MORNING');
+	else
+		callback(null,'AFTERNOON');
 }

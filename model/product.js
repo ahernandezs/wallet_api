@@ -8,7 +8,8 @@ var productSchema = new Schema({
     url: String,
 	description: String,
 	cost: Number,
-	status: String
+	status: String,
+	scheduler: String
 });
 
 module.exports = mongoose.model('Product', productSchema);
