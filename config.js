@@ -120,10 +120,10 @@ config.logger = new (winston.Logger)({
 });
 
 config.currency = {};
-config.currency.type ='Euros';
-config.currency.symbol='€';
+config.currency.type ='Pesos';
+config.currency.symbol='$';
 config.currency.position ='L';
-config.currency.proportion =1;
+config.currency.proportion =10;
 config.currency.decimal='true';
 
 module.exports = config;
