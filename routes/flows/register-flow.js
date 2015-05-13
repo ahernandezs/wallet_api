@@ -12,17 +12,9 @@ function endsWith(str, suffix) {
 
 exports.registerFlow = function(payload,callback) {
   var transfer = true;
-  var end = 'ES'
-  var userBlock1 = '357963053783385ES';
-  var userBlock2 = '358240050218148ES';
+  var end = 'MX'
 
-  console.log('Validation PhoneID--------------');
   console.log(endsWith(payload.phoneID, end));
-
-  if(!endsWith(payload.phoneID, end) || payload.phoneID ==='357963053783385ES' || payload.phoneID === '358240050218148ES' || payload.phoneID === '865164024611400ES' || payload.phoneID ===  '869274011161768ES' ){
-    console.log('User not authorized');
-    callback('ERROR',{statusCode: 1, additionalInfo: "User not authorized for register" });
-  }else
   async.waterfall([
     function(callback){
       console.log('Validate connection');
@@ -143,7 +135,7 @@ exports.registerFlow = function(payload,callback) {
     function(sessionid,callback){
         if (transfer) {
             console.log('Transfer ' + sessionid);
-            var requestSoap = { sessionid:sessionid, to: payload.phoneID, amount : 5 , type: 1 };
+            var requestSoap = { sessionid:sessionid, to: payload.phoneID, amount : 100 , type: 1 };
             var request = { transferRequest: requestSoap };
             console.log(request);
             soap.createClient(soapurl, function(err, client) {
