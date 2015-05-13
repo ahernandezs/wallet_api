@@ -12,7 +12,7 @@ function endsWith(str, suffix) {
 
 exports.registerFlow = function(payload,callback) {
   var transfer = true;
-  var end = 'MX'
+  var end = 'CN'
 
   console.log(endsWith(payload.phoneID, end));
   async.waterfall([
@@ -102,6 +102,7 @@ exports.registerFlow = function(payload,callback) {
       },
       function(sessionid, callback){
         payload.profileCompleted = 0;
+        payload.canPurchase ='YES';
         console.log('Register in Mongo ' + sessionid);
         Userquery.validateUser( payload.phoneID, function (err, result) {
           if(result.statusCode === 0)
@@ -135,7 +136,7 @@ exports.registerFlow = function(payload,callback) {
     function(sessionid,callback){
         if (transfer) {
             console.log('Transfer ' + sessionid);
-            var requestSoap = { sessionid:sessionid, to: payload.phoneID, amount : 100 , type: 1 };
+            var requestSoap = { sessionid:sessionid, to: payload.phoneID, amount : 10 , type: 1 };
             var request = { transferRequest: requestSoap };
             console.log(request);
             soap.createClient(soapurl, function(err, client) {
