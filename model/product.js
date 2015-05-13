@@ -9,8 +9,7 @@ var productSchema = new Schema({
 	description: String,
 	cost: Number,
 	status: String,
-	scheduler: String
+	schedule: String
 });
 
 module.exports = mongoose.model('Product', productSchema);
-

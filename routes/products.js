@@ -8,7 +8,7 @@ var soapurl = process.env.SOAP_URL;
 
 exports.products =  function(req, res){
   console.log('POST method products');
-    Productquery.getProducts(req.body.merchantID, function(err, result) {
+    Productquery.getProductScheduler(req.body.merchantID, function(err, result) {
         res.json(result);
     });
 };

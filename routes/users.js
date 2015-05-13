@@ -128,11 +128,11 @@ exports.validate = function(req, res){
   console.log('execute POST method validate');
   console.log(req.body);
   console.log('Search phoneID');
-  req.body.phoneID = req.body.phoneID +'ES';
+  req.body.phoneID = req.body.phoneID +'MX';
   console.log(req.body.phoneID);
   Userquery.validateUser(req.body.phoneID, function(err,result){
     var resultWithID = JSON.parse(JSON.stringify(result));
-    resultWithID.countryID = 'ES';
+    resultWithID.countryID = 'MX';
     resultWithID.currency = config.currency;
     resultWithID.question = config.question;
     res.json(resultWithID);
