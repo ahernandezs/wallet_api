@@ -8,7 +8,7 @@ var soapurl = process.env.SOAP_URL;
 
 exports.products =  function(req, res){
   console.log('POST method products');
-    Productquery.getProductScheduler(req.body.merchantID, function(err, result) {
+    Productquery.getProductSchedule(req.body.merchantID, function(err, result) {
         res.json(result);
     });
 };
@@ -43,7 +43,7 @@ exports.changeReceiptStatus = function(req, res){
 
 exports.products2 =  function(req, res){
   console.log('POST method products');
-    Productquery.getProductsDiscount(req.body.merchantID, function(err, result) {
+    Productquery.getProductsDiscountSchededule(req.body.merchantID, function(err, result) {
         res.json(result);
     });
 };

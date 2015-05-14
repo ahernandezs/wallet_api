@@ -24,7 +24,7 @@ exports.getProducts =  function(merchantID, callback) {
     });
 };
 
-exports.getProductScheduler =  function(merchantID, callback) {
+exports.getProductSchedule =  function(merchantID, callback) {
     console.log( 'getProducts by Schedule from MongoDB with status: ' + config.products.status );
     timeService.getSchedulerLabel(function(err,timeHour) {
         console.log(timeHour);
@@ -86,6 +86,50 @@ exports.getProductsDiscount =  function(merchantID, callback) {
         } else {
             response = { statusCode: 0, additionalInfo: products };
             callback(null, response);
+        }
+    });
+};
+
+exports.getProductsDiscountSchededule =  function(merchantID, callback) {
+    console.log( 'getProducts by Schedule from MongoDB with status: ' + config.products.status );
+    timeService.getSchedulerLabel(function(err,timeHour) {
+        console.log(timeHour);
+        if(timeHour === 'MORNING'){
+            var query = Product2.find({ 'merchantId': merchantID , 'status': config.products.status , 'schedule': 'MORNING' });
+            query.sort({productID:1});
+            query.exec(function(err,products){
+                    var response;
+                if (err) {
+                    response = { statusCode: 1, additionalInfo: config.products.errMsg };
+                    callback("ERROR: " + err.message, response);
+                    console.log(err.message);
+                } else if (products.length === 0) {
+                    response = { statusCode: 0, additionalInfo: config.products.emptyMsg };
+                    callback(null, response);
+                    console.log(config.products.emptyMsg);
+                } else {
+                    response = { statusCode: 0, additionalInfo: products };
+                    callback(null, response);
+                }
+            });
+        }else{
+            var query = Product2.find({ 'merchantId': merchantID , 'status': config.products.status });
+            query.sort({productID:1});
+            query.exec(function(err,products){
+                    var response;
+                if (err) {
+                    response = { statusCode: 1, additionalInfo: config.products.errMsg };
+                    callback("ERROR: " + err.message, response);
+                    console.log(err.message);
+                } else if (products.length === 0) {
+                    response = { statusCode: 0, additionalInfo: config.products.emptyMsg };
+                    callback(null, response);
+                    console.log(config.products.emptyMsg);
+                } else {
+                    response = { statusCode: 0, additionalInfo: products };
+                    callback(null, response);
+                }
+            });
         }
     });
 };

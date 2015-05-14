@@ -230,7 +230,7 @@ exports.buyFlow = function(payload,callback) {
 			    var receipt = {};
 			    receipt.emitter = data.phoneID;
 			    receipt.receiver = 'merchant';
-			    receipt.title = 'You have bought a coffee of € ' + data.order.total;
+			    receipt.title = 'You have bought a coffee of '+ config.currency.symbol + ' '+ data.order.total;
 			    receipt.additionalInfo = JSON.stringify(response.additionalInfo);
 			    receipt.amount = data.order.total;
 			    receipt.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
@@ -396,7 +396,8 @@ exports.authorizeBuy = function(payload,callback){
 				Userquery.updateUserPurchaseFlag(updateQuery,function (err,result) {
 					if(err) callback('ERROR',err);
 					else{
-						if(result === 1)
+						console.log('result Update '+ JSON.stringify(result));
+						if(result.ok === 1)
 							callback(null,order);
 						else{
 							var response = { statusCode:1 ,  additionalInfo : 'Error to update flag purchase' };

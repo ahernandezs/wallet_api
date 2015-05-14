@@ -153,9 +153,13 @@ exports.getTransacctionsSocialFeed = function(callback) {
 
                   giftsTransactions.forEach(function(v){
                    User.findOne({'phoneID': v.phoneID }, 'name', function (err, user) {
-                        var tmp = v.toObject();
-                        tmp.avatar = config.S3.url + v.phoneID+'.png';
-                        tmp.name = user.name;
+                        if(user){
+                            console.log('SHOWUSER');
+                            console.log(user);
+                            var tmp = v.toObject();
+                            tmp.avatar = config.S3.url + v.phoneID+'.png';
+                            tmp.name = user.name;
+                        }
                         giftsTransactionsFinal.push(tmp);
                         if(giftsTransactionsFinal.length === giftsTransactions.length){
                             console.log('DONE gifts');

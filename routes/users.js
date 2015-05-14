@@ -18,7 +18,6 @@ exports.login =  function(req, res, callback){
   sessionUser.loginFlow(req.body,function(err,result){
       var token = result.sessionid;
       console.log('Token '+ token);
-      console.log(res);
       if(result.statusCode === 0){
         res.setHeader('X-AUTH-TOKEN', result.sessionid);
         delete result.sessionid;
@@ -166,8 +165,6 @@ exports.validateBuy = function(req, res){
 
 exports.authorizeBuy = function(req, res){
   console.log('execute POST method authorize for OFFLA');
-  var phoneID = req.headers['x-phoneid'];
-  console.log('phoneID ' + phoneID);
   var payload = req.body;
   console.log('payload ' + JSON.stringify(payload));
   buyFlow.authorizeBuy(payload,function(err,result){

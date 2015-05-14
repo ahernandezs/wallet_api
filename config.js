@@ -123,7 +123,7 @@ config.currency = {};
 config.currency.type ='Pesos';
 config.currency.symbol='$';
 config.currency.position ='L';
-config.currency.proportion =10;
+config.currency.proportion =1;
 config.currency.decimal='true';
 
 module.exports = config;
