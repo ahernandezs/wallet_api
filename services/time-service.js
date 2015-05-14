@@ -22,7 +22,7 @@ exports.getSchedulerLabel = function(callback){
 	var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
 	var hour = new Date().getHours();
 	console.log('Get actual hour '+hour);
-	if ( hour  < 14)
+	if ( hour  < process.env.SCHEDULE_CHANGE)
 		callback(null,'MORNING');
 	else
 		callback(null,'AFTERNOON');
