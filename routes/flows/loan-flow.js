@@ -225,7 +225,7 @@ var updateLoanFlow = exports.updateLoanFlow = function(payload,callback){
       else{
         logger.info('REJECTED');
         loan.message = config.messages.loanRejectedMsg;
-        loan.title = 'Your loan for €' + loan.amount + ' was rejected' ;
+        loan.title = 'Your loan for '+config.currency.symbol +' '+ loan.amount + ' was rejected' ;
       }
 
       loan.additionalInfo = JSON.stringify({ _id : loanID , sender: 1 , status: loan.status ,date:dateTime });
