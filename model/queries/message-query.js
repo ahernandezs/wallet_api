@@ -42,7 +42,22 @@ exports.getMessages = function(phoneID, callback) {
           callback(null,emptyMessages);
         }
       });
+    },
+
+    function(emptyMessages, callback){
+      var condiciones = { 'phoneID': phoneID , type : 'REQUEST_MONEY'  };
+      Message.find(condiciones, ' title type message status additionalInfo date', {sort: {date: -1}}, function (err, msgs) {
+        if (err) callback('ERROR', err);
+        else if(msgs && emptyMessages){
+          emptyMessages = emptyMessages.concat(msgs);
+          emptyMessages.sort(compare);
+          callback(null,emptyMessages);
+        }else{
+          callback(null,emptyMessages);
+        }
+      });
     }
+
     ], function (err, result){
         callback(null,result);
     });
