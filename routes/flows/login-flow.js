@@ -191,8 +191,10 @@ exports.loginFlow = function(payload,callback) {
           if(err) {
             return new Error(err);
           } else {
+            console.log(result);
             var response = result.balanceReturn;
-            if(response.result  === '0' ) {
+            console.log(response);
+            if(response.result  === 0 ) {
               var balance = { current : currentMoney , dox : response.current ,unreadMsgs :length } ;
               console.log(JSON.stringify(balance));
               response = { statusCode: 0, sessionid : sessionid, additionalInfo : balance, userInfo : info };
