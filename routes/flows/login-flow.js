@@ -6,6 +6,7 @@ var Userquery = require('../../model/queries/user-query');
 var User = require('../../model/user');
 var UserLoginFlow = require('./login-flow');
 var soapurl = process.env.SOAP_URL;
+var soapurlNew = process.env.SOAP_URL_NEW;
 var wallet = require('../wallet');
 var session =  require('../../model/queries/session-query');
 var msgQuery =  require('../../model/queries/message-query');
@@ -163,44 +164,42 @@ exports.loginFlow = function(payload,callback) {
     },
 
     function(sessionid,length,callback){
-      logger.info('balance e-wallet');
-      var request = { sessionid: sessionid, type: 1  };
-      var request = {balanceRequest: request};
-      soap.createClient(soapurl, function(err, client) {
-        client.balance(request, function(err, result) {
+      logger.info('balance ');
+      var currentMoney, currentDox;
+      soap.createClient(soapurlNew, function(err, client) {
+        client.setSecurity(new soap.WSSecurity( payload.phoneID,payload.pin,'PasswordDigest'));
+        client.Balance({}, function(err, result) {
           if(err) {
             return new Error(err);
           } else {
-            var response = result.balanceReturn;
-            if(response.result  === '0' )
-              var response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : response };
-            else
-              var response = { statusCode:1 ,  additionalInfo : response };
-
-            callback(null,sessionid,response.additionalInfo.current,length);
-          }
-        });
-      });
-    },
-    function(sessionid,currentMoney,length,callback){
-      logger.info('balance Points');
-      var  request = { sessionid: sessionid, type: 3  };
-      var request = {balanceRequest: request};
-      soap.createClient(soapurl, function(err, client) {
-        client.balance(request, function(err, result) {
-          if(err) {
-            return new Error(err);
-          } else {
+            console.log('-----Balance-xxx------');
+            console.log(result.wallets.wallet[1].current);
+            console.log('------------');
             console.log(result);
-            var response = result.balanceReturn;
-            console.log(response);
-            if(response.result  === 0 ) {
-              var balance = { current : currentMoney , dox : response.current ,unreadMsgs :length } ;
+            if(result.result  === '0' ) {
+              if(result.wallets.wallet[0].attributes.id){
+                if(result.wallets.wallet[0].attributes.id === 'wallet.ewallet')
+                  currentMoney = result.wallets.wallet[0].current.attributes.amount
+                 else
+                    currentMoney = result.wallets.wallet[1].current.attributes.amount;
+              }
+
+              if(result.wallets.wallet[1].attributes.id){
+                if(result.wallets.wallet[1].attributes.id === 'wallet.points')
+                  currentDox = result.wallets.wallet[1].current.attributes.amount
+                else
+                  currentDox = result.wallets.wallet[3].current.attributes.amount;
+              }
+
+              var balance = { current : currentMoney , dox : currentDox , unreadMsgs :length } ;
               console.log(JSON.stringify(balance));
+              console.log('get balance');
               response = { statusCode: 0, sessionid : sessionid, additionalInfo : balance, userInfo : info };
             }
-            else
-              var response = { statusCode:1 ,  additionalInfo : response };
+            else{
+              console.log('Errorrrrr');
+              response = { statusCode:1 ,  additionalInfo : response };
+            }
             callback(null,response);
           }
         });
