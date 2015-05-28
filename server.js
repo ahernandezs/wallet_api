@@ -7,6 +7,7 @@ var product = require('./routes/products');
 var merchant = require('./routes/merchants')
 var message = require('./routes/messages');
 var lendo =  require('./routes/lendo');
+var vimpelcom =  require('./routes/vimpelcom');
 var transacction = require('./routes/transacctions');
 var loan = require('./routes/loans');
 var spa = require('./routes/spa');
@@ -133,7 +134,8 @@ app.post('/api/message',interceptorHeader, user.sendMessage);
 app.post('/api/resolveRequest', interceptorHeader, user.resolveRquest);
 app.get('/api/socialFeed', interceptorHeader,transacction.getSocialFeeds);
 app.get('/api/sms', interceptorHeader,user.getSMSMessage);
-
+app.post('/api/microlending',interceptorHeader, vimpelcom.microLending);
+app.get('/api/events', interceptorHeader, vimpelcom.catalogEvents);
 //Merchant operations
 //app.put('/api/order', merchant.putOrder);
 app.put('/api/order', merchant.updateOrder);

@@ -5,6 +5,7 @@ var Userquery = require('../../model/queries/user-query');
 var soapurl = process.env.SOAP_URL;
 
 exports.balanceFlow = function(sessionid,callback) {
+  console.log('Execute balance Flow');
   async.waterfall([
     function(callback){
       console.log('balance e-wallet');
@@ -16,7 +17,7 @@ exports.balanceFlow = function(sessionid,callback) {
             return new Error(err);
           } else {
             var response = result.balanceReturn;
-            if(response.result  === '0' )
+            if(response.result  === 0 )
               var response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : response };
             else
               var response = { statusCode:1 ,  additionalInfo : response };
@@ -27,16 +28,19 @@ exports.balanceFlow = function(sessionid,callback) {
       });
     },
     function(sessionid,currentMoney, callback){
-      console.log('balance Points');
+      console.log('balance Points Wallet');
       var  request = { sessionid: sessionid, type: 3  };
       var request = {balanceRequest: request};
       soap.createClient(soapurl, function(err, client) {
         client.balance(request, function(err, result) {
           if(err) {
+            console.log(err);
             return new Error(err);
           } else {
+
             var response = result.balanceReturn;
-            if(response.result  === '0' ) {
+            console.log(response);
+            if(response.result  === 0 ) {
               var balance = { current : currentMoney , dox : response.current  } ;
               response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
             }

@@ -12,7 +12,7 @@ function endsWith(str, suffix) {
 
 exports.registerFlow = function(payload,callback) {
   var transfer = true;
-  var end = 'CN'
+  var end = 'VP'
 
   console.log(endsWith(payload.phoneID, end));
   async.waterfall([
@@ -162,7 +162,6 @@ exports.registerFlow = function(payload,callback) {
             if(payload.group){
               sessionUser.loginFlow({phoneID:payload.phoneID , pin :payload.pin, group : payload.group },function(err,result){
                 callback(null, result);
-
               });
             }
             else{
