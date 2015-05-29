@@ -173,7 +173,7 @@ exports.loginFlow = function(payload,callback) {
             return new Error(err);
           } else {
             console.log('-----Balance-xxx------');
-            console.log(result.wallets.wallet[1].current);
+            console.log(result);
             console.log('------------');
             console.log(result);
             if(result.result  === '0' ) {

@@ -6,6 +6,7 @@ var Userquery = require('../../model/queries/user-query');
 var messageQuery = require('../../model/queries/message-query');
 var sessionQuery = require('../../model/queries/session-query');
 var soapurl = process.env.SOAP_URL;
+var soapurlNew = process.env.SOAP_URL_NEW;
 var config = require('../../config.js');
 var urbanService = require('../../services/notification-service');
 var balance = require('./balance-flow');
@@ -125,38 +126,56 @@ exports.transferFunds = function(data, callback) {
             });
         },
 
-        function(callback) {
-            console.log('Do transfer in wallet');
+        function(callback){
+          var header = data.header;
+          console.log('Get credentials .........'+header.sessionid);
+          var requestSession = { 'sessionid' :  header.sessionid };
+          sessionQuery.getCredentials(requestSession,function(err,user){
+             if(err) {
+                console.log('Error to get credentials ' )
+                console.log(user);
+                callback(null,user.data);
+              } else {
+                console.log('Obteniendo usuarios');
+                console.log(user);
+                callback(null,user)
+              }
+          });
+        },
+
+        function(user,callback){
+            console.log('Transfer purchase to merchant');
             var payload = data.body;
+            console.log(payload);
             msg = payload.message;
             var header = data.header;
-            var requestSoap = { sessionid: header.sessionid, to: payload.destiny, amount: payload.amount, type: 1 };
-            var request = { transferRequest: requestSoap };
+            var paymentRequest = {  amount :  payload.amount ,to: payload.destiny, description:'transfer funds' };
             forReceipt.payload = payload;
-            soap.createClient(soapurl, function(err, client) {
-                client.transfer(request, function(err, result) {
-                    if (err) {
-                        console.log(err);
-                        return new Error(err);
-                    } else {
-                        var response = result.transferReturn;
-                        forReceipt.transferReturn = result;
-                        transid = response.transid;
-                        if (response.result != 0) {
-                            console.log('Result '+ response.result);
-                            var responseTransfer = {};
-                            if(response.result === 7 ){
-                                console.log('Error de transferencia');
-                                responseTransfer = { statusCode: 1, additionalInfo: "Transaction not allowed" };
-                            }
-                            else{
-                                responseTransfer = { statusCode: 1, additionalInfo: JSON.stringify(result) };
-                            }
-                            callback('ERROR', responseTransfer);
-                        } else {
+            console.log(paymentRequest);
+            soap.createClient(soapurlNew, function(err, client) {
+            client.setSecurity(new soap.WSSecurity( user.phoneID,user.pin,'PasswordDigest'));
+            client.Payment(paymentRequest, function(err, result) {
+                    if(err) {
+                        if(err.body.indexOf('successful')  >= 0 ){
                             payload.phoneID = payload.destiny;
                             delete payload.destiny;
-                            callback(null, header.sessionid,payload);
+                            callback(null,header.sessionid,payload);
+                        }
+                        else{
+                            console.log(err);
+                            console.log('Error de transferencia');
+                            responseTransfer = { statusCode: 1, additionalInfo: "Transaction not allowed"};
+                        }
+
+                    } else {
+                        console.log(result);
+                        var response = result.transferReturn;
+                        if(response.result != 0){
+                            var response = { statusCode:1 ,  additionalInfo : result };
+                            callback("ERROR", response);
+                        }
+                        else{
+                            callback(null,header.sessionid,payload);
                         }
                     }
                 });
@@ -165,6 +184,7 @@ exports.transferFunds = function(data, callback) {
 
         function(sessionid,payload,callback){
             console.log('Get receiver in db ' + payload.phoneID);
+            console.log(payload);
             Userquery.getName(payload.phoneID,function(err,user){
                 if (err) {
                     var response = { statusCode: 1, additionalInfo: err };
@@ -183,6 +203,7 @@ exports.transferFunds = function(data, callback) {
             console.log('Get sender in db ' + mainUser);
             var requestSession = { phoneID :  mainUser };
             sessionQuery.getCredentials(requestSession,function(err,user){
+                console.log(user);
                 forReceipt.user = user;
                 var payloadoxs = {phoneID: user.data.phoneID, action: 'gift', type: 3}
                 doxsService.saveDoxs(payloadoxs, function(err, result){
@@ -269,6 +290,7 @@ exports.transferFunds = function(data, callback) {
             data = forReceipt;
             var receipt = {};
             receipt.emitter = data.user.data.phoneID;
+            console.log(data);
             receipt.receiver = data.payload.phoneID;
             receipt.amount = data.payload.amount;
             receipt.message = msg;
