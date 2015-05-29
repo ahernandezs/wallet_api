@@ -45,7 +45,7 @@ exports.loanDisburse = function(payload,phoneID,callback) {
 **/
 exports.buyTickets = function(payload,phoneID,callback) {
   var date = new Date(moment().tz(process.env.TZ));
-  var buyTicketsRequest = {amount: 1 , venue : payload.venue , seatsDetail : payload.seatsDetail , eventDate : '2012-11-04T14:51:06.157Z' };
+  var buyTicketsRequest = {amount: '1' , venue : payload.venue , seatsDetail : payload.seatsDetail , eventDate : '2012-11-04T14:51:06.157Z' };
   console.log(buyTicketsRequest);
   userQuery.findUserByPhoneID(phoneID,function(err,user){
       if(err) {
