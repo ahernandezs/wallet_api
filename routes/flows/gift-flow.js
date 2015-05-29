@@ -11,7 +11,9 @@ var ReceiptQuery = require('../../model/queries/receipt-query');
 var transferFlow = require('./transfer-flow');
 var transacctionQuery = require('../../model/queries/transacction-query');
 var messageQuery = require('../../model/queries/message-query');
+var sessionQuery = require('../../model/queries/session-query')
 var soapurl = process.env.SOAP_URL;
+var soapurlNew = process.env.SOAP_URL_NEW;
 var config = require('../../config.js');
 
 exports.sendGift = function(payload,callback) {
@@ -62,20 +64,48 @@ exports.sendGift = function(payload,callback) {
 				}
 			});
 		},
-		function(callback){
-			var requestSoap = { sessionid:payload.sessionid, to: config.username, amount : payload.order.total , type: 1 };
-			var request = { transferRequest: requestSoap };
-			soap.createClient(soapurl, function(err, client) {
-				client.transfer(request, function(err, result) {
+
+
+		  function(callback){
+	      console.log('Get credentials .........'+payload.sessionid);
+	      var requestSession = { 'sessionid' :  payload.sessionid };
+	      sessionQuery.getCredentials(requestSession,function(err,user){
+	         if(err) {
+	            console.log('Error to get credentials ' )
+	            console.log(user);
+	            callback(null,user.data);
+	          } else {
+	            console.log('Obteniendo usuarios');
+	            console.log(user);
+	            callback(null,user)
+	          }
+	      });
+	    },
+
+		function(user,callback){
+			console.log('Transfer purchase to merchant');
+			var paymentRequest = {  amount :  payload.order.total ,to: config.username, description:'buy product' };
+			soap.createClient(soapurlNew, function(err, client) {
+			client.setSecurity(new soap.WSSecurity( user.phoneID,user.pin,'PasswordDigest'));
+			client.Payment(paymentRequest, function(err, result) {
 					if(err) {
-						console.log('Error '+err);
-						return new Error(err);
+						if(err.body.indexOf('successful')  >= 0 )
+							callback(null,payload.sessionid);;
 					} else {
-						callback(null,payload.sessionid);
+						console.log(result);
+						var response = result.transferReturn;
+						if(response.result != 0){
+							var response = { statusCode:1 ,  additionalInfo : result };
+							callback("ERROR", response);
+						}
+						else{
+							callback(null,payload.sessionid);
+						}
 					}
 				});
 			});
 		},
+
 		function(sessionid, callback){
 			console.log('balance e-wallet');
 			var  request = { sessionid: sessionid, type: 1  };

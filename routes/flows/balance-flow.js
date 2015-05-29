@@ -55,7 +55,7 @@ exports.balanceFlow = function(sessionid,callback) {
                       if(result.wallets.wallet[2].attributes.id === 'wallet.points')
                         currentDox = result.wallets.wallet[2].current.attributes.amount;
                       else
-                        currentDox = result.wallets.wallet[3].current.attributes.amount;                    
+                        currentDox = result.wallets.wallet[3].current.attributes.amount;
                     }
                   }
 
