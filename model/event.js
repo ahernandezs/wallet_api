@@ -9,6 +9,9 @@ var eventSchema = new Schema({
 	place:String ,
 	imageBanner:String,
     prices: String,
+    desc:String,
+    address:String,
+    placeImage:String
 });
 
 module.exports = mongoose.model('Event', eventSchema);
