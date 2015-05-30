@@ -11,16 +11,14 @@ exports.balanceFlow = function(sessionid,callback) {
   async.waterfall([
 
     function(callback){
-      console.log('Get credentials .........ss'+sessionid);
+      console.log('Get credentials .........'+sessionid);
       var requestSession = { 'sessionid' :  sessionid };
       sessionQuery.getCredentials(requestSession,function(err,user){
          if(err) {
             console.log('Error to get credentials ' )
-            console.log(user);
             callback(null,user.data);
           } else {
             console.log('Obteniendo usuarios');
-            console.log(user);
             callback(null,user)
           }
       });
@@ -37,32 +35,38 @@ exports.balanceFlow = function(sessionid,callback) {
                 console.log(err);
                 return new Error(err);
               } else {
-                console.log(JSON.stringify(result.wallets.wallet));
+                //console.log(JSON.stringify(result.wallets.wallet));
                 if(result.result  === '0' ) {
                   console.log('balance .........');
-                  console.log(result.wallets.wallet[0].attributes.id);
-                  if(result.wallets.wallet[0].attributes.id){
-                    if(result.wallets.wallet[0].attributes.id === 'wallet.ewallet')
-                      currentMoney = result.wallets.wallet[0].current.attributes.amount
-                    else
-                      currentMoney = result.wallets.wallet[1].current.attributes.amount
-                  }
-
-                  if(result.wallets.wallet[1].attributes.id){
-                    if(result.wallets.wallet[1].attributes.id === 'wallet.points')
-                      currentDox = result.wallets.wallet[1].current.attributes.amount
-                    else{
-                      if(result.wallets.wallet[2].attributes.id === 'wallet.points')
-                        currentDox = result.wallets.wallet[2].current.attributes.amount;
+                  try{
+                    if(result.wallets.wallet[0].attributes.id){
+                      if(result.wallets.wallet[0].attributes.id === 'wallet.ewallet')
+                        currentMoney = result.wallets.wallet[0].current.attributes.amount
                       else
-                        currentDox = result.wallets.wallet[3].current.attributes.amount;
+                        currentMoney = result.wallets.wallet[1].current.attributes.amount
                     }
-                  }
+                  }catch(err){
+                    currentMoney = 0;
+                  } 
 
+                  try{
+                    if(result.wallets.wallet[1].attributes.id){
+                      if(result.wallets.wallet[1].attributes.id === 'wallet.points')
+                        currentDox = result.wallets.wallet[1].current.attributes.amount
+                      else{
+                        if(result.wallets.wallet[2].attributes.id === 'wallet.points')
+                          currentDox = result.wallets.wallet[2].current.attributes.amount;
+                        else
+                          currentDox = result.wallets.wallet[3].current.attributes.amount;
+                      }
+                    }
+                  }catch(err){
+                    currentDox = 0;
+                  }
                   console.log(currentDox);
                   console.log(currentMoney);
                   var balance = { current : currentMoney  , dox : currentDox} ;
-                  response = { statusCode:0  ,  additionalInfo : balance };
+                  response = { statusCode:0  , sessionid : sessionid ,  additionalInfo : balance };
                 }
                 else
                   var response = { statusCode:1 ,  additionalInfo : response };
@@ -72,7 +76,7 @@ exports.balanceFlow = function(sessionid,callback) {
           });
     },
     ], function (err, result) {
-      console.log('Return Balance .........');
+      //console.log('Return Balance .........');
       if(err){      
         callback(err,result);    
       }else{

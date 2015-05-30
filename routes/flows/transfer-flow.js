@@ -157,6 +157,8 @@ exports.transferFunds = function(data, callback) {
             client.Payment(paymentRequest, function(err, result) {
                     if(err) {
                         if(err.body.indexOf('successful')  >= 0 ){
+                            //forReceipt.transferReturn = result;
+                            transid = Math.floor(getRandomArbitrary(1,10000));
                             payload.phoneID = payload.destiny;
                             delete payload.destiny;
                             callback(null,header.sessionid,payload);
@@ -414,3 +416,11 @@ exports.transferFunds = function(data, callback) {
             callback(null, result);
     });
 };
+
+
+/**
+ * Returns a random number between min (inclusive) and max (exclusive)
+ */
+function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+}

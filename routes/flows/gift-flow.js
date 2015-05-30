@@ -87,25 +87,39 @@ exports.sendGift = function(payload,callback) {
 		function(user,callback){
 			console.log('Transfer purchase to merchant');
 			var paymentRequest = {  amount :  payload.order.total ,to: config.username, description:'buy product' };
-			soap.createClient(soapurlNew, function(err, client) {
-			client.setSecurity(new soap.WSSecurity( user.phoneID,user.pin,'PasswordDigest'));
-			client.Payment(paymentRequest, function(err, result) {
-					if(err) {
-						if(err.body.indexOf('successful')  >= 0 )
-							callback(null,payload.sessionid);;
-					} else {
-						console.log(result);
-						var response = result.transferReturn;
-						if(response.result != 0){
-							var response = { statusCode:1 ,  additionalInfo : result };
-							callback("ERROR", response);
+			console.log(paymentRequest);
+
+			if(payload.order.total === 0){
+				var response = { statusCode:1 ,  additionalInfo : 'Invalid amount' };
+				callback("ERROR", response);
+			}
+			else{
+				soap.createClient(soapurlNew, function(err, client) {
+				client.setSecurity(new soap.WSSecurity( user.phoneID,user.pin,'PasswordDigest'));
+				client.Payment(paymentRequest, function(err, result) {
+						if(err) {
+							if(err.body.indexOf('successful')  >= 0 )
+								callback(null,payload.sessionid);
+							else{
+								console.log(err);
+								var response = { statusCode:1 ,  additionalInfo : 'Error while performing payment' };
+								callback("ERROR", response);
+							}
+
+						} else {
+							console.log(result);
+							var response = result.transferReturn;
+							if(response.result != 0){
+								var response = { statusCode:1 ,  additionalInfo : result };
+								callback("ERROR", response);
+							}
+							else{
+								callback(null,payload.sessionid);
+							}
 						}
-						else{
-							callback(null,payload.sessionid);
-						}
-					}
+					});
 				});
-			});
+			}
 		},
 
         function(sessionid, callback) {

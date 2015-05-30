@@ -172,31 +172,36 @@ exports.loginFlow = function(payload,callback) {
           if(err) {
             return new Error(err);
           } else {
-            console.log('-----Balance-xxx------');
-            console.log(result);
-            console.log('------------');
-            console.log(result);
             if(result.result  === '0' ) {
-              if(result.wallets.wallet[0].attributes.id){
-                if(result.wallets.wallet[0].attributes.id === 'wallet.ewallet')
-                  currentMoney = result.wallets.wallet[0].current.attributes.amount
-                 else
-                    currentMoney = result.wallets.wallet[1].current.attributes.amount;
-              }
 
-              if(result.wallets.wallet[1].attributes.id){
-                if(result.wallets.wallet[1].attributes.id === 'wallet.points')
-                  currentDox = result.wallets.wallet[1].current.attributes.amount
-                else{
-                  if(result.wallets.wallet[2].attributes.id === 'wallet.points')
-                    currentDox = result.wallets.wallet[2].current.attributes.amount;
-                  else
-                    currentDox = result.wallets.wallet[3].current.attributes.amount;
+              try{
+                if(result.wallets.wallet[0].attributes.id){
+                  if(result.wallets.wallet[0].attributes.id === 'wallet.ewallet')
+                    currentMoney = result.wallets.wallet[0].current.attributes.amount
+                   else
+                      currentMoney = result.wallets.wallet[1].current.attributes.amount;
                 }
+              }catch(err){
+                currentMoney = 0;
+              }
+            
+
+              try {
+                if(result.wallets.wallet[1].attributes.id){
+                  if(result.wallets.wallet[1].attributes.id === 'wallet.points')
+                    currentDox = result.wallets.wallet[1].current.attributes.amount
+                  else{
+                    if(result.wallets.wallet[2].attributes.id === 'wallet.points')
+                      currentDox = result.wallets.wallet[2].current.attributes.amount;
+                    else
+                      currentDox = result.wallets.wallet[3].current.attributes.amount;
+                  }
+                }
+              }catch(err){
+                currentDox = 0;
               }
 
               var balance = { current : currentMoney , dox : currentDox , unreadMsgs :length } ;
-              console.log(JSON.stringify(balance));
               console.log('get balance');
               response = { statusCode: 0, sessionid : sessionid, additionalInfo : balance, userInfo : info };
             }
