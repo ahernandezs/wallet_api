@@ -120,7 +120,7 @@ config.logger = new (winston.Logger)({
 });
 
 config.currency = {};
-config.currency.type ='Pesos';
+config.currency.type ='Dollar';
 config.currency.symbol='$';
 config.currency.position ='L';
 config.currency.proportion =1;
