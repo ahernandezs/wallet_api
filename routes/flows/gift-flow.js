@@ -11,7 +11,10 @@ var ReceiptQuery = require('../../model/queries/receipt-query');
 var transferFlow = require('./transfer-flow');
 var transacctionQuery = require('../../model/queries/transacction-query');
 var messageQuery = require('../../model/queries/message-query');
+var sessionQuery = require('../../model/queries/session-query')
+var balance_Flow = require('./balance-flow');
 var soapurl = process.env.SOAP_URL;
+var soapurlNew = process.env.SOAP_URL_NEW;
 var config = require('../../config.js');
 
 exports.sendGift = function(payload,callback) {
@@ -26,6 +29,7 @@ exports.sendGift = function(payload,callback) {
 	var imageProduct;
     var emitter = payload.phoneID;
     var receiver = payload.beneficiaryPhoneID;
+    var responseBalance ={};
 
 	async.waterfall([
 
@@ -62,41 +66,63 @@ exports.sendGift = function(payload,callback) {
 				}
 			});
 		},
-		function(callback){
-			var requestSoap = { sessionid:payload.sessionid, to: config.username, amount : payload.order.total , type: 1 };
-			var request = { transferRequest: requestSoap };
-			soap.createClient(soapurl, function(err, client) {
-				client.transfer(request, function(err, result) {
-					if(err) {
-						console.log('Error '+err);
-						return new Error(err);
-					} else {
-						callback(null,payload.sessionid);
-					}
-				});
-			});
-		},
-		function(sessionid, callback){
-			console.log('balance e-wallet');
-			var  request = { sessionid: sessionid, type: 1  };
-			var request = {balanceRequest: request};
-			soap.createClient(soapurl, function(err, client) {
-				client.balance(request, function(err, result) {
-					if(err) {
-						return new Error(err);
-					} else {
-						var response = result.balanceReturn;
-						if(response.result  === '0' )
-							var response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : response };
-						else
-							var response = { statusCode:1 ,  additionalInfo : response };
 
-						callback(null,sessionid,response.additionalInfo.current);
-					}
+
+		  function(callback){
+	      console.log('Get credentials .........'+payload.sessionid);
+	      var requestSession = { 'sessionid' :  payload.sessionid };
+	      sessionQuery.getCredentials(requestSession,function(err,user){
+	         if(err) {
+	            console.log('Error to get credentials ' )
+	            console.log(user);
+	            callback(null,user.data);
+	          } else {
+	            console.log('Obteniendo usuarios');
+	            console.log(user);
+	            callback(null,user)
+	          }
+	      });
+	    },
+
+		function(user,callback){
+			console.log('Transfer purchase to merchant');
+			var paymentRequest = {  amount :  payload.order.total ,to: config.username, description:'buy product' };
+			console.log(paymentRequest);
+
+			if(payload.order.total === 0){
+				var response = { statusCode:1 ,  additionalInfo : 'Invalid amount' };
+				callback("ERROR", response);
+			}
+			else{
+				soap.createClient(soapurlNew, function(err, client) {
+				client.setSecurity(new soap.WSSecurity( user.phoneID,user.pin,'PasswordDigest'));
+				client.Payment(paymentRequest, function(err, result) {
+						if(err) {
+							if(err.body.indexOf('successful')  >= 0 )
+								callback(null,payload.sessionid);
+							else{
+								console.log(err);
+								var response = { statusCode:1 ,  additionalInfo : 'Error while performing payment' };
+								callback("ERROR", response);
+							}
+
+						} else {
+							console.log(result);
+							var response = result.transferReturn;
+							if(response.result != 0){
+								var response = { statusCode:1 ,  additionalInfo : result };
+								callback("ERROR", response);
+							}
+							else{
+								callback(null,payload.sessionid);
+							}
+						}
+					});
 				});
-			});
+			}
 		},
-        function(sessionid, currentMoney, callback) {
+
+        function(sessionid, callback) {
             console.log('search user by phoneID');
               Userquery.findUserByPhoneID(receiver,function(err,result){
                 if(err){
@@ -109,66 +135,61 @@ exports.sendGift = function(payload,callback) {
                     order.customerName = result.name;
                     order.customerImage = config.S3.url + receiver +'.png',
                     order.merchantId = payload.merchantID;
-                    callback(null,sessionid, currentMoney);
+                    callback(null,sessionid);
                   }
               });  
         },
-		function(sessionid,currentMoney, callback){
+		function(sessionid, callback){
 				Orderquery.putOrder(order, function(err,result){
 				orderID = result.order;
 				console.log('Order saving result: ');
-				callback(null,sessionid,currentMoney);
+				callback(null,sessionid);
 			});
 		},
 
-		function(sessionid,currentMoney, callback){
-			var requestBalance = { sessionid: sessionid, type: 3 };
-			var request = { balanceRequest: requestBalance };
-			soap.createClient(soapurl, function(err, client) {
-				client.balance(request, function(err, result) {
-					if(err) {
-						return new Error(err);
-					} else {
-						var response = result.balanceReturn;
-						if(response.result  === '0' ) {
-							dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
-							var balance = { current : currentMoney , dox : response.current , doxAdded:config.doxs.gift,  order : orderID ,  status :'NEW' , date: dateTime } ;
-							response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
-						}else{
-							var response = { statusCode:1 ,  additionalInfo : response };
-						}
-						callback(null,sessionid,response);
-					}
-				});
-			});
-		},
-
-		function(sessionid, response, callback){
+		function(sessionid, callback){
 			doxsService.saveDoxs(payloadoxs, function(err, result){
 				console.log('Transfer result ');
 				if(err) {
 					return new Error(err);
 				} else {
-					callback(null, sessionid, response);
+					callback(null, sessionid);
 				}
 			});
 		},
 
-		function(sessionid, response, callback){
+		        //Get balance using old version
+        function(sessionid,callback){
+			balance_Flow.balanceFlow(sessionid,function(err,result){
+				if(err)
+					var response = { statusCode:1 ,  additionalInfo : err };
+				else{
+					console.log('Result balance');
+					console.log(result);
+					dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
+					var balance = { current : result.additionalInfo.current , dox : result.additionalInfo.dox , doxAdded:config.doxs.gift,  order : orderID ,  status :'NEW' , date: dateTime } ;
+					responseBalance = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
+
+					callback(null,sessionid);
+				}
+			});
+        },
+
+		function(sessionid, callback){
 			var updateDoxs = {phoneID: payload.phoneID, operation: 'gift', sessionid:payload.sessionid};
 			console.log('Saving doxs in mongo');
 			Userquery.putDoxs(updateDoxs, function(err,result){
-				callback(null,sessionid, response);
+				callback(null,sessionid);
 			});
 		},
 
-        function(sessionid, response, callback){
+        function(sessionid, callback){
             Userquery.getIdByPhoneID(payload.phoneID,function(err,result){
                 var id = result._id;
-                callback(null,sessionid,response);
+                callback(null,sessionid);
             });
         },
-        function(sessionid, response, callback){
+        function(sessionid, callback){
             console.log('Save message in DB');
             var title = config.messages.giftMsg;
             title = title.replace('[sender]', name.name);
@@ -207,11 +228,11 @@ exports.sendGift = function(payload,callback) {
                 if (err) {
                     callback('ERROR', { statusCode: 1, additionalInfo: result });
                 } else {
-                    callback(null, response,result._id);
+                    callback(null, result._id);
                 }
             });
         },
-		function(response,messageID,callback) {
+		function(messageID,callback) {
 			console.log('sending push');
 			//var additionalInfo = { phoneID: payload.phoneID, name: name.name, avatar: config.S3.url + payload.phoneID +'.png', order:orderID, date:dateTime,message:payload.message};
 			//console.log(additionalInfo);
@@ -224,10 +245,10 @@ exports.sendGift = function(payload,callback) {
 			payload.phoneID = payload.beneficiaryPhoneID;
 			delete payload.beneficiaryPhoneID;
 			urbanService.singlePush(payload, function(err, result) {
-				callback(null,response,payload,emitter,receiver,message,payload.additionalInfo);
+				callback(null,payload,emitter,receiver,message,payload.additionalInfo);
 			});
 		},
-		function(balance,payload,emitter,receiver,message,additionalInfo,callback) {
+		function(payload,emitter,receiver,message,additionalInfo,callback) {
 			console.log( 'Create Receipt Gift for sender ');
 			var receipt = {};
 			receipt.emitter = emitter;
@@ -244,10 +265,10 @@ exports.sendGift = function(payload,callback) {
 				if (err)
 					callback('ERROR', err);
 				else
-					callback(null, balance,receipt, message, additionalInfo);
+					callback(null,receipt, message, additionalInfo);
 			});
 		},
-        function(balance, receipt, message, additionalInfo, callback) {
+        function( receipt, message, additionalInfo, callback) {
             console.log( 'Create second receipt, this one for the receiver' );
             var title = config.messages.giftMsg;
             title = title.replace('[sender]', name.name);
@@ -269,11 +290,12 @@ exports.sendGift = function(payload,callback) {
                if (err)
                    callback('ERROR', errr);
                 else
-                    callback(null, balance, receipt);
+                    callback(null, receipt);
             });
         },
-		function(balance,receipt, callback) {
+		function(receipt, callback) {
 			console.log( 'Create  transacction Money' );
+			console.log(responseBalance);
 			var receiver;
 			var transacction = {};
 			transacction.title = 'Coffee gift';
@@ -304,6 +326,7 @@ exports.sendGift = function(payload,callback) {
 							if (err)
 								callback('ERROR', err);
 							else {
+								var balance = responseBalance;
 								balance.date = dateTime;
                                 balance.type = 'GIFT';
                                 balance._id = orderID;

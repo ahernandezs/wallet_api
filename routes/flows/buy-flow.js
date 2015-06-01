@@ -12,8 +12,10 @@ var urbanService = require('../../services/notification-service');
 var doxsService = require('../../services/doxs-service');
 var transferFlow = require('./transfer-flow');
 var purchaseFlow = require('./buy-flow');
+var balance_Flow = require('./balance-flow');
 var loginFlow = require('./login-flow');
 var soapurl = process.env.SOAP_URL;
+var soapurlNew = process.env.SOAP_URL_NEW;
 var config = require('../../config.js');
 var logger = config.logger;
 var ReceiptQuery = require('../../model/queries/receipt-query');
@@ -54,17 +56,33 @@ exports.buyFlow = function(payload,callback) {
 				callback(null);
         },
 
-		function(callback){
+        function(callback){
+	      console.log('Get credentials .........ss'+payload.sessionid);
+	      var requestSession = { 'sessionid' :  payload.sessionid };
+	      sessionQuery.getCredentials(requestSession,function(err,user){
+	         if(err) {
+	            console.log('Error to get credentials ' )
+	            console.log(user);
+	            callback(null,user.data);
+	          } else {
+	            console.log('Obteniendo usuarios');
+	            console.log(user);
+	            callback(null,user)
+	          }
+	      });
+	    },
+
+		function(user,callback){
 			console.log('Transfer purchase to merchant');
-			var requestSoap = { sessionid: payload.sessionid, to: config.username, amount : payload.order.total , type: 1 };
-			var request = { transferRequest: requestSoap };
-			console.log(request);
-				soap.createClient(soapurl, function(err, client) {
-				client.transfer(request, function(err, result) {
+			var paymentRequest = {  amount :  payload.order.total ,to: config.username, description:'buy product' };
+			soap.createClient(soapurlNew, function(err, client) {
+			client.setSecurity(new soap.WSSecurity( user.phoneID,user.pin,'PasswordDigest'));
+			client.Payment(paymentRequest, function(err, result) {
 					if(err) {
-						logger.error(err);
-						return new Error(err);
+						if(err.body.indexOf('successful')  >= 0 )
+							callback(null,payload.sessionid);;
 					} else {
+						console.log(result);
 						var response = result.transferReturn;
 						if(response.result != 0){
 							var response = { statusCode:1 ,  additionalInfo : result };
@@ -151,28 +169,7 @@ exports.buyFlow = function(payload,callback) {
 			});
         },
 
-		function(sessionid, callback){
-			logger.info('balance e-wallet');
-			var  request = { sessionid: sessionid, type: 1  };
-			var request = {balanceRequest: request};
-			soap.createClient(soapurl, function(err, client) {
-				client.balance(request, function(err, result) {
-					if(err) {
-						return new Error(err);
-					} else {
-						var response = result.balanceReturn;
-						if(response.result  === '0' )
-							var response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : response };
-						else
-							var response = { statusCode:1 ,  additionalInfo : response };
-
-						callback(null,sessionid,response.additionalInfo.current);
-					}
-				});
-			});
-		},
-
-		function(sessionid,currentMoney ,callback){
+        function(sessionid ,callback){
 			logger.info('Get product image');
 			productQuery.getProduct(payload.order.products[0].name ,function(err,result){
 				if(err){
@@ -181,31 +178,28 @@ exports.buyFlow = function(payload,callback) {
 				}else{
 					imageProduct = result.url;
                     config.messages.facebook.picture = imageProduct;
-					callback(null,sessionid,currentMoney);
+					callback(null,sessionid);
 				}
 			});
 		},
 
-		function(sessionid,currentMoney, callback){
-			logger.info('balance Points');
-			var  request = { sessionid: sessionid, type: 3  };
-			var request = {balanceRequest: request};
-			soap.createClient(soapurl, function(err, client) {
-				client.balance(request, function(err, result) {
-					if(err) {
-						return new Error(err);
-					} else {
-						var response = result.balanceReturn;
+        //Get balance using old version
+        function(sessionid,callback){
+			balance_Flow.balanceFlow(sessionid,function(err,response){
+				if(err)
+					var response = { statusCode:1 ,  additionalInfo : err };
+				else{
+						console.log('Create balance ticket');
 						var twitterMsg = {};
 						//twitterMsg = config.messages.twitter1 + payload.order.products[0].name + config.messages.twitter2 + new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '').substring(0,19); +'!!!';
 						//var twitterMsg = config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '').substring(0,19););
-                        dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
+						dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
 						var twitterMsg = config.messages.twitterMsg + dateTime.substr(11, 5);
 						config.messages.twitter.message = twitterMsg;
-						if(response.result  === '0' ) {
+						//if(response.result  === '0' ) {
 							var balance = {
-								current: currentMoney,
-								dox: response.current,
+								current: response.additionalInfo.current,
+								dox: response.additionalInfo.dox,
 								doxAdded: config.doxs.payment,
 								order: orderID,
 								status:'NEW',
@@ -216,14 +210,14 @@ exports.buyFlow = function(payload,callback) {
 							};
 							logger.info(config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '').substring(0,19)));
 							response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
-						}
-						else
-							var response = { statusCode:1 ,  additionalInfo : response };
+						//}
+						//else
+						//	var response = { statusCode:1 ,  additionalInfo : response };
 						callback(null,response);
-					}
-				});
+				}
 			});
-		},
+        },
+
 		function(response, callback) {
 			    logger.info('Create receipt buy');
 			    data = forReceipt.payload;

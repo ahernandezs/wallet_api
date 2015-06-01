@@ -20,7 +20,7 @@ exports.login =  function(req, res, callback){
       console.log('Token '+ token);
       if(result.statusCode === 0){
         res.setHeader('X-AUTH-TOKEN', result.sessionid);
-        delete result.sessionid;
+        //delete result.sessionid;
       }
       if (req.body.continue === undefined)
           res.json(result);
@@ -72,6 +72,7 @@ exports.register = function(req, res){
 exports.updateProfile = function(req, res){
   console.log('execute POST method updateProfile' + JSON.stringify(req.body));
   req.body.sessionid = req.headers['x-auth-token'];
+  console.log(req.body);
   Userquery.updateUser(req.body, function(err,result){
     res.json(result);
   });
@@ -127,11 +128,11 @@ exports.validate = function(req, res){
   console.log('execute POST method validate');
   console.log(req.body);
   console.log('Search phoneID');
-  req.body.phoneID = req.body.phoneID +'CN';
+  req.body.phoneID = req.body.phoneID +'00';
   console.log(req.body.phoneID);
   Userquery.validateUser(req.body.phoneID, function(err,result){
     var resultWithID = JSON.parse(JSON.stringify(result));
-    resultWithID.countryID = 'CN';
+    resultWithID.countryID = '00';
     resultWithID.currency = config.currency;
     resultWithID.question = config.question;
     res.json(resultWithID);

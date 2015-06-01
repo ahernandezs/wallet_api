@@ -135,7 +135,9 @@ app.post('/api/resolveRequest', interceptorHeader, user.resolveRquest);
 app.get('/api/socialFeed', interceptorHeader,transacction.getSocialFeeds);
 app.get('/api/sms', interceptorHeader,user.getSMSMessage);
 app.post('/api/microlending',interceptorHeader, vimpelcom.microLending);
-app.get('/api/events', interceptorHeader, vimpelcom.catalogEvents);
+app.post('/api/tickets',interceptorHeader, vimpelcom.buyTickets);
+app.post('/api/insurance',interceptorHeader, vimpelcom.paymentInsurance);
+app.get('/api/events',  vimpelcom.catalogEvents);
 //Merchant operations
 //app.put('/api/order', merchant.putOrder);
 app.put('/api/order', merchant.updateOrder);

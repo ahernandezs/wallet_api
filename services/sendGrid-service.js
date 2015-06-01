@@ -31,9 +31,9 @@ exports.sendRegisterMessage= function(user, callback){
         subject:    'Welcome to Amdocs Wallet',
         text:       'hello'
     });
-    var disableMail = true;
+    var enableMail = false;
 
-    if(disableMail){
+    if(enableMail){
         async.waterfall([
             function(callback) {
                 console.log( 'Reading html file' );
