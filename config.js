@@ -103,14 +103,14 @@ config.mail.footer='Amdocs wallet Team';
 
 config.mailInvite = {};
 config.mailInvite.header = 'Hey there,';
-config.mailInvite.bodyInit = 'Check out the Amdocs Mobile Wallet  - it\'s really awesome with FREE €5 to get you started with some delicious drinks at the fully cashless Amdocs Café';
+config.mailInvite.bodyInit = 'Check out the Amdocs Mobile Wallet  - it\'s really awesome with FREE $25 to get you started with some delicious drinks at the fully cashless Amdocs Café';
 config.mailInvite.bodyMid1 = 'The most active wallet user will also win a prize';
-config.mailInvite.bodyMid2 = 'To download the app , simply click on below link from your mobile device - ';
+config.mailInvite.bodyMid2 = 'To download the app, search it on stores as Amdocs Wallet.';
 config.mailInvite.bodyEnd = '(iOS and Android supported)';
 config.mailInvite.footer = 'Cheers,';
 
 config.sms = {};
-config.sms.message = 'Check out the Amdocs Mobile Wallet with FREE 5 EUR to buy some drinks at the Amdocs Cafe. Download the iOS and Android app from here www.goo.gl/B8HdBj.';
+config.sms.message = 'Check out the Amdocs Mobile Wallet with FREE $25  to buy some drinks at the Amdocs Cafe. Download the app from stores as Amdocs wallet.';
 config.logger = new (winston.Logger)({
     transports: [
         new (winston.transports.Console)({ colorize: 'true', handleExceptions: true }),
@@ -120,7 +120,7 @@ config.logger = new (winston.Logger)({
 });
 
 config.currency = {};
-config.currency.type ='Pesos';
+config.currency.type ='Dollar';
 config.currency.symbol='$';
 config.currency.position ='L';
 config.currency.proportion =1;

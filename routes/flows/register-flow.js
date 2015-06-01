@@ -12,7 +12,7 @@ function endsWith(str, suffix) {
 
 exports.registerFlow = function(payload,callback) {
   var transfer = true;
-  var end = 'CN'
+  var end = 'AP'
 
   console.log(endsWith(payload.phoneID, end));
   async.waterfall([
@@ -136,7 +136,7 @@ exports.registerFlow = function(payload,callback) {
     function(sessionid,callback){
         if (transfer) {
             console.log('Transfer ' + sessionid);
-            var requestSoap = { sessionid:sessionid, to: payload.phoneID, amount : 100 , type: 1 };
+            var requestSoap = { sessionid:sessionid, to: payload.phoneID, amount : 25 , type: 1 };
             var request = { transferRequest: requestSoap };
             console.log(request);
             soap.createClient(soapurl, function(err, client) {
