@@ -14,11 +14,11 @@ channel.on('error', console.error);
 exports.saveDoxs = function(payload,callback) {
 	console.log('Transfering DOX ....');
     console.log(blacklist);
-    //if (blacklist.indexOf(payload.phoneID) > -1) {
-    //    console.log('In blacklist');
-    //    var response = { statusCode:0 ,  additionalInfo : "Successful" };
-    //    callback(null,response);
-    //} else {
+   if (blacklist.indexOf(payload.phoneID) > -1){
+        console.log('In blacklist');
+        var response = { statusCode:0 ,  additionalInfo : "Successful" };
+        callback(null,response);
+    } else {
         var transferDoxs = {phoneID:payload.phoneID,amount:config.doxs[payload.action] ,type:3};
         console.log(transferDoxs);
         transferFlow.transferFlow({transferRequest: transferDoxs}, function(err,result){
@@ -28,5 +28,5 @@ exports.saveDoxs = function(payload,callback) {
             }, 3000);
             callback(null,result);
         });
-    //}
+    }
 }

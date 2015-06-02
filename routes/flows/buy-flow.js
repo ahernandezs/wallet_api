@@ -311,7 +311,7 @@ exports.notifyMerchantBuy = function(phoneID,payload,callback){
 		function(user, callback) {
 			var updatePayload = {};
 			updatePayload.phoneID = phoneID;
-			updatePayload.canPurchase = 'NO';
+			updatePayload.canPurchase = 'YES';
 			Userquery.updateUserPurchaseFlag(updatePayload, function(err,result){
 			    if(err){
 			      console.log(err);
@@ -353,7 +353,7 @@ exports.notifyMerchantBuy = function(phoneID,payload,callback){
 					callback('ERROR',response);
 				}else{
 					console.log('')
-					response = {message : 'Please approach to the merchant for an additional validation.' , canPurchase : 'NO'}
+					response = {message : 'Please approach to the merchant for an additional validation.' , canPurchase : 'YES'}
 					var response = { statusCode:0 ,  additionalInfo : response };
 					callback(null,response);
 				}
@@ -460,7 +460,7 @@ exports.authorizeBuy = function(payload,callback){
 				extraData = { status : payload.status , message:'Your purchase was approved. Please check your receipts.' , canPurchase :'YES' };
 
 			else
-				extraData = { status : payload.status , message:'Your purchase was rejected.' , canPurchase :'NO'};
+				extraData = { status : payload.status , message:'Your purchase was rejected.' , canPurchase :'YES'};
 
 			message.extra = {extra : extraData} ;
 			urbanService.singlePush(message, function(err, result) {
