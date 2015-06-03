@@ -14,6 +14,7 @@ var transferFlow = require('./transfer-flow');
 var purchaseFlow = require('./buy-flow');
 var loginFlow = require('./login-flow');
 var soapurl = process.env.SOAP_URL;
+var buyFlow = require('./buy-flow');
 var config = require('../../config.js');
 var logger = config.logger;
 var ReceiptQuery = require('../../model/queries/receipt-query');
@@ -359,17 +360,31 @@ exports.notifyMerchantBuy = function(phoneID,payload,callback){
 				}
 			});
 		},
+		//autorize buy
+		function(responseValidate,callback) {
+			payloadMessage = { ID : order.ID  , status : "ACCEPTED"};
+			buyFlow.authorizeBuy(payloadMessage,function(err,result){
+				if(err){
+					var response = { statusCode:1 ,  additionalInfo : result };
+					callback('ERROR',response);
+				}
+				else{
+					callback(null,responseValidate);
+				}
+			});
+		}
     ], function (err, result) {
       if(err){
 		console.log('Error  --->' + JSON.stringify(result));
         callback(err,result);
       }else{
+
         callback(null,result);
       }
     });
 }
 
-exports.authorizeBuy = function(payload,callback){
+exports.authorizeBuy		 = function(payload,callback){
 	console.log('Incoming autorization for  autorization' + JSON.stringify(payload));
 	var payloadBuyFlow = {};
 
