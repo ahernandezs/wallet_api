@@ -1,4 +1,4 @@
-db = db.getSiblingDB('amdocs-barcelona'); //mongo c128.candidate.42.mongolayer.com:10128/amdocs-barcelona -u admin -p s3cr37o products_cala.js
+db = db.getSiblingDB('amdocs'); //mongo c128.candidate.42.mongolayer.com:10128/amdocs-barcelona -u admin -p s3cr37o products_cala.js
 
 db.products.remove({});
 db.products.insert({"productID" : 1, "cost" : 10, "description" : "", "merchantId" : 1, "name" : "Mocha", "status" : "IN STOCK", "url": "https://d80mkr1efvy13.cloudfront.net/products_apac/mocha.jpg" , "schedule" : "MORNING" });
