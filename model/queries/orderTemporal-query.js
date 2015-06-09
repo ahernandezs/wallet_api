@@ -21,7 +21,7 @@ exports.getOrder = function (ID,callback) {
 	    else{
 	    	callback(null,order);
 	    }
-	});
+	}).remove();
 }
 
 exports.getAllOrderTemporals = function (callback) {
