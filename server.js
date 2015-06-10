@@ -149,6 +149,7 @@ app.get('/api/leaderboard',user.getLeaderboard);
 app.post('/api/receipt', wallet.getReceipts);
 app.put('/api/receiptStatus', product.changeReceiptStatus);
 app.post('/api/coupon', wallet.setCoupon);
+app.get('/api/orderTemporals',product.getOrderTemporals);
 // SPA operations
 app.get('/api/spa/users', spa.getUsers);
 app.get('/api/spa/transactions/:phoneID/:type', spa.getTransactions);
