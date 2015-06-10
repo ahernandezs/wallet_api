@@ -9,7 +9,9 @@ var productSchema = new Schema({
 	description: String,
 	cost: Number,
 	status: String,
-	schedule: String
+	schedule: String,
+	CustomerCode: Number,
+	DemonstratorCode: Number
 });
 
 module.exports = mongoose.model('Product', productSchema);
