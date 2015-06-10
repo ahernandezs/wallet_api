@@ -3,6 +3,7 @@ var Product = require('../model/product');
 var Productquery = require('../model/queries/product-query');
 var Prizequery = require('../model/queries/prize-query');
 var Receiptquery = require('../model/queries/receipt-query');
+var OrderTemporalquery = require('../model/queries/orderTemporal-query');
 var soap = require('soap');
 var soapurl = process.env.SOAP_URL;
 
@@ -44,6 +45,14 @@ exports.changeReceiptStatus = function(req, res){
 exports.products2 =  function(req, res){
   console.log('POST method products');
     Productquery.getProductsDiscountSchededule(req.body.merchantID, function(err, result) {
+        res.json(result);
+    });
+};
+
+
+exports.getOrderTemporals = function (req, res) {
+    console.log('GET method orderTemporals');
+    OrderTemporalquery.getAllOrderTemporals(function(err,result){
         res.json(result);
     });
 };

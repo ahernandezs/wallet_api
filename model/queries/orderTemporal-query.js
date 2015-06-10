@@ -23,3 +23,12 @@ exports.getOrder = function (ID,callback) {
 	    }
 	});
 }
+
+exports.getAllOrderTemporals = function (callback) {
+	console.log('getAllOrderTemporals from MongoDB (all records)');
+	Order.find({}, function (err, orders){
+		console.log(orders);
+		callback(null, orders);
+	});
+
+};
