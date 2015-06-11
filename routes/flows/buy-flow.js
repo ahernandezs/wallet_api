@@ -360,19 +360,6 @@ exports.notifyMerchantBuy = function(phoneID,payload,callback){
 				}
 			});
 		},
-		//autorize buy
-		function(responseValidate,callback) {
-			payloadMessage = { ID : order.ID  , status : "ACCEPTED"};
-			buyFlow.authorizeBuy(payloadMessage,function(err,result){
-				if(err){
-					var response = { statusCode:1 ,  additionalInfo : result };
-					callback('ERROR',response);
-				}
-				else{
-					callback(null,responseValidate);
-				}
-			});
-		}
     ], function (err, result) {
       if(err){
 		console.log('Error  --->' + JSON.stringify(result));
