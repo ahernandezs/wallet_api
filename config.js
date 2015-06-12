@@ -16,7 +16,7 @@ config.group ={}
 config.group.env = {INTERNAL: 'INTERNAL' , PUBLIC : 'PUBLIC'};
 
 config.orders = {};
-config.orders.status = {NEW : 'NEW' ,IN_PROGRESS : 'IN PROGRESS' , READY : 'READY' , DELIVERED : 'DELIVERED' , CANCELED : 'CANCELED' };
+config.orders.status = {NEW : 'NEW' ,IN_PROGRESS : 'IN PROGRESS' , READY : 'READY' , DELIVERED : 'DELIVERED' , CANCELED : 'CANCELED',PENDING : 'PENDING'};
 config.orders.errMsg = 'Something went wrong';
 config.orders.emptyMsg = 'There are no ' + config.orders.status + ' orders';
 
