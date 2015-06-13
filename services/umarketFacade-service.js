@@ -40,7 +40,7 @@ exports.balancePoints = function(sessionid,callback){
   Invoke Umarket transfer operation betwen 2 customers .
 **/
 exports.transfer = function(sessionid,payload,callback){
-  var requestSoap = { sessionid: sessionid, to: payload.to, amount : payload.order.total , type: 1 };
+  var requestSoap = { sessionid: sessionid, to: payload.to, amount : payload.order.total , type: payload.transferRequest.type };
   var request = { transferRequest: requestSoap };
   soap.createClient(soapurl, function(err, client) {
     client.transfer(request, function(err, result) {
@@ -54,26 +54,10 @@ exports.transfer = function(sessionid,payload,callback){
 }
 
 /*
- *Verify connection
- */
-
-exports.validateConnection = function(callback){
-  var response = null;
-  soap.createClient(soapurl, function(err, client) {
-    if(err) {
-      logger.error(err);
-      var response = { statusCode: 3 ,  additionalInfo : 'Service Unavailable' };
-      callback(err,response);
-    }else
-      callback(null);
-  });
-}
-
-/*
  *Create session
  */
 
-exports.validateConnection = function(callback){
+exports.createSession = function(callback){
   var response = null;
   soap.createClient(soapurl, function(err, client) {
     client.createsession({}, function(err, result) {
@@ -183,29 +167,6 @@ exports.loginTransferFlow = function(sessionid, hashpin, callback){
       } else {
         var response = result.loginReturn;
         callback(null,sessionid);
-      }
-    });
-  });
-}
-
-exports.transferTransferFlow = function(sessionid, payload, callback){
-  var requestSoap = { sessionid:sessionid, to: payload.transferRequest.phoneID, amount : payload.transferRequest.amount , type: payload.transferRequest.type };
-  var request = { transferRequest: requestSoap };
-  soap.createClient(soapurl, function(err, client) {
-    client.transfer(request, function(err, result) {
-      if(err) {
-        console.log(err);
-        return new Error(err);
-      } else {
-        var response = result.transferReturn;
-        console.log("Result: "+JSON.stringify(result));
-        if(response.result != 0){
-          var response = { statusCode:1 ,  additionalInfo : result };
-          callback("ERROR", response);
-        } else{
-          var response = { statusCode:0 ,  additionalInfo : JSON.stringify(result) };
-          callback(null, response);
-        }
       }
     });
   });
