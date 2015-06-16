@@ -86,7 +86,7 @@ exports.validateSMS = function(phoneID,callback){
 
 exports.validateUser = function(phoneID,callback){
 	console.log('Search user in mongoDB');
-	User.findOne({ 'phoneID': phoneID }, 'name 	email pin	phoneID appID canPurchase', function (err, person) {
+	User.findOne({ 'phoneID': phoneID }, 'name 	email pin	phoneID appID canPurchase  reportAdmin', function (err, person) {
 		if (err) return handleError(err); 
 		else if(!person)
 			callback("ERROR", { statusCode: 1 ,  additionalInfo: 'User is not yet registered' });
