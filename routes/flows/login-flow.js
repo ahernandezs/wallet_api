@@ -203,6 +203,7 @@ exports.loginFlow = function(payload,callback) {
 
               var balance = { current : currentMoney , dox : currentDox , unreadMsgs :length } ;
               console.log('get balance');
+              info.reportAdmin = 'YES';
               response = { statusCode: 0, sessionid : sessionid, additionalInfo : balance, userInfo : info };
             }
             else{

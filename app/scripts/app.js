@@ -31,5 +31,8 @@ angular.module('pantallasAdministradorApp', [
       })
       .otherwise({
         redirectTo: '/login'
+      })
+      .when('/report', {
+        templateUrl: 'views/report.html',
       });
   });
