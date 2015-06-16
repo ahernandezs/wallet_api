@@ -382,6 +382,7 @@ exports.authorizeBuy		 = function(payload,callback){
 			orderQueryTemporal.getOrder(payload.ID,function(err,result){
 				if(err) callback('ERROR',err);
 				else{
+					console.log(result);
 					callback(null,result);
 				}
 			});

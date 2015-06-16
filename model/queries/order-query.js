@@ -1,4 +1,5 @@
 var Order = require('../order');
+var OrderTemporal = require('../orderTemporal');
 var config = require('../../config.js');
 var async = require('async');
 
@@ -79,7 +80,16 @@ exports.getOrders =  function(merchantID, callback) {
 			});
 		},
 
-		function(ordersCanceled, ordersDelivered, callback){
+		function(ordersCanceled,ordersDelivered, callback){
+			var conditionsDelivered= { 'status':config.orders.status.PENDING }
+			var pending = OrderTemporal.find(conditionsDelivered, 'orderId _id customerImage customerName date status products userId');
+			pending.sort({orderId: -1});
+			pending.exec(function (err1, ordersPending) {
+				callback(null, ordersCanceled, ordersDelivered,ordersPending);
+			});
+		},
+
+		function(ordersCanceled, ordersDelivered, ordersPending, callback){
 
 			var response = { statusCode: 0 };
 			var conditions = {$or: [{'status':config.orders.status.NEW },{'status':config.orders.status.READY}]};
@@ -93,6 +103,7 @@ exports.getOrders =  function(merchantID, callback) {
 				} else {
 					if(orders.length != 0){
 						ordersCanceled = ordersCanceled.concat(ordersDelivered);
+						ordersCanceled = ordersCanceled.concat(ordersPending);
 						var ordersMerge = ordersCanceled.concat(orders);
 						response.additionalInfo = ordersMerge;
 					}
