@@ -73,7 +73,7 @@ exports.registerFlow = function(payload,callback) {
     },
     function(sessionid, callback){
       console.log('Register ' + sessionid);
-      var requestSoap = { sessionid:sessionid, agent: payload.phoneID, name : payload.name , email_address: payload.email_address };
+      var requestSoap = { sessionid:sessionid, agent: payload.phoneID, name : payload.name , email_address: payload.email_address , reportAdmin: 'YES'};
       var request = { registerRequest: requestSoap };
       console.log(request);
       soap.createClient(soapurl, function(err, client) {

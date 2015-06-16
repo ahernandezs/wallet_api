@@ -135,6 +135,7 @@ exports.validate = function(req, res){
     resultWithID.countryID = '00';
     resultWithID.currency = config.currency;
     resultWithID.question = config.question;
+    resultWithID.reportUrl = process.env.YELLOWFIN_URL;
     res.json(resultWithID);
   });
 };

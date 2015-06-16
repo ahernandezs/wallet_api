@@ -22,6 +22,7 @@ var userSchema = new Schema({
     facebook: String,
     answer:String,
     canPurchase:String,
+    reportAdmin:String,
     sms:Number
 });
 
