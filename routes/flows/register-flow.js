@@ -73,7 +73,7 @@ exports.registerFlow = function(payload,callback) {
     },
     function(sessionid, callback){
       console.log('Register ' + sessionid);
-      var requestSoap = { sessionid:sessionid, agent: payload.phoneID, name : payload.name , email_address: payload.email_address , reportAdmin: 'YES'};
+      var requestSoap = { sessionid:sessionid, agent: payload.phoneID, name : payload.name , email_address: payload.email_address };
       var request = { registerRequest: requestSoap };
       console.log(request);
       soap.createClient(soapurl, function(err, client) {
@@ -104,6 +104,7 @@ exports.registerFlow = function(payload,callback) {
         payload.profileCompleted = 0;
         payload.canPurchase ='YES';
         console.log('Register in Mongo ' + sessionid);
+        payload.reportAdmin= 'YES';
         Userquery.validateUser( payload.phoneID, function (err, result) {
           if(result.statusCode === 0)
             callback(null,sessionid);
