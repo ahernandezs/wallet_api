@@ -99,6 +99,7 @@ app.get('/api/ping', function(req, res){
 	var body = 'pong';
 	res.setHeader('Content-Type', 'text/plain');
 	res.setHeader('Content-Length', Buffer.byteLength(body));
+	res.status(400);
 	res.end(body);
 	console.log('execute GET method ping');
 });
@@ -163,6 +164,7 @@ app.post('/api/offla/authorizebuy', user.authorizeBuy);
 
 //services for LENDDO
 app.post('/api/lenddo/webhook', lendo.notification);
+app.get('/api/lenddo/pendingLoans', lendo.getPendingLoans);
 
 
 

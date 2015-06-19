@@ -8,10 +8,12 @@ var merchantQuery = require('../../model/queries/merchant-query');
 var urbanService = require('../../services/notification-service');
 var transfer = require('./transfer-flow');
 var transacctionQuery = require('../../model/queries/transacction-query');
+var loanLenddoQuery = require('../../model/queries/loanLenddo-query');
 var config = require('../../config.js');
 var logger = config.logger;
 var soapurl = process.env.SOAP_URL;
 var ReceiptQuery = require('../../model/queries/receipt-query');
+var notificationService = require('../../services/notification-service');
 
 exports.createLoanFlow = function(payload,callback) {
   var forReceipt = {};
@@ -324,3 +326,95 @@ var updateLoanFlow = exports.updateLoanFlow = function(payload,callback){
       }  
     });
 };
+
+
+exports.getLenddoPendingLoans = function(phoneID,callback) {
+  console.log('Get pending Loans  Lenddo');
+   loanLenddoQuery.existPendingLoan(phoneID, function(err,result){
+      if(err)
+        callback("ERROR",err);
+      else
+        callback(null,result)
+  }); 
+}
+
+exports.processLogin = function(payload) {
+  console.log('processing login for Lenddo ');
+  var timeStamp = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
+  var payload = {phoneID: payload.client_id , date : timeStamp , status :payload.event}
+  loanLenddoQuery.saveLoan(payload, function(err,result){
+     if (err)
+       callback('ERROR', { statusCode : 1, additionalInfo : err });
+     else {
+      callback(null, response);
+    }
+  });
+}
+
+exports.processHasScore = function(payload) {
+  console.log('process has score event ' );
+  console.log(payload);
+  var client_id = payload.client_id;
+  async.waterfall([
+    function(callback) {
+      var timeStamp = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
+      var payloadLenddo = {phoneID: payload.client_id , date : timeStamp , status :payload.event };
+      loanLenddoQuery.updateLoanPending(payloadLenddo , function(err,forResult){
+         if (err)
+           callback('ERROR', { statusCode : 1, additionalInfo : err });
+         else {
+          callback(null);
+        }
+      });
+    },
+
+    function(callback){
+      if(payload.event == 'has_score'){
+        var score = payload.data.score;
+        payload = {};
+        payload.phoneID = client_id;
+        payload.message = " Your MAX available loan is $";
+        payload.score_type = config.loans.type.DEFAULT;
+        payload.max_amount = config.loans.max_amount.DEFAULT;
+
+        if (score >= 700 && score <= 999) {
+          payload.score_type = config.loans.type.GREAT;
+          payload.max_amount = config.loans.max_amount.GREAT;
+        }
+        else if (score >= 550 && score < 700) {
+          payload.score_type = config.loans.type.GOOD;
+          payload.max_amount = config.loans.max_amount.GOOD;
+        }
+        else if (score >= 450 && score < 550) {
+          payload.score_type = config.loans.type.OK;
+          payload.max_amount = config.loans.max_amount.OK;
+        }
+        else if (score >= 100 && score <= 300) {
+          payload.score_type = config.loans.type.BAD;
+          payload.max_amount = config.loans.max_amount.BAD;
+        }
+        payload.message = payload.message + payload.max_amount;
+
+        var extraData = { action : config.messages.action.LENDO };
+        payload.extra = {extra : extraData} ;
+
+        notificationService.singlePush(payload, function(err, result) {
+          if (err){
+            callback('ERROR',err);
+          }
+          else{
+            callback(null,result);
+          }
+        });
+      }
+    }
+    ], function (err, result) {
+      if(err){
+        console.log('Error flow');
+      }else{
+        console.log('Finish flow');
+        console.log(result)
+      }
+    });
+}
+  

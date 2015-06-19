@@ -9,6 +9,8 @@ var loanSchema =  new Schema({
 	amount : String,
 	status:String,
 	date: String,
+	months : Number,
+	interest : Number,
     phoneID: String
 });
 

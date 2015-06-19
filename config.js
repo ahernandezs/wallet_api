@@ -22,6 +22,7 @@ config.orders.emptyMsg = 'There are no ' + config.orders.status + ' orders';
 
 config.loans = {};
 config.loans.status = {NEW : 'NEW' ,ACCEPTED : 'ACCEPTED' , REJECTED : 'REJECTED' };
+config.loans.lenddoStatus = {PENDING : 'PENDING', PENDING : 'ACCEPTED' };
 config.loans.errMsg = 'Something went wrong';
 config.loans.emptyMsg = 'There are no ' + config.loans.status + ' loans';
 config.loans.type = { GREAT:"GREAT" , GOOD:"GOOD" , OK:"OK", BAD: "BAD", DEFAULT: "BAD" };
@@ -53,7 +54,7 @@ config.messages.transferRejectedOneMsg = 'Sorry, you have exceded transfers in l
 config.messages.giftRejectedOneMsg = 'Sorry, you have exceeded your number of gifts per hour';
 config.messages.buyRejectedOneMsg = 'Sorry, you have exceeded your number of buys per hour. Please return home';
 config.messages.loanAcceptedMsg = 'Congratulations,Your Instan-Loan is approved';
-config.messages.action = {TRANSFER:1 , GIFT :2 , BUY :3 ,LOAN : 4, COUPON: 5 , AUTH: 6};
+config.messages.action = {TRANSFER:1 , GIFT :2 , BUY :3 ,LOAN : 4, COUPON: 5 , AUTH: 6 , LENDO : 7};
 config.messages.transferFund = 'You have sent a Transfer to ';
 config.messages.coupon = {};
 config.messages.coupon.message = 'Congratulations You are today’s winner of “Highest DOX score of the day wins a prize” promotion! We will be in touch shortly, along with your prize';
