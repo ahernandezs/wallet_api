@@ -2,7 +2,7 @@ var updateOrder = require('../routes/flows/updateOrder-flow');
 var umarketService = require('../services/umarketFacade-service');
 var balance = require('../routes/flows/balance-flow');
 var eventQuery = require('../model/queries/event-query');
-var transacctionQuery = require('../../model/queries/transacction-query');
+var transacctionQuery = require('../model/queries/transacction-query');
 var async = require('async');
 var moment = require('moment-timezone');
 
@@ -44,7 +44,7 @@ exports.buyTickets = function(req, res) {
             });
         },
         function(response, phoneID, callback){
-            logger.info( 'Create  transacction ticket' );
+            console.log( 'Create  transacction ticket' );
             var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
             var transacction = {};
             transacction.title = 'Buy ticket';
@@ -55,11 +55,11 @@ exports.buyTickets = function(req, res) {
             transacction.phoneID = phoneID;
             transacctionQuery.createTranssaction(transacction, function(err, result) {
                 if (err) {
-                    logger.error('Error to create transacction');
+                    console.log('Error to create transacction');
                     callback(err,response);
                 }
                 else{
-                    logger.info(result);
+                    console.log(result);
                     callback(null,response);
                 }
             });
