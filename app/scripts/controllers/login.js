@@ -1,19 +1,13 @@
 'use strict';
 
 angular.module('pantallasAdministradorApp')
-  .controller('LoginCtrl', function ($scope, $log, $location) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
-    $scope.login=function(username,password){
-	 		console.log("hola");
-	 		$scope.username="";
-	 		$scope.password="";
-	 		//if(username=='alex@hotmail.com' && password==123){
-	 		$scope.isAuthenticated = true;
-	 		$location.path('/mainAccount');
-	 		//};
-	 };
-  });
+.controller('LoginCtrl', ['$scope', '$rootScope', '$location', '$http',  function ($scope, $rootScope, $location,$http) {
+	$scope.login=function(username,password){
+		if(username=='admin@amdocs.com' && password=='admin321'){
+			$rootScope.isAuthenticated = true;
+			$location.path('/main');
+		}else{
+			$scope.errorMessage = 'User / Password Invalid';
+		}
+	};
+}]);

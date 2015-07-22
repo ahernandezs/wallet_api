@@ -1,10 +1,14 @@
 var Product = require('../product');
+var Product2 = require('../product2');
 var config = require('../../config.js');
+var timeService = require('../../services/time-service');
 
 exports.getProducts =  function(merchantID, callback) {
     console.log( 'getProducts from MongoDB with status: ' + config.products.status );
-    Product.find({ 'merchantId': merchantID , 'status': config.products.status }, '_id name description url cost status', function(err, products)  {
-        var response;
+    var query = Product.find({ 'merchantId': merchantID , 'status': config.products.status });
+    query.sort({productID:1});
+    query.exec(function(err,products){
+            var response;
         if (err) {
             response = { statusCode: 1, additionalInfo: config.products.errMsg };
             callback("ERROR: " + err.message, response);
@@ -16,14 +20,123 @@ exports.getProducts =  function(merchantID, callback) {
         } else {
             response = { statusCode: 0, additionalInfo: products };
             callback(null, response);
-            console.log(response);
+        }
+    });
+};
+
+exports.getProductSchedule =  function(merchantID, callback) {
+    console.log( 'getProducts by Schedule from MongoDB with status: ' + config.products.status );
+    timeService.getSchedulerLabel(function(err,timeHour) {
+        console.log(timeHour);
+        if(timeHour === 'MORNING'){
+            var query = Product.find({ 'merchantId': merchantID , 'status': config.products.status , 'schedule': 'MORNING' });
+            query.sort({productID:1});
+            query.exec(function(err,products){
+                    var response;
+                if (err) {
+                    response = { statusCode: 1, additionalInfo: config.products.errMsg };
+                    callback("ERROR: " + err.message, response);
+                    console.log(err.message);
+                } else if (products.length === 0) {
+                    response = { statusCode: 0, additionalInfo: config.products.emptyMsg };
+                    callback(null, response);
+                    console.log(config.products.emptyMsg);
+                } else {
+                    response = { statusCode: 0, additionalInfo: products };
+                    callback(null, response);
+                }
+            });
+        }else{
+            var query = Product.find({ 'merchantId': merchantID , 'status': config.products.status });
+            query.sort({productID:1});
+            query.exec(function(err,products){
+                    var response;
+                if (err) {
+                    response = { statusCode: 1, additionalInfo: config.products.errMsg };
+                    callback("ERROR: " + err.message, response);
+                    console.log(err.message);
+                } else if (products.length === 0) {
+                    response = { statusCode: 0, additionalInfo: config.products.emptyMsg };
+                    callback(null, response);
+                    console.log(config.products.emptyMsg);
+                } else {
+                    response = { statusCode: 0, additionalInfo: products };
+                    callback(null, response);
+                }
+            });
+        }
+    });
+};
+
+
+exports.getProductsDiscount =  function(merchantID, callback) {
+    console.log( 'getProducts discount from MongoDB with status: ' + config.products.status );
+    var query =  Product2.find({}, 'productID name description url cost status discount');
+    query.sort({productID:1});
+    query.exec(function(err,products){
+            var response;
+        if (err) {
+            response = { statusCode: 1, additionalInfo: config.products.errMsg };
+            callback("ERROR: " + err.message, response);
+            console.log(err.message);
+        } else if (products.length === 0) {
+            response = { statusCode: 0, additionalInfo: config.products.emptyMsg };
+            callback(null, response);
+            console.log(config.products.emptyMsg);
+        } else {
+            response = { statusCode: 0, additionalInfo: products };
+            callback(null, response);
+        }
+    });
+};
+
+exports.getProductsDiscountSchededule =  function(merchantID, callback) {
+    console.log( 'getProducts by Schedule from MongoDB with status: ' + config.products.status );
+    timeService.getSchedulerLabel(function(err,timeHour) {
+        console.log(timeHour);
+        if(timeHour === 'MORNING'){
+            var query = Product2.find({ 'merchantId': merchantID , 'status': config.products.status , 'schedule': 'MORNING' });
+            query.sort({productID:1});
+            query.exec(function(err,products){
+                    var response;
+                if (err) {
+                    response = { statusCode: 1, additionalInfo: config.products.errMsg };
+                    callback("ERROR: " + err.message, response);
+                    console.log(err.message);
+                } else if (products.length === 0) {
+                    response = { statusCode: 0, additionalInfo: config.products.emptyMsg };
+                    callback(null, response);
+                    console.log(config.products.emptyMsg);
+                } else {
+                    response = { statusCode: 0, additionalInfo: products };
+                    callback(null, response);
+                }
+            });
+        }else{
+            var query = Product2.find({ 'merchantId': merchantID , 'status': config.products.status });
+            query.sort({productID:1});
+            query.exec(function(err,products){
+                    var response;
+                if (err) {
+                    response = { statusCode: 1, additionalInfo: config.products.errMsg };
+                    callback("ERROR: " + err.message, response);
+                    console.log(err.message);
+                } else if (products.length === 0) {
+                    response = { statusCode: 0, additionalInfo: config.products.emptyMsg };
+                    callback(null, response);
+                    console.log(config.products.emptyMsg);
+                } else {
+                    response = { statusCode: 0, additionalInfo: products };
+                    callback(null, response);
+                }
+            });
         }
     });
 };
 
 exports.getInventory = function(merchantID, callback) {
     console.log( 'getInventory from MongoDB for merchantID: ' + merchantID );
-    Product.find({ 'merchantId' : merchantID }, '_id name description url', function(err, inventory) {
+    Product.find({ 'merchantId' : merchantID }, '_id name description url status', function(err, inventory) {
         var response;
         if (err) {
             response = { statusCode: 1, additionalInfo: config.products.errMsg };
@@ -43,26 +156,36 @@ exports.getInventory = function(merchantID, callback) {
 
 exports.updateInventory = function(product, callback) {
     console.log( 'verifying product in MongoDB' );
-    Product.find({ '_id' : product._id }, '_id name url', function(err, products) {
+    var query = { '_id': product._id};
+    delete product._id;
+    var options = { new: false };
+    Product.findOneAndUpdate(query, product, options, function (err, product) {
+    if (err){
+          callback("ERROR", { statusCode: 1 ,  additionalInfo: err });
+      }
+      else if(!product)
+          callback("ERROR", { statusCode: 1 ,  additionalInfo: 'Product not  Found' });
+      else
+          callback( null, { statusCode: 0 ,  message: 'Successful Update' } );
+    });
+};
+
+exports.getProduct =  function(name, callback) {
+    console.log( 'getProduct from MongoDB with status: ' + name );
+    Product.find({ 'name': name }, 'url', function(err, products)  {
+        var response;
         if (err) {
-            callback('ERROR', { statusCode: 1,  message: 'Something went wrong' } );
-            console.log( 'Something went wrong' );
+            response = { statusCode: 1, additionalInfo: config.products.errMsg };
+            callback("ERROR: " + err.message, response);
+            console.log(err.message);
         } else if (products.length === 0) {
-            callback('ERROR', { statusCode: 1,  message: 'Failed Update (no product found)' } );
-            console.log( 'Failed Update (no product found)' );
+            response = { statusCode: 0, additionalInfo: config.products.emptyMsg };
+            callback(null, response);
+            console.log(config.products.emptyMsg);
         } else {
-            console.log( 'updateInventory in MongoDB with _id: ' +  product._id + ". New status: " + product.status);
-            var conditions = product._id;
-            delete product._id;
-            Product.update( conditions, product, null, function(err, result) {
-                if (err) {
-                    callback('ERROR', { statusCode: 1,  message: 'Failed Update' } );
-                    console.log( 'Failed Update' );
-                } else {
-                    callback( null, { statusCode: 0 ,  message: 'Successful Update' } );
-                    console.log( 'Successful Update' );
-                }
-            });
+            response = { statusCode: 0, additionalInfo: products };
+            callback(null, products[0]);
+            console.log(products[0].url);
         }
     });
 };

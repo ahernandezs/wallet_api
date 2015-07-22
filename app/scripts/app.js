@@ -5,19 +5,29 @@ angular.module('pantallasAdministradorApp', [
   'ngResource',
   'ngSanitize',
   'ngRoute',
-  'ngTable'
+  'ngTable',
+  'ui.bootstrap'
 ])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/login', {
         templateUrl: 'views/login.html',
-        controller: 'LoginCtrl',
-        url: 'login'
+        controller: 'LoginCtrl'
       })
-       .when('/mainAccount', {
+       .when('/main', {
         templateUrl: 'views/mainAccount.html',
-        controller: 'MainAccountCtrl',
-        url: 'main'
+        controller: 'MainAccountCtrl'
+      })
+       .when('/detail/:phoneId', {
+        templateUrl: 'views/detail.html',
+        controller: 'detailCtrl'
+      })
+       .when('/leaderboard', {
+        templateUrl: 'views/leaderboard.html',
+        controller: 'LeaderBoardCtrl'
+      })
+      .when('/websockets', {
+        templateUrl: 'views/webSocket.html'
       })
       .otherwise({
         redirectTo: '/login'

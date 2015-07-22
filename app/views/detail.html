@@ -1,0 +1,95 @@
+<div class="row">
+  <div class="col-md-1"></div>
+  <div class="col-md-10">
+    <div class="content row menu">
+        <div class="col-md-6">
+          <img src="https://s3-us-west-1.amazonaws.com/amdocs-images/mail/logo.png" alt="amdocs">
+        </div>
+        <div class="col-md-6">
+          <div class="pull-right" >
+            <a class="menuItem" href='#/leaderboard'>LeaderBoard</a>
+          <a class="menuItem" href='#/main'>Home</a>
+          <button class="btn" ng-click="logOut()"> Exit </button>
+          </div>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div ng-include="'views/header.html'" class="usertype"></div>
+      </div>
+    
+    <tabset>
+      <tab heading="Loans">
+        <form class="form-inline">
+                    <input ng-model="queryLoans" type="text" placeholder="Filter by date, amount or status" autofocus class="form-control">
+            </form>
+        <div class="main">
+          <table ng-table="tableParamsloans">
+            
+            <tr ng-repeat="loan in loans | filter:queryLoans">
+              <td data-title="'Date'" sortable="'date'">{{loan.date}}</td>
+              <td data-title="'Amount'" sortable="'amount'">{{loan.amount}}</td>
+              <td data-title="'Status'" sortable="'status'">{{loan.status}}</td>
+            </tr>
+          </table>
+        </div>
+      </tab>
+      <tab heading="Receipts">
+        <form class="form-inline">
+                    <input ng-model="queryReceipts" type="text" placeholder="Filter by date, amount, status or type" autofocus class="form-control">
+            </form>
+        <div class="main">
+          <table ng-table="tableParamsreceipts">
+            
+            <tr ng-repeat="receipt in receipts | filter:queryReceipts">
+              <td data-title="'Date'" sortable="'date'">{{receipt.date}}</td>
+              <td data-title="'Amount'" sortable="'amount'">{{receipt.amount}}</td>
+              <td data-title="'Status'" sortable="'status'">{{receipt.status}}</td>
+              <td data-title="'Type'" sortable="'type'">{{receipt.type}}</td>
+              <!--td data-title="'Receiver'">{{receipt.receiver}}</td-->
+            </tr>
+          </table>
+        </div>
+      </tab>
+      <tab heading="Doxs Transactions">
+        <form class="form-inline">
+                    <input ng-model="queryDoxs" type="text" placeholder="Filter by date, amount, status or type" autofocus class="form-control">
+
+            </form>
+        <div class="main">
+          <table ng-table="tableParamsdoxs">
+            
+            <tr ng-repeat="dox in doxs | filter:queryDoxs">
+              <td data-title="'Title'" sortable="'title'">{{dox.title}}</td>
+              <td data-title="'Type'" sortable="'type'">{{dox.type}}</td>
+              <td data-title="'Date'" sortable="'date'">{{dox.date}}</td>
+              <td data-title="'Amount'" sortable="'amount'">{{dox.amount}}</td>
+              <td data-title="'operation'" sortable="'operation'">{{dox.operation}}</td>
+              <td data-title="'description'" sortable="'description'">{{dox.description}}</td>
+            </tr>
+          </table>
+        </div>
+      </tab>
+      <tab heading="Money Transactions">
+        <form class="form-inline">
+                    <input ng-model="queryMoney" type="text" placeholder="Filter by date, amount, status or type" autofocus class="form-control">
+      
+            </form>
+        <div class="main">
+          <table ng-table="tableParamsmoney">
+            
+            <tr ng-repeat="money in moneys | filter:queryMoney">
+              <td data-title="'Title'" sortable="'title'">{{money.title}}</td>
+              <td data-title="'Type'" sortable="'type'">{{money.type}}</td>
+              <td data-title="'Date'" sortable="'date'">{{money.date}}</td>
+              <td data-title="'Amount'" sortable="'amount'">{{money.amount}}</td>
+              <td data-title="'operation'" sortable="'operation'">{{money.operation}}</td>
+              <td data-title="'description'" sortable="'description'">{{money.description}}</td>
+            </tr>
+          </table>
+        </div>
+      </tab>
+    </tabset>
+  </div>
+  <div class="col-md-1"></div>
+</div>

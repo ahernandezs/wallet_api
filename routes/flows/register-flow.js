@@ -4,12 +4,33 @@ var crypto = require('crypto');
 var Userquery = require('../../model/queries/user-query');
 var sessionUser = require('./login-flow');
 var soapurl = process.env.SOAP_URL;
+var config = require('../../config.js');
 
-var username = 'anzen_01';
-var pin  = '1234';
+function endsWith(str, suffix) {
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+}
 
 exports.registerFlow = function(payload,callback) {
+  var transfer = true;
+  var end = 'AP'
+
+  console.log(endsWith(payload.phoneID, end));
   async.waterfall([
+    function(callback){
+      console.log('Validate connection');
+      var response = null;
+
+      //payload.phoneID = payload.phoneID +'ES';
+      console.log('Validate phoneID ---->' + payload.phoneID);
+      soap.createClient(soapurl, function(err, client) {
+        if(err) {
+          console.log(err);
+          var response = { statusCode:1 ,  additionalInfo : err };
+          callback(err,response);
+        }else
+        callback(null);
+      });
+    },
     function(callback){
       console.log('Create Session');
       var response = null;
@@ -27,7 +48,7 @@ exports.registerFlow = function(payload,callback) {
     },
     function(sessionid, callback){
       console.log('Create hashpin');
-      var hashpin = username.toLowerCase() + pin ;
+      var hashpin = config.username.toLowerCase() + config.pin ;
       hashpin = sessionid + crypto.createHash('sha1').update(hashpin).digest('hex').toLowerCase();
       hashpin = crypto.createHash('sha1').update(hashpin).digest('hex').toUpperCase();
       console.log(hashpin);
@@ -35,9 +56,8 @@ exports.registerFlow = function(payload,callback) {
     },
     function(sessionid, hashpin, callback){
       console.log('Login');
-      var  request = { sessionid: sessionid, initiator: username, pin: hashpin  };
+      var  request = { sessionid: sessionid, initiator: config.username, pin: hashpin  };
       var request = {loginRequest: request};
-      console.log(request);
       soap.createClient(soapurl, function(err, client) {
         client.login(request, function(err, result) {
           if(err) {
@@ -65,23 +85,36 @@ exports.registerFlow = function(payload,callback) {
             console.log(result);
             var response = result.registerReturn;
             if(response.result != 0){
-                var response = { statusCode:1 ,  additionalInfo : result };
-               callback("ERROR", response);
+                if (response.result === 18) {
+                    transfer = false;
+                  callback(null,sessionid);
+                } else {
+                  var response = { statusCode:1 ,  additionalInfo : result };
+                  callback("ERROR", response);
+                }
             }
-            else
+            else {
               callback(null,sessionid);
+            }
           }
         });
       });
       },
-    function(sessionid, callback){
-      console.log('Register in Mongo ' + sessionid);
-      Userquery.createUser(payload,function(err,result){
-          if (err) return handleError(err);
-          else
+      function(sessionid, callback){
+        payload.profileCompleted = 0;
+        payload.canPurchase ='YES';
+        console.log('Register in Mongo ' + sessionid);
+        Userquery.validateUser( payload.phoneID, function (err, result) {
+          if(result.statusCode === 0)
             callback(null,sessionid);
-      });
-    },
+          else
+            Userquery.createUser(payload,function(err,result){
+              if (err) return handleError(err);
+              else
+                callback(null,sessionid);
+            });
+        });
+      },
     function(sessionid,callback){
       console.log('Reset PIN ' + sessionid);
       var requestSoap = { sessionid:sessionid, new_pin: payload.pin , agent: payload.phoneID, suppress_pin_expiry:'true' };
@@ -101,30 +134,43 @@ exports.registerFlow = function(payload,callback) {
       });
     },
     function(sessionid,callback){
-      console.log('Transfer ' + sessionid);
-      var requestSoap = { sessionid:sessionid, to: payload.phoneID, amount : 20 , type: 1 };
-      var request = { transferRequest: requestSoap };
-      console.log(request);
-      soap.createClient(soapurl, function(err, client) {
-        client.transfer(request, function(err, result) {
-          if(err) {
-            console.log(err);
-            return new Error(err);
+        if (transfer) {
+            console.log('Transfer ' + sessionid);
+            var requestSoap = { sessionid:sessionid, to: payload.phoneID, amount : 25 , type: 1 };
+            var request = { transferRequest: requestSoap };
+            console.log(request);
+            soap.createClient(soapurl, function(err, client) {
+                client.transfer(request, function(err, result) {
+                    if(err) {
+                        console.log(err);
+                        return new Error(err);
+                    } else {
+                        console.log(result);
+                        var response = result.transferReturn;
+                        if(response.result != 0){
+                            var response = { statusCode:1 ,  additionalInfo : result };
+                            callback("ERROR", response);
+                        } else{
+                            sessionUser.loginFlow({phoneID:payload.phoneID , pin :payload.pin },function(err,result){
+                                callback(null, result);
+                            });
+                        }
+                    }
+                });
+            });
           } else {
-            console.log(result);
-            var response = result.transferReturn;
-            if(response.result != 0){
-              var response = { statusCode:1 ,  additionalInfo : result };
-              callback("ERROR", response);
+            if(payload.group){
+              sessionUser.loginFlow({phoneID:payload.phoneID , pin :payload.pin, group : payload.group },function(err,result){
+                callback(null, result);
+
+              });
             }
             else{
-              sessionUser.loginFlow({phoneID:payload.phoneID , pin :payload.pin },function(err,result){
+              sessionUser.loginFlow({phoneID:payload.phoneID , pin :payload.pin, group : config.group.env.PUBLIC },function(err,result){
                 callback(null, result);
               });
             }
           }
-        });
-      });
     },
     ], function (err, result) {
       console.log(result);

@@ -1,24 +1,40 @@
-<div class="col-md-12">
-  <div class="row">
-      <div class="col-md-6">
-        <h2><font color="white">Table of Contents</font></h2>
-      </div><!--End col-md-6-->
-      <div class="col-md-6">
-        <button class="btn btn-default pull-right" ng-click="logOut()"> Log out </button>
-      </div><!--End col-md-6 num2-->
-  </div><!--End row-->
-    
-    <div class="well">
-      <table ng-table class="table">
-        <tr ng-repeat="user in users">
-          <td data-title="'Id'">{{user.id}}</td>
-          <td data-title="'Class Name'">{{user.className}}</td>
-          <td data-title="'Method Name'">{{user.methodName}}</td>
-          <td data-title="'Elapsed Time'">{{user.elapsedTime}}</td>
-          <td data-title="'Created at'">{{user.createdAt}}</td>
+<div class="row">
+  <div class="col-md-1"></div>
+  <div class="col-md-10">
+    <div class="content row menu">
+        <div class="col-md-6">
+          <img src="https://s3-us-west-1.amazonaws.com/amdocs-images/mail/logo_amdocs_header.png" alt="amdocs">
+        </div>
+        <div class="col-md-6">
+          <div class="pull-right" >
+          <a class="menuItem" href='#/leaderboard'>Leader Board</a>
+          <a class="menuItem active" href='#/main'>Home</a>
+          <button class="btn" ng-click="logOut()">Exit</button-->
+          </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div ng-include="'views/header.html'" class="usertype"></div>
+        </div>
+    </div>
+    <form class="form-inline">
+              <input ng-model="query" type="text" placeholder="Filter by name, company, group or email" autofocus class="form-control">
+
+      </form>
+    <div class="main">
+      <table ng-table="tableParams">
+      
+        <tr ng-repeat="user in $data | filter:query" ng-click="user.$selected = !user.$selected; detail(user)">
+          <td data-title="'Name'" sortable="'name'">{{user.name}}</td>
+          <td data-title="'Company'" sortable="'company'">{{user.company}}</td>
+          <td data-title="'Group'">{{user.group}}</td>
+          <td data-title="'Email'">{{user.email}}</td>
+          <td data-title="'Doxs'" sortable="'doxs'">{{user.doxs}}</td>
         </tr>
       </table>
-      <highchart id="chart1" config="chart"></highchart>
     </div>
+  </div>
+  <div class="col-md-1"> </div>
 </div>
 

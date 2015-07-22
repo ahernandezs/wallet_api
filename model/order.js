@@ -3,7 +3,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var orderSchema =  new Schema({
-	userId: Number,
+	orderId: Number,
+	userId: String,
     merchantId: Number,
     customerImage: String,
     customerName: String,

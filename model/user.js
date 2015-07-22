@@ -13,7 +13,16 @@ var userSchema = new Schema({
 	phoneID:String ,
 	appID:String ,
 	doxs:Number ,
-	OS : String
+	OS : String,
+    lastSession : String,
+    environment :String ,
+    profileCompleted : Number,
+    group : String,
+    twitter: String,
+    facebook: String,
+    answer:String,
+    canPurchase:String,
+    sms:Number
 });
 
 module.exports = mongoose.model('User', userSchema);
