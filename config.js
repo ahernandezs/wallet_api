@@ -24,6 +24,8 @@ config.loans = {};
 config.loans.status = {NEW : 'NEW' ,ACCEPTED : 'ACCEPTED' , REJECTED : 'REJECTED' };
 config.loans.errMsg = 'Something went wrong';
 config.loans.emptyMsg = 'There are no ' + config.loans.status + ' loans';
+config.loans.type = { GREAT:"GREAT" , GOOD:"GOOD" , OK:"OK", BAD: "BAD", DEFAULT: "BAD" };
+config.loans.max_amount = { GREAT : 5000.00 , GOOD: 2500.00 , OK:1000.00, BAD: 0.00, DEFAULT: 0.00 };
 
 config.products = {};
 config.products.status = 'IN STOCK';
