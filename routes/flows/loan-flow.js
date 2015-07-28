@@ -343,6 +343,9 @@ exports.getLenddoPendingLoans = function(phoneID,callback) {
   console.log('Get pending Loans  Lenddo');
   var response = {};
 
+  var loan1 =  {"months": 3, "interest": 1.25 };
+  var loan2 =  {"months": 6, "interest": 1.5 };
+  var loan3 =  {"months": 12, "interest": 1.75 };
 
   async.waterfall([
   function(callback) {
@@ -359,6 +362,11 @@ exports.getLenddoPendingLoans = function(phoneID,callback) {
           response.pending = 'NO';
           response.maxLoanAmount = 0;
         }
+
+        response.loan = [];
+        response.loan.push(loan1);
+        response.loan.push(loan2);
+        response.loan.push(loan3);
         callback(null);
     });
   },
