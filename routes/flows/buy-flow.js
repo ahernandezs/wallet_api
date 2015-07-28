@@ -329,6 +329,7 @@ exports.notifyMerchantBuy = function(phoneID,payload,callback){
 			order.phoneID = phoneID;
             order.customerImage = config.S3.url + phoneID +'.png',
             order.merchantId = payload.merchantID;
+            order.status = 'PENDING';
             console.log('Order to persist');
             console.log(order)
             console.log('----------------');
@@ -433,6 +434,7 @@ exports.authorizeBuy		 = function(payload,callback){
 		function(order,sessionid,callback){
 			if(payload.status === 'ACCEPTED'){
 				console.log('Invoke buy flow');
+				order.status = 'NEW';
 				payloadBuyFlow.order =  order ;
 				payloadBuyFlow.sessionid = sessionid;
 				payloadBuyFlow.phoneID = order.phoneID;

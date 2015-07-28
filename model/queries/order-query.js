@@ -85,6 +85,7 @@ exports.getOrders =  function(merchantID, callback) {
 			var pending = OrderTemporal.find(conditionsDelivered, 'orderId _id customerImage customerName date status products userId');
 			pending.sort({orderId: -1});
 			pending.exec(function (err1, ordersPending) {
+				console.log(ordersPending);
 				callback(null, ordersCanceled, ordersDelivered,ordersPending);
 			});
 		},

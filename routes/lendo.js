@@ -1,62 +1,52 @@
-var Hawk = require('hawk');
-var notificationService = require('../services/notification-service');
 var config = require('../config.js');
+var hawk = require('hawk');
+var rest = require('restler');
+var async = require('async');
+var loan = require('./flows/loan-flow');
 
 exports.notification = function(req, res) {
     console.log('LENDO POST method notification ');
     console.log(req.body);
 
-	if (req.body.hasOwnProperty('event')){
-		if(req.body.event == 'has_score'){
-			var score = req.body.data.score;
-			payload = {};
-			payload.phoneID = req.body.client_id;
-			payload.message = " Your MAX available loan is $";
-			payload.score_type = config.loans.type.DEFAULT;
-			payload.max_amount = config.loans.max_amount.DEFAULT;
+    function credentials(id, callback) {
+        var webhook_auth = {
+            key:'4fS4ah7lnhlzdMTsuRY4sqF5fTHvnx5e',
+            algorithm: 'sha256',
+            id: id
+        };
+        console.log(webhook_auth);
+        return callback(null, webhook_auth)
+    }
 
-			if (score >= 700 && score <= 999) {
-				payload.score_type = config.loans.type.GREAT;
-				payload.max_amount = config.loans.max_amount.GREAT;
-			}
-			else if (score >= 550 && score < 700) {
-				payload.score_type = config.loans.type.GOOD;
-				payload.max_amount = config.loans.max_amount.GOOD;
-			}
-			else if (score >= 450 && score < 550) {
-				payload.score_type = config.loans.type.OK;
-				payload.max_amount = config.loans.max_amount.OK;
-			}
-			else if (score >= 100 && score <= 300) {
-				payload.score_type = config.loans.type.BAD;
-				payload.max_amount = config.loans.max_amount.BAD;
-			}
-			payload.message = payload.message + payload.max_amount;
+    var auth_config = {port: 443, host:'amdocs.anzen.io'};
+    hawk.server.authenticate(req, credentials,auth_config, function(err) {
+        console.log('Authenticate haw request');
+          if(err)
+            console.log(err);
 
-			notificationService.singlePush(payload, function(err, result) {
-				if (err)
-					console.log("Error al enviar notificacion");
-				else
-					console.log("Notificacion enviada");
-			});
-		}
-	}
-    res.send(200);
+        var body = 'WEBHOOK ACCEPTED';
+        res.setHeader('Content-Type', 'text/plain');
+        res.setHeader('Content-Length', Buffer.byteLength(body));
+        res.status(200);
+        res.end(body);
+
+        //Business logic for incoming events
+        var payload = req.body;
+
+        if(payload.event === 'logged_in'){
+            loan.processLogin(req.body);
+        }
+
+        else if(payload.event === 'has_score'){
+            loan.processHasScore(req.body);
+        }
+    });
 };
 
-function Succesful(done) {
-	function credentials(id, callback) {
-		var webhook_auth = {
-			key: '',
-			algorithm: 'sha256',
-			id: id
-		};
-	return callback(null, webhook_auth)
-	}
-
-	var auth_config = {port: 443, host:'http://amdocs.anzen.io'};
-
-	hawk.server.authenticate(req, credentials, auth_config, function(err) {
-		done((err || {}).output);
-	});
-}
+exports.getPendingLoans = function(req, res) {
+    console.log('LENDO GET method pending LOANS ');
+    var phoneID = req.headers['x-phoneid'];
+    loan.getLenddoPendingLoans(phoneID, function(err, result) {
+        res.json(result);
+    });
+};
