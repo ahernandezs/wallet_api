@@ -21,6 +21,17 @@ exports.createLoanFlow = function(payload,callback) {
     forResult.additionalInfo = {};
   var additionalInfo;
   async.waterfall([
+    //DELETE from lenddo pending loan
+    function(callback) {
+          logger.info( 'delete pending loan lenddo' );
+          loanLenddoQuery.remove(payload.body.phoneID,function(err,result){
+            if(err)
+              callback('ERROR', { statusCode : 1, additionalInfo : err });
+            else
+              callback(null);
+          });
+    },
+
     function(callback) {
         logger.info( 'Find loans for this user' );
         loanQuery.findUserLoans(payload.body.phoneID, function(err, result) {
@@ -330,11 +341,42 @@ var updateLoanFlow = exports.updateLoanFlow = function(payload,callback){
 
 exports.getLenddoPendingLoans = function(phoneID,callback) {
   console.log('Get pending Loans  Lenddo');
-   loanLenddoQuery.existPendingLoan(phoneID, function(err,result){
-      if(err)
-        callback("ERROR",err);
-      else
-        callback(null,result)
+  var response = {};
+
+
+  async.waterfall([
+  function(callback) {
+     loanLenddoQuery.existPendingLoan(phoneID, function(err,result){
+        if(err)
+          callback("ERROR",err);
+
+        //Verify if exist loan pending
+        if(result){
+          console.log(result);
+          response.pending = 'YES';
+          response.maxLoanAmount = result.maxLoanAmount;
+        }else{
+          response.pending = 'NO';
+          response.maxLoanAmount = 0;
+        }
+        callback(null);
+    });
+  },
+  function(callback) {
+    loanQuery.getLoans(phoneID,function(err,result){
+     if (err)
+       callback('ERROR', { statusCode : 1, additionalInfo : err });
+     else {
+        response.loans = result;
+        callback(null);
+      }
+    });
+  }], function (err, result) {
+    if(err){
+      callback("ERROR",err);
+    }else{
+      callback(null,response);
+    }
   }); 
 }
 
@@ -355,19 +397,9 @@ exports.processHasScore = function(payload) {
   console.log('process has score event ' );
   console.log(payload);
   var client_id = payload.client_id;
-  async.waterfall([
-    function(callback) {
-      var timeStamp = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
-      var payloadLenddo = {phoneID: payload.client_id , date : timeStamp , status :payload.event };
-      loanLenddoQuery.updateLoanPending(payloadLenddo , function(err,forResult){
-         if (err)
-           callback('ERROR', { statusCode : 1, additionalInfo : err });
-         else {
-          callback(null);
-        }
-      });
-    },
+  var event = payload.event;
 
+  async.waterfall([
     function(callback){
       if(payload.event == 'has_score'){
         var score = payload.data.score;
@@ -403,11 +435,23 @@ exports.processHasScore = function(payload) {
             callback('ERROR',err);
           }
           else{
-            callback(null,result);
+            callback(null,result, payload.max_amount);
           }
         });
       }
+    },
+    function(result,max_amount,callback) {
+      var timeStamp = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
+      var payloadLenddo = {phoneID: client_id , date : timeStamp , status:event , maxLoanAmount : max_amount };
+      loanLenddoQuery.updateLoanPending(payloadLenddo , function(err,forResult){
+         if (err)
+           callback('ERROR', { statusCode : 1, additionalInfo : err });
+         else {
+          callback(null,result);
+        }
+      });
     }
+
     ], function (err, result) {
       if(err){
         console.log('Error flow');

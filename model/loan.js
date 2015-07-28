@@ -11,7 +11,9 @@ var loanSchema =  new Schema({
 	date: String,
 	months : Number,
 	interest : Number,
-    phoneID: String
+    phoneID: String ,
+    months: Number,
+    interest : String
 });
 
 module.exports = mongoose.model('Loan', loanSchema);
