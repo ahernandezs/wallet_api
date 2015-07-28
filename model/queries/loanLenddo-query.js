@@ -37,10 +37,23 @@ exports.updateLoanPending = function(payload, callback) {
 
 exports.existPendingLoan = function(phoneID, callback) {
     console.log( 'Verify if there is  Loan ');
-    Loan.find({ 'phoneID' : phoneID }, 'status', function(err, result)  {
+    Loan.findOne({ 'phoneID' : phoneID }, 'status maxLoanAmount', function(err, result)  {
         if(err)
             callback("ERROR",result);
         else
           callback(null,result);
     });
+}
+
+exports.loanLenddoQuery = function(phoneID,callback){
+    console.log( 'Remove Lenddo Loan ');
+    Loan.findOneAndRemove({ 'phoneID' : phoneID }, function(err, result)  {
+        if(err)
+            callback("ERROR",result);
+        else{
+          console.log(result);
+          callback(null,result);
+        }
+    });
+
 }

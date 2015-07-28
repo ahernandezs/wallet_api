@@ -90,3 +90,19 @@ exports.findUserLoans = function(phoneID, callback) {
         }
     });
 };
+
+
+exports.getLoans = function(phoneID,callback){
+  console.log("Get Loan in MongoDB");
+  console.log(phoneID);
+  Loan.find({ 'phoneID':phoneID }, 'date amount months interest', function(err, loans) {
+    var response;
+    if (err) {
+        response = { statusCode: 1, additionalInfo: config.loans.errMsg };
+        console.log(response);
+        callback("ERROR: " + err.message, response);
+    } else {
+        callback(null, loans);
+    }
+   });
+};

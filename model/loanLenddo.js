@@ -5,6 +5,7 @@ var Schema = mongoose.Schema;
 var loanSchema =  new Schema({
 	phoneID: String,
 	date: String,
+	maxLoanAmount: Number,
 	status: String
 });
 
