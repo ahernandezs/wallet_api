@@ -13,7 +13,7 @@ var loanSchema =  new Schema({
 	interest : Number,
     phoneID: String ,
     months: Number,
-    interest : String
+    interest : String ,
     interest : String ,
     pay : Number
 });
