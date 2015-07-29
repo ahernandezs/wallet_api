@@ -45,9 +45,9 @@ exports.existPendingLoan = function(phoneID, callback) {
     });
 }
 
-exports.loanLenddoQuery = function(phoneID,callback){
+exports.loanRemove = function(phoneID,callback){
     console.log( 'Remove Lenddo Loan ');
-    Loan.findOneAndRemove({ 'phoneID' : phoneID }, function(err, result)  {
+    Loan.remove({ 'phoneID' : phoneID }, function(err, result)  {
         if(err)
             callback("ERROR",result);
         else{
