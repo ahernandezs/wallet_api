@@ -16,15 +16,17 @@ var ReceiptQuery = require('../../model/queries/receipt-query');
 var notificationService = require('../../services/notification-service');
 
 exports.createLoanFlow = function(payload,callback) {
+  console.log('Create new Loan');
+  console.log('Payload');  
   var forReceipt = {};
-    var forResult = {};
-    forResult.additionalInfo = {};
+  var forResult = {};
+  forResult.additionalInfo = {};
   var additionalInfo;
   async.waterfall([
     //DELETE from lenddo pending loan
     function(callback) {
           logger.info( 'delete pending loan lenddo' );
-          loanLenddoQuery.remove(payload.body.phoneID,function(err,result){
+          loanLenddoQuery.loanRemove(payload.body.phoneID,function(err,result){
             if(err)
               callback('ERROR', { statusCode : 1, additionalInfo : err });
             else
@@ -343,6 +345,9 @@ exports.getLenddoPendingLoans = function(phoneID,callback) {
   console.log('Get pending Loans  Lenddo');
   var response = {};
 
+  var loan1 =  {"months": 3, "interest": 1.25 };
+  var loan2 =  {"months": 6, "interest": 1.5 };
+  var loan3 =  {"months": 12, "interest": 1.75 };
 
   async.waterfall([
   function(callback) {
@@ -354,11 +359,17 @@ exports.getLenddoPendingLoans = function(phoneID,callback) {
         if(result){
           console.log(result);
           response.pending = 'YES';
-          response.maxLoanAmount = result.maxLoanAmount;
+          //response.maxLoanAmount = result.maxLoanAmount;
+          response.maxLoanAmount = 1000;
         }else{
           response.pending = 'NO';
           response.maxLoanAmount = 0;
         }
+
+        response.loan = [];
+        response.loan.push(loan1);
+        response.loan.push(loan2);
+        response.loan.push(loan3);
         callback(null);
     });
   },
@@ -396,7 +407,9 @@ exports.processLogin = function(payload) {
 exports.processHasScore = function(payload) {
   console.log('process has score event ' );
   console.log(payload);
-  var client_id = payload.client_id;
+  var transId = payload.client_id.split('_');
+  var client_id = tansId[0];
+  console.log(client_id);
   var event = payload.event;
 
   async.waterfall([
