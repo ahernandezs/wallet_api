@@ -8,6 +8,9 @@ var requestMoney = require('./flows/requestMoney-flow');
 var messages = require('./flows/message-flow');
 var buyFlow = require('./flows/buy-flow');
 var awsS3 = require('../services/aws-service');
+var sms = require('../services/sms-service');
+var random = require('../utils/random');
+var smsverificationRepository = require('../model/sms_verification');
 var config = require('../config.js');
 var logger = config.logger;
 var soap = require('soap');
@@ -55,6 +58,45 @@ exports.logout = function(req, res){
     'Content-Length': userString.length
   };
   res.send(responseString);
+};
+
+exports.preregister = function(req, res){
+    console.log('execute POST method preregister');
+    console.log(req.body);
+
+    var enable_sms = process.env.SMS_ENABLED == "YES" ? true : false;
+
+    sms_verification_data = {};
+    sms_verification_data.phoneId = req.body.phoneNumber;
+    sms_verification_data.phoneNumber = req.body.phoneNumber;
+    sms_verification_data.createdAt = new Date();
+
+    if (enable_sms){
+        random.generate(11111,99999, function(number){
+
+            sms_verification_data.verificationCode = number;
+            var message = "Hello! your verification code is: " + number;
+            sms.sendMessage(req.body.phoneNumber,message, function(err,sms_response){
+                if (err)
+                    res.status(503).send({code : 103, message : 'UNAVAILABLE SMS SERVICE' });
+                console.log(sms_response);
+                sms = new smsverificationRepository(sms_verification_data);
+                sms.save(function(err){
+                    if (err)
+                        res.status(503).send({code : 102, message : 'UNAVAILABLE DATABASE SERVICE' });
+                    res.status(200).send({code : 0, message : 'OK' });
+                });
+            });
+        });
+    } else {
+        sms_verification_data.verificationCode = 11111;
+        sms = new smsverificationRepository(sms_verification_data);
+        sms.save(function(err){
+            if (err)
+                res.status(503).send({code : 102, message : 'UNAVAILABLE DATABASE SERVICE' });
+            res.status(200).send({code : 0, message : 'OK' });
+        });
+    }
 };
 
 exports.register = function(req, res){

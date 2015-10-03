@@ -106,6 +106,7 @@ app.get('/api/ping', function(req, res){
 
 app.get('/api/forgotpin',user.forgotPIN);
 app.post('/api/validate',user.validate);
+app.post('/api/preregister', user.preregister);
 app.post('/api/register', user.register);
 app.post('/api/products', product.products);
 app.post('/api/products2', product.products2);
