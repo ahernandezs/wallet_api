@@ -114,6 +114,7 @@ config.mailInvite.footer = 'Cheers,';
 
 config.sms = {};
 config.sms.message = 'Check out the Amdocs Mobile Wallet with FREE $25  to buy some drinks at the Amdocs Cafe. Download the app from stores as Amdocs wallet.';
+config.sms.default_sms_verification_code = '11111';
 config.logger = new (winston.Logger)({
     transports: [
         new (winston.transports.Console)({ colorize: 'true', handleExceptions: true }),
@@ -129,4 +130,14 @@ config.currency.position ='L';
 config.currency.proportion =1;
 config.currency.decimal='true';
 
+config.nexmo = {};
+config.nexmo.key = '3168d69c';
+config.nexmo.secret = '0fe0d188';
+config.nexmo.from = '525549998455';
+config.nexmo.api_protocol = 'http'; //Default
+config.nexmo.debug_on = 'true';
+config.nexmo.debug_false = 'false';
 module.exports = config;
+
+
+
