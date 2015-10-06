@@ -65,19 +65,25 @@ exports.preregister = function(req, res){
     console.log('execute POST method preregister');
     console.log(req.body);
 
+    var phoneNumber = req.body.phoneNumber;
+
+    if (!phoneNumber) {
+        res.status(400).send({message: 'The request JSON was invalid or cannot be served. '});
+        return;
+    }
+
     var enable_sms = process.env.SMS_ENABLED == "YES" ? true : false;
 
     sms_verification_data = {};
-    sms_verification_data.phoneId = req.body.phoneNumber;
-    sms_verification_data.phoneNumber = req.body.phoneNumber;
+    sms_verification_data.phoneId = phoneNumber;
+    sms_verification_data.phoneNumber = phoneNumber;
     sms_verification_data.createdAt = new Date();
 
     if (enable_sms){
         random.generate(11111,99999, function(number){
-
             sms_verification_data.verificationCode = number;
             var message = "Hello! your verification code is: " + number;
-            sms.sendMessage(req.body.phoneNumber,message, function(err,sms_response){
+            sms.sendMessage(phoneNumber,message, function(err,sms_response){
                 if (err)
                     res.status(503).send({code : 103, message : 'UNAVAILABLE SMS SERVICE' });
                 console.log(sms_response);
@@ -188,14 +194,17 @@ exports.verify = function(req, res){
     var phoneNumber = req.body.phoneNumber;
     var code = req.body.code;
 
-    smsverificationQuery.verify_code(phoneNumber, code, function(err, result){
-        if (err)
-            res.status(503).send({code : 202, message : 'UNAVAILABLE DATABASE SERVICE' });
-        if (result)
-            res.status(200).send({code : 0, message : 'OK' });
-        else
-            res.status(500).send({code : 102, message : 'USER WILL NOT REGISTER' });
-    });
+    if (!phoneNumber && !code)
+        res.status(400).send({message: 'The request JSON was invalid or cannot be served. '});
+     else
+        smsverificationQuery.verify_code(phoneNumber, code, function (err, result) {
+            if (err)
+                res.status(503).send({code: 202, message: 'UNAVAILABLE DATABASE SERVICE'});
+            if (result)
+                res.status(200).send({code: 0, message: 'OK'});
+            else
+                res.status(500).send({code: 102, message: 'USER WILL NOT REGISTER'});
+        });
 };
 
 
