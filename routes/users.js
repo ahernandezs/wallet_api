@@ -11,6 +11,7 @@ var awsS3 = require('../services/aws-service');
 var sms = require('../services/sms-service');
 var random = require('../utils/random');
 var smsverificationRepository = require('../model/sms_verification');
+var smsverificationQuery = require('../model/queries/sms-query');
 var config = require('../config.js');
 var logger = config.logger;
 var soap = require('soap');
@@ -178,6 +179,23 @@ exports.validate = function(req, res){
     resultWithID.question = config.question;
     res.json(resultWithID);
   });
+};
+
+exports.verify = function(req, res){
+    console.log('Execute POST method verify');
+    console.log(req.body);
+
+    var phoneNumber = req.body.phoneNumber;
+    var code = req.body.code;
+
+    smsverificationQuery.verify_code(phoneNumber, code, function(err, result){
+        if (err)
+            res.status(503).send({code : 202, message : 'UNAVAILABLE DATABASE SERVICE' });
+        if (result)
+            res.status(200).send({code : 0, message : 'OK' });
+        else
+            res.status(500).send({code : 102, message : 'USER WILL NOT REGISTER' });
+    });
 };
 
 
