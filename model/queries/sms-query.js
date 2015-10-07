@@ -13,3 +13,12 @@ exports.verify_code = function (phoneNumber, code, callback){
             callback(null, false);
     });
 };
+
+exports.set_code = function (phoneNumber, callback){
+
+    sms_verification.findOne({ 'phoneNumber': phoneNumber }, function (err, doc) {
+        if (err) callback(true, null);
+        if (!doc) callback(false,null)
+        else callback(false, doc);
+    });
+};
