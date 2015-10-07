@@ -68,7 +68,8 @@ exports.preregister = function(req, res){
     var phoneNumber = req.body.phoneNumber;
 
     if (!phoneNumber) {
-        res.status(400).send({message: 'The request JSON was invalid or cannot be served. '});
+        //res.status(400).send({message: 'The request JSON was invalid or cannot be served. '});
+        res.send({'statusCode' : 1, additionalInfo: {'message': 'The request JSON was invalid or cannot be served. '}});
         return;
     }
 
@@ -85,13 +86,16 @@ exports.preregister = function(req, res){
             var message = "Hello! your verification code is: " + number;
             sms.sendMessage(phoneNumber,message, function(err,sms_response){
                 if (err)
-                    res.status(503).send({code : 103, message : 'UNAVAILABLE SMS SERVICE' });
+                    //res.status(503).send({code : 103, message : 'UNAVAILABLE SMS SERVICE' });
+                    res.send({statusCode: 1, additionalInfo : { message : 'UNAVAILABLE SMS SERVICE' }});
                 console.log(sms_response);
                 sms = new smsverificationRepository(sms_verification_data);
                 sms.save(function(err){
                     if (err)
-                        res.status(503).send({code : 102, message : 'UNAVAILABLE DATABASE SERVICE' });
-                    res.status(200).send({code : 0, message : 'OK' });
+                        //res.status(503).send({code : 102, message : 'UNAVAILABLE DATABASE SERVICE' });
+                        res.send({statusCode: 1, additionalInfo : { message : 'UNAVAILABLE DATABASE SERVICE' }});
+                    //res.status(200).send({code : 0, message : 'OK' });
+                    res.send({statusCode: 0, additionalInfo : { message : 'OK' }});
                 });
             });
         });
@@ -100,8 +104,10 @@ exports.preregister = function(req, res){
         sms = new smsverificationRepository(sms_verification_data);
         sms.save(function(err){
             if (err)
-                res.status(503).send({code : 102, message : 'UNAVAILABLE DATABASE SERVICE' });
-            res.status(200).send({code : 0, message : 'OK' });
+                //res.status(503).send({code : 102, message : 'UNAVAILABLE DATABASE SERVICE' });
+                res.send({statusCode: 1, additionalInfo : { message : 'UNAVAILABLE DATABASE SERVICE' }});
+            //res.status(200).send({code : 0, message : 'OK' });
+            res.send({statusCode: 0, additionalInfo : { message : 'OK' }});
         });
     }
 };
@@ -109,11 +115,21 @@ exports.preregister = function(req, res){
 exports.register = function(req, res){
   console.log('execute POST method register');
   console.log(req.body);
+
+    if( !req.body.pin && !req.body.name &&
+        !req.body.company && !req.body.email_address && !req.body.phoneID &&
+        !req.body.appID && !req.body.OS && !req.body.answer) {
+        //res.status(400).send({message: 'The request JSON was invalid or cannot be served. '});
+        res.send({'statusCode' : 1, additionalInfo: {'message': 'The request JSON was invalid or cannot be served. '}});
+        return;
+    }
+
   anzenUser.registerFlow(req.body, function(err,result){
     if(result.statusCode === 0){
       res.setHeader('X-AUTH-TOKEN', result.sessionid);
       delete result.sessionid;
     }
+    //res.send({'dox':result.additionalInfo.dox, 'current':result.additionalInfo.current});
     res.json(result);
   });
 };
@@ -195,15 +211,25 @@ exports.verify = function(req, res){
     var code = req.body.code;
 
     if (!phoneNumber && !code)
-        res.status(400).send({message: 'The request JSON was invalid or cannot be served. '});
-     else
+        //res.status(400).send({message: 'The request JSON was invalid or cannot be served. '});
+        res.send({'statusCode' : 1, additionalInfo: {'message': 'The request JSON was invalid or cannot be served. '}});
+    else
         smsverificationQuery.verify_code(phoneNumber, code, function (err, result) {
             if (err)
-                res.status(503).send({code: 202, message: 'UNAVAILABLE DATABASE SERVICE'});
+                //res.status(503).send({code: 202, message: 'UNAVAILABLE DATABASE SERVICE'});
+                res.send({statusCode: 1, additionalInfo : { message : 'UNAVAILABLE DATABASE SERVICE' }});
             if (result)
-                res.status(200).send({code: 0, message: 'OK'});
+                Userquery.validateUser(phoneNumber, function(err,result) {
+                    if (result.statusCode === 0)
+                        //res.status(500).send({code: 104, message: 'PHONEID ALREADY REGISTERED'});
+                        res.send({statusCode: 1, additionalInfo : { message : 'PHONEID ALREADY REGISTERED' }});
+                    else
+                        //res.status(200).send({code: 0, message: 'OK'});
+                        res.send({statusCode: 0, additionalInfo : { message : 'OK' }});
+                });
             else
-                res.status(500).send({code: 102, message: 'USER WILL NOT REGISTER'});
+                //res.status(500).send({code: 102, message: 'PHONEID WILL NOT REGISTER'});
+                res.send({statusCode: 1, additionalInfo : { message : 'PHONEID WILL NOT REGISTER' }});
         });
 };
 
