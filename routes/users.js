@@ -118,7 +118,7 @@ exports.preregister = function(req, res){
                 });
             });
         } else {
-            if (doc) doc.verificationCode = number;
+            if (doc) doc.verificationCode = 11111;
             else sms_verification_data.verificationCode = 11111;
 
             if (doc){
