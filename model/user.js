@@ -22,7 +22,8 @@ var userSchema = new Schema({
     facebook: String,
     answer:String,
     canPurchase:String,
-    sms:Number
+    sms:Number,
+	validated: Boolean
 });
 
 module.exports = mongoose.model('User', userSchema);
