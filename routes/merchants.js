@@ -1,4 +1,5 @@
 var Orderquery = require('../model/queries/order-query');
+var userQuery = require('../model/queries/user-query');
 var merchant = require('../model/merchant');
 var merchantQuery = require('../model/queries/merchant-query');
 var updateOrder = require('../routes/flows/updateOrder-flow');
@@ -52,3 +53,15 @@ exports.register = function(req, res) {
     }
   });
 };
+
+exports.usersVerified  = function(req, res) {
+  console.log( 'execute  method usersVerified' );
+  userQuery.getUserVerified(function(err,result){
+    if(err) {
+      res.send(500);
+    } else {
+      res.json(result);
+    }
+  });
+};
+

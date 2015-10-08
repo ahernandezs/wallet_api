@@ -57,7 +57,6 @@ exports.getTransacctionsDox = function(req,res){
   });
 };
 
-
 exports.getSocialFeeds = function(req, res) {
     req.body.sessionid = req.headers['x-auth-token'];
 
