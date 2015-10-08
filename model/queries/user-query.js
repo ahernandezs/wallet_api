@@ -146,6 +146,17 @@ exports.singleUpdateUser = function(payload,callback){
   });
 }
 
+exports.validateUserByMerchant = function (payload,callback){
+  User.findOneAndUpdate({'phoneID': payload },{$set : {validated:true}}, function(err, doc){
+    if (err)
+      return new Error(err);
+    if (!doc)
+      callback(false,null);
+    else
+      callback(false,doc);
+  });
+};
+
 exports.updateUserPurchaseFlag = function(payload,callback){
     console.log('Upatdate user flag' + JSON.stringify(payload));
     var conditions = { 'phoneID': payload.phoneID }
