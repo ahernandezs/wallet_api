@@ -82,8 +82,8 @@ exports.preregister = function(req, res){
 
     smsverificationQuery.set_code(phoneNumber,function(err, doc){
         if (err) {
-            //res.status(503).send({code : 103, message : 'UNAVAILABLE SMS SERVICE' });
-            res.send({statusCode: 3, additionalInfo: {message: 'UNAVAILABLE SMS SERVICE'}});
+            //res.status(503).send({code : 104, message : 'UNAVAILABLE DATABASE SERVICE' });
+            res.send({statusCode: 4, additionalInfo: {message: 'UNAVAILABLE DATABASE SERVICE'}});
             return;
         }
 
@@ -93,26 +93,30 @@ exports.preregister = function(req, res){
                 else sms_verification_data.verificationCode = number;
                 var message = "Hello! your verification code is: " + number;
                 sms.sendMessage(phoneNumber,message, function(err,sms_response){
-                    if (err)
+                    if (err) {
                         //res.status(503).send({code : 103, message : 'UNAVAILABLE SMS SERVICE' });
-                        res.send({statusCode: 3, additionalInfo : { message : 'UNAVAILABLE SMS SERVICE' }});
-                    console.log(sms_response);
+                        res.send({statusCode: 3, additionalInfo: {message: 'UNAVAILABLE SMS SERVICE'}});
+                        console.log(sms_response);
+                        return;
+                    }
                     if (doc){
                         doc.save(function(err){
                             if (err)
-                            //res.status(503).send({code : 102, message : 'UNAVAILABLE DATABASE SERVICE' });
+                                //res.status(503).send({code : 102, message : 'UNAVAILABLE DATABASE SERVICE' });
                                 res.send({statusCode: 4, additionalInfo: {message: 'UNAVAILABLE DATABASE SERVICE'}});
-                            //res.status(200).send({code : 0, message : 'OK' });
-                            res.send({statusCode: 0, additionalInfo: {message: 'OK'}});
+                            else
+                                //res.status(200).send({code : 0, message : 'OK' });
+                                res.send({statusCode: 0, additionalInfo: {message: 'OK'}});
                         });
                     } else {
                         var user_sms = new smsverificationRepository(sms_verification_data);
                         user_sms.save(function (err) {
                             if (err)
-                            //res.status(503).send({code : 102, message : 'UNAVAILABLE DATABASE SERVICE' });
+                                //res.status(503).send({code : 102, message : 'UNAVAILABLE DATABASE SERVICE' });
                                 res.send({statusCode: 4, additionalInfo: {message: 'UNAVAILABLE DATABASE SERVICE'}});
-                            //res.status(200).send({code : 0, message : 'OK' });
-                            res.send({statusCode: 0, additionalInfo: {message: 'OK'}});
+                            else
+                                //res.status(200).send({code : 0, message : 'OK' });
+                                res.send({statusCode: 0, additionalInfo: {message: 'OK'}});
                         });
                     }
                 });
@@ -126,17 +130,19 @@ exports.preregister = function(req, res){
                     if (err)
                         //res.status(503).send({code : 102, message : 'UNAVAILABLE DATABASE SERVICE' });
                         res.send({statusCode: 4, additionalInfo: {message: 'UNAVAILABLE DATABASE SERVICE'}});
-                    //res.status(200).send({code : 0, message : 'OK' });
-                    res.send({statusCode: 0, additionalInfo: {message: 'OK'}});
+                    else
+                        //res.status(200).send({code : 0, message : 'OK' });
+                        res.send({statusCode: 0, additionalInfo: {message: 'OK'}});
                 });
             } else {
                 var user_sms = new smsverificationRepository(sms_verification_data);
                 user_sms.save(function (err) {
                     if (err)
-                    //res.status(503).send({code : 102, message : 'UNAVAILABLE DATABASE SERVICE' });
+                        //res.status(503).send({code : 102, message : 'UNAVAILABLE DATABASE SERVICE' });
                         res.send({statusCode: 4, additionalInfo: {message: 'UNAVAILABLE DATABASE SERVICE'}});
-                    //res.status(200).send({code : 0, message : 'OK' });
-                    res.send({statusCode: 0, additionalInfo: {message: 'OK'}});
+                    else
+                        //res.status(200).send({code : 0, message : 'OK' });
+                        res.send({statusCode: 0, additionalInfo: {message: 'OK'}});
                 });
             }
         }
@@ -235,7 +241,23 @@ exports.validate = function(req, res){
 };
 
 exports.validate_customer = function (req, res){
+    var phoneNumber = req.body.phoneNumber;
 
+    if (!phoneNumber) {
+        //res.status(400).send({message: 'The request JSON was invalid or cannot be served. '});
+        res.send({'statusCode' : 1, additionalInfo: {'message': 'INVALID JSON'}});
+        return;
+    }
+    Userquery.validateUserByMerchant(phoneNumber, function(err, userValidated) {
+        if (err) {
+            res.send({statusCode: 4, additionalInfo: {message: 'UNAVAILABLE DATABASE SERVICE'}});
+            return;
+        }
+        if (!userValidated)
+            res.send({statusCode: 6, additionalInfo: {message: 'CANNOT FOUND PHONEID'}});
+        else
+            res.send({statusCode: 0, additionalInfo: {message: 'OK'}});
+    });
 };
 
 exports.verify = function(req, res){
@@ -250,9 +272,11 @@ exports.verify = function(req, res){
         res.send({'statusCode' : 1, additionalInfo: {'message': 'INVALID JSON'}});
     else
         smsverificationQuery.verify_code(phoneNumber, code, function (err, result) {
-            if (err)
+            if (err) {
                 //res.status(503).send({code: 202, message: 'UNAVAILABLE DATABASE SERVICE'});
-                res.send({statusCode: 4, additionalInfo : { message : 'UNAVAILABLE DATABASE SERVICE' }});
+                res.send({statusCode: 4, additionalInfo: {message: 'UNAVAILABLE DATABASE SERVICE'}});
+                return;
+            }
             if (result)
                 Userquery.validateUser(phoneNumber, function(err,result) {
                     if (result.statusCode === 0)
