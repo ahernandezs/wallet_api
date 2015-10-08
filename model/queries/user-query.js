@@ -650,3 +650,12 @@ function getUsersByTeam(callback){
         callback(null,result);
     });
 }
+
+exports.getUserVerified = function(callback){
+      var conditions= { validated : false };
+      var query = User.find(conditions);
+      query.sort({name: 1});
+      query.exec(function (err1, usersTeam) {
+        callback(null,usersTeam);
+      });
+}
