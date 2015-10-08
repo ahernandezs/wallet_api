@@ -137,6 +137,7 @@ app.post('/api/message',interceptorHeader, user.sendMessage);
 app.post('/api/resolveRequest', interceptorHeader, user.resolveRquest);
 app.get('/api/socialFeed', interceptorHeader,transacction.getSocialFeeds);
 app.get('/api/sms', interceptorHeader,user.getSMSMessage);
+//app.post('/api/contacts',interceptorHeader,user.getContacts);
 
 //Merchant operations
 //app.put('/api/order', merchant.putOrder);
