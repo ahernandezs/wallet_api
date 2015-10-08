@@ -504,3 +504,12 @@ exports.getSMSMessage = function(req, res) {
         res.json( { statusCode : 1, additionalInfo : 'Error to get message' } );
 
 };
+
+exports.getContacts = function(req, res) {
+  Userquery.getContactList(req.body , function(err,result) {
+    if (err)
+      res.json( { statusCode : 1, additionalInfo : result } );
+    else
+      res.json( result );
+    });
+};
