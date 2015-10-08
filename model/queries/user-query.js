@@ -670,3 +670,13 @@ exports.getUserVerified = function(callback){
         callback(null,usersTeam);
       });
 }
+
+exports.getContactList = function(contactList, callback){
+      var conditions= { phoneID : {'$in' : contactList } };
+      var query = User.find(conditions);
+      query.sort({name: 1});
+      query.exec(function (err1, usersTeam) {
+        callback(null,usersTeam);
+      });
+}
+
