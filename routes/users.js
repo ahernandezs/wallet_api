@@ -21,6 +21,8 @@ exports.login =  function(req, res, callback){
   console.log('execute POST method login');
   sessionUser.loginFlow(req.body,function(err,result){
       var token = result.sessionid;
+      result.countryID = 'AP';
+      result.currency = config.currency;
       console.log('Token '+ token);
       if(result.statusCode === 0){
         res.setHeader('X-AUTH-TOKEN', result.sessionid);
