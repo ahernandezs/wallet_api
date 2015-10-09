@@ -8,4 +8,4 @@ var smsVerificationSchema = new Schema({
     verificationCode: Number
 });
 
-module.exports = mongoose.model('SMSVerification', smsVerificationSchema);
+module.exports = mongoose.model('smsverification', smsVerificationSchema);
