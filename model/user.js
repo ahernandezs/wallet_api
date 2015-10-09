@@ -23,7 +23,8 @@ var userSchema = new Schema({
     answer:String,
     canPurchase:String,
     sms:Number,
-	validated: Boolean
+	validated: Boolean,
+	countryCode: String
 });
 
 module.exports = mongoose.model('User', userSchema);
