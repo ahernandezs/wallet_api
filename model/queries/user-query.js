@@ -672,7 +672,7 @@ exports.getUserVerified = function(callback){
 }
 
 exports.getContactList = function(contactList, callback){
-      var conditions= { phoneID : {'$in' : contactList } };
+      var conditions= { phoneID : {'$in' : contactList }  };
       var query = User.find(conditions);
       query.sort({name: 1});
       query.exec(function (err1, usersTeam) {
