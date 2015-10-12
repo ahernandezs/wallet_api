@@ -167,6 +167,7 @@ exports.register = function(req, res){
     if(result.statusCode === 0){
       res.setHeader('X-AUTH-TOKEN', result.sessionid);
       delete result.sessionid;
+      result.currency = config.currency;
     }
     //res.send({'dox':result.additionalInfo.dox, 'current':result.additionalInfo.current});
     res.json(result);
