@@ -534,6 +534,7 @@ exports.getContacts = function(req, res) {
   });
 };
 
+<<<<<<< HEAD
 
 
 exports.getPendingPayments = function(req, res) {
@@ -546,3 +547,10 @@ exports.getPendingPayments = function(req, res) {
     }
   });
 };
+=======
+exports.authorizeShopMobileBuy = function(req , res){
+  console.log('Execute method authorizeShopMobileBuy');
+   buyFlow.authorizeShopMobileBuy(req.orderID , function(err,result) {
+  }); 
+}
+>>>>>>> AM-26 Add  field appID for login response .

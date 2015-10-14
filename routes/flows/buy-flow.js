@@ -539,3 +539,92 @@ exports.sendBuy2Customer  = function(order, callback){
 	});
 }
 
+exports.authorizeShopMobileBuy = function(order,callback){
+async.waterfall([
+		//get Temporal order
+		function(callback){
+		console.log('Get Temporal Order');
+			orderQueryTemporal.getOrder(payload.ID,function(err,result){
+				if(err) callback('ERROR',err);
+				else{
+					console.log(result);
+					callback(null,result);
+				}
+			});
+		},
+
+		//get session
+		function(order,callback){
+			if(payload.status === 'ACCEPTED'){
+				console.log('Consult sessionid for ' + order.phoneID);
+				console.log(order);
+				var requestRegenerate = { 'phoneID' : order.phoneID };
+				requestRegenerate.sessionid = '';
+				loginFlow.regenerate(requestRegenerate,null, function (err,result){
+					if(err) callback('ERROR',err);
+					else{
+						callback(null,order,result);
+					}
+				});
+			}else
+				callback(null,order,'');
+		},
+
+		//invoke buy flow
+		function(order,sessionid,callback){
+			if(payload.status === 'ACCEPTED'){
+				console.log('Invoke buy flow');
+				order.status = 'NEW';
+				payloadBuyFlow.order =  order ;
+				payloadBuyFlow.sessionid = sessionid;
+				payloadBuyFlow.phoneID = order.phoneID;
+				purchaseFlow.buyFlow(payloadBuyFlow ,function  (err,result) {
+					if(err){
+						console.log(err);
+						callback('ERROR',err);
+					}
+					else{
+						console.log('Result purchase');
+						callback(null,order);
+					}
+				});
+			}else
+				callback(null,order);
+
+		},
+
+		//push notification for client
+		function(order,callback){
+            var message = {};
+            var extraData = {};
+            var title = 'Purchase validation';
+            message.message = title;
+            message.phoneID = order.phoneID;
+
+            if(payload.status === 'ACCEPTED')
+				extraData = { status : payload.status , message:'Your purchase was approved. Please check your receipts.' , canPurchase :'YES' };
+
+			else
+				extraData = { status : payload.status , message:'Your purchase was rejected.' , canPurchase :'YES'};
+
+			message.extra = {extra : extraData} ;
+			urbanService.singlePush(message, function(err, result) {
+				if(err){
+				  var response = { statusCode:1 ,  additionalInfo : result.message };
+				  callback('ERROR',response);
+				}
+				else{
+				  var response = { statusCode:0 ,  additionalInfo : result };
+				  callback(null, response, result);
+				}
+			})
+		}
+    ], function (err, result) {
+      if(err){
+        callback(err,result);
+      }else{
+        callback(null,result);
+      }
+    });
+}
+
