@@ -4,6 +4,7 @@ var crypto = require('crypto');
 var moment = require('moment-timezone');
 var Orderquery = require('../../model/queries/order-query');
 var orderQueryTemporal = require('../../model/queries/orderTemporal-query');
+var shopOrderQuery = require('../../model/queries/shopOrder-query');
 var productQuery = require('../../model/queries/product-query');
 var Userquery = require('../../model/queries/user-query');
 var merchantQuery = require('../../model/queries/merchant-query');
@@ -372,7 +373,7 @@ exports.notifyMerchantBuy = function(phoneID,payload,callback){
     });
 }
 
-exports.authorizeBuy		 = function(payload,callback){
+exports.authorizeBuy = function(payload,callback){
 	console.log('Incoming autorization for  autorization' + JSON.stringify(payload));
 	var payloadBuyFlow = {};
 
@@ -487,3 +488,54 @@ exports.authorizeBuy		 = function(payload,callback){
       }
     });
 }
+
+
+exports.sendBuy2Customer  = function(order, callback){
+		async.waterfall([
+		//save temporal order
+		function(callback){
+			shopOrderQuery.putOrder(order, function(err, result) {
+				if(err){
+				  var response = { statusCode:1 ,  additionalInfo : err };
+				  callback('ERROR',response);
+				}
+				else{
+				console.log('Save mobile shop order' + result.order);
+				  callback(null, result.order);
+				}
+			});
+		},
+				//send push notification
+		function(orderID,callback){
+            var message = {};
+            var extraData = {};
+            var title = 'Authorization Purchase';
+            message.message = title;
+            message.phoneID = order.customerID;
+            if(order.status === 'NEW')
+				extraData = { action : config.messages.action.AUTHORIZATION_PURCHASE , total : order.total , orderID: orderID};
+
+			message.extra = {extra : extraData} ;
+			urbanService.singlePush(message, function(err, result) {
+				if(err){
+				  var response = { statusCode:1 ,  additionalInfo : result.message };
+				  callback('ERROR',response);
+				}
+				else{
+				  var response = { statusCode:0 ,  additionalInfo : 'Operation was sucessful' };
+				  callback(null,response);
+				}
+			})
+
+		},
+
+	], function(err, result) {
+	    if (err) 
+	        callback(err, result);
+	    else{
+	    	console.log('Finish callback');
+	        callback(null, result);   
+	    }
+	});
+}
+
