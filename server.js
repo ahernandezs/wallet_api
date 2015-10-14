@@ -175,7 +175,7 @@ app.get('/api/lenddo/pendingLoans', lendo.getPendingLoans);
 //services for merchant
 app.get('/api/merchant/usersVerified', merchant.usersVerified);
 app.get('/api/merchant/mobileProducts', merchant.getMobileProducts);
-//app.post('/api/merchant/buyProducts',merchant.buyMobileProducts);
+app.post('/api/merchant/notifyBuyProducts',merchant.buyMobileProducts);
 
 
 server.listen(process.env.PORT  || 3000);

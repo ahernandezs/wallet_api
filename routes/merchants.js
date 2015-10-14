@@ -4,6 +4,7 @@ var mobileProductQuery = require('../model/queries/mobileProduct-query');
 var merchant = require('../model/merchant');
 var merchantQuery = require('../model/queries/merchant-query');
 var updateOrder = require('../routes/flows/updateOrder-flow');
+var buyFlow = require('../routes/flows/buy-flow');
 
 exports.merchants =  function(req, res){
   console.log('execute GET method merchants! ');
@@ -72,10 +73,21 @@ exports.getMobileProducts = function(req,res){
     if(err) {
       res.send(500);
     } else {
+      res.json(result);
+    }
+  });
+};
+
+exports.buyMobileProducts = function(req,res){
+  console.log( 'executing method buyMobileProducts')
+  buyFlow.sendBuy2Customer(req.body,function(err,result){
+    if(err) {
+      console.log('Error Flow');
+      res.send(500);
+    } else {
       console.log('Finish Flow');
       console.log(result);
       res.json(result);
     }
   });
 };
-
