@@ -358,8 +358,8 @@ exports.getDoxs = function(req, res){
 };
 exports.uploadImage = function(req,res){
   console.log('execute POST method uploadImage');
-  console.log(req.headers['image-profile']);
-  awsS3.uploadImage2S3(req,function(err,result){
+  console.log(req.body);
+  awsS3.uploadImage2S3(req.body,function(err,result){
     res.json(result);
   });
 };
