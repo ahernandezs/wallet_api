@@ -9,3 +9,15 @@ var smsVerificationSchema = new Schema({
 });
 
 module.exports = mongoose.model('smsverification', smsVerificationSchema);
+
+smsVerificationSchema.statics.verify_code = function(phoneNumber, code, callback){
+    //callback(err,doc,result)
+    sms_verification.findOneAndRemove({'phoneNumber': phoneNumber, 'verificationCode': code}, callback);
+};
+
+smsVerificationSchema.statics.set_code = function (phoneNumber, callback){
+    //callback(err,doc)
+    sms_verification.findOne({ 'phoneNumber': phoneNumber }, callback);
+};
+
+

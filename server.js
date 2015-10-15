@@ -108,12 +108,13 @@ app.get('/api/ping', function(req, res){
 app.get('/api/forgotpin',user.forgotPIN);
 app.post('/api/validate',user.validate);
 app.post('/api/verify',user.verify);
-app.post('/api/verifyCustomer',user.validate_customer);
+app.post('/api/verifyCustomer',user.verify_customer);
 app.post('/api/preregister', user.preregister);
 app.post('/api/register', user.register);
 app.post('/api/products', product.products);
 app.post('/api/products2', product.products2);
 app.get('/api/bill/:id',bill.get_bill);
+app.post('api/bill/pay',interceptorHeader, bill.pay_bill);
 app.post('/api/registerMerchant',merchant.register);
 app.post('/api/login', user.login);
 app.post('/api/updateprofile', user.updateProfile);

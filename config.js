@@ -15,6 +15,9 @@ config.sendGrid.password = 'Anzen7924';
 config.group ={}
 config.group.env = {INTERNAL: 'INTERNAL' , PUBLIC : 'PUBLIC'};
 
+config.receipt = {};
+config.receipt.type = {BUY: 'BUY', COUPON: 'COUPON', GIFT:'GIFT', LOAN: 'LOAN', TRANSFER: 'TRANSFER', BILLPAYMENT: 'BILLPAYMENT'};
+
 config.orders = {};
 config.orders.status = {NEW : 'NEW' ,IN_PROGRESS : 'IN PROGRESS' , READY : 'READY' , DELIVERED : 'DELIVERED' , CANCELED : 'CANCELED',PENDING : 'PENDING'};
 config.orders.errMsg = 'Something went wrong';
@@ -43,9 +46,10 @@ config.S3.url = process.env.AS3_IMAGES;
 
 config.messages = {};
 config.messages.status = { READ : 'READ' ,NOTREAD : 'NOTREAD', DELIVERED: 'DELIVERED'};
-config.messages.type = { TRANSFER:'TRANSFER' , GIFT : 'GIFT' , BUY :'BUY' ,LOAN :'LOAN', COUPON: 'COUPON' , REQUEST_MONEY : 'REQUEST_MONEY' , MESSAGE : 'MESSAGE' , AUTHORIZATION_PURCHASE:'AUTHORIZATION_PURCHASE' };
+config.messages.type = { TRANSFER:'TRANSFER' , GIFT : 'GIFT' , BUY :'BUY' ,LOAN :'LOAN', COUPON: 'COUPON' , REQUEST_MONEY : 'REQUEST_MONEY' , MESSAGE : 'MESSAGE' , AUTHORIZATION_PURCHASE:'AUTHORIZATION_PURCHASE', BILLPAYMENT: 'BILLPAYMENT' };
 config.messages.transferMsg = 'You have received money from ';
 config.messages.giftMsg = '[sender] has gifted you an Amdocs Café voucher';
+config.messages.billPayMsg = 'You have payed bill from ';
 config.messages.loanRequestMsg = 'You have requested a loan for €';
 config.messages.loanRejectedMsg = 'Build up your Dox score to be elegible for a loan';
 config.messages.loanRejectedOneMsg = 'Sorry,Since you recently availed a loan, you need to wait another ';
