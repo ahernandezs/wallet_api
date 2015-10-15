@@ -243,7 +243,7 @@ exports.validate = function(req, res){
   });
 };
 
-exports.validate_customer = function (req, res){
+exports.verify_customer = function (req, res){
     var phoneNumber = req.body.phoneNumber;
 
     if (!phoneNumber) {
