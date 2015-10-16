@@ -1,8 +1,21 @@
+var async = require('async');
+var soap = require('soap');
+var config = require('../../config');
+var urbanService = require('../../services/notification-service');
+var messageQuery = require('../../model/queries/message-query');
+var balance = require('./balance-flow');
+var ReceiptQuery = require('../../model/queries/receipt-query');
+var Userquery = require('../../model/queries/user-query');
+var transacctionQuery = require('../../model/queries/transacction-query');
+var ReceiptQuery = require('../../model/queries/receipt-query');
+var soapurl = process.env.SOAP_URL;
+var logger = config.logger;
+
 
 exports.buy = function(payload, callback){
 
     var transid;
-    var dateTime = dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
+    var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
 
     console.log(payload);
 
@@ -58,9 +71,9 @@ exports.buy = function(payload, callback){
                     callback('ERROR', response);
                 } else {
                     payload.message = title;
-                    var extraData = { action: 1, additionalInfo : {transactionid: transid}, _id:result._id };
+                    var extraData = { action: config.messages.action.AIRTIME, additionalInfo : {transactionid: transid}, _id:result._id };
                     payload.extra = { extra:extraData };
-                    callback(null, sessionid, message);
+                    callback(null, sessionid, payload);
                 }
             });
         },

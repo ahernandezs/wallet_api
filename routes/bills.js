@@ -7,6 +7,7 @@ var User = require('../model/user');
 var Bill = require('../model/bill');
 var config = require('../config.js');
 var payBillFlow = require('./flows/pay_bill-flow');
+var urbanService = require('../../services/notification-service');
 var logger = config.logger;
 
 exports.get_bill = function (req, res){
@@ -70,6 +71,44 @@ exports.pay_bill = function(req, res){
                     return;
                 }
                 res.send({statusCode: 0, additionalInfo : { billPaymentInfo : result }});
+            });
+        }
+    });
+};
+
+exports.get_bill_with_push = function(req, res){
+    var billId = req.params.id;
+
+
+    console.log('execute GET method bill');
+    console.log('{ "billId":' + billId + "}");
+
+    if (!billId) {
+        res.send({});
+        return;
+    }
+    Bill.getBill(billId, function (err,bill) {
+        if (err) {
+            res.send({statusCode: 4, additionalInfo: {message: 'UNAVAILABLE DATABASE SERVICE'}});
+            return;
+        }
+        if (!bill){
+            res.send({statusCode: 7, additionalInfo : { message : 'CANNOT FOUND BILLID' }});
+        }
+        else {
+            payload = {};
+            payload.phoneID = req.headers['x-phoneid'];
+            var extraData = { action: config.messages.action.BILLPAYMENT , additionalInfo : {billPaymentInfo : bill }};
+            payload.extra = { extra:extraData };
+            console.log('Send push notification');
+            console.log(payload);
+
+            urbanService.singlePush(payload, function(err, result) {
+                if (err) {
+                    res.send({statusCode: 1, additionalInfo : { message : "UNAVAILABLE PUSH SERVICE" }});
+                    return;
+                }
+                res.send({statusCode: 0, additionalInfo : { billPaymentInfo : bill, pushNotificationInfo: result }});
             });
         }
     });
