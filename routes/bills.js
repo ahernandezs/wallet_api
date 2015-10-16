@@ -7,7 +7,7 @@ var User = require('../model/user');
 var Bill = require('../model/bill');
 var config = require('../config.js');
 var payBillFlow = require('./flows/pay_bill-flow');
-var urbanService = require('../../services/notification-service');
+var urbanService = require('../services/notification-service');
 var logger = config.logger;
 
 exports.get_bill = function (req, res){
