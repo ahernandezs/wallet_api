@@ -4,7 +4,6 @@
 var async = require('async');
 var soap = require('soap');
 var config = require('../../config');
-var doxsService = require('../../services/doxs-service');
 var balance = require('./balance-flow');
 var Userquery = require('../../model/queries/user-query');
 var urbanService = require('../../services/notification-service');
@@ -19,7 +18,7 @@ var logger = config.logger;
 exports.pay_bill = function(payload, callback){
 
     var transid;
-    var dateTime = dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
+    var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
 
     console.log(payload);
 
@@ -75,9 +74,9 @@ exports.pay_bill = function(payload, callback){
                     callback('ERROR', response);
                 } else {
                     payload.message = title;
-                    var extraData = { action: 1, additionalInfo : {transactionid: transid}, _id:result._id };
+                    var extraData = { action: config.messages.action.BILLPAYMENT , additionalInfo : {transactionid: transid}, _id:result._id };
                     payload.extra = { extra:extraData };
-                    callback(null, sessionid,message);
+                    callback(null, sessionid,payload);
                 }
             });
         },

@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var User = require('../model/user');
 var config = require('../config.js');
-var airtimeBuyFlow = require('./flows/airtime-flow');
+var airtimeFlow = require('./flows/airtime-flow');
 var logger = config.logger;
 
 exports.buy = function(req, res){
@@ -22,7 +22,7 @@ exports.buy = function(req, res){
         return;
     }
 
-    airtimeBuyFlow.buy(payload, function(err, result){
+    airtimeFlow.buy(payload, function(err, result){
         if (err) {
             res.send({statusCode: 1, additionalInfo : { message : result }});
             return;
