@@ -80,7 +80,7 @@ exports.get_bill_with_push = function(req, res){
     var billId = req.params.id;
 
 
-    console.log('execute GET method bill');
+    console.log('execute GET method bill with PUSH');
     console.log('{ "billId":' + billId + "}");
 
     if (!billId) {
@@ -98,6 +98,7 @@ exports.get_bill_with_push = function(req, res){
         else {
             payload = {};
             payload.phoneID = req.headers['x-phoneid'];
+            payload.message = "Bill info received";
             var extraData = { action: config.messages.action.BILLPAYMENT , additionalInfo : {billPaymentInfo : bill }};
             payload.extra = { extra:extraData };
             console.log('Send push notification');
