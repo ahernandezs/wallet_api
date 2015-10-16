@@ -137,6 +137,8 @@ exports.transferFunds = function(data, callback) {
             msg = payload.message;
             var header = data.header;
             var requestSoap = { sessionid: header.sessionid, to: payload.destiny, amount: payload.amount, type: 1 };
+            console.log('Request for transfer');
+            console.log(requestSoap);
             var request = { transferRequest: requestSoap };
             forReceipt.payload = payload;
             soap.createClient(soapurl, function(err, client) {

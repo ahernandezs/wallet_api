@@ -534,8 +534,6 @@ exports.getContacts = function(req, res) {
   });
 };
 
-<<<<<<< HEAD
-
 
 exports.getPendingPayments = function(req, res) {
   console.log(req.body);
@@ -547,10 +545,12 @@ exports.getPendingPayments = function(req, res) {
     }
   });
 };
-=======
+
 exports.authorizeShopMobileBuy = function(req , res){
+  logger.info(req.headers['x-auth-token']);
+  var json = req.body;
+  json['sessionid']= req.headers['x-auth-token'];
   console.log('Execute method authorizeShopMobileBuy');
-   buyFlow.authorizeShopMobileBuy(req.orderID , function(err,result) {
+   buyFlow.authorizeShopMobileBuy(json , function(err,result) {
   }); 
 }
->>>>>>> AM-26 Add  field appID for login response .

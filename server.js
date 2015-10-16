@@ -150,6 +150,7 @@ app.get('/api/sms', interceptorHeader,user.getSMSMessage);
 app.post('/api/contacts',interceptorHeader,user.getContacts);
 app.get('/api/pendingPayments',interceptorHeader,transacction.getPendingPayments);
 app.post('/api/authorizeBuy',interceptorHeader,user.authorizeShopMobileBuy);
+app.post('/api/authorizeMobileBuy',interceptorHeader,user.authorizeShopMobileBuy);
 //Merchant operations
 //app.put('/api/order', merchant.putOrder);
 app.put('/api/order', merchant.updateOrder);
@@ -185,6 +186,7 @@ app.get('/api/lenddo/pendingLoans', lendo.getPendingLoans);
 app.get('/api/merchant/usersVerified', merchant.usersVerified);
 app.get('/api/merchant/mobileProducts', merchant.getMobileProducts);
 app.post('/api/merchant/notifyBuyProducts',merchant.buyMobileProducts);
+app.get('/api/merchant/users',user.getUsers);
 
 
 server.listen(process.env.PORT  || 3000);
