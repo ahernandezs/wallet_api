@@ -5,6 +5,7 @@ var async = require('async');
 var soap = require('soap');
 var config = require('../../config');
 var balance = require('./balance-flow');
+var moment = require('moment-timezone');
 var Userquery = require('../../model/queries/user-query');
 var urbanService = require('../../services/notification-service');
 var ReceiptQuery = require('../../model/queries/receipt-query');

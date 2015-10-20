@@ -1,6 +1,7 @@
 var async = require('async');
 var soap = require('soap');
 var config = require('../../config');
+var moment = require('moment-timezone');
 var urbanService = require('../../services/notification-service');
 var messageQuery = require('../../model/queries/message-query');
 var balance = require('./balance-flow');

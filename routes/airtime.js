@@ -13,7 +13,7 @@ exports.buy = function(req, res){
     payload.session = req.headers['x-auth-token'];
     payload.message = config.messages.airtimeBuyMsg + payload.to;
 
-    console.log('execute POST method Pay Bill');
+    console.log('execute POST method Buy Airtime');
     console.log(payload);
 
     if (!payload.to && !payload.amount) {
