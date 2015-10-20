@@ -4,7 +4,6 @@ var config = require('../../config');
 var urbanService = require('../../services/notification-service');
 var messageQuery = require('../../model/queries/message-query');
 var balance = require('./balance-flow');
-var ReceiptQuery = require('../../model/queries/receipt-query');
 var Userquery = require('../../model/queries/user-query');
 var transacctionQuery = require('../../model/queries/transacction-query');
 var ReceiptQuery = require('../../model/queries/receipt-query');
