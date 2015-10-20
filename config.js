@@ -17,7 +17,7 @@ config.group.env = {INTERNAL: 'INTERNAL' , PUBLIC : 'PUBLIC'};
 
 config.receipt = {};
 config.receipt.type = { BUY: 'BUY', COUPON: 'COUPON', GIFT:'GIFT', LOAN: 'LOAN', TRANSFER: 'TRANSFER', BILLPAYMENT: 'BILLPAYMENT',
-                        AIRTIMEBUY:'AIRTIMEBUY', TICKETBUY: 'TICKETBUY'};
+                        AIRTIMEBUY:'AIRTIMEBUY', TICKETBUY: 'TICKETBUY', TOPUP:'TOPUP'};
 
 config.orders = {};
 config.orders.status = {NEW : 'NEW' ,IN_PROGRESS : 'IN PROGRESS' , READY : 'READY' , DELIVERED : 'DELIVERED' , CANCELED : 'CANCELED',PENDING : 'PENDING'};
@@ -48,11 +48,12 @@ config.S3.url = process.env.AS3_IMAGES;
 config.messages = {};
 config.messages.status = { READ : 'READ' ,NOTREAD : 'NOTREAD', DELIVERED: 'DELIVERED'};
 config.messages.type = { TRANSFER:'TRANSFER' , GIFT : 'GIFT' , BUY :'BUY' ,LOAN :'LOAN', COUPON: 'COUPON' , REQUEST_MONEY : 'REQUEST_MONEY' , MESSAGE : 'MESSAGE' ,
-                         AUTHORIZATION_PURCHASE:'AUTHORIZATION_PURCHASE', BILLPAYMENT: 'BILLPAYMENT', AIRTIMEBUY: 'AIRTIMEBUY', TICKET : 'TICKET'};
+                         AUTHORIZATION_PURCHASE:'AUTHORIZATION_PURCHASE', BILLPAYMENT: 'BILLPAYMENT', AIRTIMEBUY: 'AIRTIMEBUY', TICKETBUY : 'TICKETBUY', TOPUP:'TOPUP'};
 config.messages.transferMsg = 'You have received money from ';
 config.messages.giftMsg = '[sender] has gifted you an Amdocs Café voucher';
 config.messages.billPayMsg = 'You have payed bill from ';
 config.messages.airtimeBuyMsg = 'You buy airtime to phone ';
+config.messages.ticketBuyMsg = 'You buy a Ticket to ';
 config.messages.loanRequestMsg = 'You have requested a loan for €';
 config.messages.loanRejectedMsg = 'Build up your Dox score to be elegible for a loan';
 config.messages.loanRejectedOneMsg = 'Sorry,Since you recently availed a loan, you need to wait another ';
@@ -61,7 +62,8 @@ config.messages.transferRejectedOneMsg = 'Sorry, you have exceded transfers in l
 config.messages.giftRejectedOneMsg = 'Sorry, you have exceeded your number of gifts per hour';
 config.messages.buyRejectedOneMsg = 'Sorry, you have exceeded your number of buys per hour. Please return home';
 config.messages.loanAcceptedMsg = 'Congratulations,Your Instan-Loan is approved';
-config.messages.action = {TRANSFER:1 , GIFT :2 , BUY :3 ,LOAN : 4, COUPON: 5 , AUTH: 6 , LENDO : 7, BILLPAYMENT: 8, AIRTIME: 9, TICKET: 10};
+config.messages.action = { TRANSFER:1 , GIFT :2 , BUY :3 ,LOAN : 4, COUPON: 5 , AUTH: 6 , LENDO : 7, BILLPAYMENT: 8, AIRTIME: 9, TICKET: 10,
+                          VERIFYCUSTOMER:11 };
 config.messages.transferFund = 'You have sent a Transfer to ';
 config.messages.coupon = {};
 config.messages.coupon.message = 'Congratulations You are today’s winner of “Highest DOX score of the day wins a prize” promotion! We will be in touch shortly, along with your prize';

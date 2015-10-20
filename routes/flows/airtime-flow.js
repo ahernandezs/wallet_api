@@ -4,7 +4,6 @@ var config = require('../../config');
 var urbanService = require('../../services/notification-service');
 var messageQuery = require('../../model/queries/message-query');
 var balance = require('./balance-flow');
-var ReceiptQuery = require('../../model/queries/receipt-query');
 var Userquery = require('../../model/queries/user-query');
 var transacctionQuery = require('../../model/queries/transacction-query');
 var ReceiptQuery = require('../../model/queries/receipt-query');
@@ -70,7 +69,6 @@ exports.buy = function(payload, callback){
                     var response = { statusCode: 1, additionalInfo: result };
                     callback('ERROR', response);
                 } else {
-                    payload.message = title;
                     var extraData = { action: config.messages.action.AIRTIME, additionalInfo : {transactionid: transid}, _id:result._id };
                     payload.extra = { extra:extraData };
                     callback(null, sessionid, payload);

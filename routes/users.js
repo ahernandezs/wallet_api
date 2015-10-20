@@ -9,6 +9,7 @@ var messages = require('./flows/message-flow');
 var buyFlow = require('./flows/buy-flow');
 var awsS3 = require('../services/aws-service');
 var sms = require('../services/sms-service');
+var urbanService = require('../../services/notification-service');
 var random = require('../utils/random');
 var smsverificationRepository = require('../model/sms_verification');
 var smsverificationQuery = require('../model/queries/sms-query');
@@ -258,8 +259,22 @@ exports.verify_customer = function (req, res){
         }
         if (!userValidated)
             res.send({statusCode: 6, additionalInfo: {message: 'CANNOT FOUND PHONEID'}});
-        else
-            res.send({statusCode: 0, additionalInfo: {message: 'OK'}});
+        else {
+            var payload = {};
+            payload.phoneID = phoneNumber;
+            payload.message = "Phone Validated";
+            var extraData = { action: config.messages.action.VERIFYCUSTOMER , additionalInfo : {message : "OK" }};
+            payload.extra = { extra:extraData };
+            console.log('Send push notification');
+            console.log(payload);
+            urbanService.singlePush(payload, function(err, result) {
+                if (err) {
+                    res.send({statusCode: 1, additionalInfo : { message : "UNAVAILABLE PUSH SERVICE" }});
+                    return;
+                }
+                res.send({statusCode: 0, additionalInfo: {message: 'OK'}});
+            });
+        }
     });
 };
 
