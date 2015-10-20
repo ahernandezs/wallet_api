@@ -70,7 +70,6 @@ exports.buy = function(payload, callback){
                     var response = { statusCode: 1, additionalInfo: result };
                     callback('ERROR', response);
                 } else {
-                    payload.message = title;
                     var extraData = { action: config.messages.action.AIRTIME, additionalInfo : {transactionid: transid}, _id:result._id };
                     payload.extra = { extra:extraData };
                     callback(null, sessionid, payload);

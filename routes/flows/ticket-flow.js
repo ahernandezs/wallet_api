@@ -12,11 +12,11 @@ var userQuery = require('../../model/queries/user-query');
 var urbanService = require('../../services/notification-service');
 var transacctionQuery = require('../../model/queries/transacction-query');
 var soapurl = process.env.SOAP_URL;
-var soapurlnew = process.env.SOAP_URL_NEW;
 
 exports.buy = function (payload, callback){
 
     var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
+    var transid;
     console.log(payload);
 
     async.waterfall([
@@ -54,44 +54,12 @@ exports.buy = function (payload, callback){
             });
         },
 
-        function(sessionid, callback) {
-
-            var buyTicketsRequest = {
-                amount: '1',
-                venue: payload.venue,
-                seatsDetail: payload.seatsDetail,
-                eventDate: '2012-11-04T14:51:06.157Z'
-            };
-            console.log(buyTicketsRequest);
-            userQuery.findUserByPhoneID(phoneID, function (err, user) {
-                if (err) {
-                    return callback('ERROR', err);
-                } else {
-                    soap.createClient(soapurlnew, function (err, client) {
-                        client.setSecurity(new soap.WSSecurity(phoneID, user.pin, 'PasswordDigest'));
-                        client.BuyTickets(buyTicketsRequest, function (err, result) {
-                            if (err) {
-                                console.log(err);
-                                if (err.body.indexOf('successful') >= 0)
-                                    callback(null, 'successful');
-                                else
-                                    callback('ERROR', err);
-                            } else {
-                                console.log(result);
-                                callback(null, result);
-                            }
-                        });
-                    });
-                }
-            });
-        },
-
         function(sessionid, callback){
             console.log('Save message in DB');
             var message = {};
 
             message.status = config.messages.status.NOTREAD;
-            message.type = config.messages.type.AIRTIMEBUY;
+            message.type = config.messages.type.TICKETBUY;
             message.title = payload.message;
             message.phoneID = payload.phoneID;
             message.date = dateTime;
@@ -102,10 +70,9 @@ exports.buy = function (payload, callback){
                     var response = { statusCode: 1, additionalInfo: result };
                     callback('ERROR', response);
                 } else {
-                    payload.message = title;
                     var extraData = { action: config.messages.action.TICKET, additionalInfo : {transactionid: transid}, _id:result._id };
                     payload.extra = { extra:extraData };
-                    callback(null, sessionid, message);
+                    callback(null, sessionid, payload);
                 }
             });
         },
@@ -127,7 +94,6 @@ exports.buy = function (payload, callback){
                 }
                 else
                     console.log('Obteniendo Balance');
-                //result.additionalInfo.doxAdded = config.doxs.p2p;
                 callback(null,balance);
             });
         },
@@ -140,7 +106,7 @@ exports.buy = function (payload, callback){
             receipt.amount = payload.amount;
             receipt.message = payload.message;
             receipt.additionalInfo = payload.additionalInfo;
-            receipt.title = 'You had bought a ticket';
+            receipt.title = 'You have bought a ticket';
             receipt.date = dateTime;
             receipt.type = config.receipt.type.TICKETBUY;
             receipt.status = 'DELIVERED';
@@ -156,7 +122,7 @@ exports.buy = function (payload, callback){
         function(balance,receipt, callback) {
             console.log( 'Create History transaction for emitter' );
             var transacction = {};
-            transacction.title = 'AirTime Buy';
+            transacction.title = 'Ticket Buy';
             transacction.type = 'MONEY',
             transacction.date = dateTime;
             transacction.amount = (-1) * receipt.amount;
