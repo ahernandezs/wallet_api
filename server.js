@@ -8,6 +8,7 @@ var merchant = require('./routes/merchants')
 var message = require('./routes/messages');
 var airtime = require('./routes/airtime');
 var ticket = require('./routes/ticket');
+var topup =  require('./routes/topup');
 var lendo =  require('./routes/lendo');
 var transacction = require('./routes/transacctions');
 var loan = require('./routes/loans');
@@ -122,6 +123,7 @@ app.post('/api/airtime',interceptorHeader, airtime.buy);
 app.get('/api/ticket',ticket.get_all);
 app.get('/api/ticket/:id',ticket.get_by_id);
 app.post('/api/ticket/pay',interceptorHeader, ticket.buy);
+app.post('/api/topup',interceptorHeader, topup.buy);
 app.post('/api/registerMerchant',merchant.register);
 app.post('/api/login', user.login);
 app.post('/api/updateprofile', user.updateProfile);
