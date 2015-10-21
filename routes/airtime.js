@@ -7,7 +7,7 @@ var logger = config.logger;
 exports.buy = function(req, res){
 
     var payload = {};
-    payload.to = req.body.to;
+    payload.to = req.headers['x-phoneid'];
     payload.amount = req.body.amount;
     payload.phoneID = req.headers['x-phoneid'];
     payload.sessionid = req.headers['x-auth-token'];
@@ -24,9 +24,9 @@ exports.buy = function(req, res){
 
     airtimeFlow.buy(payload, function(err, result){
         if (err) {
-            res.send({statusCode: 1, additionalInfo : { message : result }});
+            res.send(result);
             return;
         }
-        res.send({statusCode: 0, additionalInfo : { billPaymentInfo : result }});
+        res.send({statusCode: 0, additionalInfo : { airTimeBuyInfo : result }});
     });
 };
