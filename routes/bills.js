@@ -70,7 +70,7 @@ exports.pay_bill = function(req, res){
                 if (err) {
                     return;
                 }
-                res.send({statusCode: 0, additionalInfo : { billPaymentInfo : result }});
+                res.send(result);
             });
         }
     });

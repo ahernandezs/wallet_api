@@ -27,6 +27,6 @@ exports.buy = function(req, res){
             res.send(result);
             return;
         }
-        res.send({statusCode: 0, additionalInfo : { airTimeBuyInfo : result }});
+        res.send(result);
     });
 };
