@@ -53,6 +53,27 @@ exports.getTransacctions = function(phoneIDToSearch, callback) {
     });
 };
 
+
+exports.getPendingTransacctions = function(phoneIDToSearch, callback) {
+    console.log( 'Get Transacctions as creditMoney' );
+    transacction.find({phoneID:phoneIDToSearch, type:'MONEY' , creditMoney :'true'}, 'title description amount date additionalInfo ',{sort: {date: -1}}, function(err, transacction)  {
+        var response;
+        if (err) {
+            response = { statusCode: 1, additionalInfo: err };
+            console.log(err.message);
+            callback("ERROR: " + err.message, response);
+        } else if (transacction.length === 0) {
+            console.log('Empty');
+            response = { statusCode: 0, additionalInfo: 'Empty' };
+            callback(null, response);
+        } else {
+            console.log('Return Collection');
+            response = { statusCode: 0, additionalInfo: transacction };
+            callback(null, transacction);
+        }
+    });
+};
+
 exports.getTransacctionsDox = function(phoneIDToSearch, callback) {
     console.log( 'Get Transacctions DOX' );
     transacction.find({phoneID:phoneIDToSearch, type:'DOX'}, 'title description amount date',{sort: {date: -1}}, function(err, transacction)  {

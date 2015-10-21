@@ -30,6 +30,7 @@ exports.loginFlow = function(payload,callback) {
             logger.info('You have been logged in');
             info.email = person.email;
             info.company = person.company;
+            info.appID = person.appID;
             info.name = person.name;
             info.profileCompleted = person.profileCompleted;
             info.validated = person.validated;
@@ -195,7 +196,7 @@ exports.loginFlow = function(payload,callback) {
             var response = result.balanceReturn;
             if(response.result  === '0' ) {
               var balance = { current : currentMoney , dox : response.current ,unreadMsgs :length } ;
-              console.log(JSON.stringify(balance));
+              console.log(info);
               response = { statusCode: 0, sessionid : sessionid, additionalInfo : balance, userInfo : info };
             }
             else

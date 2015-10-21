@@ -349,7 +349,7 @@ var putDoxs = exports.putDoxs = function(payload, callback){
 exports.confirmPin = function(phoneID, callback){
   console.log('Confirm Pin');
   console.log(phoneID);
-  User.findOne({ 'phoneID': phoneID }, 'pin email company name profileCompleted', function (err, person) {
+  User.findOne({ 'phoneID': phoneID }, 'pin email appID company name profileCompleted validated', function (err, person) {
     if (err) return handleError(err);
     else if(person){
       console.log(person);
@@ -398,7 +398,7 @@ exports.getUsers = function(parameters,callback){
     });
   }//end of if
   else{
-    User.find({group:'INTERNAL'}, 'phoneID name email lastSession company', { sort : { name : 1 }}, function (err, people) {
+    User.find({},'phoneID name email lastSession company', { sort : { name : 1 }}, function (err, people) {
       if (err) return handleError(err);
       else if(people){
         callback(null, people);

@@ -7,8 +7,8 @@ var fs = require('fs');
 var bucket_name = 'amdocs-images'; // AwsSum also has the API for this if you need to create the buckets
 
 exports.uploadImage2S3 = function(req,callback){
-    var base64Str = req.text;
-    var imageName = req.headers['image-profile'];
+    var base64Str = req.content;
+    var imageName = req.name;
     var rePattern = new  RegExp(/^data:image\/\w+;base64/);
     var contentType = base64Str.match(rePattern);
     contentType = contentType[0].replace(/^data:/,'').replace(/;base64/,'');

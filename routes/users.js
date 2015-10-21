@@ -358,8 +358,8 @@ exports.getDoxs = function(req, res){
 };
 exports.uploadImage = function(req,res){
   console.log('execute POST method uploadImage');
-  console.log(req.headers['image-profile']);
-  awsS3.uploadImage2S3(req,function(err,result){
+  console.log(req.body);
+  awsS3.uploadImage2S3(req.body,function(err,result){
     res.json(result);
   });
 };
@@ -533,3 +533,24 @@ exports.getContacts = function(req, res) {
     }
   });
 };
+
+
+exports.getPendingPayments = function(req, res) {
+  console.log(req.body);
+  Userquery.getContactList(req.body.phones , function(err,result) {
+    if (err)
+      res.json( { statusCode : 1, additionalInfo : result } );
+    else{
+      res.json( {  url_base:'https://d80mkr1efvy13.cloudfront.net/profile/'  , users :result });
+    }
+  });
+};
+
+exports.authorizeShopMobileBuy = function(req , res){
+  logger.info(req.headers['x-auth-token']);
+  var json = req.body;
+  json['sessionid']= req.headers['x-auth-token'];
+  console.log('Execute method authorizeShopMobileBuy');
+   buyFlow.authorizeShopMobileBuy(json , function(err,result) {
+  }); 
+}

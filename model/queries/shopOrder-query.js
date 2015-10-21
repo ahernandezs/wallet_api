@@ -16,3 +16,15 @@ exports.putOrder = function(order,callback){
 		});
 	});
 }
+
+exports.update = function(order,callback){
+	var conditions = orderID
+	Order.update(conditions, payload, null, function(err, result) {
+		if (err){
+			console.log(err)
+			callback("ERROR", { statusCode: 1,  additionalInfo: 'Update Fail' });
+		}else{
+			callback(null, { statusCode: 0 ,  additionalInfo: 'Update success' });
+		}
+	});
+}
