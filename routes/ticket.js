@@ -4,6 +4,7 @@
 
 var ticketFlow = require('./flows/ticket-flow');
 var events = require('../model/event');
+var config = require('../config');
 
 exports.get_all = function(req, res){
     events.getAllEvents(function(err, events){
