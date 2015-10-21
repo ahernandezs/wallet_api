@@ -20,10 +20,11 @@ exports.getMessages = function(phoneID, callback) {
 
     function(callback){
       var message = {};
-      var condiciones = { 'phoneID': phoneID , message:{ $ne: '' } };
+      var condiciones = { 'phoneID': phoneID , message:{ $ne: '' }  ,  $and:[ { type : { $ne : 'REQUEST_MONEY' } } , { type : { $ne : 'GIFT' }  } ] } ; 
       Message.find(condiciones, ' title type message status additionalInfo date', {sort: {date: -1}}, function (err, msgs) {
         if (err) callback('ERROR', err);
         else if(msgs){
+          console.log(msgs);
           message = msgs;
           callback(null, message);
           }

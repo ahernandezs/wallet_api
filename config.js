@@ -137,7 +137,8 @@ config.currency.type ='Dollar';
 config.currency.symbol='$';
 config.currency.position ='L';
 config.currency.proportion =1;
-config.currency.decimal='true';
+config.currency.decimal='false';
+config.currency.airtimeRadio = 10;
 
 config.nexmo = {};
 config.nexmo.key = '3168d69c';

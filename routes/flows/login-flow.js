@@ -34,6 +34,7 @@ exports.loginFlow = function(payload,callback) {
             info.name = person.name;
             info.profileCompleted = person.profileCompleted;
             info.validated = person.validated;
+            info.bucketUrl = process.env.AS3_IMAGES;
             callback(null);
           } else{
             var response = { statusCode:1 ,  additionalInfo : 'INVALID PIN' };

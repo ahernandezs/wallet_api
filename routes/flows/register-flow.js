@@ -12,7 +12,7 @@ function endsWith(str, suffix) {
 
 exports.registerFlow = function(payload,callback) {
   var transfer = true;
-  var end = 'AP'
+  var end = 'LN'
 
   console.log(endsWith(payload.phoneID, end));
   async.waterfall([
