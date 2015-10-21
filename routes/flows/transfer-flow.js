@@ -99,6 +99,7 @@ var doxsService = require('../../services/doxs-service');
 
 exports.transferFunds = function(data, callback) {
     var transid;
+    var creditMoney;
     var forReceipt = {};
     var receiptName;
     var senderName;
@@ -111,6 +112,10 @@ exports.transferFunds = function(data, callback) {
     var msg;
     var forReturn = {};
     var mainUser = data.header.phoneID;
+
+    if(data.body.paymeback){
+        creditMoney = data.body.paymeback;
+    }
 
     async.waterfall([
         
@@ -127,6 +132,7 @@ exports.transferFunds = function(data, callback) {
 
         function(callback) {
             console.log('Do transfer in wallet');
+            console.log(data);
             var payload = data.body;
             msg = payload.message;
             var header = data.header;
@@ -365,6 +371,8 @@ exports.transferFunds = function(data, callback) {
             transaction.additionalInfo = additionalInfoReceiver;
             transaction.operation = 'TRANSFER';
             transaction.phoneID = receipt.emitter;
+            transaction.creditMoney = creditMoney;
+            console.log(transaction);
             Userquery.findAppID(receipt.receiver, function(err, result) {
                 transaction.description = 'From ' + result.name;
                 transacctionQuery.createTranssaction(transaction, function(err, result) {

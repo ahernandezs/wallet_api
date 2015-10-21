@@ -55,7 +55,7 @@ exports.getTransacctionsDox = function(req,res){
       });
     }
   });
-};
+};  
 
 exports.getSocialFeeds = function(req, res) {
     req.body.sessionid = req.headers['x-auth-token'];
@@ -76,4 +76,23 @@ exports.getSocialFeeds = function(req, res) {
           }
         }
       });
+};
+
+
+exports.getPendingPayments = function(req, res) {
+  var phoneID = req.headers['x-phoneid'];
+  transacctionQuery.getPendingTransacctions(phoneID,function(err,result){
+        if(err) {
+          res.send(500);
+        } else {
+          if(result && result.length != 0 ){ 
+            var response = result;
+            res.json(response);
+          }else{
+            var empty = [];
+            result.additionalInfo = empty;
+            res.json(result);
+          }
+        }
+   });
 };

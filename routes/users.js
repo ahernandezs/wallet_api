@@ -533,3 +533,16 @@ exports.getContacts = function(req, res) {
     }
   });
 };
+
+
+
+exports.getPendingPayments = function(req, res) {
+  console.log(req.body);
+  Userquery.getContactList(req.body.phones , function(err,result) {
+    if (err)
+      res.json( { statusCode : 1, additionalInfo : result } );
+    else{
+      res.json( {  url_base:'https://d80mkr1efvy13.cloudfront.net/profile/'  , users :result });
+    }
+  });
+};

@@ -11,6 +11,7 @@ var transacctionSchema =  new Schema({
 	additionalInfo : String,
 	operation:String ,
 	phoneID:String,
+	creditMoney:String
 });
 
 module.exports = mongoose.model('Transacction', transacctionSchema);
