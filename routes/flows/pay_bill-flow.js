@@ -68,7 +68,7 @@ exports.pay_bill = function(payload, callback){
             message.phoneID = payload.phoneID;
             message.date = dateTime;
             message.message = payload.message;
-            message.additionalInfo = {};
+            //message.additionalInfo = {};
             messageQuery.createMessage(payload.phoneID, message, function(err, result) {
                 if (err) {
                     var response = { statusCode: 1, additionalInfo: result };
