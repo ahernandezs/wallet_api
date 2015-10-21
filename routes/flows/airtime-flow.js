@@ -56,21 +56,22 @@ exports.buy = function(payload, callback){
 
         function(sessionid, callback){
             console.log('Save message in DB');
-            var message = {};
 
+            var message = {};
             message.status = config.messages.status.NOTREAD;
             message.type = config.messages.type.AIRTIMEBUY;
             message.title = payload.message;
             message.phoneID = payload.phoneID;
             message.date = dateTime;
             message.message = payload.message;
-            message.additionalInfo = {};
+            //message.additionalInfo = {};
+            console.log(message);
             messageQuery.createMessage(payload.phoneID, message, function(err, result) {
                 if (err) {
                     var response = { statusCode: 1, additionalInfo: result };
                     callback('ERROR', response);
                 } else {
-                    var extraData = { action: config.messages.action.AIRTIME, additionalInfo : {transactionid: transid}, _id:result._id };
+                    var extraData = { action: config.messages.action.AIRTIME, additionalInfo : {transactionid: transid, _id:result._id }};
                     payload.extra = { extra:extraData };
                     callback(null, sessionid, payload);
                 }
@@ -95,6 +96,7 @@ exports.buy = function(payload, callback){
                 else
                     console.log('Obteniendo Balance');
                 //result.additionalInfo.doxAdded = config.doxs.p2p;
+                console.log(balance);
                 callback(null,balance);
             });
         },
