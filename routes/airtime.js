@@ -10,7 +10,7 @@ exports.buy = function(req, res){
     payload.to = req.body.to;
     payload.amount = req.body.amount;
     payload.phoneID = req.headers['x-phoneid'];
-    payload.session = req.headers['x-auth-token'];
+    payload.sessionid = req.headers['x-auth-token'];
     payload.message = config.messages.airtimeBuyMsg + payload.to;
 
     console.log('execute POST method Buy Airtime');
