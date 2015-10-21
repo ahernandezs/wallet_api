@@ -73,12 +73,12 @@ exports.buy = function(req, res){
 
         ticketFlow.buy(payload,function(err,result){
             if(err){
-                var response = { statusCode:1 , additionalInfo : JSON.stringify(err)};
-                res.json(response);
+                //var response = { statusCode:1 , additionalInfo : JSON.stringify(err)};
+                res.json(result);
                 return;
             } else {
-                var response = { statusCode:0 ,  additionalInfo : result };
-                res.json(response);
+                //var response = { statusCode:0 ,  additionalInfo : result };
+                res.json(result);
             }
         });
     });

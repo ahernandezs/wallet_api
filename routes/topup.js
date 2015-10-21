@@ -25,12 +25,11 @@ exports.buy = function (req, res){
 
     topupFlow.buy(payload,function(err, result){
         if(err){
-            var response = { statusCode:1 , additionalInfo : JSON.stringify(err)};
-            res.json(response);
-            return;
+            //var response = { statusCode:1 , additionalInfo : JSON.stringify(err)};
+            res.json(result);
         } else {
-            var response = { statusCode:0 ,  additionalInfo : result };
-            res.json(response);
+            //var response = { statusCode:0 ,  additionalInfo : result };
+            res.json(result);
         }
     });
 };
