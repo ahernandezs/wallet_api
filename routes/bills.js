@@ -40,9 +40,8 @@ exports.pay_bill = function(req, res){
     var billId = req.body.billId;
     var phoneNumber = req.headers['x-phoneid'];
 
-    console.log('execute POST method Pay Bill');
-    console.log(req.body);
-
+    logger.info('********** EXECUTING POST METHOD /api/bill/pay **************');
+    logger.info('POST REQUEST BODY ->' + JSON.stringify(req.body));
     if (!billId && !phoneNumber) {
         //res.status(400).send({message: 'The request JSON was invalid or cannot be served. '});
         res.send({'statusCode' : 1, additionalInfo: {'message': 'INVALID JSON'}});
@@ -64,10 +63,11 @@ exports.pay_bill = function(req, res){
             payload.sessionid = req.headers['x-auth-token'];
             payload.phoneID = req.headers['x-phoneid'];
             payload.bill = bill;
-            payload.message = config.messages.transferMsg + payload.bill.issuer;
+            payload.message = config.messages.billPayMsg + payload.bill.issuer + ' by ' + config.currency.symbol + payload.bill.total;
 
             payBillFlow.pay_bill(payload,function(err, result){
                 if (err) {
+                    res.send(result);
                     return;
                 }
                 res.send(result);
