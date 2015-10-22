@@ -79,10 +79,43 @@ exports.buy = function (payload, callback){
             });
         },
 
+        function(sessionid, callback){
+            if (payload.dox) {
+                console.log('Make DOX Transfer ' + payload.sessionid);
+                var requestSoap = {
+                    sessionid: payload.sessionid,
+                    to: config.username,
+                    amount: payload.dox,
+                    type: config.wallet.type.DOX
+                };
+                var request = {transferRequest: requestSoap};
+                console.log(request);
+                soap.createClient(soapurl, function (err, client) {
+                    client.transfer(request, function (err, result) {
+                        if (err) {
+                            console.log(err);
+                            return new Error(err);
+                        } else {
+                            console.log(result);
+                            var response = result.transferReturn;
+                            if (response.result != 0) {
+                                var response = {statusCode: 1, additionalInfo: result};
+                                callback("ERROR", response);
+                            } else {
+                                callback(null, sessionid);
+                            }
+                        }
+                    });
+                });
+            } else {
+                callback(null, sessionid);
+            }
+        },
+
         function(sessionid,callback) {
 
             console.log('Make Transfer ' + sessionid);
-            var requestSoap = {sessionid: sessionid, to: payload.phoneID, amount: payload.amount, type: 1};
+            var requestSoap = {sessionid: sessionid, to: payload.phoneID, amount: payload.amount, type: config.wallet.type.MONEY};
             var request = {transferRequest: requestSoap};
             console.log(request);
             soap.createClient(soapurl, function (err, client) {
@@ -103,7 +136,6 @@ exports.buy = function (payload, callback){
                     }
                 });
             });
-
         },
 
         function(sessionid, callback){
