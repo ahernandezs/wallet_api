@@ -38,6 +38,9 @@ config.products.errMsg = 'Something went wrong';
 config.products.emptyMsg = 'There are no products ' + config.products.status;
 config.products.emptyInventory = 'The inventory is empty';
 
+config.wallet = {};
+config.wallet.type = { MONEY:1,OTHER2:2 ,DOX:3 };
+
 config.merchants = {};
 config.merchants.errMsg = 'Something went wrong';
 config.merchants.emptyMsg = 'merchant not found ';

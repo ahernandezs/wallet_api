@@ -26,7 +26,7 @@ exports.pay_bill = function(payload, callback){
     async.waterfall([
 
         function(callback) {
-            var requestSoap = { sessionid: payload.sessionid, to: config.username, amount : payload.bill.total , type: 1 };
+            var requestSoap = { sessionid: payload.sessionid, to: config.username, amount : payload.bill.total , type: config.wallet.type.MONEY };
             var request = { transferRequest: requestSoap };
 
             logger.info('1.- DO TRANSFER FROM USER WALLET');
