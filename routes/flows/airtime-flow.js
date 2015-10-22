@@ -23,7 +23,7 @@ exports.buy = function(payload, callback){
 
         function(callback) {
             console.log('Do transfer in wallet');
-            var requestSoap = { sessionid: payload.sessionid, to: config.username, amount : payload.amount , type: 1 };
+            var requestSoap = { sessionid: payload.sessionid, to: config.username, amount : payload.amount , type: config.wallet.type.MONEY };
             var request = { transferRequest: requestSoap };
 
             soap.createClient(soapurl, function(err, client) {

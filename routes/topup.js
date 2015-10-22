@@ -10,13 +10,14 @@ exports.buy = function (req, res){
     payload.phoneID = req.headers['x-phoneid'];
     payload.sessionid  = req.headers['x-auth-token'];
     payload.amount = req.body.amount;
+    payload.dox = req.body.dox;
 
     if (!payload.amount){
         res.send({'statusCode' : 1, additionalInfo: {'message': 'INVALID JSON'}});
         return;
     }
 
-    if (payload.amount < 1){
+    if (payload.amount <= 0){
         res.send({statusCode: 10, additionalInfo : { message : 'CANNOT TOPUP NEGATIVE AMOUNT' }});
         return;
     }

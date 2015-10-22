@@ -21,29 +21,29 @@ exports.pay_bill = function(payload, callback){
     var transid;
     var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
 
-    console.log(payload);
+    logger.info('PAYLOAD TO PAYBILL-FLOW BODY ->' + JSON.stringify(payload));
 
     async.waterfall([
 
         function(callback) {
-            console.log('Do transfer in wallet');
-            var requestSoap = { sessionid: payload.sessionid, to: config.username, amount : payload.bill.total , type: 1 };
+            var requestSoap = { sessionid: payload.sessionid, to: config.username, amount : payload.bill.total , type: config.wallet.type.MONEY };
             var request = { transferRequest: requestSoap };
+
+            logger.info('1.- DO TRANSFER FROM USER WALLET');
 
             soap.createClient(soapurl, function(err, client) {
                 client.transfer(request, function(err, result) {
                     if (err) {
-                        console.log(err);
+                        logger.error(err);
                         return new Error(err);
                     } else {
                         var response = result.transferReturn;
-
                         transid = response.transid;
                         if (response.result != 0) {
                             console.log('Result '+ response.result);
                             var responseTransfer = {};
                             if(response.result === 7 ){
-                                console.log('Error de transferencia');
+                                logger.error('Error de transferencia');
                                 responseTransfer = { statusCode: 1, additionalInfo: "Transaction not allowed" };
                             }
                             else{
@@ -51,6 +51,7 @@ exports.pay_bill = function(payload, callback){
                             }
                             callback('ERROR', responseTransfer);
                         } else {
+                            logger.info('---TRANSFER MADE');
                             callback(null, payload.sessionid);
                         }
                     }
@@ -59,9 +60,7 @@ exports.pay_bill = function(payload, callback){
         },
 
         function(sessionid, callback){
-            console.log('Save message in DB');
             var message = {};
-
             message.status = config.messages.status.NOTREAD;
             message.type = config.messages.type.BILLPAYMENT;
             message.title = payload.message;
@@ -69,6 +68,9 @@ exports.pay_bill = function(payload, callback){
             message.date = dateTime;
             message.message = payload.message;
             //message.additionalInfo = {};
+
+            logger.info('2.- SAVE MESSAGE IN DB');
+
             messageQuery.createMessage(payload.phoneID, message, function(err, result) {
                 if (err) {
                     var response = { statusCode: 1, additionalInfo: result };
@@ -82,7 +84,7 @@ exports.pay_bill = function(payload, callback){
         },
 
         function(sessionid,message, callback) {
-            console.log('Send push notification');
+            logger.info('3.- SEND PUSH NOTIFICATION');
             urbanService.singlePush(message, function(err, result) {
                 var response = { statusCode: 0, additionalInfo: 'The payment was successful' };
                 callback(null,sessionid);
@@ -90,28 +92,26 @@ exports.pay_bill = function(payload, callback){
         },
 
         function(sessionid,callback){
-            console.log('Get Balance');
+            logger.info('4.- GET BALANCE');
             balance.balanceFlow(sessionid, function(err, balance) {
                 if(err){
                     var response = { statusCode: 1, additionalInfo: balance };
                     callback('ERROR', response);
                 }
-                else
-                    console.log('Obteniendo Balance');
-                //result.additionalInfo.doxAdded = config.doxs.p2p;
+                logger.info('---BALANCE ACQUIRED');
                 callback(null,balance);
             });
         },
 
         function(balance, callback) {
-            console.log( 'Create Receipt Transfer' );
+            logger.info('5.- CREATE RECEIPT FROM BILLPAYMENT' );
             var receipt = {};
             receipt.emitter = payload.phoneID;
             receipt.receiver = payload.bill.issuer;
             receipt.amount = payload.bill.total;
             receipt.message = payload.message;
             receipt.additionalInfo = payload.additionalInfo;
-            receipt.title = 'You have pay a Bill of '+  config.currency.symbol + ' ' + receipt.amount + ' to ' + receipt.receiver;
+            receipt.title = payload.message;
             receipt.date = dateTime;
             receipt.type = config.receipt.type.BILLPAYMENT;
             receipt.status = 'DELIVERED';
@@ -119,28 +119,30 @@ exports.pay_bill = function(payload, callback){
             ReceiptQuery.createReceipt(receipt, function(err, result) {
                 if (err)
                     callback('ERROR', err);
-                else
-                    callback(null, balance,receipt);
+                else {
+                    logger.info('---RECEIPT CREATED');
+                    callback(null, balance, receipt);
+                }
             });
         },
 
         function(balance,receipt, callback) {
-            console.log( 'Create History transaction for emitter' );
+            logger.info('6.- CREATE HISTORY TRANSACTION FROM BILLPAYMENT' );
             var transacction = {};
-            transacction.title = 'Bill payment';
-            transacction.type = 'MONEY',
+            transacction.title = 'Bill Payment';
+            transacction.type = config.transaction.type.BILLPAYMENT ,
             transacction.date = dateTime;
             transacction.amount = (-1) * receipt.amount;
             transacction.additionalInfo = receipt.additionalInfo;
-            transacction.operation = 'TRANSFER';
-            transacction.phoneID = receipt.receiver;
+            transacction.operation = config.transaction.operation.BILLPAYMENT;
+            transacction.phoneID = receipt.emitter;
             Userquery.findAppID(receipt.emitter,function(err,result){
                 transacction.description ='To ' + result.name;
                 transacctionQuery.createTranssaction(transacction, function(err, result) {
                     if (err)
                         callback('ERROR', err);
                     else{
-                        console.log('Transacction Created');
+                        logger.info('---TRANSACTION CREATED');
                         callback(null, balance,receipt);
                     }
                 });
@@ -152,6 +154,7 @@ exports.pay_bill = function(payload, callback){
             console.log('Error  --->' + JSON.stringify(result));
             callback(err,result);
         }else{
+            logger.info('7.- BILLPAYMENT FLOW FINISHED');
             callback(null,result);
         }
     });

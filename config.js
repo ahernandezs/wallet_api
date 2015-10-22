@@ -38,6 +38,9 @@ config.products.errMsg = 'Something went wrong';
 config.products.emptyMsg = 'There are no products ' + config.products.status;
 config.products.emptyInventory = 'The inventory is empty';
 
+config.wallet = {};
+config.wallet.type = { MONEY:1,OTHER2:2 ,DOX:3 };
+
 config.merchants = {};
 config.merchants.errMsg = 'Something went wrong';
 config.merchants.emptyMsg = 'merchant not found ';
@@ -51,7 +54,7 @@ config.messages.type = { TRANSFER:'TRANSFER' , GIFT : 'GIFT' , BUY :'BUY' ,LOAN 
                          AUTHORIZATION_PURCHASE:'AUTHORIZATION_PURCHASE', BILLPAYMENT: 'BILLPAYMENT', AIRTIMEBUY: 'AIRTIMEBUY', TICKETBUY : 'TICKETBUY', TOPUP:'TOPUP'};
 config.messages.transferMsg = 'You have received money from ';
 config.messages.giftMsg = '[sender] has gifted you an Amdocs Café voucher';
-config.messages.billPayMsg = 'You have payed bill from ';
+config.messages.billPayMsg = 'You have payed a bill from ';
 config.messages.airtimeBuyMsg = 'You buy airtime to phone ';
 config.messages.ticketBuyMsg = 'You buy a Ticket to ';
 config.messages.loanRequestMsg = 'You have requested a loan for €';
@@ -63,7 +66,7 @@ config.messages.giftRejectedOneMsg = 'Sorry, you have exceeded your number of gi
 config.messages.buyRejectedOneMsg = 'Sorry, you have exceeded your number of buys per hour. Please return home';
 config.messages.loanAcceptedMsg = 'Congratulations,Your Instan-Loan is approved';
 config.messages.action = { TRANSFER:1 , GIFT :2 , BUY :3 ,LOAN : 4, COUPON: 5 , AUTH: 6 , LENDO : 7, BILLPAYMENT: 8, AIRTIME: 9, TICKET: 10,
-                          VERIFYCUSTOMER:11 };
+                          VERIFYCUSTOMER:11, TOPUP: 12 };
 config.messages.transferFund = 'You have sent a Transfer to ';
 config.messages.coupon = {};
 config.messages.coupon.message = 'Congratulations You are today’s winner of “Highest DOX score of the day wins a prize” promotion! We will be in touch shortly, along with your prize';
@@ -81,6 +84,12 @@ config.messages.facebook =	{
 								description:'Just downloaded my Amdocs Wallet  looking forward to the delicous coffee at the fully cashless Amdocs Café',
 								link:'http://amdocs.com/MFS'
 							};
+
+config.transaction = {};
+config.transaction.type = { TRANSFER:'TRANSFER' , GIFT : 'GIFT' , BUY :'BUY' ,LOAN :'LOAN', COUPON: 'COUPON' , REQUEST_MONEY : 'REQUEST_MONEY' , MESSAGE : 'MESSAGE' ,
+    AUTHORIZATION_PURCHASE:'AUTHORIZATION_PURCHASE', BILLPAYMENT: 'BILLPAYMENT', AIRTIMEBUY: 'AIRTIMEBUY', TICKETBUY : 'TICKETBUY', TOPUP:'TOPUP'};
+config.transaction.operation = { TRANSFER:'TRANSFER' , GIFT : 'GIFT' , BUY :'BUY' ,LOAN :'LOAN', COUPON: 'COUPON' , REQUEST_MONEY : 'REQUEST_MONEY' , MESSAGE : 'MESSAGE' ,
+    AUTHORIZATION_PURCHASE:'AUTHORIZATION_PURCHASE', BILLPAYMENT: 'BILLPAYMENT', AIRTIMEBUY: 'AIRTIMEBUY', TICKETBUY : 'TICKETBUY', TOPUP:'TOPUP'};
 
 config.requests = {};
 config.requests.status = { NEW : 'NEW', ACCEPTED : 'ACCEPTED', REJECTED: 'REJECTED' };
