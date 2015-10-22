@@ -414,12 +414,12 @@ exports.getLeaderboard = function(req, res){
   var phoneID = req.headers['x-phoneid'];
   if(phoneID){
     Userquery.getLeaderboard(phoneID,function(err,result){
-      var result = {url_base:'https://d80mkr1efvy13.cloudfront.net/profile/', users: result}
+      var result = {url_base: process.env.AS3_IMAGES , users: result}
       res.json(result);
     });
   }else{
       Userquery.getLeaderboard(null,function(err,result){
-      var result = {url_base:'https://d80mkr1efvy13.cloudfront.net/profile/', users: result}
+      var result = {url_base:process.env.AS3_IMAGES , users: result}
       res.json(result);
     });
   }
@@ -529,7 +529,7 @@ exports.getContacts = function(req, res) {
     if (err)
       res.json( { statusCode : 1, additionalInfo : result } );
     else{
-      res.json( {  url_base:'https://d80mkr1efvy13.cloudfront.net/profile/'  , users :result });
+      res.json( {  url_base: process.env.AS3_IMAGES  , users :result });
     }
   });
 };
@@ -541,7 +541,7 @@ exports.getPendingPayments = function(req, res) {
     if (err)
       res.json( { statusCode : 1, additionalInfo : result } );
     else{
-      res.json( {  url_base:'https://d80mkr1efvy13.cloudfront.net/profile/'  , users :result });
+      res.json( {  url_base: process.env.AS3_IMAGES , users :result });
     }
   });
 };

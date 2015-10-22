@@ -22,6 +22,16 @@ db.discounts.insert({"productID" : 6, "cost" : 22.5, "description" : "", "mercha
 db.discounts.insert({"productID" : 7, "cost" : 22.5, "description" : "", "merchantId" : 1, "name" : "lemon smoothie", "status" : "IN STOCK", "url": "https://d80mkr1efvy13.cloudfront.net/discount_product_cala/lemon.jpg" , "schedule" : "MORNING"});
 db.discounts.insert({"productID" : 8, "cost" : 22.5, "description" : "", "merchantId" : 1, "name" : "strawberry smoothie", "status" : "IN STOCK", "url": "https://d80mkr1efvy13.cloudfront.net/discount_product_cala/strawberry_smoothie.jpg" , "schedule" : "MORNING"});
 db.discounts.insert({"productID" : 9, "cost" : 17.5, "description" : "", "merchantId" : 1, "name" : "vanilla cappuccino", "status" : "IN STOCK", "url": "https://d80mkr1efvy13.cloudfront.net/discount_product_cala/vainilla.jpg" , "schedule" : "MORNING"});
-db.discounts.insert({"productID" : 10, "cost" : 17.5, "description" : "", "merchantId" : 1, "name" : "irish cream", "status" : "IN STOCK", "url": "https://d80mkr1efvy13.cloudfront.net/discount_product_cala/irish.jpg" , "schedule" : "MORNING"});
+db.discounts.insert({"productID" : 10, "cost" : 17.5, "description" : "", "merchantId" : 1, "name" : "irish cream", "status" : "IN STOCK", "url": "https://d80mkr1efvy13.cloudfront.net/discount_product_cala/irish.jpg" , "schedule" : "MORNING"})
 
-
+-
+amaretto.jpg
+cakepops.jpg
+capuchino.jpg
+expresscoffe.jpg
+irishcream.jpg
+macaroons.jpg
+mocha.jpg
+vainilla.jpg
+cakepops.jpg
+macaroons.jpg

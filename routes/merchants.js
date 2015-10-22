@@ -62,7 +62,7 @@ exports.usersVerified  = function(req, res) {
     if (err)
       res.json( { statusCode : 1, additionalInfo : result } );
     else{
-      res.json( {  url_base:'https://d80mkr1efvy13.cloudfront.net/profile/'  , users :result });
+      res.json( {  url_base:process.env.AS3_IMAGES  , users :result });
     }
   });
 };
