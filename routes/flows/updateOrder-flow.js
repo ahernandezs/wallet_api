@@ -52,8 +52,7 @@ exports.updateOrderFlow = function(payload,callback) {
 					additionalInfoJSON.status = status;
 					messageUpdate.message =  'Your order No ' + payload.orderID +  ' is ' + status;
 					messageUpdate.title = messageUpdate.message;
-					//messageUpdate.additionalInfo = JSON.stringify(additionalInfoJSON);
-					messageUpdate.additionalInfo = additionalInfoJSON;
+					messageUpdate.additionalInfo = JSON.stringify(additionalInfoJSON);
 					var actionType ;
 					if(messageUpdate.type === config.messages.type.BUY) actionType = config.messages.action.BUY;
 					else if(messageUpdate.type === config.messages.type.GIFT) actionType = config.messages.action.GIFT;
@@ -79,8 +78,7 @@ exports.updateOrderFlow = function(payload,callback) {
 					message.status = 'NOTREAD';
 					var additionalInfoJSON = JSON.parse(receipt.additionalInfo);
 					additionalInfoJSON.status = status;
-					//message.additionalInfo =  JSON.stringify(additionalInfoJSON);
-					message.additionalInfo = additionalInfoJSON;
+					message.additionalInfo =  JSON.stringify(additionalInfoJSON);
 					message.date = dateTime;
 					message.message = 'Your order No ' + payload.orderID +  ' is ' + status;
 					message.orderID = payload.orderID;

@@ -12,17 +12,26 @@ exports.getMessages = function(req, res) {
     var request = { sessionid : req.headers.sessionid, phoneID : req.headers['x-phoneid'] };
     sessionQuery.getCredentials(request, function(err,result){
         messageQuery.getMessages(result.data.phoneID,function(err,result) {
+            var response = { statusCode: 0 };
             if(err) {
                 res.send(500);
             } else {
-                  if(result && result[0] ){
-                    var response = { statusCode: 0, additionalInfo: result };
+
+                var info = JSON.parse(JSON.stringify(result));
+                if(info && info[0] ){
+                    for(var i = 0; i < info.length; i++){
+                        if (info[i].additionalInfo){
+                            additionalInfo = info[i].additionalInfo;
+                            delete info[i]['additionalInfo'];
+                            info[i].additionalInfo = JSON.parse(additionalInfo);
+                        }
+                    }
+                    response.additionalInfo = info;
+                  res.json(response);
+                }else {
+                    response.additionalInfo = result;
                     res.json(response);
-                  }else{
-                    var empty = [];
-                    var response = { statusCode: 0, additionalInfo: result };
-                    res.json(response);
-                  }
+                }
             }
         });
     });
