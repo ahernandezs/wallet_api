@@ -466,8 +466,7 @@ exports.getLeaderboard = function(phoneIDUser,callback){
       if (err)
         callback('ERROR', { message: 'Fail  getLeaderboard' });
       else{
-        if(result.group){
-          var query = User.find({group:result.group}, 'phoneID name doxs', {sort: {doxs: -1}});
+          var query = User.find({}, 'phoneID name doxs', {sort: {doxs: -1}});
           query.limit(15);
           query.exec(function (err, people) {
             if (err) return handleError(err);
@@ -479,9 +478,6 @@ exports.getLeaderboard = function(phoneIDUser,callback){
               callback("USERS NOT FOUND", null);
             }
           });
-        }else{
-          callback(null,[]);
-        }
       }
     });
   }

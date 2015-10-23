@@ -37,26 +37,6 @@ io.on('connection', function (socket) {
 	});
 });
 
-var mubsub = require('mubsub');
-
-var client = mubsub(process.env.MONGOLAB_URI || process.env.MONGOHQ_URL ||   'mongodb://localhost/amdocs');
-var channel = client.channel('leaderboard_channel');
-console.log('subscribe client');
-
-client.on('error', console.error);
-channel.on('error', console.error);
-
-channel.subscribe('leaderboard_update', function (message) {
-    console.log('Incomming message' + JSON.stringify(message)); // => 'bar'
-	if(usersockets){
-		//var socketid = usersockets[6666];
-		console.log(usersockets);
-		userQuery.getLeaderboard(null,function(err,users){
-			io.sockets.emit('update_event', {'users': users});
-		});
-	}
-});
-
 
 // ## CORS middleware
 var allowCrossDomain = function(req, res, next) {
@@ -151,6 +131,7 @@ app.get('/api/socialFeed', interceptorHeader,transacction.getSocialFeeds);
 app.get('/api/sms', interceptorHeader,user.getSMSMessage);
 app.post('/api/contacts',interceptorHeader,user.getContacts);
 app.get('/api/pendingPayments',interceptorHeader,transacction.getPendingPayments);
+app.post('/api/pendingPayment',interceptorHeader,transacction.transferPendingPayment);
 app.post('/api/authorizeBuy',interceptorHeader,user.authorizeShopMobileBuy);
 app.post('/api/authorizeMobileBuy',interceptorHeader,user.authorizeShopMobileBuy);
 //Merchant operations

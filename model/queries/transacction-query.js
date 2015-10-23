@@ -104,6 +104,20 @@ exports.createTranssaction = function(data, callback) {
         callback(null, 'The Transacction was created successfully');
 };
 
+exports.updatePendingPayment = function(data, callback) {
+    console.log('Update transacction');
+    transacction.update({_id : data }, {creditMoney:'false'}, null, function(err, result) {
+        if (err){
+            console.log(err)
+            callback("ERROR", { statusCode: 1,  additionalInfo: 'Update Fail' });
+        }else{
+            callback(null, { statusCode: 0 ,  additionalInfo: 'Update success' });
+        }
+    });
+};
+
+
+
 exports.getTransacctionsSocialFeed = function(callback) {
     console.log( 'Get Transacctions' );
     //compras
