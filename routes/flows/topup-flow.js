@@ -235,3 +235,133 @@ exports.buy = function (payload, callback){
         }
     });
 };
+
+exports.verify_customer = function(payload, callback){
+    var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
+    var transid;
+    console.log(payload);
+
+    async.waterfall([
+        function(callback) {
+            console.log('Validate connection');
+            var response = null;
+
+            //payload.phoneID = payload.phoneID +'ES';
+            console.log('Validate phoneID ---->' + payload.phoneID);
+            soap.createClient(soapurl, function (err, client) {
+                if (err) {
+                    console.log(err);
+                    var response = {statusCode: 1, additionalInfo: err};
+                    callback(err, response);
+                } else
+                    callback(null);
+            });
+        },
+        function(callback) {
+            console.log('Create Session');
+            var response = null;
+            soap.createClient(soapurl, function (err, client) {
+                client.createsession({}, function (err, result) {
+                    if (err) {
+                        return new Error(err);
+                    } else {
+                        console.log(result);
+                        var response = result.createsessionReturn;
+                        callback(null, response.sessionid);
+                    }
+                });
+            });
+        },
+        function(sessionid, callback) {
+            console.log('Create hashpin');
+            var hashpin = config.username.toLowerCase() + config.pin;
+            hashpin = sessionid + crypto.createHash('sha1').update(hashpin).digest('hex').toLowerCase();
+            hashpin = crypto.createHash('sha1').update(hashpin).digest('hex').toUpperCase();
+            console.log(hashpin);
+            callback(null, sessionid, hashpin);
+        },
+        function(sessionid, hashpin, callback) {
+            console.log('Login');
+            var request = {sessionid: sessionid, initiator: config.username, pin: hashpin};
+            var request = {loginRequest: request};
+            soap.createClient(soapurl, function (err, client) {
+                client.login(request, function (err, result) {
+                    if (err) {
+                        console.log('Error' + err);
+                        return new Error(err);
+                    } else {
+                        var response = result.loginReturn;
+                        console.log(response);
+                        callback(null, sessionid);
+                    }
+                });
+            });
+        },
+        function(sessionid,callback) {
+
+            console.log('Make Transfer ' + sessionid);
+            var requestSoap = {sessionid: sessionid, to: payload.phoneID, amount: payload.amount, type: config.wallet.type.MONEY};
+            var request = {transferRequest: requestSoap};
+            console.log(request);
+            soap.createClient(soapurl, function (err, client) {
+                client.transfer(request, function (err, result) {
+                    if (err) {
+                        console.log(err);
+                        return new Error(err);
+                    } else {
+                        console.log(result);
+                        var response = result.transferReturn;
+                        if (response.result != 0) {
+                            var response = {statusCode: 1, additionalInfo: result};
+                            callback("ERROR", response);
+                        } else {
+                            callback(null);
+                        }
+                    }
+                });
+            });
+        },
+
+        function(callback){
+            console.log('Save message in DB');
+            var message = {};
+
+            message.status = config.messages.status.NOTREAD;
+            message.type = config.messages.type.VERIFYCUSTOMER;
+            message.title = payload.message;
+            message.phoneID = payload.phoneID;
+            message.date = dateTime;
+            message.message = payload.message;
+            //message.additionalInfo = {};
+            messageQuery.createMessage(payload.phoneID, message, function(err, result) {
+                if (err) {
+                    var response = { statusCode: 1, additionalInfo: result };
+                    callback('ERROR', response);
+                } else {
+                    var extraData = { action: config.messages.action.VERIFYCUSTOMER, additionalInfo : {transactionid: transid}, _id:result._id };
+                    payload.extra = { extra:extraData };
+                    callback(null);
+                }
+            });
+        },
+        function(callback){
+            urbanService.singlePush(payload, function(err, result) {
+                if (err) {
+                    var response = { statusCode: 1, additionalInfo: result };
+                    callback('ERROR',response)
+                    return;
+                }
+                callback(null,result);
+            });
+
+        }
+
+    ], function (err, result) {
+        if(err){
+            console.log('Error  --->' + JSON.stringify(result));
+            callback(err,result);
+        }else{
+            callback(null,result);
+        }
+    });
+};

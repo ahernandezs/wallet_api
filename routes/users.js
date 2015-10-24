@@ -7,6 +7,7 @@ var forgotPin = require('./flows/forgotPin-flow');
 var requestMoney = require('./flows/requestMoney-flow');
 var messages = require('./flows/message-flow');
 var buyFlow = require('./flows/buy-flow');
+var topup = require('./flows/topup-flow');
 var awsS3 = require('../services/aws-service');
 var sms = require('../services/sms-service');
 var urbanService = require('../services/notification-service');
@@ -262,18 +263,18 @@ exports.verify_customer = function (req, res){
         else {
             var payload = {};
             payload.phoneID = phoneNumber;
-            payload.message = "Phone Validated";
-            var extraData = { action: config.messages.action.VERIFYCUSTOMER , additionalInfo : {message : "OK" }};
-            payload.extra = { extra:extraData };
-            console.log('Send push notification');
+            payload.message = "Phone Validated. Receive a " + config.currency.symbol + "5 Topup!";
+            payload.amount = 5;
+
             console.log(payload);
-            urbanService.singlePush(payload, function(err, result) {
-                if (err) {
-                    res.send({statusCode: 1, additionalInfo : { message : "UNAVAILABLE PUSH SERVICE" }});
+            topup.verify_customer(payload, function(err, result){
+                if (err){
+                    res.send({statusCode: 1, additionalInfo : result});
                     return;
                 }
-                res.send({statusCode: 0, additionalInfo: {message: 'OK'}});
+                res.send({statusCode: 0, additionalInfo : { message : 'OK' }});
             });
+
         }
     });
 };
