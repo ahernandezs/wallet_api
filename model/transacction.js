@@ -11,7 +11,8 @@ var transacctionSchema =  new Schema({
 	additionalInfo : String,
 	operation:String ,
 	phoneID:String,
-	creditMoney:String
+	creditMoney:String,
+	from:String
 });
 
 transacctionSchema.statics.getLastTransaction = function(phoneID, operation, callback){
