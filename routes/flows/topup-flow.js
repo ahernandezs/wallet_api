@@ -206,12 +206,12 @@ exports.buy = function (payload, callback){
         function(balance,receipt, callback) {
             console.log( 'Create History transaction for emitter' );
             var transacction = {};
-            transacction.title = 'Top-up';
-            transacction.type = 'MONEY',
+            transacction.title = config.transaction.operation.TOPUP;
+            transacction.type = config.transaction.type.TOPUP,
             transacction.date = dateTime;
-            transacction.amount = (-1) * receipt.amount;
+            transacction.amount = receipt.amount;
             transacction.additionalInfo = receipt.additionalInfo;
-            transacction.operation = 'TRANSFER';
+            transacction.operation = config.transaction.operation.TOPUP;
             transacction.phoneID = receipt.emitter;
             userQuery.findAppID(receipt.emitter,function(err,result){
                 transacction.description ='To ' + result.name;
