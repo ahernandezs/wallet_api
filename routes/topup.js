@@ -4,6 +4,7 @@
 
 var topupFlow = require('./flows/topup-flow');
 var config = require('../config');
+var transaction = require('../model/transacction');
 
 exports.buy = function (req, res){
     var payload = {};
@@ -22,15 +23,43 @@ exports.buy = function (req, res){
         return;
     }
 
-    payload.message = "You add a Topup of " + config.currency.symbol + payload.amount ;
+    payload.message = "You add a Topup of " + config.currency.symbol + payload.amount;
 
-    topupFlow.buy(payload,function(err, result){
-        if(err){
-            //var response = { statusCode:1 , additionalInfo : JSON.stringify(err)};
-            res.json(result);
+    transaction.getLastTransaction(payload.phoneID, config.transaction.operation.TOPUP, function(err,transaction){
+        if (err){
+            res.send({statusCode: 4, additionalInfo: {message: 'UNAVAILABLE DATABASE SERVICE'}});
+            return;
+        }
+
+        if (!transaction){
+            topupFlow.buy(payload,function(err, result){
+                if(err){
+                    //var response = { statusCode:1 , additionalInfo : JSON.stringify(err)};
+                    res.json(result);
+                    return;
+                } else {
+                    //var response = { statusCode:0 ,  additionalInfo : result };
+                    res.json(result);
+                    return;
+                }
+            });
+        }
+
+        if ( ((new Date() - transaction.fecha)/1000) > 3600 ){
+            topupFlow.buy(payload,function(err, result){
+                if(err){
+                    //var response = { statusCode:1 , additionalInfo : JSON.stringify(err)};
+                    res.json(result);
+                    return;
+                } else {
+                    //var response = { statusCode:0 ,  additionalInfo : result };
+                    res.json(result);
+                    return;
+                }
+            });
         } else {
-            //var response = { statusCode:0 ,  additionalInfo : result };
-            res.json(result);
+            res.send({statusCode: 11, additionalInfo : { message : 'ONLY 1 TOPUP PER HOUR' }});
+            return;
         }
     });
 };
