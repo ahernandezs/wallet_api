@@ -1,5 +1,8 @@
 var transacctionQuery = require('../model/queries/transacction-query');
+var TransferFlow = require('./flows/transfer-flow');
 var sessionQuery = require('../model/queries/session-query');
+var doxsService = require('../services/doxs-service');
+var async = require('async');
 
 exports.getTransacctionsHistory = function(req,res){
   console.log('execute GET method getTransacctionsHistory');
@@ -18,7 +21,7 @@ exports.getTransacctionsHistory = function(req,res){
           if(result && result[0] ){
             var response = { statusCode: 0, additionalInfo: result };
             res.json(response);
-          }else{
+          }else{  
             var empty = [];
             result.additionalInfo = empty;
             res.json(result);
@@ -96,3 +99,46 @@ exports.getPendingPayments = function(req, res) {
         }
    });
 };
+
+exports.transferPendingPayment = function(req,res){
+    console.log('Invoke method transferPendingPayment' );
+    req.headers.sessionid = req.headers['x-auth-token'];
+    req.headers.phoneID = req.headers['x-phoneid'];
+    var values = {};
+    values.body = req.body;
+    values.header = req.headers;
+
+    var payloadoxs = {phoneID: req.body.destiny, action:'gift'};
+    async.waterfall([
+      function(callback){
+        TransferFlow.transferFunds(values, function(err, result) {
+            if (result.statusCode === 0) {
+                res.setHeader( 'x-auth-token', result.sessionid );
+                delete result.sessionid;
+            }
+            callback(null, result);
+        });
+      },
+      function(resultBalance, callback){
+        doxsService.saveDoxs(payloadoxs, function(err, result){
+          console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
+          callback(null, resultBalance);
+        });
+      },
+      function(resultBalance, callback){
+          transacctionQuery.updatePendingPayment(req.body.transferPendingID , function(err, response){
+          if(err) {
+          res.send(500);
+          } else {
+            callback(null, resultBalance);
+          } 
+        });
+      }
+    ], function (err, result) {
+      if(err){
+        callback("Error! "+err,result);
+      }else{
+        res.json(result);
+      }
+    });
+}
