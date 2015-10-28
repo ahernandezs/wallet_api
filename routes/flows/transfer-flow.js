@@ -374,6 +374,7 @@ exports.transferFunds = function(data, callback) {
             transaction.operation = 'TRANSFER';
             transaction.phoneID = receipt.emitter;
             transaction.creditMoney = creditMoney;
+            transaction.from = mainUser;
             console.log(transaction);
             Userquery.findAppID(receipt.receiver, function(err, result) {
                 transaction.description = 'From ' + result.name;

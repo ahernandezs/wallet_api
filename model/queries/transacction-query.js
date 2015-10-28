@@ -56,7 +56,7 @@ exports.getTransacctions = function(phoneIDToSearch, callback) {
 
 exports.getPendingTransacctions = function(phoneIDToSearch, callback) {
     console.log( 'Get Transacctions as creditMoney' );
-    transacction.find({phoneID:phoneIDToSearch, type:'MONEY' , creditMoney :'true'}, 'title description amount date additionalInfo ',{sort: {date: -1}}, function(err, transacction)  {
+    transacction.find({phoneID:phoneIDToSearch, type:'MONEY' , creditMoney :'true'}, 'title description amount date additionalInfo from',{sort: {date: -1}}, function(err, transacction)  {
         var response;
         if (err) {
             response = { statusCode: 1, additionalInfo: err };
