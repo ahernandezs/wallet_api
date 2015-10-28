@@ -8,11 +8,11 @@ var Client = require('node-rest-client').Client;
 
 
 exports.requestLoan = function(req, callback) {
-	var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
-	console.log(dateTime.replace(/-/,'.'));
+	var dateTime = moment().tz(process.env.TZ).format('DD.MM.YYYY HH:mm:ss').substring(0,19);;
+	console.log(dateTime);	
 	var xmlPayload = {
 		SYSTEMID    : 'AMDOCS' ,
-		REQUESTID   :  uuid.v1().replace('/-/','') ,
+		REQUESTID   :  uuid.v1().replace(/-/g,'') ,
 		TIMESTAMP   : dateTime ,
 		COMMAND     : 'REQUESTLOAN' ,
 		PID         :  '431276122',
@@ -31,6 +31,7 @@ exports.requestLoan = function(req, callback) {
 
 	var client = new Client();
 	client.post('http://212.36.7.118:4444/WSP_1008', args, function(data,response) {
-		console.log(response);
+		console.log(data);
+        callback(null,data);
 	});
 };

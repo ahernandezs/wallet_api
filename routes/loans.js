@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var async = require('async');
 var loan = require('./flows/loan-flow');
 var loanQuery = require('../model/queries/loan-query');
-
+var  cashCreditService = require('../services/cashCredit-Service');
 var urbanService = require('../services/notification-service');
 var config = require('../config.js');
 var logger = config.logger;
@@ -37,3 +37,23 @@ exports.createLoan = function(req, res) {
         res.json(result);
     });
 };
+
+
+exports.getDecision = function(req,res){
+    logger.info('POST method get decision');
+    var payload = req.body;
+    cashCreditService.requestLoan(payload, function(err,result){
+      if(err) {
+      res.send(500);
+        } else {
+          console.log(result);
+          var mockResponse = { approved:'YES' , appromaxAmount :100, maxPeriod: 5 } ;
+          var response = {statusCode:0 , additionalInfo : mockResponse }
+          res.json(response);
+        }
+    });
+}
+
+exports.loanConfirm = function(req,res){
+    logger.info('POST method loan confirm');
+}

@@ -660,7 +660,7 @@ function getUsersByTeam(callback){
 
 exports.getUserVerified = function(callback){
       var conditions= { validated : false };
-      var query = User.find(conditions);
+      var query = User.find(conditions,' name company phoneID email genre dateOfBirth countryCode nationality passportNumber');
       query.sort({name: 1});
       query.exec(function (err1, usersTeam) {
         callback(null,usersTeam);
@@ -669,7 +669,7 @@ exports.getUserVerified = function(callback){
 
 exports.getContactList = function(contactList, callback){
       var conditions= { phoneID : {'$in' : contactList }  };
-      var query = User.find(conditions);
+      var query = User.find(conditions,'phoneID name _id ');
       query.sort({name: 1});
       query.exec(function (err1, usersTeam) {
         callback(null,usersTeam);

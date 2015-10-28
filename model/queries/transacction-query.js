@@ -64,7 +64,7 @@ exports.getPendingTransacctions = function(phoneIDToSearch, callback) {
             callback("ERROR: " + err.message, response);
         } else if (transacction.length === 0) {
             console.log('Empty');
-            response = { statusCode: 0, additionalInfo: 'Empty' };
+            response = { statusCode: 0, additionalInfo: [] };
             callback(null, response);
         } else {
             console.log('Return Collection');

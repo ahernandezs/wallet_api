@@ -110,7 +110,7 @@ app.post('/api/updateprofile', user.updateProfile);
 app.post('/api/uploadimage', interceptorHeader, user.uploadImage);
 app.post('/api/balance', interceptorHeader, wallet.balance);
 app.get('/api/balance', interceptorHeader, wallet.getBalance);
-app.post('/api/loan', interceptorHeader, loan.createLoan);
+//app.post('/api/loan', interceptorHeader, loan.createLoan);
 app.post('/api/buyflow', interceptorHeader, wallet.buyFlow);
 app.get('/api/users', interceptorHeader, user.getUsers);
 app.post('/api/transferFunds', interceptorHeader, wallet.transferFunds);
@@ -170,6 +170,10 @@ app.get('/api/merchant/usersVerified', merchant.usersVerified);
 app.get('/api/merchant/mobileProducts', merchant.getMobileProducts);
 app.post('/api/merchant/notifyBuyProducts',merchant.buyMobileProducts);
 app.get('/api/merchant/users',user.getUsers);
+
+//services for cash-credit
+app.post('/api/loanDecision', loan.getDecision);
+//app.post('/api/loanConfirm', loan.loanConfirm);
 
 
 server.listen(process.env.PORT  || 3000);
