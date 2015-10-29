@@ -3,8 +3,10 @@ var soap = require('soap');
 var crypto = require('crypto');
 var Userquery = require('../../model/queries/user-query');
 var sessionUser = require('./login-flow');
+var pendingTransfer = require('../../model/pendingTransfer');
 var soapurl = process.env.SOAP_URL;
 var config = require('../../config.js');
+var logger = config.logger;
 
 function endsWith(str, suffix) {
     return str.indexOf(suffix, str.length - suffix.length) !== -1;
@@ -136,28 +138,50 @@ exports.registerFlow = function(payload,callback) {
     function(sessionid,callback){
         if (transfer) {
             console.log('Transfer ' + sessionid);
-            var requestSoap = { sessionid:sessionid, to: payload.phoneID, amount : 25 , type: 1 };
-            var request = { transferRequest: requestSoap };
-            console.log(request);
-            soap.createClient(soapurl, function(err, client) {
+
+            pendingTransfer.getPendingTransfers(payload.phoneID,function(err,result,pending){
+              if (err){
+                callback('ERROR',result);
+              }
+              console.log("************PENDING TRANSFER**************");
+              console.log(pending);
+              var requestSoap = {
+                  sessionid : sessionid,
+                  to : payload.phoneID,
+                  amount :  config.initialTransferAmount,
+                  type :  config.wallet.type.MONEY
+              };
+              if (pending.length > 0 ) {
+                var pendingAmount = 0;
+                for (var i = 0; i < pending.length; i++)
+                  pendingAmount = pendingAmount + pending[i].amount;
+                requestSoap.amount = requestSoap.amount  + pendingAmount;
+                console.log("************PENDING TRANSFER AMOUNT**************");
+              }
+
+              var request = { transferRequest: requestSoap };
+              console.log(request);
+              soap.createClient(soapurl, function(err, client) {
                 client.transfer(request, function(err, result) {
-                    if(err) {
-                        console.log(err);
-                        return new Error(err);
-                    } else {
-                        console.log(result);
-                        var response = result.transferReturn;
-                        if(response.result != 0){
-                            var response = { statusCode:1 ,  additionalInfo : result };
-                            callback("ERROR", response);
-                        } else{
-                            sessionUser.loginFlow({phoneID:payload.phoneID , pin :payload.pin },function(err,result){
-                                callback(null, result);
-                            });
-                        }
+                  if(err) {
+                    console.log(err);
+                    return new Error(err);
+                  } else {
+                    console.log(result);
+                    var response = result.transferReturn;
+                    if(response.result != 0){
+                      var response = { statusCode:1 ,  additionalInfo : result };
+                      callback("ERROR", response);
+                    } else{
+                      sessionUser.loginFlow({phoneID:payload.phoneID , pin :payload.pin },function(err,result){
+                        callback(null, result);
+                      });
                     }
+                  }
                 });
+              });
             });
+
           } else {
             if(payload.group){
               sessionUser.loginFlow({phoneID:payload.phoneID , pin :payload.pin, group : payload.group },function(err,result){
