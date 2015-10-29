@@ -11,7 +11,9 @@ var urbanService = require('../../services/notification-service');
 var balance = require('./balance-flow');
 var ReceiptQuery = require('../../model/queries/receipt-query');
 var transacctionQuery = require('../../model/queries/transacction-query');
+var pendingTranfer = require('../../model/pendingTransfer');
 var doxsService = require('../../services/doxs-service');
+var logger = config.logger;
 
   exports.transferFlow = function(payload,callback) {
       async.waterfall([
@@ -398,6 +400,307 @@ exports.transferFunds = function(data, callback) {
         }
     ], function(err, result) {
         if (err) 
+            callback(err, result);
+        else
+            callback(null, result);
+    });
+};
+
+exports.transferNotRegisteredUser = function(data, callback){
+    var transid;
+    var creditMoney;
+    var forReceipt = {};
+    var receiptName;
+    var senderName;
+    var additionalInfoReceiver;
+    var additionalInfoReceiverJSON;
+    var addInfo;
+    var beneficiaryName;
+    var receiptAvatar;
+    var dateTime;
+    var msg;
+    var forReturn = {};
+    var mainUser = data.header.phoneID;
+
+    if(data.body.paymeback){
+        creditMoney = data.body.paymeback;
+    }
+
+    async.waterfall([
+
+        function(callback) {
+            logger.info('1.- DO TRANSFER TO MAIN ACCOUNT');
+            console.log(data);
+            var payload = data.body;
+            msg = payload.message;
+            var header = data.header;
+            var requestSoap = { sessionid: header.sessionid, to: config.username, amount: payload.amount, type: config.wallet.type.MONEY };
+            console.log('1.1.- REQUEST FOR TRANSFER');
+            console.log(requestSoap);
+            var request = { transferRequest: requestSoap };
+            forReceipt.payload = payload;
+            soap.createClient(soapurl, function(err, client) {
+                client.transfer(request, function(err, result) {
+                    if (err) {
+                        console.log(err);
+                        return new Error(err);
+                    } else {
+                        var response = result.transferReturn;
+                        forReceipt.transferReturn = result;
+                        transid = response.transid;
+                        if (response.result != 0) {
+                            console.log('Result '+ response.result);
+                            var responseTransfer = {};
+                            if(response.result === 7 ){
+                                console.log('Error de transferencia');
+                                responseTransfer = { statusCode: 1, additionalInfo: "Transaction not allowed" };
+                            }
+                            else{
+                                responseTransfer = { statusCode: 1, additionalInfo: JSON.stringify(result) };
+                            }
+                            callback('ERROR', responseTransfer);
+                        } else {
+                            //payload.phoneID = payload.destiny;
+                            //delete payload.destiny;
+                            callback(null, header.sessionid,payload);
+                        }
+                    }
+                });
+            });
+        },
+
+        function(sessionid,payload,callback){
+            logger.info('2.- SET RECEIVER INFO ' + payload.destiny);
+            receipt = payload.destiny;
+            beneficiaryName = payload.destiny;
+            receiptAvatar = "" ; //config.S3.url + payload.phoneID +'.png';}
+            var transfer = {};
+            transfer.date =  dateTime;
+            transfer.amount = payload.amount;
+            transfer.sender = mainUser;
+            transfer.receiver = payload.destiny;
+            transfer.operation = config.transaction.operation.TRANSFER;
+            transfer.message = payload.message;
+
+            var transferNotRegistered = new pendingTranfer(transfer);
+
+            transferNotRegistered.save(function(err,doc){
+                if (err)
+                    callback('ERROR',{ statusCode: 4, additionalInfo: { message:'UNAVAILABLE DATABASE SERVICE' } });
+                else
+                    callback(null, sessionid,payload);
+            });
+        },
+
+        function(sessionid,payload,callback){
+            logger.info('3.- GET SENDER IN DB ' + mainUser);
+            var requestSession = { phoneID :  mainUser };
+            sessionQuery.getCredentials(requestSession,function(err,user){
+                forReceipt.user = user;
+                var payloadoxs = {phoneID: user.data.phoneID, action: 'gift', type: config.wallet.type.DOX}
+                doxsService.saveDoxs(payloadoxs, function(err, result){
+                    if(err) {
+                        console.log('ERROR'+ response);
+                    } else {
+                        console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
+                        Userquery.findAppID(user.data.phoneID,function(err,result){
+                            if (err) {
+                                var response = { statusCode: 1, additionalInfo: result };
+                                callback('ERROR', response);
+                            } else {
+                                dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
+                                senderName = result.name;
+                                addInfo = {transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime };
+                                additionalInfoReceiver = JSON.stringify({transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime });
+                                additionalInfoReceiverJSON = {transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime };
+                                payload.additionalInfo = JSON.stringify({transferID : transid , message : payload.message,amount: payload.amount , doxAdded : config.doxs.p2p  ,name: receipt ,avatar: receiptAvatar , date:dateTime });
+                                payload.date = dateTime;
+                                callback(null, sessionid,payload);
+                            }
+                        });
+                    }
+                });
+            });
+        },
+
+        function(sessionid,payload,callback){
+            var updateDoxs = {phoneID: mainUser, operation: 'p2p',sessionid: sessionid};
+            logger.info('4.- SAVING DOX IN MONGO');
+            Userquery.putDoxs(updateDoxs, function(err,result){
+                callback(null,sessionid,payload);
+            });
+        },
+
+        function(sessionid,payload,callback){
+            logger.info('5.- SAVE MESSAGE IN MONGO');
+            var message = {};
+            var title = config.messages.transferMsg + senderName;
+            //message = extraData;
+            message.status = config.messages.status.NOTREAD;
+            message.type = config.messages.type.TRANSFER;
+            message.title = title;
+            message.phoneID = payload.phoneID;
+            message.date = dateTime;
+            message.message = payload.message;
+            message.additionalInfo = additionalInfoReceiver;
+            messageQuery.createMessage(forReceipt.user.data.phoneID,message, function(err, result) {
+                if (err) {
+                    var response = { statusCode: 1, additionalInfo: result };
+                    callback('ERROR', response);
+                } else {
+                    payload.message = title;
+                    var extraData = {   action: 1, additionalInfo : JSON.stringify(additionalInfoReceiverJSON),
+                        _id:result._id };
+                    payload.extra = { extra:extraData};
+                    callback(null, sessionid,payload);
+                }
+            });
+        },
+
+        function(sessionid,message, callback) {
+            logger.info('6.- SEND PUSH NOTIFICATION');
+            urbanService.singlePush(message, function(err, result) {
+                var response = { statusCode: 0, additionalInfo: 'The transfer was successful' };
+                callback(null,sessionid,message);
+            });
+        },
+        function(sessionid,message,callback){
+            logger.info('7.- GET BALANCE');
+            balance.balanceFlow(sessionid, function(err, result) {
+                if(err){
+                    var response = { statusCode: 1, additionalInfo: result };
+                    callback('ERROR', response);
+                }
+                logger.info('6.1.- GETTING BALANCE...');
+                result.additionalInfo.doxAdded = config.doxs.p2p;
+                callback(null,result);
+            });
+        },
+        function(balance, callback) {
+            logger.info( '8.- CREATE RECEIPT TRANSFER' );
+            data = forReceipt;
+            var receipt = {};
+            receipt.emitter = data.user.data.phoneID;
+            receipt.receiver = data.payload.phoneID;
+            receipt.amount = data.payload.amount;
+            receipt.message = msg;
+            receipt.additionalInfo = data.payload.additionalInfo;
+            receipt.title = 'You have sent a Transfer of '+  config.currency.symbol + ' ' + receipt.amount + ' to ' + beneficiaryName;
+            receipt.date = dateTime;
+            receipt.type = 'TRANSFER';
+            receipt.status = 'DELIVERED';
+            receipt.owner = 0;
+            ReceiptQuery.createReceipt(receipt, function(err, result) {
+                if (err)
+                    callback('ERROR', err);
+                else
+                    callback(null, balance,receipt);
+            });
+        },
+
+        function(balance,receipt, callback) {
+            logger.info( '9.- CREATE RECEIPT TRANSFER RECEIVER' );
+            data = forReceipt;
+            var receipt = {};
+            receipt.emitter = data.payload.phoneID;
+            receipt.receiver = data.user.data.phoneID;
+            receipt.amount = data.payload.amount;
+            receipt.message = msg;
+            addInfo.amount = receipt.amount;
+            receipt.additionalInfo = JSON.stringify(addInfo);
+            receipt.title = config.messages.transferMsg + senderName;
+            receipt.date = dateTime;
+            receipt.type = 'TRANSFER';
+            receipt.status = 'DELIVERED';
+            receipt.owner = 1;
+            ReceiptQuery.createReceipt(receipt, function(err, result) {
+                if (err)
+                    callback('ERROR', err);
+                else
+                    callback(null, balance,receipt);
+            });
+        },
+
+        function(balance,receipt, callback) {
+            logger.info( '10.- CREATE HISTORY TRANSACTION FOR EMITTER' );
+            var transacction = {};
+            transacction.title = 'Transfer fund';
+            transacction.type = 'MONEY',
+            transacction.date = dateTime;
+            transacction.amount = (-1) * receipt.amount;
+            transacction.additionalInfo = receipt.additionalInfo;
+            transacction.operation = 'TRANSFER';
+            transacction.phoneID = receipt.receiver;
+            Userquery.findAppID(receipt.emitter,function(err,result){
+                transacction.description ='To ' + result.name;
+                transacctionQuery.createTranssaction(transacction, function(err, result) {
+                    if (err)
+                        callback('ERROR', err);
+                    else{
+                        console.log('Transacction Created');
+                        callback(null, balance,receipt);
+                    }
+                });
+            });
+        },
+
+        function(balance,receipt, callback) {
+            logger.info( '11.- CREATE TRANSACTION DOX' );
+            var transacction = {};
+            transacction.title = 'Transfer fund';
+            transacction.type = config.transaction.type.DOX;
+            transacction.date = dateTime;
+            transacction.amount = config.doxs.p2p;
+            transacction.additionalInfo = receipt.additionalInfo;
+            transacction.operation = 'TRANSFER';
+            transacction.phoneID = receipt.receiver;
+            Userquery.findAppID(receipt.emitter,function(err,result){
+                transacction.description ='To ' + result.name;
+                forReturn.name = result.name;
+                transacctionQuery.createTranssaction(transacction, function(err, result) {
+                    if (err)
+                        callback('ERROR', err);
+                    else{
+                        console.log('Transacction Created');
+                        callback(null, balance, receipt);
+                    }
+                });
+            });
+        },
+        function(balance, receipt) {
+            console.log( '12.- CREATE HISTORY TRANSACTION FOR RECEIVER. ' );
+            var transaction = {};
+            transaction.title = 'Transfer fund';
+            transaction.type = 'MONEY';
+            transaction.date = dateTime;
+            transaction.amount = receipt.amount;
+            transaction.additionalInfo = additionalInfoReceiver;
+            transaction.operation = 'TRANSFER';
+            transaction.phoneID = receipt.emitter;
+            transaction.creditMoney = creditMoney;
+            console.log(transaction);
+            Userquery.findAppID(receipt.receiver, function(err, result) {
+                transaction.description = 'From ' + result.name;
+                transacctionQuery.createTranssaction(transaction, function(err, result) {
+                    if (err)
+                        callback('ERROR', err);
+                    else {
+                        console.log( 'Transaction created for receiver' );
+                        balance.title = config.messages.transferFund + beneficiaryName;
+                        balance.additionalInfo.date = dateTime;
+                        balance.additionalInfo.amount = receipt.amount;
+                        balance.additionalInfo.name = beneficiaryName;
+                        balance.type = 'TRANSFER';
+                        balance.date = dateTime;
+                        balance.additionalInfo.avatar = receiptAvatar;
+                        balance._id = transid;
+                        callback(null, balance);
+                    }
+                });
+            });
+        }
+    ], function(err, result) {
+        if (err)
             callback(err, result);
         else
             callback(null, result);

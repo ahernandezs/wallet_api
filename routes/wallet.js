@@ -119,31 +119,52 @@ exports.transferFunds = function(req, res) {
     values.body = req.body;
     values.header = req.headers;
 
-    var payloadoxs = {phoneID: req.body.destiny, action:'gift'};
-    async.waterfall([
-      function(callback){
-        TransferFlow.transferFunds(values, function(err, result) {
-            if (result.statusCode === 0) {
-                res.setHeader( 'x-auth-token', result.sessionid );
-                delete result.sessionid;
-            }
-            callback(null, result);
-        });
-      },
-      function(resultBalance, callback){
-        doxsService.saveDoxs(payloadoxs, function(err, result){
-          console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
-          callback(null, resultBalance);
-        });
-      }
-    ], function (err, result) {
+    Userquery.findUserByPhoneID(values.body.destiny, function(err, info){
       if(err){
-        callback("Error! "+err,result);
-      }else{
-        res.json(result);
+        //User not registered.
+        TransferFlow.transferNotRegisteredUser(values,function(err, result){
+
+          if (err){
+            res.send(result);
+            return;
+          } else {
+            res.send(result);
+            return;
+          }
+        });
+
+      } else {
+        //User already registered. Normal Flow.
+        var payloadoxs = {phoneID: req.body.destiny, action: 'gift'};
+        async.waterfall([
+          function (callback) {
+            TransferFlow.transferFunds(values, function (err, result) {
+              if (result.statusCode === 0) {
+                res.setHeader('x-auth-token', result.sessionid);
+                delete result.sessionid;
+              }
+              callback(null, result);
+            });
+          },
+          function (resultBalance, callback) {
+            doxsService.saveDoxs(payloadoxs, function (err, result) {
+              console.log('Transfer result: ' + JSON.stringify(result) + '\n\n');
+              callback(null, resultBalance);
+            });
+          }
+        ], function (err, result) {
+          if (err) {
+            callback("Error! " + err, result);
+          } else {
+            res.json(result);
+          }
+        });
       }
+
     });
-};
+
+
+}
 
 exports.sendGift = function(req, res){
   console.log('\n\nExecute POST Send Gift');
