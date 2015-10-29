@@ -118,6 +118,7 @@ config.prizes.top = 1;
 config.conn = {};
 config.username = 'anzen_01';
 config.pin = '1234';
+config.initialTransferAmount = 5;
 
 config.mail = {};
 config.mail.bodyPin= 'Thank you for registering with Amdocs wallet! Your pin number is: ';
