@@ -69,7 +69,7 @@ exports.preregister = function(req, res){
     console.log('execute POST method preregister');
     console.log(req.body);
 
-    var phoneNumber = req.body.phoneNumber;
+    var phoneNumber = req.body.countryCode+req.body.phoneNumber;
 
     if (!phoneNumber) {
         //res.status(400).send({message: 'The request JSON was invalid or cannot be served. '});
