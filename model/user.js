@@ -26,6 +26,8 @@ var userSchema = new Schema({
 	validated: Boolean,
 	countryCode: String ,
 	dateOfBirth: String ,
+	nationality: String ,
+	passportNumber: String,
 	genre : String
 });
 
