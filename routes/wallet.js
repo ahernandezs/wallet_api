@@ -9,6 +9,7 @@ var GiftFlow = require('./flows/gift-flow');
 var balance = require('./flows/balance-flow');
 var doxsService = require('../services/doxs-service');
 var couponService = require('../services/coupon-service');
+var sms = require('../services/sms-service');
 var receipt = require('../model/queries/receipt-query');
 var sessionQuery = require('../model/queries/session-query');
 var doxInfoQuery = require('../model/queries/catalog-query');
@@ -119,20 +120,31 @@ exports.transferFunds = function(req, res) {
     values.body = req.body;
     values.header = req.headers;
 
+    var enable_sms = process.env.SMS_ENABLED == "YES" ? true : false;
+
     Userquery.findUserByPhoneID(values.body.destiny, function(err, info){
       if(err){
         //User not registered.
         TransferFlow.transferNotRegisteredUser(values,function(err, result){
-
           if (err){
             res.send(result);
             return;
           } else {
+            if (enable_sms) {
+              var message = "Hello! you receive a transfer from: " + req.headers.phoneID + " by " + config.currency.symbol + values.body.amount;
+              sms.sendMessage(values.body.countryCode + values.body.destiny, message, function (err, sms_response) {
+                if (err) {
+                  //res.status(503).send({code : 103, message : 'UNAVAILABLE SMS SERVICE' });
+                  res.send({statusCode: 3, additionalInfo: {message: 'UNAVAILABLE SMS SERVICE'}});
+                  console.log(sms_response);
+                  return;
+                }
+              });
+            }
             res.send(result);
             return;
           }
         });
-
       } else {
         //User already registered. Normal Flow.
         var payloadoxs = {phoneID: req.body.destiny, action: 'gift'};
