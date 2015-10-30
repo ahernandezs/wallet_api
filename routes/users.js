@@ -69,8 +69,11 @@ exports.preregister = function(req, res){
     console.log('execute POST method preregister');
     console.log(req.body);
 
-    var phoneNumber = req.body.countryCode+req.body.phoneNumber;
 
+    //var phoneNumber = req.body.phoneNumber;
+    var phoneNumber = req.body.phoneNumber;
+    var countryCode = req.body.countryCode;
+    
     if (!phoneNumber) {
         //res.status(400).send({message: 'The request JSON was invalid or cannot be served. '});
         res.send({'statusCode' : 1, additionalInfo: {'message': 'INVALID JSON'}});
@@ -96,7 +99,7 @@ exports.preregister = function(req, res){
                 if (doc) doc.verificationCode = number;
                 else sms_verification_data.verificationCode = number;
                 var message = "Hello! your verification code is: " + number;
-                sms.sendMessage(phoneNumber,message, function(err,sms_response){
+                sms.sendMessage(countryCode + phoneNumber,message, function(err,sms_response){
                     if (err) {
                         //res.status(503).send({code : 103, message : 'UNAVAILABLE SMS SERVICE' });
                         res.send({statusCode: 3, additionalInfo: {message: 'UNAVAILABLE SMS SERVICE'}});
