@@ -63,3 +63,31 @@ exports.requestDecision = function(req, callback) {
         callback(null,data);
 	});
 };
+
+exports.loanConfirm = function(payload, callback){
+
+	var dateTime = moment().tz(process.env.TZ).format('DD.MM.YYYY HH:mm:ss').substring(0,19);;
+	console.log(dateTime);
+	var xmlPayload = {
+		SYSTEMID    : 'AMDOCS' ,
+		REQUESTID   :  uuid.v1().replace(/-/g,'') ,
+		TIMESTAMP   : dateTime ,
+		COMMAND     : 'REQUESTDECISION' ,
+		PID         :  payload.phoneID,
+		MSSIDN      :  "+" + payload.countryCode + payload.phoneID
+	};
+
+	console.log(js2xmlparser("DATA", xmlPayload));
+
+	var args = {
+		data:  js2xmlparser("DATA", xmlPayload) ,
+		headers:{ 'Content-Type': 'text/xml' , 'Accept-Charset' : 'UTF-8' }
+	};
+
+	console.log(args);
+	var client = new Client();
+	client.post('http://212.36.7.118:4444/WSP_1008', args, function(data,response) {
+		console.log(data);
+		callback(null,data);
+	});
+};

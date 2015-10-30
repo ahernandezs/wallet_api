@@ -55,16 +55,22 @@ exports.getDecision = function(req,res){
 }
 
 exports.loanConfirm = function(req,res){
-    logger.info('POST method loan confirm');
+    logger.info('POST METHOD LOAN CONFIRM');
     var payload = req.body;
+    if (!payload.phoneID && !payload.countryCode) {
+        //res.status(400).send({message: 'The request JSON was invalid or cannot be served. '});
+        res.send({'statusCode' : 1, additionalInfo: {'message': 'INVALID JSON'}});
+        return;
+    }
     cashCreditService.requestLoan(payload, function(err,result){
       if(err) {
-      res.send(500);
-        } else {
+          res.send({statusCode: 12, additionalInfo: {message: 'UNAVAILABLE CASHCREDIT SERVICE'}});
+          return;
+      } else {
           console.log(result);
           var mockResponse = { approved:'SUCCESSFUL' } ;
           var response = {statusCode:0 , additionalInfo : mockResponse }
           res.json(response);
-        }
+      }
     });   
 }
