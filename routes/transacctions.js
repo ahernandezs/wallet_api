@@ -88,8 +88,15 @@ exports.getPendingPayments = function(req, res) {
         if(err) {
           res.send(500);
         } else {
-          if(result && result.length != 0 ){ 
-            var response = result;
+          if(result && result.length != 0 ){
+            var response = JSON.parse(JSON.stringify(result));
+            for(var i = 0; i < response.length; i++){
+                if (response[i].additionalInfo){
+                    additionalInfo = response[i].additionalInfo;
+                    delete response[i].additionalInfo;
+                    response[i].additionalInfo = JSON.parse(additionalInfo);
+                }
+            }
             res.json(response);
           }else{
             var empty = [];
