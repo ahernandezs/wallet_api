@@ -173,7 +173,7 @@ app.get('/api/merchant/users',user.getUsers);
 
 //services for cash-credit
 app.post('/api/loanDecision', loan.getDecision);
-//app.post('/api/loanConfirm', loan.loanConfirm);
+app.post('/api/loanConfirm', loan.loanConfirm);
 
 
 server.listen(process.env.PORT  || 3000);

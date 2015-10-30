@@ -8,6 +8,7 @@ var productSchema = new Schema({
     url: String,
 	description: String,
 	cost: Number,
+	typeMoney : String,
 	status: String,
 	schedule: String,
 	CustomerCode: Number,

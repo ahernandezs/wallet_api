@@ -47,7 +47,7 @@ exports.getDecision = function(req,res){
       res.send(500);
         } else {
           console.log(result);
-          var mockResponse = { approved:'YES' , appromaxAmount :100, maxPeriod: 5 } ;
+          var mockResponse = { approved:'YES' , maxAmount :100, maxPeriod: 5 } ;
           var response = {statusCode:0 , additionalInfo : mockResponse }
           res.json(response);
         }
@@ -56,4 +56,15 @@ exports.getDecision = function(req,res){
 
 exports.loanConfirm = function(req,res){
     logger.info('POST method loan confirm');
+    var payload = req.body;
+    cashCreditService.requestLoan(payload, function(err,result){
+      if(err) {
+      res.send(500);
+        } else {
+          console.log(result);
+          var mockResponse = { approved:'SUCCESSFUL' } ;
+          var response = {statusCode:0 , additionalInfo : mockResponse }
+          res.json(response);
+        }
+    });   
 }

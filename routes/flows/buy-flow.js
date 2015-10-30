@@ -513,7 +513,7 @@ exports.sendBuy2Customer  = function(order, callback){
             message.message = title;
             message.phoneID = order.customerID;
             if(order.status === 'NEW')
-				extraData = { action : config.messages.action.AUTHORIZATION_PURCHASE , total : order.total , orderID: orderID};
+				extraData = { action : config.messages.action.MOBILE_SHOP_PURCHASE , total : order.total , orderID: orderID};
 
 			message.extra = {extra : extraData} ;
 			urbanService.singlePush(message, function(err, result) {

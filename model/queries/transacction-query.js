@@ -69,7 +69,7 @@ exports.getPendingTransacctions = function(phoneIDToSearch, callback) {
         } else {
             console.log('Return Collection');
             response = { statusCode: 0, additionalInfo: transacction };
-            callback(null, transacction);
+            callback(null, response);
         }
     });
 };
