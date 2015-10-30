@@ -23,4 +23,16 @@ exports.getMobileProducts =  function(callback) {
             callback(null, response);
         }
     });
+}; 
+
+exports.getMobileProduct =  function(productID,callback) {
+    console.log( 'getProduct from MongoDB ' + productID );
+    Product.findOne( { 'productID' : productID }, function(err, result) {
+       if (err)
+           callback('ERROR', 'Product was not found');
+        else{
+            console.log(result);
+            callback(null, result);
+        }
+    });
 };  

@@ -6,6 +6,7 @@ var Orderquery = require('../../model/queries/order-query');
 var orderQueryTemporal = require('../../model/queries/orderTemporal-query');
 var shopOrderQuery = require('../../model/queries/shopOrder-query');
 var productQuery = require('../../model/queries/product-query');
+var productMobileQuery = require('../../model/queries/mobileProduct-query');
 var Userquery = require('../../model/queries/user-query');
 var merchantQuery = require('../../model/queries/merchant-query');
 var sessionQuery = require('../../model/queries/session-query')
@@ -491,6 +492,7 @@ exports.authorizeBuy = function(payload,callback){
 
 
 exports.sendBuy2Customer  = function(order, callback){
+		console.log(order);
 		async.waterfall([
 		//save temporal order
 		function(callback){
@@ -501,19 +503,38 @@ exports.sendBuy2Customer  = function(order, callback){
 				}
 				else{
 				console.log('Save mobile shop order' + result.order);
-				  callback(null, result.order);
+				  callback(null,result.order);
 				}
 			});
 		},
-				//send push notification
-		function(orderID,callback){
+		
+		//Get customer code 
+		function(orderID, callback){
+			console.log('Get customer code' + order);
+			console.log(order.products[0].productID);
+			productMobileQuery.getMobileProduct(order.products[0].productID, function(err,result) {
+				if(err){
+				  var response = { statusCode:1 ,  additionalInfo : err };
+				  callback('ERROR',response);
+				}
+				else{
+					console.log('Senfbuy"Cusrtomer')
+					console.log(result);
+					console.log('Get customer code for products' + result.customerCode);
+				  callback(null, orderID, result.customerCode);
+				}
+			});
+		},
+
+		//send push notification
+		function(orderID,customerCode,callback){
             var message = {};
             var extraData = {};
             var title = 'Authorization Purchase';
             message.message = title;
             message.phoneID = order.customerID;
             if(order.status === 'NEW')
-				extraData = { action : config.messages.action.MOBILE_SHOP_PURCHASE , total : order.total , orderID: orderID};
+				extraData = { action : config.messages.action.MOBILE_SHOP_PURCHASE , total : order.total , orderID: orderID , 'customerCode' : customerCode };
 
 			message.extra = {extra : extraData} ;
 			urbanService.singlePush(message, function(err, result) {

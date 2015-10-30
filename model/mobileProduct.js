@@ -11,8 +11,8 @@ var productSchema = new Schema({
 	typeMoney : String,
 	status: String,
 	schedule: String,
-	CustomerCode: Number,
-	DemonstratorCode: Number
+	customerCode: Number,
+	demonstratorCode: Number
 });
 
 module.exports = mongoose.model('mobile_product', productSchema);
