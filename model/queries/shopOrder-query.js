@@ -17,9 +17,9 @@ exports.putOrder = function(order,callback){
 	});
 }
 
-exports.update = function(order,callback){
+exports.update = function(orderID,callback){
 	var conditions = orderID
-	Order.update(conditions, payload, null, function(err, result) {
+	Order.update(conditions, {  status: "ACCEPTED",}, null, function(err, result) {
 		if (err){
 			console.log(err)
 			callback("ERROR", { statusCode: 1,  additionalInfo: 'Update Fail' });
@@ -27,4 +27,24 @@ exports.update = function(order,callback){
 			callback(null, { statusCode: 0 ,  additionalInfo: 'Update success' });
 		}
 	});
+}
+
+exports.getOrder = function (ID,callback) {
+	console.log('Get temporal order '+ID);
+	 async.waterfall([
+    	function(callback){
+			Order.findOne({ 'orderID': ID }, function (err, order) {
+		    	if (err) callback('ERROR',err);
+		    	else{
+				callback(null,order);
+		    }
+		})
+	}
+	], function (err, result) {
+      if(err){
+        callback(err,result);
+      }else{
+        callback(null,result);
+      }
+    });
 }

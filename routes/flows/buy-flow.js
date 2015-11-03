@@ -510,7 +510,7 @@ exports.sendBuy2Customer  = function(order, callback){
 		
 		//Get customer code 
 		function(orderID, callback){
-			console.log('Get customer code' + order);
+			console.log('Get customer code' + order.products);
 			console.log(order.products[0].productID);
 			productMobileQuery.getMobileProduct(order.products[0].productID, function(err,result) {
 				if(err){
@@ -562,12 +562,17 @@ exports.sendBuy2Customer  = function(order, callback){
 
 exports.authorizeShopMobileBuy = function(payload,callback){
 var sessionid = payload.sessionid;
+var payloadBuyFlow = {};
 async.waterfall([
 		//update order
 		function(callback){
-		console.log('Get Temporal Order');
-			orderQueryTemporal.getOrder(payload.orderID,function(err,result){
-				if(err) callback('ERROR',err);
+			console.log('Get Temporal Order');
+			console.log(payload);
+			shopOrderQuery.getOrder(payload.orderID ,function  (err,result) {
+				if(err){
+					console.log(err);
+					callback('ERROR',err);
+				}
 				else{
 					console.log(result);
 					callback(null,result);
@@ -581,7 +586,7 @@ async.waterfall([
 				order.status = 'ACCEPTED';
 				payloadBuyFlow.order =  order ;
 				payloadBuyFlow.sessionid = sessionid;
-				payloadBuyFlow.phoneID = order.phoneID;
+				payloadBuyFlow.phoneID = order.customerID;
 				purchaseFlow.buyFlowMobileShop(payloadBuyFlow ,function  (err,result) {
 					if(err){
 						console.log(err);
@@ -589,7 +594,7 @@ async.waterfall([
 					}
 					else{
 						console.log('Result purchase');
-						callback(null,order);
+						callback(null,result);
 					}
 				});
 			}else
@@ -620,7 +625,8 @@ exports.buyFlowMobileShop = function(payload,callback) {
 		//Transfer
 		function(callback){
 			console.log('Transfer purchase to merchant');
-			var requestSoap = { sessionid: payload.sessionid, to: config.username, amount : payload.total , type: 1 };
+			console.log(payload);
+			var requestSoap = { sessionid: payload.sessionid, to: config.username, amount : payload.order.total , type: 1 };
 			var request = { transferRequest: requestSoap };
 			console.log(request);
 				soap.createClient(soapurl, function(err, client) {
@@ -641,37 +647,15 @@ exports.buyFlowMobileShop = function(payload,callback) {
 				});
 			});
 		},
-		//Add dox in umarket
-		function(sessionid,callback){
-			payload['action']='payment';
-			doxsService.saveDoxs(payload, function(err, result){
-				logger.info('Transfer result: '+JSON.stringify(result)+'\n\n');
-				if(err) {
-					return new Error(err);
-				} else {
-					callback(null,sessionid);
-				}
-			});
-		},
-		//Add dox in Middleware Storage
-		function(sessionid, callback){
-			var updateDoxs = {sessionid:sessionid, phoneID: payload.customerID, operation: 'payment'};
-			logger.info('Saving doxs in mongo');
-			Userquery.putDoxs(updateDoxs, function(err,result){
-				logger.info(sessionid);
-				callback(null,sessionid);
-			});
-		},
         //Update order
 		function(sessionid,callback){
 			logger.info('Saving order ');
-			shopOrderquery.update(order, function(err,result){
+			shopOrderQuery.update(payload.order.orderID, function(err,result){
 				orderID = result.order;
 				logger.info('Order updated result: '+JSON.stringify(result)+'\n\n');
 				callback(null, sessionid);
 			});
 		},
-
 		function(sessionid, callback){
 			logger.info('balance e-wallet');
 			var  request = { sessionid: sessionid, type: 1  };
@@ -712,16 +696,9 @@ exports.buyFlowMobileShop = function(payload,callback) {
 							var balance = {
 								current: currentMoney,
 								dox: response.current,
-								doxAdded: config.doxs.payment,
-								order: orderID,
-								status:'NEW',
-								date:dateTime,
-								twitter: config.messages.twitter,
-								facebook:config.messages.facebook,
-								picture : imageProduct
 							};
 							logger.info(config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '').substring(0,19)));
-							response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
+							response = { statusCode:0 ,  additionalInfo : balance };
 						}
 						else
 							var response = { statusCode:1 ,  additionalInfo : response };
@@ -740,7 +717,7 @@ exports.buyFlowMobileShop = function(payload,callback) {
 			    receipt.additionalInfo = JSON.stringify(response.additionalInfo);
 			    receipt.amount = data.order.total;
 			    receipt.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
-			    receipt.type = 'BUY';
+			    receipt.type = 'BUY-PRODUCT';
 			    receipt.status = 'NEW';
 			    receipt.orderID = orderID;
 			    ReceiptQuery.createReceipt(receipt, function(err, result) {
@@ -760,29 +737,12 @@ exports.buyFlowMobileShop = function(payload,callback) {
 			transacction.date = dateTime;
 			transacction.amount = (-1) * receipt.amount;
 			transacction.additionalInfo = receipt.additionalInfo;
-			transacction.operation = 'BUY';
+			transacction.operation = 'BUY-PRODUCT';
 			transacction.phoneID = receipt.emitter;
 			transacction.description ='Order No '+ orderID;
 			transacctionQuery.createTranssaction(transacction, function(err, result) {
 				if (err)
 					logger.error('Error to create transacction');
-				else{
-					logger.info(result);
-				}
-			});
-			logger.info( 'Create  transacction DOX' );
-			var transacction = {};
-			transacction.title = 'Amdocs mobile shop ';
-			transacction.type = 'DOX',
-			transacction.date = dateTime;
-			transacction.amount = config.doxs.payment;
-			transacction.additionalInfo = receipt.additionalInfo;
-			transacction.operation = 'BUY';
-			transacction.phoneID = receipt.emitter;
-			transacction.description ='Order No '+ orderID;
-			transacctionQuery.createTranssaction(transacction, function(err, result) {
-				if (err)
-					callback('ERROR', err);
 				else{
 					logger.info(result);
 					callback(null, balance);
