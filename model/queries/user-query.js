@@ -270,7 +270,7 @@ exports.findAppID = function(phoneID,callback){
 exports.findUserByPhoneID = function(phoneID,callback){
   console.log('Search user in mongoDB');
   console.log(phoneID);
-  User.findOne({ 'phoneID': phoneID }, 'name email', function (err, person) {
+  User.findOne({ 'phoneID': phoneID }, 'name email countryCode', function (err, person) {
     if (err) return handleError(err);
     else if(!person)
       callback("ERROR", { statusCode: 0 ,  additionalInfo: 'User not  Found' });
@@ -349,7 +349,7 @@ var putDoxs = exports.putDoxs = function(payload, callback){
 exports.confirmPin = function(phoneID, callback){
   console.log('Confirm Pin');
   console.log(phoneID);
-  User.findOne({ 'phoneID': phoneID }, 'pin email appID company name profileCompleted validated', function (err, person) {
+  User.findOne({ 'phoneID': phoneID }, 'pin email appID company name profileCompleted validated email', function (err, person) {
     if (err) return handleError(err);
     else if(person){
       console.log(person);

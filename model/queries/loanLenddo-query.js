@@ -51,7 +51,6 @@ exports.loanRemove = function(phoneID,callback){
         if(err)
             callback("ERROR",result);
         else{
-          console.log(result);
           callback(null,result);
         }
     });

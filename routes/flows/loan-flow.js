@@ -14,6 +14,7 @@ var logger = config.logger;
 var soapurl = process.env.SOAP_URL;
 var ReceiptQuery = require('../../model/queries/receipt-query');
 var notificationService = require('../../services/notification-service');
+var balanceServiceFlow = require('./balance-flow.js');
 
 exports.createLoanFlow = function(payload,callback) {
   console.log('Create new Loan');
@@ -23,18 +24,8 @@ exports.createLoanFlow = function(payload,callback) {
   forResult.additionalInfo = {};
   var additionalInfo;
   async.waterfall([
-    //DELETE from lenddo pending loan
-    function(callback) {
-          logger.info( 'delete pending loan lenddo' );
-          loanLenddoQuery.loanRemove(payload.body.phoneID,function(err,result){
-            if(err)
-              callback('ERROR', { statusCode : 1, additionalInfo : err });
-            else
-              callback(null);
-          });
-    },
-
-    function(callback) {
+    //TODO: check if there are curren loans
+   /* function(callback) {
         logger.info( 'Find loans for this user' );
         loanQuery.findUserLoans(payload.body.phoneID, function(err, result) {
             logger.info(result);
@@ -45,11 +36,11 @@ exports.createLoanFlow = function(payload,callback) {
             else
                 callback(null);
         });
-    },
+    },*/
     function(callback){
       logger.info('saving loan in DB');
       var loan = payload.body;
-      var merchantID = loan.merchantID;
+      var merchantID = 1;
       loan.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
       loan.status = config.loans.status.NEW;
       loan.customerImage = config.S3.url + loan.phoneID +'.png';
@@ -102,8 +93,7 @@ exports.createLoanFlow = function(payload,callback) {
             callback('ERROR',response);
           }
           else{
-
-            logger.info(result);
+            console.log(result);
             loan.name = result.name;
             loan.additionalInfo = JSON.stringify ({_id: loan._id , customerName : loan.name , customerImage : loan.customerImage , status: loan.status , date :loan.date });
             forReceipt.detail = loan;
@@ -153,7 +143,7 @@ exports.createLoanFlow = function(payload,callback) {
 
       function(response, loanId, callback){
 
-        var carga = {body:{"_id" : loanId, "status" : "ACCEPTED"}};
+        var carga = {body:{"_id" : loanId, "status" : "ACCEPTED"} , sessionID : payload.body.sessionID};
 
         updateLoanFlow(carga, function(err, result) {
           callback(null, result);
@@ -329,7 +319,18 @@ var updateLoanFlow = exports.updateLoanFlow = function(payload,callback){
                 callback(null, response);
             }
         });
-    }
+    },
+    //Get current Balance
+    function(response,callback){
+      balanceServiceFlow.balanceFlow(payload.sessionID, function(err, result) {
+        if(err){      
+          callback(err,result);    
+        }else{
+          delete result.sessionid;
+          callback(null,result);    
+        } 
+      });
+    },
     ],  function (err, result) {
       logger.info(result);
       if(err){      

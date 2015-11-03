@@ -42,9 +42,12 @@ exports.createLoan = function(req, res) {
 exports.getDecision = function(req,res){
     logger.info('POST method get decision');
     var payload = req.body;
-    cashCreditService.requestLoan(payload, function(err,result){
+    payload.phoneID = req.headers['x-phoneid'];
+
+    cashCreditService.requestDecision(payload, function(err,result){
       if(err) {
-      res.send(500);
+        console.log(err);
+        res.send(500);
         } else {
           console.log(result);
           var mockResponse = { approved:'YES' , maxAmount :100, maxPeriod: 5 } ;
@@ -57,6 +60,9 @@ exports.getDecision = function(req,res){
 exports.loanConfirm = function(req,res){
     logger.info('POST METHOD LOAN CONFIRM');
     var payload = req.body;
+    payload.phoneID = req.headers['x-phoneid'];
+    var amountLoan = payload.amount;
+
     if (!payload.phoneID && !payload.countryCode) {
         //res.status(400).send({message: 'The request JSON was invalid or cannot be served. '});
         res.send({'statusCode' : 1, additionalInfo: {'message': 'INVALID JSON'}});
@@ -67,10 +73,17 @@ exports.loanConfirm = function(req,res){
           res.send({statusCode: 12, additionalInfo: {message: 'UNAVAILABLE CASHCREDIT SERVICE'}});
           return;
       } else {
-          console.log(result);
-          var mockResponse = { approved:'SUCCESSFUL' } ;
-          var response = {statusCode:0 , additionalInfo : mockResponse }
-          res.json(response);
+          console.log('Invoke create Loan Flow');
+          var bodyContent = { phoneID : req.headers['x-phoneid'] , amount : amountLoan , sessionID :  req.headers['x-auth-token'] };
+          var payload = { body : bodyContent } ;
+          console.log('Invoke create Loan Flow 2');
+          console.log(payload);
+          loan.createLoanFlow(payload, function(err, result) {
+              res.json(result);
+          });
+          //var mockResponse = { approved:'SUCCESSFUL' } ;
+          //var response = {statusCode:0 , additionalInfo : mockResponse }
+          //res.json(response);
       }
     });   
 }
