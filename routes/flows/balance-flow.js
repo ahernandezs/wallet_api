@@ -7,7 +7,7 @@ var soapurl = process.env.SOAP_URL;
 exports.balanceFlow = function(sessionid,callback) {
   async.waterfall([
     function(callback){
-      console.log('balance e-wallet');
+      console.log('balance e-wallet' + sessionid);
       var request = { sessionid: sessionid, type: 1  };
       var request = {balanceRequest: request};
       soap.createClient(soapurl, function(err, client) {
