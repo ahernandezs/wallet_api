@@ -78,11 +78,11 @@ config.messages.twitter = { message :'I just bought a {0} from AmdocsCafe at {1}
 config.messages.twitter1 = 'I just bought a ';
 config.messages.twitter2 = ' from AmdocsCafe at ';
 config.messages.twitterURL = '';
-config.messages.twitterMsg = 'Having a great time, enjoying the delicious coffee bought with my #AmdocsWallet';
+config.messages.twitterMsg = 'Having a great time, enjoying the delicious coffee bought with my #AmdocsWallet ';
 config.messages.facebook =	{
 								name:'Amdocs Wallet',
 								caption:'I just bought a coffee',
-								description:'Just downloaded my Amdocs Wallet  looking forward to the delicous coffee at the fully cashless Amdocs Café',
+								description:'Just downloaded my Amdocs Wallet  looking forward to the delicous coffee at the fully cashless Amdocs Café ',
 								link:'http://amdocs.com/MFS'
 							};
 

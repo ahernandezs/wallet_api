@@ -26,6 +26,8 @@ exports.sendGift = function(payload,callback) {
 	var imageProduct;
     var emitter = payload.phoneID;
     var receiver = payload.beneficiaryPhoneID;
+	var fbInfo = {};
+	var twInfo = {};
 
 	async.waterfall([
 
@@ -179,12 +181,16 @@ exports.sendGift = function(payload,callback) {
             payload.title = title;
             payload.date = dateTime;
 
-			var fbinfo = config.messages.facebook;
-			fbinfo.picture = imageProduct;
+			//fbInfo = config.messages.facebook + dateTime.substr(11, -14);
+			fbInfo = config.messages.facebook;
+			fbInfo.description = (fbInfo.description + dateTime);
+			fbInfo.picture = imageProduct;
 
             //var twitterMsg = config.messages.twitter.message.replace('{0}',payload.order.products[0].name).replace('{1}',new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '').substring(0,19););
-			var twitterMsg = config.messages.twitterMsg + dateTime.substr(11, 5);
-			config.messages.twitter.message = twitterMsg;
+			//var twitterMsg = config.messages.twitterMsg + dateTime.substr(11, 5);
+			//config.messages.twitter.message = twitterMsg;
+			twInfo.message = config.messages.twitterMsg + dateTime; //dateTime.substr(11, 5);
+
             payload.additionalInfo = JSON.stringify( {
 											phoneID: payload.phoneID,
 											date: dateTime,
@@ -196,8 +202,8 @@ exports.sendGift = function(payload,callback) {
 											amount :payload.order.total,
 											status: config.orders.status.NEW,
 											doxAdded : 500 ,
-											facebook: fbinfo,
-											twitter:config.messages.twitter,
+											facebook: fbInfo,
+											twitter:twInfo
 										});
 
             var payloadMessage = payload;
@@ -312,6 +318,9 @@ exports.sendGift = function(payload,callback) {
                                 balance.additionalInfo.amount = receipt.amount;
                                 balance.title = 'You have sent a gift';
                                 balance.additionalInfo.product = payload.order.products[0].name;
+								balance.additionalInfo.twitter = twInfo;
+								balance.additionalInfo.facebook = fbInfo;
+
 								callback(null, balance);
 							}
 						});
