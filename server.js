@@ -132,7 +132,6 @@ app.get('/api/sms', interceptorHeader,user.getSMSMessage);
 app.post('/api/contacts',interceptorHeader,user.getContacts);
 app.get('/api/pendingPayments',interceptorHeader,transacction.getPendingPayments);
 app.post('/api/pendingPayment',interceptorHeader,transacction.transferPendingPayment);
-app.post('/api/authorizeBuy',interceptorHeader,user.authorizeShopMobileBuy);
 app.post('/api/authorizeMobileBuy',interceptorHeader,user.authorizeShopMobileBuy);
 //Merchant operations
 //app.put('/api/order', merchant.putOrder);
@@ -172,8 +171,8 @@ app.post('/api/merchant/notifyBuyProducts',merchant.buyMobileProducts);
 app.get('/api/merchant/users',user.getUsers);
 
 //services for cash-credit
-app.post('/api/loanDecision', loan.getDecision);
-app.post('/api/loanConfirm', loan.loanConfirm);
+app.post('/api/loanDecision', interceptorHeader, loan.getDecision);
+app.post('/api/loanConfirm',interceptorHeader, loan.loanConfirm);
 
 
 server.listen(process.env.PORT  || 3000);

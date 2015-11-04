@@ -50,3 +50,13 @@ exports.getAllOrderTemporals = function (callback) {
 	});
 
 };
+
+
+exports.acepOrder = function (callback) {
+	console.log('getAllOrderTemporals from MongoDB (all records)');
+	Order.find({}, function (err, orders){
+		console.log(orders);
+		callback(null, orders);
+	});
+
+};
