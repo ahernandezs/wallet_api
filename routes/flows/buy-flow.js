@@ -583,7 +583,7 @@ async.waterfall([
 		function(order,callback){
 			if(payload.status === 'ACCEPTED'){
 				console.log('Invoke buy flow');
-				order.status = 'ACCEPTED';
+				order.status = payload.status;
 				payloadBuyFlow.order =  order ;
 				payloadBuyFlow.sessionid = sessionid;
 				payloadBuyFlow.phoneID = order.customerID;
@@ -598,7 +598,7 @@ async.waterfall([
 					}
 				});
 			}else
-				callback(null,order);
+				callback(null,{statusCode: 0 , additionalInfo: "Operation was sucessful" });
 
 		}
     ], function (err, result) {
@@ -611,7 +611,6 @@ async.waterfall([
 }
 
 exports.buyFlowMobileShop = function(payload,callback) {
-	console.log('--------------');
 	var dateTime;
 	var balance = {sessionid:'',type:1};
 	var orderID;
@@ -623,10 +622,18 @@ exports.buyFlowMobileShop = function(payload,callback) {
 
 	async.waterfall([
 		//Transfer
+		//Update order
 		function(callback){
+			logger.info('Saving order ');
+			shopOrderQuery.update(payload.order.orderID, payload.order.status,  function(err,result){
+				orderID = result.order;
+				logger.info('Order updated result: '+JSON.stringify(result)+'\n\n');
+				callback(null, payload.sessionid);
+			});
+		},
+		function(sessionid,callback){
 			console.log('Transfer purchase to merchant');
-			console.log(payload);
-			var requestSoap = { sessionid: payload.sessionid, to: config.username, amount : payload.order.total , type: 1 };
+			var requestSoap = { sessionid: sessionid, to: config.username, amount : payload.order.total , type: 1 };
 			var request = { transferRequest: requestSoap };
 			console.log(request);
 				soap.createClient(soapurl, function(err, client) {
@@ -641,20 +648,37 @@ exports.buyFlowMobileShop = function(payload,callback) {
 							callback("ERROR", response);
 						}
 						else{
-							callback(null,payload.sessionid);
+							callback(null,sessionid);
 						}
 					}
 				});
 			});
 		},
-        //Update order
 		function(sessionid,callback){
-			logger.info('Saving order ');
-			shopOrderQuery.update(payload.order.orderID, function(err,result){
-				orderID = result.order;
-				logger.info('Order updated result: '+JSON.stringify(result)+'\n\n');
-				callback(null, sessionid);
-			});
+			console.log('Discount DOX for purchase');
+			if(payload.order.totalDox){
+				var requestSoap = { sessionid: sessionid, to: config.username, amount : payload.order.totalDox , type: 3 };
+				var request = { transferRequest: requestSoap };
+				console.log(request);
+					soap.createClient(soapurl, function(err, client) {
+					client.transfer(request, function(err, result) {
+						if(err) {
+							logger.error(err);
+							return new Error(err);
+						} else {
+							var response = result.transferReturn;
+							if(response.result != 0){
+								var response = { statusCode:1 ,  additionalInfo : result };
+								callback("ERROR", response);
+							}
+							else{
+								callback(null,sessionid);
+							}
+						}
+					});
+				});
+			}else
+				callback(null,sessionid);
 		},
 		function(sessionid, callback){
 			logger.info('balance e-wallet');
