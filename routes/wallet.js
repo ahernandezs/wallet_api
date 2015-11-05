@@ -122,6 +122,11 @@ exports.transferFunds = function(req, res) {
 
     var enable_sms = process.env.SMS_ENABLED == "YES" ? true : false;
 
+    if (values.body.destiny == req.headers.phoneID){
+      res.send({statusCode: 13, additionalInfo: {message: 'SENDER AND RECEIVER ARE THE SAME.'}});
+      return;
+    }
+
     Userquery.findUserByPhoneID(values.body.destiny, function(err, info){
       if(err){
         //User not registered.
