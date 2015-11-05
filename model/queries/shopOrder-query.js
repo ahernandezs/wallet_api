@@ -17,9 +17,9 @@ exports.putOrder = function(order,callback){
 	});
 }
 
-exports.update = function(orderID,callback){
+exports.update = function(orderID, status, callback){
 	var conditions = orderID
-	Order.update(conditions, {  status: "ACCEPTED",}, null, function(err, result) {
+	Order.update(conditions, {  'status': status }, null, function(err, result) {
 		if (err){
 			console.log(err)
 			callback("ERROR", { statusCode: 1,  additionalInfo: 'Update Fail' });
