@@ -119,6 +119,9 @@ exports.transferPendingPayment = function(req,res){
     async.waterfall([
       function(callback){
         TransferFlow.transferFunds(values, function(err, result) {
+            if(err) {
+              res.json(result);
+            }
             if (result.statusCode === 0) {
                 res.setHeader( 'x-auth-token', result.sessionid );
                 delete result.sessionid;
