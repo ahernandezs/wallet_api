@@ -20,6 +20,7 @@ var buyFlow = require('./buy-flow');
 var config = require('../../config.js');
 var logger = config.logger;
 var ReceiptQuery = require('../../model/queries/receipt-query');
+var messageQuery = require('../../model/queries/message-query');
 var transacctionQuery = require('../../model/queries/transacction-query');
 var citiService = require('../../services/citi-service');
 
@@ -153,7 +154,6 @@ exports.buyFlow = function(payload,callback) {
 				}
 			});
         },
-
 		function(sessionid, callback){
 			logger.info('balance e-wallet');
 			var  request = { sessionid: sessionid, type: 1  };
@@ -249,6 +249,31 @@ exports.buyFlow = function(payload,callback) {
 			    });
 			
 		},
+
+		//Create a new message
+		function(balance, receipt, callback){
+			var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
+			var message = {};
+			message.phoneID = receipt.emitter;
+			message.title = 'Your order No ' + orderID +  ' is ' + config.orders.status.NEW;
+			message.type = config.messages.type.BUY;
+			message.status = 'NOTREAD';
+			var additionalInfoJSON = JSON.parse(receipt.additionalInfo);
+			additionalInfoJSON.status = config.orders.status.NEW;
+			message.additionalInfo =  JSON.stringify(additionalInfoJSON);
+			message.date = dateTime;
+			message.message = 'Your order No ' + orderID +  ' is ' + config.orders.status.NEW;
+			message.orderID = orderID;
+			messageQuery.createMessage(message.phoneID,message, function(err, result) {
+				if (err) {
+					var response = { statusCode: 1, additionalInfo: err };
+					callback('ERROR', response);
+				} else {
+					callback(null, balance,receipt);
+				}
+			});
+		},
+
 		function(balance,receipt, callback) {
 			logger.info( 'Create  transacction money' );
 			var transacction = {};
