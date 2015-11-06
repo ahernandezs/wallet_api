@@ -37,6 +37,12 @@ config.products.status = 'IN STOCK';
 config.products.errMsg = 'Something went wrong';
 config.products.emptyMsg = 'There are no products ' + config.products.status;
 config.products.emptyInventory = 'The inventory is empty';
+config.products.max_items_per_transaction = 1;
+config.products.max_items_per_event = 2;
+config.products.max_amount_per_person = 10;
+config.products.loyalty = {};
+config.products.loyalty.productId = '1';
+config.products.loyalty.cost = '10000';
 
 config.wallet = {};
 config.wallet.type = { MONEY:1,OTHER2:2 ,DOX:3 };

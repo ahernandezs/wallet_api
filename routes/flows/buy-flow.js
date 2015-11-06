@@ -12,6 +12,7 @@ var merchantQuery = require('../../model/queries/merchant-query');
 var sessionQuery = require('../../model/queries/session-query')
 var urbanService = require('../../services/notification-service');
 var doxsService = require('../../services/doxs-service');
+var mobileProductTransaction = require('../../model/mobileProductTransaction');
 var transferFlow = require('./transfer-flow');
 var purchaseFlow = require('./buy-flow');
 var loginFlow = require('./login-flow');
@@ -518,6 +519,10 @@ exports.authorizeBuy = function(payload,callback){
 
 exports.sendBuy2Customer  = function(order, callback){
 		console.log(order);
+
+		var verified = verify_shop_rules(order);
+
+		if (verified)
 		async.waterfall([
 		//save temporal order
 		function(callback){
@@ -583,6 +588,8 @@ exports.sendBuy2Customer  = function(order, callback){
 	        callback(null, result);   
 	    }
 	});
+	else
+		callback(true,{statusCode:1, additionalInfo:'Error in shop rules'});
 }
 
 exports.authorizeShopMobileBuy = function(payload,callback){
@@ -809,4 +816,97 @@ exports.buyFlowMobileShop = function(payload,callback) {
     });
 };
 
+/*
+ {
+ "customerID": "5530368070",
+ "products": [
+ {
+ "productID": 1,
+ "quantity": 1,
+ "cost": 5
+ } ,           {
+ "productID": 2,
+ "quantity": 1,
+ "cost": "10"
+ }
+ ],
+ "total": 15,
+ "totalDox" : 2000,
+ "status": "NEW"
+ }*/
 
+function verify_shop_rules(order){
+
+	mobileProductTransaction.find({phoneId:order.customerID},function(err,transactions){
+		var transaction = new mobileProductTransaction({
+			phoneID: order.customerID,
+			productID: [order.products[0].productID],
+			total: [{type: "1", amount: order.total}],
+			dateTime: moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0, 19)
+		});
+
+		if (err)
+			handleError(err);
+		if (order.products.length > config.products.max_items_per_transaction) {
+			logger.error('MAX ITEMS PER TRANSACTION EXCEDED');
+			return false;
+		}
+		if (order.total > config.products.max_amount_per_person) {
+			logger.error('MAX AMOUNT PER PERSON EXCEDED');
+			return false;
+		}
+
+		if (!transactions) {
+			transaction.save(function(err){
+				if (!err) {
+					logger.info('RULES SUCCESS!!');
+					return true;
+				}
+				else {
+					logger.error('ERROR IN MONGODB!!!');
+					return false;
+				}
+			});
+		}
+		else {
+			if (transactions.length > config.products.max_items_per_event) {
+				logger.error('MAX ITEMS PER EVENT EXCEDED');
+				return false;
+			}
+
+			//Not exced total amount
+			var totalpp = 0;
+			var tmp = 0;
+			var purchased_products = [];
+			for (var i = 0; i < transactions.length; i++){
+				tmp = transactions[i].total[0].type == 1
+					? transactions[i].total[0].amount
+					: transactions[i].total[1].amount;
+				for (var j = 0; j < transactions[i].productID.length; j++)
+					purchased_products.push(transactions[i].productID[j]);
+				totalpp = totalpp + tmp;
+			}
+			if (totalpp > config.products.max_amount_per_person) {
+				logger.error('MAX AMOUNT PER PERSON EXCEDED');
+				return false;
+			}
+			//Only 1 pz for the same product
+			for (var i = 0; i < order.products.length; i++){
+				if(purchased_products.contains(order.products[i].productID))
+					logger.error('MAX AMOUNT PER PERSON EXCEDED');
+					return false;
+			}
+
+			transaction.save(function(err){
+				if (!err) {
+					logger.info('RULES SUCCESS!!');
+					return true;
+				}
+				else {
+					logger.error('ERROR IN MONGODB!!!');
+					return false;
+				}
+			});
+		}
+	});
+}
