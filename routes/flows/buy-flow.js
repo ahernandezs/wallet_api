@@ -849,14 +849,23 @@ exports.buyFlowMobileShop = function(payload,callback) {
 function verify_shop_rules(order, callback){
 
 	mobileProductTransaction.find({phoneID:order.customerID},function(err,transactions){
+
+		var prods = [];
+		for (var i = 0; i < order.products.length; i++)
+			prods.push(order.products[i].productID);
+
 		var transDoc = {
 			    phoneID: order.customerID,
-				productID: [order.products[0].productID],
+				productID: prods,
 				dateTime: moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0, 19),
 				total : [{type:"1", amount: order.total}]
 		};
 		console.log(transDoc);
 		var transaction = new mobileProductTransaction(transDoc);
+
+		if (prods.contains(config.products.loyalty.productId))
+			if (order.totalDox < config.products.loyalty.cost)
+				callback(false,'LOYALTY PRODUCT CAN BE ONLY PURCHASED WITH DOXPOINTS')
 
 		if (err)
 			handleError(err);
