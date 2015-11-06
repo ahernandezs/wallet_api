@@ -869,10 +869,6 @@ function verify_shop_rules(order){
 			});
 		}
 		else {
-			if (transactions.length > config.products.max_items_per_event) {
-				logger.error('MAX ITEMS PER EVENT EXCEDED');
-				return false;
-			}
 
 			//Not exced total amount
 			var totalpp = 0;
@@ -886,14 +882,21 @@ function verify_shop_rules(order){
 					purchased_products.push(transactions[i].productID[j]);
 				totalpp = totalpp + tmp;
 			}
+
+			if (purchased_products.length > config.products.max_items_per_event) {
+				logger.error('MAX ITEMS PER EVENT EXCEDED');
+				return false;
+			}
+
 			if (totalpp > config.products.max_amount_per_person) {
 				logger.error('MAX AMOUNT PER PERSON EXCEDED');
 				return false;
 			}
+
 			//Only 1 pz for the same product
 			for (var i = 0; i < order.products.length; i++){
 				if(purchased_products.contains(order.products[i].productID))
-					logger.error('MAX AMOUNT PER PERSON EXCEDED');
+					logger.error('YOU CAN NOT BUY THE SAME PRODUCT TWICE');
 					return false;
 			}
 

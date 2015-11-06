@@ -189,6 +189,13 @@ exports.sendGift = function(req, res){
   console.log(json);
   console.log(req.headers['x-auth-token']);
   json['sessionid']= req.headers['x-auth-token'];
+  var senderPhone = req.headers['x-phoneid'];
+
+  if (json.beneficiaryPhoneID == senderPhone ){
+    res.send({statusCode: 13, additionalInfo: {message: 'SENDER AND RECEIVER ARE THE SAME.'}});
+    return;
+  }
+
   GiftFlow.sendGift(req.body, function(err,result){
     if(err) {
       console.log('Error');
