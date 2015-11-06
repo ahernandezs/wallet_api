@@ -104,7 +104,7 @@ config.doxs.social = 1000; //Invite a friend
 config.doxs.p2p = 1000;	   //Transfer money to a friendAmdocs Wallet
 config.doxs.profile = 1000;//Complete profile
 config.doxs.pic = 1000;	   //PhotoAmdocs Wallet
-config.doxs.payment = 1500;//Make a purchase
+config.doxs.payment = 1000;//Make a purchase
 config.doxs.gift = 1000    //Send a gift to a friend
 config.doxs.twitter = 1000;
 config.doxs.facebook = 1000;
@@ -118,7 +118,7 @@ config.prizes.top = 1;
 config.conn = {};
 config.username = 'anzen_01';
 config.pin = '1234';
-config.initialTransferAmount = 5;
+config.initialTransferAmount = 10;
 
 config.mail = {};
 config.mail.bodyPin= 'Thank you for registering with Amdocs wallet! Your pin number is: ';

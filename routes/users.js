@@ -555,6 +555,7 @@ exports.authorizeShopMobileBuy = function(req , res){
   var json = req.body;
   json['sessionid']= req.headers['x-auth-token'];
   console.log('Execute method authorizeShopMobileBuy');
+  console.log(json);
    buyFlow.authorizeShopMobileBuy(json , function(err,result) {
     if (err === 'ERROR')
       res.json( { statusCode : 1, additionalInfo : result } );

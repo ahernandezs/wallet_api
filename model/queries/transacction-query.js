@@ -19,7 +19,7 @@ exports.findUserTransfers = function(phoneID, callback) {
     console.log('Init date '+ initDate);
     console.log('End date '+ endDate );
 
-    var conditions = { "phoneID" : phoneID, type:'MONEY', operation:'TRANSFER',  date:{
+    var conditions = { "phoneID" : phoneID, type:'MONEY', operation:'TRANSFER', amount:{ $lt : '0' } ,   date:{
               $gte: initDate,
               $lt: endDate }};
     var transactions = transacction.find(conditions, 'title description amount date operation type phoneID');
