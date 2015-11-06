@@ -460,7 +460,7 @@ exports.inviteFriend = function(req, res){
 exports.requestMoney = function(req, res){
   req.body.phoneID = req.headers['x-phoneid'];
 
-    if (values.body.destinatary == req.headers.phoneID){
+    if (req.body.destinatary == req.body.phoneID){
         res.send({statusCode: 13, additionalInfo: {message: 'SENDER AND RECEIVER ARE THE SAME.'}});
         return;
     }
