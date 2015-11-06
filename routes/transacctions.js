@@ -125,8 +125,12 @@ exports.transferPendingPayment = function(req,res){
             if (result.statusCode === 0) {
                 res.setHeader( 'x-auth-token', result.sessionid );
                 delete result.sessionid;
+                callback(null, result);
             }
-            callback(null, result);
+            else if(result.statusCode === 1 )  {
+                callback('ERROR', result);
+            }
+
         });
       },
       function(resultBalance, callback){
@@ -146,7 +150,7 @@ exports.transferPendingPayment = function(req,res){
       }
     ], function (err, result) {
       if(err){
-        callback("Error! "+err,result);
+        res.json(result);
       }else{
         res.json(result);
       }
