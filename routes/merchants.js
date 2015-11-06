@@ -80,15 +80,13 @@ exports.getMobileProducts = function(req,res){
 
 exports.buyMobileProducts = function(req,res){
   console.log( 'executing method buyMobileProducts')
-  console.log(req.body);
+  //console.log(req.body);
   buyFlow.sendBuy2Customer(req.body,function(err,result){
-    if(err) {
+    if(err)
       console.log('Error Flow');
-      res.send(500);
-    } else {
+    else
       console.log('Finish Flow');
-      console.log(result);
-      res.json(result);
-    }
+    console.log(result);
+    res.send(result);
   });
 };
