@@ -4,10 +4,15 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+var totalSchema = new Schema({
+    type: String,
+    amount: Number
+});
+
 var mobileProducTransactionSchema = new Schema({
     phoneID: String,
     productID : [Number],
-    total: [{type:String,amount:Number}],
+    total: [Schema.Types.Mixed],
     dateTime: Date
 });
 

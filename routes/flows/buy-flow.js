@@ -25,6 +25,16 @@ var messageQuery = require('../../model/queries/message-query');
 var transacctionQuery = require('../../model/queries/transacction-query');
 var citiService = require('../../services/citi-service');
 
+Array.prototype.contains = function(obj) {
+	var i = this.length;
+	while (i--) {
+		if (this[i] === obj) {
+			return true;
+		}
+	}
+	return false;
+};
+
 exports.buyFlow = function(payload,callback) {
 	var order = payload.order;
 	console.log('--------------');
@@ -520,76 +530,77 @@ exports.authorizeBuy = function(payload,callback){
 exports.sendBuy2Customer  = function(order, callback){
 		console.log(order);
 
-		var verified = verify_shop_rules(order);
+		verify_shop_rules(order, function(verified, message){
+			if (verified){
+				async.waterfall([
+					//save temporal order
+					function(callback){
+						shopOrderQuery.putOrder(order, function(err, result) {
+							if(err){
+								var response = { statusCode:1 ,  additionalInfo : err };
+								callback('ERROR',response);
+							}
+							else{
+								console.log('Save mobile shop order' + result.order);
+								callback(null,result.order);
+							}
+						});
+					},
 
-		if (verified)
-		async.waterfall([
-		//save temporal order
-		function(callback){
-			shopOrderQuery.putOrder(order, function(err, result) {
-				if(err){
-				  var response = { statusCode:1 ,  additionalInfo : err };
-				  callback('ERROR',response);
-				}
-				else{
-				console.log('Save mobile shop order' + result.order);
-				  callback(null,result.order);
-				}
-			});
-		},
-		
-		//Get customer code 
-		function(orderID, callback){
-			console.log('Get customer code' + order.products);
-			console.log(order.products[0].productID);
-			productMobileQuery.getMobileProduct(order.products[0].productID, function(err,result) {
-				if(err){
-				  var response = { statusCode:1 ,  additionalInfo : err };
-				  callback('ERROR',response);
-				}
-				else{
-					console.log('Senfbuy"Cusrtomer')
-					console.log(result);
-					console.log('Get customer code for products' + result.customerCode);
-				  callback(null, orderID, result.customerCode);
-				}
-			});
-		},
+					//Get customer code
+					function(orderID, callback){
+						console.log('Get customer code' + order.products);
+						console.log(order.products[0].productID);
+						productMobileQuery.getMobileProduct(order.products[0].productID, function(err,result) {
+							if(err){
+								var response = { statusCode:1 ,  additionalInfo : err };
+								callback('ERROR',response);
+							}
+							else{
+								console.log('Senfbuy"Cusrtomer')
+								console.log(result);
+								console.log('Get customer code for products' + result.customerCode);
+								callback(null, orderID, result.customerCode);
+							}
+						});
+					},
 
-		//send push notification
-		function(orderID,customerCode,callback){
-            var message = {};
-            var extraData = {};
-            var title = 'Authorization Purchase';
-            message.message = title;
-            message.phoneID = order.customerID;
-            if(order.status === 'NEW')
-				extraData = { action : config.messages.action.MOBILE_SHOP_PURCHASE , total : order.total , orderID: orderID , 'customerCode' : customerCode };
+					//send push notification
+					function(orderID,customerCode,callback){
+						var message = {};
+						var extraData = {};
+						var title = 'Authorization Purchase';
+						message.message = title;
+						message.phoneID = order.customerID;
+						if(order.status === 'NEW')
+							extraData = { action : config.messages.action.MOBILE_SHOP_PURCHASE , total : order.total , orderID: orderID , 'customerCode' : customerCode };
 
-			message.extra = {extra : extraData} ;
-			urbanService.singlePush(message, function(err, result) {
-				if(err){
-				  var response = { statusCode:1 ,  additionalInfo : result.message };
-				  callback('ERROR',response);
-				}
-				else{
-				  var response = { statusCode:0 ,  additionalInfo : 'Operation was sucessful' };
-				  callback(null,response);
-				}
-			})
+						message.extra = {extra : extraData} ;
+						urbanService.singlePush(message, function(err, result) {
+							if(err){
+								var response = { statusCode:1 ,  additionalInfo : result.message };
+								callback('ERROR',response);
+							}
+							else{
+								var response = { statusCode:0 ,  additionalInfo : 'Operation was sucessful' };
+								callback(null,response);
+							}
+						})
 
-		},
+					},
 
-	], function(err, result) {
-	    if (err) 
-	        callback(err, result);
-	    else{
-	    	console.log('Finish callback');
-	        callback(null, result);   
-	    }
-	});
-	else
-		callback(true,{statusCode:1, additionalInfo:'Error in shop rules'});
+				], function(err, result) {
+					if (err)
+						callback(err, result);
+					else{
+						console.log('Finish callback');
+						callback(null, result);
+					}
+				});
+			} else {
+				callback(true,{statusCode:1, additionalInfo: message});
+			}
+		});
 }
 
 exports.authorizeShopMobileBuy = function(payload,callback){
@@ -835,41 +846,50 @@ exports.buyFlowMobileShop = function(payload,callback) {
  "status": "NEW"
  }*/
 
-function verify_shop_rules(order){
+function verify_shop_rules(order, callback){
 
-	mobileProductTransaction.find({phoneId:order.customerID},function(err,transactions){
-		var transaction = new mobileProductTransaction({
-			phoneID: order.customerID,
-			productID: [order.products[0].productID],
-			total: [{type: "1", amount: order.total}],
-			dateTime: moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0, 19)
-		});
+	mobileProductTransaction.find({phoneID:order.customerID},function(err,transactions){
+		var transDoc = {
+			    phoneID: order.customerID,
+				productID: [order.products[0].productID],
+				dateTime: moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0, 19),
+				total : [{type:"1", amount: order.total}]
+		};
+		console.log(transDoc);
+		var transaction = new mobileProductTransaction(transDoc);
 
 		if (err)
 			handleError(err);
 		if (order.products.length > config.products.max_items_per_transaction) {
 			logger.error('MAX ITEMS PER TRANSACTION EXCEDED');
-			return false;
+			callback(false,'MAX ITEMS PER TRANSACTION EXCEDED');
+			return;
 		}
 		if (order.total > config.products.max_amount_per_person) {
 			logger.error('MAX AMOUNT PER PERSON EXCEDED');
-			return false;
+			callback(false,'MAX AMOUNT PER PERSON EXCEDED');
+			return;
 		}
 
-		if (!transactions) {
+		logger.info('--------OBJECT FOR TRANSACTION-----------------');
+		console.log(transaction);
+		logger.info('-------------------------');
+
+		if (transactions.length == 0) {
 			transaction.save(function(err){
 				if (!err) {
 					logger.info('RULES SUCCESS!!');
-					return true;
+					callback(true,'RULES SUCCESS!!');
+					return;
 				}
 				else {
 					logger.error('ERROR IN MONGODB!!!');
-					return false;
+					console.log(err);
+					callback(false,'ERROR IN MONGODB!!!');
+					return;
 				}
 			});
-		}
-		else {
-
+		} else {
 			//Not exced total amount
 			var totalpp = 0;
 			var tmp = 0;
@@ -882,34 +902,50 @@ function verify_shop_rules(order){
 					purchased_products.push(transactions[i].productID[j]);
 				totalpp = totalpp + tmp;
 			}
+			console.log("---------------TOTAL PRICE PRODUCTS--------------------------");
+			console.log(totalpp);
+			console.log("---------------------------------------------");
+
+			console.log("---------------PURCHASED PRODUCTS--------------------------");
+			console.log(purchased_products);
+			console.log("---------------------------------------------");
 
 			if (purchased_products.length > config.products.max_items_per_event) {
 				logger.error('MAX ITEMS PER EVENT EXCEDED');
-				return false;
+				callback(false,'MAX ITEMS PER EVENT EXCEDED');
+				return;
 			}
 
-			if (totalpp > config.products.max_amount_per_person) {
+			if (totalpp + order.total > config.products.max_amount_per_person) {
 				logger.error('MAX AMOUNT PER PERSON EXCEDED');
-				return false;
+				callback(false,'MAX AMOUNT PER PERSON EXCEDED');
+				return;
 			}
 
 			//Only 1 pz for the same product
 			for (var i = 0; i < order.products.length; i++){
-				if(purchased_products.contains(order.products[i].productID))
+				console.log(order.products[i].productID);
+				if(purchased_products.contains(order.products[i].productID)) {
 					logger.error('YOU CAN NOT BUY THE SAME PRODUCT TWICE');
-					return false;
+					callback(false,'YOU CAN NOT BUY THE SAME PRODUCT TWICE');
+					return;
+				}
 			}
 
 			transaction.save(function(err){
 				if (!err) {
 					logger.info('RULES SUCCESS!!');
-					return true;
+					callback(true,'RULES SUCCESS!!');
+					return;
 				}
 				else {
 					logger.error('ERROR IN MONGODB!!!');
-					return false;
+					console.log(err);
+					callback(false,'ERROR IN MONGODB!!!');
+					return;
 				}
 			});
 		}
 	});
 }
+
