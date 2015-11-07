@@ -31,7 +31,7 @@ exports.sendRegisterMessage= function(user, callback){
         subject:    'Welcome to Amdocs Wallet',
         text:       'hello'
     });
-    var disableMail = true;
+    var disableMail = false;
 
     if(disableMail){
         async.waterfall([

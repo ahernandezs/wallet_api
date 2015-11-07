@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "dependencies": {
     "async": "^0.9.0",
-    "aws-sdk": "^2.0.17",
+    "aws-sdk": "^2.2.15",
     "easynexmo": "0.6.x",
     "express": "^3.16.6",
     "hawk": "^2.3.1",
