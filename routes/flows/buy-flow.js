@@ -864,8 +864,11 @@ function verify_shop_rules(order, callback){
 		var transaction = new mobileProductTransaction(transDoc);
 
 		if (prods.contains(config.products.loyalty.productId))
-			if (order.totalDox < config.products.loyalty.cost)
-				callback(false,'LOYALTY PRODUCT CAN BE ONLY PURCHASED WITH DOXPOINTS')
+			if (order.totalDox < config.products.loyalty.cost) {
+				logger.error('LOYALTY PRODUCT CAN BE ONLY PURCHASED WITH DOXPOINTS');
+				callback(false, 'LOYALTY PRODUCT CAN BE ONLY PURCHASED WITH DOXPOINTS')
+				return;
+			}
 
 		if (err)
 			handleError(err);
