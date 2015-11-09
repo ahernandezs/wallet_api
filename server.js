@@ -131,6 +131,7 @@ app.get('/api/socialFeed', interceptorHeader,transacction.getSocialFeeds);
 app.get('/api/sms', interceptorHeader,user.getSMSMessage);
 app.post('/api/contacts',interceptorHeader,user.getContacts);
 app.get('/api/pendingPayments',interceptorHeader,transacction.getPendingPayments);
+app.get('/api/pendingNotifications',interceptorHeader,transacction.getPendingNotifications);
 app.post('/api/pendingPayment',interceptorHeader,transacction.transferPendingPayment);
 app.post('/api/authorizeMobileBuy',interceptorHeader,user.authorizeShopMobileBuy);
 //Merchant operations

@@ -24,7 +24,6 @@ exports.getMessages = function(phoneID, callback) {
       Message.find(condiciones, ' title type message status additionalInfo date', {sort: {date: -1}}, function (err, msgs) {
         if (err) callback('ERROR', err);
         else if(msgs){
-          console.log(msgs);
           message = msgs;
           callback(null, message);
           }
@@ -62,6 +61,20 @@ exports.getMessages = function(phoneID, callback) {
     ], function (err, result){
         callback(null,result);
     });
+}
+
+exports.getRequestMoneyMessages = function(phoneID, callback) {
+  console.log( 'Getting messages for REQUEST_MONEY ' + phoneID);
+
+  var message = {};
+  var condiciones = { 'phoneID': phoneID , type : 'REQUEST_MONEY'  };
+  Message.find(condiciones, ' title type message status additionalInfo date', {sort: {date: -1}}, function (err, msgs) {
+    if (err) callback('ERROR', err);
+    else if(msgs){
+      message = msgs;
+      callback(null, message);
+    }
+  });
 }
 
 exports.updateMessage = function(message,callback){

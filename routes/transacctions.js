@@ -1,6 +1,7 @@
 var transacctionQuery = require('../model/queries/transacction-query');
 var TransferFlow = require('./flows/transfer-flow');
 var sessionQuery = require('../model/queries/session-query');
+var messageQuery = require('../model/queries/message-query');
 var doxsService = require('../services/doxs-service');
 var async = require('async');
 
@@ -106,6 +107,28 @@ exports.getPendingPayments = function(req, res) {
         }
    });
 };
+
+exports.getPendingNotifications = function(req, res) {
+  var phoneID = req.headers['x-phoneid'];
+  var payload = {};
+  transacctionQuery.getPendingTransacctions(phoneID,function(err,pendingPayments){
+        if(err) {
+          res.send(500);
+        } else {
+          messageQuery.getRequestMoneyMessages(phoneID, function(err, messages) {
+            if (err) {
+              var response = { statusCode: 1, additionalInfo: err };
+              callback('ERROR', response);
+            } else {
+              payload.pendingPayments = pendingPayments.additionalInfo;
+              payload.requestMoneyMessages = messages;
+              res.json(payload);
+            }
+          });
+        }
+   });
+};
+
 
 exports.transferPendingPayment = function(req,res){
     console.log('Invoke method transferPendingPayment' );
