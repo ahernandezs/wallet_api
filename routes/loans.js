@@ -50,7 +50,7 @@ exports.getDecision = function(req,res){
         res.send(500);
         } else {
           console.log(result);
-          var mockResponse = { approved:'YES' , maxAmount :100, maxPeriod: 5 } ;
+          var mockResponse = { approved:'YES' , maxAmount :result.MAXAMOUNT[0], maxPeriod: 5 } ;
           var response = {statusCode:0 , additionalInfo : mockResponse }
           res.json(response);
         }
@@ -81,9 +81,6 @@ exports.loanConfirm = function(req,res){
           loan.createLoanFlow(payload, function(err, result) {
               res.json(result);
           });
-          //var mockResponse = { approved:'SUCCESSFUL' } ;
-          //var response = {statusCode:0 , additionalInfo : mockResponse }
-          //res.json(response);
       }
     });   
 }
