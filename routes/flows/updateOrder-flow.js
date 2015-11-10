@@ -50,6 +50,7 @@ exports.updateOrderFlow = function(payload,callback) {
 					var messageUpdate = JSON.parse(JSON.stringify(result));
 					var additionalInfoJSON = JSON.parse(receipt.additionalInfo);
 					additionalInfoJSON.status = status;
+					messageUpdate.phoneID = receipt.emitter;
 					messageUpdate.message =  'Your order No ' + payload.orderID +  ' is ' + status;
 					messageUpdate.title = messageUpdate.message;
 					messageUpdate.additionalInfo = JSON.stringify(additionalInfoJSON);
@@ -102,6 +103,7 @@ exports.updateOrderFlow = function(payload,callback) {
             });
 		},
 		function(message, callback){
+			console.log('Send message to customer');
 			if(status === config.orders.status.READY){
 				urbanService.singlePush(message, function(err, result) {
 					if (err) {
