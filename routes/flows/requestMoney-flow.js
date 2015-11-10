@@ -16,14 +16,14 @@ var soapurl = process.env.SOAP_URL;
 var config = require('../../config.js');
 
 exports.requestMoneyFlow = function(payload,callback) {
-	var requestMessage = payload;
+    var requestMessage = payload;
     var phoneIDOrigin = requestMessage.phoneID;
     var receiverName;
     var dateTime;
 
-	async.waterfall([
-		function(callback) {
-		    console.log('Get sender in db ' + requestMessage.phoneID);
+    async.waterfall([
+        function(callback) {
+            console.log('Get sender in db ' + requestMessage.phoneID);
             Userquery.getName(requestMessage.phoneID,function(err,user){
                 if (err) {
                     var response = { statusCode: 1, additionalInfo: err };
@@ -35,30 +35,30 @@ exports.requestMoneyFlow = function(payload,callback) {
                 }
 
             });
-		},
-        
+        },
+
         function(senderName, senderAvatar, callback) {
-              console.log('Get receiver in db ' + requestMessage.destinatary);
+            console.log('Get receiver in db ' + requestMessage.destinatary);
             Userquery.getName(requestMessage.destinatary,function(err,user){
                 if (err) {
-                    var response = { statusCode: 1, additionalInfo: err };
-                    callback('ERROR', response);
+                    console.log("USING FLOW FOR RECEIVER NOT REGISTERED");
+                    receiverName = "+" + requestMessage.countryCode + requestMessage.destinatary;
                 } else {
                     console.log(config.S3.url);
                     receiverName = user.name;
-                    callback(null, user.name, senderName, senderAvatar);
                 }
+                callback(null, user.name, senderName, senderAvatar);
 
             });
         },
-        
+
         function (receiverName, senderName, senderAvatar, callback)
         {
             console.log('Save requestMoney in DB');
             var requestMsg = 'You have sent a money transfer request to ' + receiverName;
             dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
             var data = { sender : payload.phoneID, destinatary : payload.destinatary, amount : payload.amount,
-                            message : requestMsg, status : config.requests.status.NEW , date : dateTime};
+                message : requestMsg, status : config.requests.status.NEW , date : dateTime};
             requestQuery.createRequest(data, function(err, result) {
                 if (err)
                     callback('ERROR', { statusCode : 1, additionalInfo : 'The request could not be sent.' });
@@ -66,8 +66,8 @@ exports.requestMoneyFlow = function(payload,callback) {
                     callback(null, senderName, senderAvatar, result);
             });
         },
-        
-		function(senderName, senderAvatar, requestID, callback) {
+
+        function(senderName, senderAvatar, requestID, callback) {
             console.log('Save message in DB');
             var message = {};
             message.status = config.messages.status.NOTREAD;
@@ -85,13 +85,13 @@ exports.requestMoneyFlow = function(payload,callback) {
                     payload.message = message.title;
                     payload.phoneID = payload.destinatary;
                     var extraData = {   action: 6, additionalInfo :  message.additionalInfo ,
-                                    _id:result._id };
+                        _id:result._id };
                     payload.extra = { extra:extraData};
                     callback(null, payload,requestID);
                 }
             });
         },
-        
+
         function(message,requestID, callback) {
             console.log('Send push notification');
             urbanService.singlePush(message, function(err, result) {
@@ -106,7 +106,7 @@ exports.requestMoneyFlow = function(payload,callback) {
             var receipt = {};
             receipt.emitter = phoneIDOrigin;
             receipt.amount = payload.amount;
-            receipt.message = "You have requested €"+ payload.amount + ' from '  + receiverName ;
+            receipt.message = "You have requested " + config.currency.symbol + payload.amount + ' from '  + receiverName ;
             receipt.additionalInfo = response.additionalInfo;
             receipt.title = receipt.message;
             receipt.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
@@ -125,14 +125,14 @@ exports.requestMoneyFlow = function(payload,callback) {
 
 
 
-		], function (err, result) {
-			if(err){
-				console.log('Error  --->' + JSON.stringify(result));
-				callback("Error! "+err,result);
-			}else{
-				callback(null,result);
-			}
-		});
+    ], function (err, result) {
+        if(err){
+            console.log('Error  --->' + JSON.stringify(result));
+            callback("Error! "+err,result);
+        }else{
+            callback(null,result);
+        }
+    });
 };
 
 exports.resolveRequestFlow = function(payload, header, callback) {

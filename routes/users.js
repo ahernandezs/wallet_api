@@ -459,19 +459,40 @@ exports.inviteFriend = function(req, res){
 exports.requestMoney = function(req, res){
   req.body.phoneID = req.headers['x-phoneid'];
 
+    var enable_sms = process.env.SMS_ENABLED == "YES" ? true : false;
+
     if (req.body.destinatary == req.body.phoneID){
         res.send({statusCode: 13, additionalInfo: {message: 'SENDER AND RECEIVER ARE THE SAME.'}});
         return;
     }
 
-      requestMoney.requestMoneyFlow(req.body,function(err,result){
-        console.log(result);
-        if(err)
-            res.json({ statusCode : 1, additionalInfo : result});
-        else
-            res.json(result);
-    });
+    Userquery.findUserByPhoneID(req.body.destinatary, function(err,user){
+        if(err) {
+            //User not registered
+            if (enable_sms){
+                var message = "Hello! you have received a money request from " + req.body.phoneID;
 
+                sms.sendMessage(user.countryCode + req.body.destinatary,message, function(err,sms_response) {
+                    if (err) {
+                        //res.status(503).send({code : 103, message : 'UNAVAILABLE SMS SERVICE' });
+                        res.send({statusCode: 3, additionalInfo: {message: 'UNAVAILABLE SMS SERVICE'}});
+                        console.log(sms_response);
+                        return;
+                    }
+                });
+            } else {
+                logger.info('SENDED REQUEST MONEY MESSAGE TO NOT REGISTERED USER');
+            }
+        }
+
+        requestMoney.requestMoneyFlow(req.body, function (err, result) {
+            console.log(result);
+            if (err)
+                res.json({statusCode: 1, additionalInfo: result});
+            else
+                res.json(result);
+        });
+    });
 }
 
 exports.sendMessage = function(req, res){
