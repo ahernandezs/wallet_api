@@ -196,18 +196,40 @@ exports.sendGift = function(req, res){
     return;
   }
 
-  GiftFlow.sendGift(req.body, function(err,result){
-    if(err) {
-      console.log('Error');
-      console.log(result);
+  Userquery.findUserByPhoneID(json.beneficiaryPhoneID,function(err,user){
+    var enable_sms = process.env.SMS_ENABLED == "YES" ? true : false;
+
+    if(err){
+      if (enable_sms){
+        var message = "Hello! you have received a money request from " + req.body.phoneID;
+
+        sms.sendMessage(user.countryCode + req.body.destinatary,message, function(err,sms_response) {
+          if (err) {
+            //res.status(503).send({code : 103, message : 'UNAVAILABLE SMS SERVICE' });
+            res.send({statusCode: 3, additionalInfo: {message: 'UNAVAILABLE SMS SERVICE'}});
+            console.log(sms_response);
+            return;
+          }
+        });
+      } else {
+        logger.info('SENDED SIMULATION MESSAGE TO A NOT REGISTERED USER.!');
+      }
     }
-    console.log('Finish Gift');
-    if(result.statusCode === 0){
-      res.setHeader('X-AUTH-TOKEN', result.sessionid);
-      delete result.sessionid;
-    }
-    res.json(result);
-  })
+
+    GiftFlow.sendGift(req.body, function(err,result){
+      if(err) {
+        console.log('Error');
+        console.log(result);
+      }
+      console.log('Finish Gift');
+      if(result.statusCode === 0){
+        res.setHeader('X-AUTH-TOKEN', result.sessionid);
+        delete result.sessionid;
+      }
+      res.json(result);
+    })
+
+  });
 };
 
 exports.activity = function(req, res){
