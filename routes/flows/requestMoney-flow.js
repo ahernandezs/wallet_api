@@ -95,7 +95,7 @@ exports.requestMoneyFlow = function(payload,callback) {
         function(message,requestID, callback) {
             console.log('Send push notification');
             urbanService.singlePush(message, function(err, result) {
-                var response = { statusCode: 0, additionalInfo: { msg:'request-money message was sent successful', 'requestID' : requestID , 'dateTime' : dateTime}};
+                var response = { statusCode: 0, additionalInfo: { msg:'Money request successfully sent', 'requestID' : requestID , 'dateTime' : dateTime}};
                 callback(null,response);
             });
         },
