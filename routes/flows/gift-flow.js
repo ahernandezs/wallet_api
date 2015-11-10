@@ -101,18 +101,18 @@ exports.sendGift = function(payload,callback) {
         function(sessionid, currentMoney, callback) {
             console.log('search user by phoneID');
               Userquery.findUserByPhoneID(receiver,function(err,result){
+				  console.log(result);
+				  order.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
+
+				  order.customerImage = config.S3.url + receiver +'.png',
+				  order.merchantId = payload.merchantID;
                 if(err){
-                    var response = { statusCode:1 ,  additionalInfo : err };
-                    callback('ERROR',response);
+					order.customerName = receiver;
                   }
                   else{
-                    console.log(result);
-                    order.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
                     order.customerName = result.name;
-                    order.customerImage = config.S3.url + receiver +'.png',
-                    order.merchantId = payload.merchantID;
-                    callback(null,sessionid, currentMoney);
                   }
+				  callback(null,sessionid, currentMoney);
               });  
         },
 		function(sessionid,currentMoney, callback){
