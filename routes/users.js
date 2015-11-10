@@ -553,7 +553,6 @@ exports.getSMSMessage = function(req, res) {
 };
 
 exports.getContacts = function(req, res) {
-  console.log(req.body);
   Userquery.getContactList(req.body.phones , function(err,result) {
     if (err)
       res.json( { statusCode : 1, additionalInfo : result } );
