@@ -398,7 +398,8 @@ exports.getUsers = function(parameters,callback){
     });
   }//end of if
   else{
-    User.find({},'phoneID name email lastSession company', { sort : { name : 1 }}, function (err, people) {
+    console.log('Get all users');
+    User.find({},'name', { sort : { name : 1 }}, function (err, people) {
       if (err) return handleError(err);
       else if(people){
         callback(null, people);
@@ -638,7 +639,7 @@ function getUsersByTeam(callback){
       includeTeamQuery.sort({name: 1});
       includeTeamQuery.exec(function (err1, usersTeam) {
         console.log('Users with Team');
-        console.log(usersTeam);
+        usersTeam.sort(sortstring);
         callback(null,usersTeam);
       });
     },
@@ -649,6 +650,7 @@ function getUsersByTeam(callback){
       var usersQuery = User.find(conditionsNotIncludeTeam,'phoneID name email lastSession company');
       usersQuery.sort({name: 1});
       usersQuery.exec(function (err1, usersWithoutTeam) {
+        usersWithoutTeam.sort(sortstring);
         callback(null, usersTeam.concat(usersWithoutTeam));
       });
     },
