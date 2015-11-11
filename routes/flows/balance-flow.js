@@ -2,10 +2,11 @@ var async = require('async');
 var soap = require('soap');
 var crypto = require('crypto');
 var Message = require('../../model/message');
+var Session = require('../../model/session');
 var Userquery = require('../../model/queries/user-query');
 var soapurl = process.env.SOAP_URL;
 
-exports.balanceFlow = function(sessionid, phoneId, callback) {
+exports.balanceFlow = function(sessionid, callback) {
   async.waterfall([
     function(callback){
       console.log('balance e-wallet' + sessionid);
@@ -49,14 +50,24 @@ exports.balanceFlow = function(sessionid, phoneId, callback) {
       });
     },
     function(response,callback){
-      var message = {};
-      var condiciones = { 'phoneID': phoneId , message:{ $ne: '' }  ,  $and:[ { type : { $ne : 'REQUEST_MONEY' } } , { type : { $ne : 'GIFT' }}, {status:'NOTREAD'}] } ;
-      Message.find(condiciones, ' title type message status additionalInfo date', {sort: {date: -1}}, function (err, msgs) {
-        if (err) callback('ERROR', err);
-        else if(msgs){
-          //response.additionalInfo.messages = msgs;
-          response.additionalInfo.unreadMsgs = msgs.length;
-          callback(null, response);
+
+      Session.findOne({token:sessionid},'phoneID', function(err, session){
+        if (err) {
+          callback( 'ERROR', {statusCode: 4, additionalInfo: {message: 'UNAVAILABLE DATABASE SERVICE'}} );
+          console.log(err.message);
+        } else if (session === null)
+          callback('ERROR', { statusCode : 1, message: 'NO USER FOR THAT SESSIONID' } );
+        else {
+          var message = {};
+          var condiciones = { 'phoneID': session.phoneID , message:{ $ne: '' }  ,  $and:[ { type : { $ne : 'REQUEST_MONEY' } } , { type : { $ne : 'GIFT' }}, {status:'NOTREAD'}] } ;
+          Message.find(condiciones, ' title type message status additionalInfo date', {sort: {date: -1}}, function (err, msgs) {
+            if (err) callback('ERROR', err);
+            else if(msgs){
+              //response.additionalInfo.messages = msgs;
+              response.additionalInfo.unreadMsgs = msgs.length;
+              callback(null, response);
+            }
+          });
         }
       });
     },

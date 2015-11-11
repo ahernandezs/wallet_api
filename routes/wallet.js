@@ -90,8 +90,7 @@ exports.balance = function(request, callback) {
 exports.getBalance = function(req, res) {
   console.log('execute GET method balance');
   console.log( req.headers['x-auth-token'] );
-  console.log( req.headers['x-phoneid'] );
-  balance.balanceFlow(req.headers['x-auth-token'], req.headers['x-phoneid'], function(err, result) {
+  balance.balanceFlow(req.headers['x-auth-token'], function(err, result) {
     if(result.statusCode === 0){
       res.setHeader('X-AUTH-TOKEN', result.sessionid);
       delete result.sessionid;
