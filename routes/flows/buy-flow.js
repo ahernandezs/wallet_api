@@ -573,7 +573,7 @@ exports.sendBuy2Customer  = function(order, callback){
 						message.message = title;
 						message.phoneID = order.customerID;
 						if(order.status === 'NEW')
-							extraData = { action : config.messages.action.MOBILE_SHOP_PURCHASE , total : order.total , orderID: orderID , 'customerCode' : customerCode };
+							extraData = { action : config.messages.action.MOBILE_SHOP_PURCHASE , total : order.total , totalDox:order.totalDox , orderID: orderID , 'customerCode' : customerCode };
 
 						message.extra = {extra : extraData} ;
 						urbanService.singlePush(message, function(err, result) {
@@ -600,6 +600,7 @@ exports.sendBuy2Customer  = function(order, callback){
 						message.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
 						message.message = title;
 						message.total = extraData.total ;
+						message.totalDox = extraData.totalDox ;
 						message.customerCode = extraData.customerCode;
 						message.orderID = extraData.orderID;
 						//message.additionalInfo = {};
