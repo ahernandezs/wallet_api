@@ -1,0 +1,14 @@
+db = db.getSiblingDB('amdocs-wallet'); //mongo c128.candidate.42.mongolayer.com:10128/camdocs-barcelona -u admin -p s3cr37o products_cala.js
+
+db.doxInfo.remove({});
+db.doxInfo.insert({ description: "Transfer money to a friend", amount:1000, id: 1 } );
+db.doxInfo.insert({ description: "Make a coffee purchase", amount:1500, id: 2 } );
+db.doxInfo.insert({ description: "Send a coffee to a friend", amount:1500, id: 3 } );
+db.doxInfo.insert({ description: "Update profile Photo", amount:1000, id: 4 } );
+db.doxInfo.insert({ description: "Share on Twitter", amount:1000, id: 5 } );
+db.doxInfo.insert({ description: "Share on Facebook", amount:1000, id: 6 } );
+db.doxInfo.insert({ description: "Buy tickets", amount:1000, id: 7 } );
+db.doxInfo.insert({ description: "Pay a bill", amount:1000, id: 8 } );
+db.doxInfo.insert({ description: "Buy airtime", amount:1000, id: 9 } );
+db.doxInfo.insert({ description: "Take a loan", amount:1500, id: 10 } );
+db.doxInfo.insert({ description: "Top up account", amount:1000, id: 11 } );
