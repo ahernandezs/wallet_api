@@ -583,12 +583,12 @@ exports.sendBuy2Customer  = function(order, callback){
 							}
 							else{
 								var response = { statusCode:0 ,  additionalInfo : 'Operation was sucessful' };
-								callback(null,response);
+								callback(null,response, extraData);
 							}
 						})
 
 					},
-					function(response,callback){
+					function(response,extraData,callback){
 						logger.info('4.- SAVE MESSAGE IN MONGO');
 						var message = {};
 						var title = 'Authorization Purchase';
@@ -599,6 +599,9 @@ exports.sendBuy2Customer  = function(order, callback){
 						message.phoneID = order.customerID;
 						message.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
 						message.message = title;
+						message.total = extraData.total ;
+						message.customerCode = extraData.customerCode;
+						message.orderID = extraData.orderID;
 						//message.additionalInfo = {};
 						messageQuery.createMessage(order.customerID,message, function(err, result) {
 							if (err) {
