@@ -71,8 +71,17 @@ exports.getRequestMoneyMessages = function(phoneID, callback) {
   Message.find(condiciones, ' title type message status additionalInfo date', {sort: {date: -1}}, function (err, msgs) {
     if (err) callback('ERROR', err);
     else if(msgs){
-      message = msgs;
-      callback(null, message);
+      var info = JSON.parse(JSON.stringify(msgs));
+      if(info && info[0] ){
+        for(var i = 0; i < info.length; i++){
+          if (info[i].additionalInfo){
+            additionalInfo = info[i].additionalInfo;
+            delete info[i]['additionalInfo'];
+            info[i].additionalInfo = JSON.parse(additionalInfo);
+          }
+        }
+        callback(null, info);
+      }
     }
   });
 }

@@ -399,7 +399,7 @@ exports.getUsers = function(parameters,callback){
   }//end of if
   else{
     console.log('Get all users');
-    User.find({},'name', { sort : { name : 1 }}, function (err, people) {
+    User.find({},'name phoneID', { sort : { name : 1 }}, function (err, people) {
       if (err) return handleError(err);
       else if(people){
         callback(null, people);
