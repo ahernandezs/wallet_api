@@ -171,7 +171,7 @@ exports.buy = function (payload, callback){
 
         function(sessionid,callback){
             console.log('Get Balance');
-            balance.balanceFlow(sessionid, function(err, balance) {
+            balance.balanceFlow(sessionid, payload.phoneID, function(err, balance) {
                 if(err){
                     var response = { statusCode: 1, additionalInfo: balance };
                     callback('ERROR', response);
