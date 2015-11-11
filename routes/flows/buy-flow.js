@@ -591,10 +591,10 @@ exports.sendBuy2Customer  = function(order, callback){
 					function(response,callback){
 						logger.info('4.- SAVE MESSAGE IN MONGO');
 						var message = {};
-						var title = 'You have bought a product!';
+						var title = 'Authorization Purchase';
 						//message = extraData;
 						message.status = config.messages.status.NOTREAD;
-						message.type = config.messages.type.BUY;
+						message.type = config.messages.type.MOBILESHOP;
 						message.title = title;
 						message.phoneID = order.customerID;
 						message.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);

@@ -58,12 +58,12 @@ config.messages = {};
 config.messages.status = { READ : 'READ' ,NOTREAD : 'NOTREAD', DELIVERED: 'DELIVERED'};
 config.messages.type = { TRANSFER:'TRANSFER' , GIFT : 'GIFT' , BUY :'BUY' ,LOAN :'LOAN', COUPON: 'COUPON' , REQUEST_MONEY : 'REQUEST_MONEY' , MESSAGE : 'MESSAGE' ,
                          AUTHORIZATION_PURCHASE:'AUTHORIZATION_PURCHASE', BILLPAYMENT: 'BILLPAYMENT', AIRTIMEBUY: 'AIRTIMEBUY', TICKETBUY : 'TICKETBUY', TOPUP:'TOPUP',
-                         VERIFYCUSTOMER:'VERIFYCUSTOMER'};
+                         VERIFYCUSTOMER:'VERIFYCUSTOMER', MOBILESHOP:'MOBILESHOP'};
 config.messages.transferMsg = 'You have received money from ';
 config.messages.giftMsg = '[sender] has gifted you an Amdocs Café voucher';
 config.messages.billPayMsg = 'You have payed a bill from ';
 config.messages.airtimeBuyMsg = 'Successful airtime buy';
-config.messages.ticketBuyMsg = 'You buy a Ticket to ';
+config.messages.ticketBuyMsg = 'You have bought a ticket ';
 config.messages.loanRequestMsg = 'You have requested a loan for €';
 config.messages.loanRejectedMsg = 'Build up your Dox score to be elegible for a loan';
 config.messages.loanRejectedOneMsg = 'Sorry,Since you recently availed a loan, you need to wait another ';
