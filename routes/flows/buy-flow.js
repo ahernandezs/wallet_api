@@ -701,6 +701,8 @@ exports.buyFlowMobileShop = function(payload,callback) {
 		},
 		function(sessionid,callback){
 			console.log('Transfer purchase to merchant');
+			if(order.total == 0)
+				callback(null,sessionid);
 			var requestSoap = { sessionid: sessionid, to: config.username, amount : payload.order.total , type: 1 };
 			var request = { transferRequest: requestSoap };
 			console.log(request);
@@ -883,6 +885,7 @@ function verify_shop_rules(order, callback){
 			    phoneID: order.customerID,
 				productID: prods,
 				dateTime: moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0, 19),
+				status: config.orders.status.NEW,
 				total : [{type:"1", amount: order.total}]
 		};
 		console.log(transDoc);
@@ -943,7 +946,7 @@ function verify_shop_rules(order, callback){
 			console.log(totalpp);
 			console.log("---------------------------------------------");
 
-			console.log("---------------PURCHASED PRODUCTS--------------------------");
+			console.log("---------------PURCHASED PRODUCTS ID-------------------------");
 			console.log(purchased_products);
 			console.log("---------------------------------------------");
 
