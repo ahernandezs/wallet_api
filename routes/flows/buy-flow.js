@@ -591,6 +591,7 @@ exports.sendBuy2Customer  = function(order, callback){
 					function(response,extraData,callback){
 						logger.info('4.- SAVE MESSAGE IN MONGO');
 						var message = {};
+						var additionalInfo = {};
 						var title = 'Authorization Purchase';
 						//message = extraData;
 						message.status = config.messages.status.NOTREAD;
@@ -599,11 +600,11 @@ exports.sendBuy2Customer  = function(order, callback){
 						message.phoneID = order.customerID;
 						message.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
 						message.message = title;
-						message.total = extraData.total ;
-						message.totalDox = extraData.totalDox ;
-						message.customerCode = extraData.customerCode;
-						message.orderID = extraData.orderID;
-						//message.additionalInfo = {};
+						additionalInfo.total = extraData.total ;
+						additionalInfo.totalDox = extraData.totalDox ;
+						additionalInfo.customerCode = extraData.customerCode;
+						additionalInfo.orderID = extraData.orderID;
+						message.additionalInfo = JSON.stringify(additionalInfo);
 						messageQuery.createMessage(order.customerID,message, function(err, result) {
 							if (err) {
 								var resp = { statusCode: 1, additionalInfo: result };
