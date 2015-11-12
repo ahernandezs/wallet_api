@@ -14,6 +14,7 @@ var mobileProducTransactionSchema = new Schema({
     productID : [Number],
     total: [Schema.Types.Mixed],
     status: String,
+    orderId: Number,
     dateTime: Date
 });
 

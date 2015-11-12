@@ -530,7 +530,7 @@ exports.authorizeBuy = function(payload,callback){
 exports.sendBuy2Customer  = function(order, callback){
 		console.log(order);
 
-		verify_shop_rules(order, function(verified, message){
+		verify_shop_rules(order, function(verified,transaction, message){
 			if (verified){
 				async.waterfall([
 					//save temporal order
@@ -542,7 +542,16 @@ exports.sendBuy2Customer  = function(order, callback){
 							}
 							else{
 								console.log('Save mobile shop order' + result.order);
-								callback(null,result.order);
+								transaction.orderId = result.order;
+								transaction.save(function(err){
+									if (!err) {
+										callback(null,result.order);
+									}
+									else {
+										console.log(err);
+										callback('ERROR',{statusCode:1, additionalInfo: err});
+									}
+								});
 							}
 						});
 					},
@@ -623,7 +632,7 @@ exports.sendBuy2Customer  = function(order, callback){
 					}
 				});
 			} else {
-				callback(true,{statusCode:1, additionalInfo: message});
+				callback(true,{statusCode:1, additionalInfo: {message: message}});
 			}
 		});
 }
@@ -661,10 +670,18 @@ async.waterfall([
 						callback('ERROR',err);
 					}
 					else{
-						console.log('Result purchase');
-						callback(null,result);
+						mobileProductTransaction.findOne({orderId: payload.orderID}, function(err,tran){
+							if (err)
+							callback('ERROR',{statusCode:1,additionalInfo:'ERROR saving mobileProductTransaction in MongoDB'});
+							tran.status = config.orders.status.READY;
+							tran.save(function(err){
+								console.log('Result purchase');
+								callback(null,result);
+							});
+						});
 					}
 				});
+
 			}else
 				callback(null,{statusCode: 0 , additionalInfo: "Operation was sucessful" });
 
@@ -703,7 +720,7 @@ exports.buyFlowMobileShop = function(payload,callback) {
 			console.log('Transfer purchase to merchant');
 			if(payload.order.total == 0)
 				callback(null,sessionid);
-			var requestSoap = { sessionid: sessionid, to: config.username, amount : payload.order.total , type: 1 };
+			var requestSoap = { sessionid: sessionid, to: config.username, amount : payload.order.total , type: config.wallet.type.MONEY };
 			var request = { transferRequest: requestSoap };
 			console.log(request);
 				soap.createClient(soapurl, function(err, client) {
@@ -727,7 +744,7 @@ exports.buyFlowMobileShop = function(payload,callback) {
 		function(sessionid,callback){
 			console.log('Discount DOX for purchase');
 			if(payload.order.totalDox){
-				var requestSoap = { sessionid: sessionid, to: config.username, amount : payload.order.totalDox , type: 3 };
+				var requestSoap = { sessionid: sessionid, to: config.username, amount : payload.order.totalDox , type: config.wallet.type.DOX };
 				var request = { transferRequest: requestSoap };
 				console.log(request);
 					soap.createClient(soapurl, function(err, client) {
@@ -875,7 +892,7 @@ exports.buyFlowMobileShop = function(payload,callback) {
 
 function verify_shop_rules(order, callback){
 
-	mobileProductTransaction.find({phoneID:order.customerID},function(err,transactions){
+	mobileProductTransaction.find({phoneID:order.customerID, status : config.orders.status.READY},function(err,transactions){
 
 		var prods = [];
 		for (var i = 0; i < order.products.length; i++)
@@ -916,6 +933,9 @@ function verify_shop_rules(order, callback){
 		logger.info('-------------------------');
 
 		if (transactions.length == 0) {
+			logger.info('RULES SUCCESS!!');
+			callback(true,transaction,'RULES SUCCESS!!');
+			/*
 			transaction.save(function(err){
 				if (!err) {
 					logger.info('RULES SUCCESS!!');
@@ -928,7 +948,7 @@ function verify_shop_rules(order, callback){
 					callback(false,'ERROR IN MONGODB!!!');
 					return;
 				}
-			});
+			});*/
 		} else {
 			//Not exced total amount
 			var totalpp = 0;
@@ -971,7 +991,9 @@ function verify_shop_rules(order, callback){
 					return;
 				}
 			}
-
+			callback(true,transaction,'RULES SUCCESS!!');
+			logger.info('RULES SUCCESS!!');
+			/*
 			transaction.save(function(err){
 				if (!err) {
 					logger.info('RULES SUCCESS!!');
@@ -984,7 +1006,7 @@ function verify_shop_rules(order, callback){
 					callback(false,'ERROR IN MONGODB!!!');
 					return;
 				}
-			});
+			});*/
 		}
 	});
 }
