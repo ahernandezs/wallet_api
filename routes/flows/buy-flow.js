@@ -666,13 +666,15 @@ async.waterfall([
 				payloadBuyFlow.phoneID = order.customerID;
 				purchaseFlow.buyFlowMobileShop(payloadBuyFlow ,function  (err,result) {
 					if(err){
+						console.log('ERRRORRRR PURCHASE FLOW');
 						console.log(err);
 						callback('ERROR',err);
 					}
 					else{
+						console.log('BUSCANDO EL MOBILE PRODUCT TRANSACTION');
 						mobileProductTransaction.findOne({orderId: payload.orderID}, function(err,tran){
 							if (err)
-							callback('ERROR',{statusCode:1,additionalInfo:'ERROR saving mobileProductTransaction in MongoDB'});
+								callback('ERROR',{statusCode:1,additionalInfo:'ERROR saving mobileProductTransaction in MongoDB'});
 							tran.status = config.orders.status.READY;
 							tran.save(function(err){
 								console.log('Result purchase');
@@ -718,31 +720,40 @@ exports.buyFlowMobileShop = function(payload,callback) {
 		},
 		function(sessionid,callback){
 			console.log('Transfer purchase to merchant');
-			if(payload.order.total == 0)
-				callback(null,sessionid);
-			var requestSoap = { sessionid: sessionid, to: config.username, amount : payload.order.total , type: config.wallet.type.MONEY };
-			var request = { transferRequest: requestSoap };
-			console.log(request);
-				soap.createClient(soapurl, function(err, client) {
-				client.transfer(request, function(err, result) {
-					if(err) {
-						logger.error(err);
-						return new Error(err);
-					} else {
-						var response = result.transferReturn;
-						if(response.result != 0){
-							var response = { statusCode:1 ,  additionalInfo : result };
-							callback("ERROR", response);
+			if(payload.order.total == 0) {
+				console.log('NO MONEY IN TRANSACTION');
+				callback(null, sessionid);
+			} else {
+				var requestSoap = {
+					sessionid: sessionid,
+					to: config.username,
+					amount: payload.order.total,
+					type: config.wallet.type.MONEY
+				};
+				var request = {transferRequest: requestSoap};
+				console.log(request);
+				soap.createClient(soapurl, function (err, client) {
+					client.transfer(request, function (err, result) {
+						if (err) {
+							logger.error(err);
+							return new Error(err);
+						} else {
+							var response = result.transferReturn;
+							if (response.result != 0) {
+								var response = {statusCode: 1, additionalInfo: result};
+								callback("ERROR", response);
+							}
+							else {
+								callback(null, sessionid);
+							}
 						}
-						else{
-							callback(null,sessionid);
-						}
-					}
+					});
 				});
-			});
+			}
 		},
 		function(sessionid,callback){
 			console.log('Discount DOX for purchase');
+			console.log('TOTAL DOX -> ' + payload.order.totalDox);
 			if(payload.order.totalDox){
 				var requestSoap = { sessionid: sessionid, to: config.username, amount : payload.order.totalDox , type: config.wallet.type.DOX };
 				var request = { transferRequest: requestSoap };
@@ -903,7 +914,7 @@ function verify_shop_rules(order, callback){
 				productID: prods,
 				dateTime: moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0, 19),
 				status: config.orders.status.NEW,
-				total : [{type:"1", amount: order.total}]
+				total : [{type:"1", amount: order.total}, {type:"3", amount:order.totalDox}]
 		};
 		console.log(transDoc);
 		var transaction = new mobileProductTransaction(transDoc);
@@ -911,7 +922,7 @@ function verify_shop_rules(order, callback){
 		if (prods.contains(config.products.loyalty.productId))
 			if (order.totalDox < config.products.loyalty.cost) {
 				logger.error('LOYALTY PRODUCT CAN BE ONLY PURCHASED WITH DOXPOINTS');
-				callback(false, 'LOYALTY PRODUCT CAN BE ONLY PURCHASED WITH DOXPOINTS')
+				callback(false, transaction, 'LOYALTY PRODUCT CAN BE ONLY PURCHASED WITH DOXPOINTS')
 				return;
 			}
 
@@ -919,12 +930,12 @@ function verify_shop_rules(order, callback){
 			handleError(err);
 		if (order.products.length > config.products.max_items_per_transaction) {
 			logger.error('MAX ITEMS PER TRANSACTION EXCEDED');
-			callback(false,'MAX ITEMS PER TRANSACTION EXCEDED');
+			callback(false, transaction, 'MAX ITEMS PER TRANSACTION EXCEDED');
 			return;
 		}
 		if (order.total > config.products.max_amount_per_person) {
 			logger.error('MAX AMOUNT PER PERSON EXCEDED');
-			callback(false,'MAX AMOUNT PER PERSON EXCEDED');
+			callback(false, transaction, 'MAX AMOUNT PER PERSON EXCEDED');
 			return;
 		}
 
@@ -934,7 +945,7 @@ function verify_shop_rules(order, callback){
 
 		if (transactions.length == 0) {
 			logger.info('RULES SUCCESS!!');
-			callback(true,transaction,'RULES SUCCESS!!');
+			callback(true, transaction, transaction,'RULES SUCCESS!!');
 			/*
 			transaction.save(function(err){
 				if (!err) {
@@ -972,13 +983,13 @@ function verify_shop_rules(order, callback){
 
 			if (purchased_products.length > config.products.max_items_per_event) {
 				logger.error('MAX ITEMS PER EVENT EXCEDED');
-				callback(false,'MAX ITEMS PER EVENT EXCEDED');
+				callback(false, transaction, 'MAX ITEMS PER EVENT EXCEDED');
 				return;
 			}
 
 			if (totalpp + order.total > config.products.max_amount_per_person) {
 				logger.error('MAX AMOUNT PER PERSON EXCEDED');
-				callback(false,'MAX AMOUNT PER PERSON EXCEDED');
+				callback(false, transaction, 'MAX AMOUNT PER PERSON EXCEDED');
 				return;
 			}
 
@@ -987,7 +998,7 @@ function verify_shop_rules(order, callback){
 				console.log(order.products[i].productID);
 				if(purchased_products.contains(order.products[i].productID)) {
 					logger.error('YOU CAN NOT BUY THE SAME PRODUCT TWICE');
-					callback(false,'YOU CAN NOT BUY THE SAME PRODUCT TWICE');
+					callback(false, transaction, 'YOU CAN NOT BUY THE SAME PRODUCT TWICE');
 					return;
 				}
 			}

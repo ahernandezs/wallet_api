@@ -13,6 +13,7 @@ var orderSchema =  new Schema({
 				 cost : Number }
 			  ] ,
 	total : Number ,
+	totalDox: Number,
 	date : String, 
 	status: String
 }); 
