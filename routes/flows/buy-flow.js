@@ -701,7 +701,7 @@ exports.buyFlowMobileShop = function(payload,callback) {
 		},
 		function(sessionid,callback){
 			console.log('Transfer purchase to merchant');
-			if(order.total == 0)
+			if(payload.order.total == 0)
 				callback(null,sessionid);
 			var requestSoap = { sessionid: sessionid, to: config.username, amount : payload.order.total , type: 1 };
 			var request = { transferRequest: requestSoap };
