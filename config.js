@@ -119,7 +119,7 @@ config.doxs.invite = 1000;
 config.doxs.sms = 1000;
 
 config.doxs.transfer_money_to_a_friend = 1000;
-config.doxs.make_a_coffee_purchase = 500;
+config.doxs.make_a_coffee_purchase = 1500;
 config.doxs.make_a_shop_purchase = 1500;
 config.doxs.send_a_coffee_to_a_friend = 1500;
 config.doxs.update_profile_photo = 1000;
