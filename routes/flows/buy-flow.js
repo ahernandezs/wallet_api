@@ -666,12 +666,10 @@ async.waterfall([
 				payloadBuyFlow.phoneID = order.customerID;
 				purchaseFlow.buyFlowMobileShop(payloadBuyFlow ,function  (err,result) {
 					if(err){
-						console.log('ERRRORRRR PURCHASE FLOW');
 						console.log(err);
 						callback('ERROR',err);
 					}
 					else{
-						console.log('BUSCANDO EL MOBILE PRODUCT TRANSACTION');
 						mobileProductTransaction.findOne({orderId: payload.orderID}, function(err,tran){
 							if (err)
 								callback('ERROR',{statusCode:1,additionalInfo:'ERROR saving mobileProductTransaction in MongoDB'});
@@ -934,8 +932,8 @@ function verify_shop_rules(order, callback){
 			return;
 		}
 		if (order.total > config.products.max_amount_per_person) {
-			logger.error('MAX AMOUNT PER PERSON EXCEDED');
-			callback(false, transaction, 'MAX AMOUNT PER PERSON EXCEDED');
+			logger.error('$10 LIMIT EXCEDED');
+			callback(false, transaction, '$10 LIMIT EXCEDED');
 			return;
 		}
 
@@ -988,8 +986,8 @@ function verify_shop_rules(order, callback){
 			}
 
 			if (totalpp + order.total > config.products.max_amount_per_person) {
-				logger.error('MAX AMOUNT PER PERSON EXCEDED');
-				callback(false, transaction, 'MAX AMOUNT PER PERSON EXCEDED');
+				logger.error('$10 LIMIT EXCEDED');
+				callback(false, transaction, '$10 LIMIT EXCEDED');
 				return;
 			}
 

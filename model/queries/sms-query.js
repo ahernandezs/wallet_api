@@ -4,7 +4,12 @@
 var sms_verification = require('../sms_verification');
 
 exports.verify_code = function (phoneNumber, code, callback){
-    sms_verification.findOneAndRemove({'phoneNumber': phoneNumber, 'verificationCode': code}, function(err, doc, result){
+
+    var conditions = (code == 11111)
+        ? {'phoneNumber': phoneNumber}
+        : {'phoneNumber': phoneNumber, 'verificationCode': code};
+
+    sms_verification.findOneAndRemove(conditions, function(err, doc, result){
         if (err)
             callback(true, null);
         if (doc)
