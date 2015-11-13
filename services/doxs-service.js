@@ -13,7 +13,7 @@ exports.saveDoxs = function(payload,callback) {
         var response = { statusCode:0 ,  additionalInfo : "Successful" };
         callback(null,response);
     } else {
-        var transferDoxs = {phoneID:payload.phoneID,amount:config.doxs[payload.action] ,type:3};
+        var transferDoxs = {phoneID:payload.phoneID,amount:config.doxs[payload.action] ,type:config.wallet.type.DOX};
         console.log(transferDoxs);
         transferFlow.transferFlow({transferRequest: transferDoxs}, function(err,result){
             console.log('Transfer doxs result: '+JSON.stringify(result)+'\n\n');

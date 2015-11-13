@@ -194,7 +194,7 @@ exports.transferFunds = function(data, callback) {
             var requestSession = { phoneID :  mainUser };
             sessionQuery.getCredentials(requestSession,function(err,user){
                 forReceipt.user = user;
-                var payloadoxs = {phoneID: user.data.phoneID, action: 'gift', type: 3}
+                var payloadoxs = {phoneID: user.data.phoneID, action: 'transfer_money_to_a_friend', type: config.wallet.type.DOX}
                 doxsService.saveDoxs(payloadoxs, function(err, result){
                     if(err) {
                         console.log('ERROR'+ response);
@@ -210,7 +210,7 @@ exports.transferFunds = function(data, callback) {
                                 addInfo = {transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime };
                                 additionalInfoReceiver = JSON.stringify({transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime });
                                 additionalInfoReceiverJSON = {transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime };
-                                payload.additionalInfo = JSON.stringify({transferID : transid , message : payload.message,amount: payload.amount , doxAdded : config.doxs.p2p  ,name: receipt ,avatar: receiptAvatar , date:dateTime });
+                                payload.additionalInfo = JSON.stringify({transferID : transid , message : payload.message,amount: payload.amount , doxEarned : config.doxs.transfer_money_to_a_friend  ,name: receipt ,avatar: receiptAvatar , date:dateTime });
                                 payload.date = dateTime;
                                 callback(null, sessionid,payload);
                             }                    
@@ -221,7 +221,7 @@ exports.transferFunds = function(data, callback) {
         },
 
         function(sessionid,payload,callback){
-            var updateDoxs = {phoneID: mainUser, operation: 'p2p',sessionid: sessionid};
+            var updateDoxs = {phoneID: mainUser, operation: 'transfer_money_to_a_friend', sessionid: sessionid};
             console.log('Saving doxs in mongo');
             Userquery.putDoxs(updateDoxs, function(err,result){
                 callback(null,sessionid,payload);
@@ -270,7 +270,8 @@ exports.transferFunds = function(data, callback) {
                 }
                 else
                     console.log('Obteniendo Balance');
-                    result.additionalInfo.doxAdded = config.doxs.p2p;
+                    //result.additionalInfo.doxAdded = config.doxs.p2p;
+                    result.additionalInfo.doxEarned = config.doxs.transfer_money_to_a_friend;
                     callback(null,result);
             });
         },
@@ -348,7 +349,7 @@ exports.transferFunds = function(data, callback) {
             transacction.title = 'Transfer fund';
             transacction.type = 'DOX',
             transacction.date = dateTime;
-            transacction.amount = config.doxs.p2p;
+            transacction.amount = config.doxs.transfer_money_to_a_friend;
             transacction.additionalInfo = receipt.additionalInfo;
             transacction.operation = 'TRANSFER';
             transacction.phoneID = receipt.receiver;
@@ -497,7 +498,7 @@ exports.transferNotRegisteredUser = function(data, callback){
             var requestSession = { phoneID :  mainUser };
             sessionQuery.getCredentials(requestSession,function(err,user){
                 forReceipt.user = user;
-                var payloadoxs = {phoneID: user.data.phoneID, action: 'gift', type: config.wallet.type.DOX}
+                var payloadoxs = {phoneID: user.data.phoneID, action: 'transfer_money_to_a_friend', type: config.wallet.type.DOX}
                 doxsService.saveDoxs(payloadoxs, function(err, result){
                     if(err) {
                         console.log('ERROR'+ response);
@@ -513,7 +514,7 @@ exports.transferNotRegisteredUser = function(data, callback){
                                 addInfo = {transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime };
                                 additionalInfoReceiver = JSON.stringify({transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime });
                                 additionalInfoReceiverJSON = {transferID : transid , message : payload.message,amount: payload.amount, name: result.name, avatar: config.S3.url + user.data.phoneID +'.png' , date:dateTime };
-                                payload.additionalInfo = JSON.stringify({transferID : transid , message : payload.message,amount: payload.amount , doxAdded : config.doxs.p2p  ,name: receipt ,avatar: receiptAvatar , date:dateTime });
+                                payload.additionalInfo = JSON.stringify({transferID : transid , message : payload.message,amount: payload.amount , doxEarned : config.doxs.transfer_money_to_a_friend, name: receipt ,avatar: receiptAvatar , date:dateTime });
                                 payload.date = dateTime;
                                 callback(null, sessionid,payload);
                             }
@@ -524,7 +525,7 @@ exports.transferNotRegisteredUser = function(data, callback){
         },
 
         function(sessionid,payload,callback){
-            var updateDoxs = {phoneID: mainUser, operation: 'p2p',sessionid: sessionid};
+            var updateDoxs = {phoneID: mainUser, operation: config.doxs.transfer_money_to_a_friend ,sessionid: sessionid};
             logger.info('4.- SAVING DOX IN MONGO');
             Userquery.putDoxs(updateDoxs, function(err,result){
                 callback(null,sessionid,payload);
@@ -572,7 +573,8 @@ exports.transferNotRegisteredUser = function(data, callback){
                     callback('ERROR', response);
                 }
                 logger.info('6.1.- GETTING BALANCE...');
-                result.additionalInfo.doxAdded = config.doxs.p2p;
+                //result.additionalInfo.doxAdded = config.doxs.p2p;
+                result.additionalInfo.doxEarned = config.doxs.transfer_money_to_a_friend;
                 callback(null,result);
             });
         },
@@ -650,7 +652,7 @@ exports.transferNotRegisteredUser = function(data, callback){
             transacction.title = 'Transfer fund';
             transacction.type = config.transaction.type.DOX;
             transacction.date = dateTime;
-            transacction.amount = config.doxs.p2p;
+            transacction.amount = config.doxs.transfer_money_to_a_friend;
             transacction.additionalInfo = receipt.additionalInfo;
             transacction.operation = 'TRANSFER';
             transacction.phoneID = receipt.receiver;

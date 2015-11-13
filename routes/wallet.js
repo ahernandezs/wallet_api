@@ -152,7 +152,7 @@ exports.transferFunds = function(req, res) {
         });
       } else {
         //User already registered. Normal Flow.
-        var payloadoxs = {phoneID: req.body.destiny, action: 'gift'};
+       // var payloadoxs = {phoneID: req.body.destiny, action: 'gift'};
         async.waterfall([
           function (callback) {
             TransferFlow.transferFunds(values, function (err, result) {
@@ -163,12 +163,13 @@ exports.transferFunds = function(req, res) {
               callback(null, result);
             });
           },
+            /*
           function (resultBalance, callback) {
             doxsService.saveDoxs(payloadoxs, function (err, result) {
               console.log('Transfer result: ' + JSON.stringify(result) + '\n\n');
               callback(null, resultBalance);
             });
-          }
+          }*/
         ], function (err, result) {
           if (err) {
             callback("Error! " + err, result);
