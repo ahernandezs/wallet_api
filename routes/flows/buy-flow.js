@@ -780,7 +780,7 @@ exports.buyFlowMobileShop = function(payload,callback) {
 
 		function(sessionid,payload,callback){
 			console.log('RECEIVER FROM DOXS-> ' + payload.phoneID);
-			console.log('DOXS EARNED-> ' + config.doxs.transfer_money_to_a_friend);
+			console.log('DOXS EARNED-> ' + config.doxs.make_a_shop_purchase);
 			var payloadoxs = {phoneID: payload.phoneID, action: 'make_a_shop_purchase', type: config.wallet.type.DOX}
 			doxsService.saveDoxs(payloadoxs, function(err, result){
 				if(err) {
