@@ -8,6 +8,7 @@ var async = require('async');
 var UserQuery = require('../model/queries/user-query');
 var parseString = require('xml2js').parseString;
 var Client = require('node-rest-client').Client;
+var doxsService = require('./doxs-service');
 
 
 exports.requestLoan = function(payload, callback) {
@@ -53,11 +54,27 @@ exports.requestLoan = function(payload, callback) {
 						callback(null,result);
 					}else{
 						console.log('result information ' + 'Unknown error');
-						callback(null,result);
+						callback(null,payload.sessionid, result);
 					}
 				});
 			});
-        }
+        },
+		function(sessionid,result, callback){
+				console.log('RECEIVER FROM DOXS-> ' + payload.phoneID);
+				console.log('DOXS EARNED-> ' + config.doxs.take_a_loan);
+				var payloadoxs = {phoneID: payload.phoneID, action: 'take_a_loan', type: config.wallet.type.DOX}
+				doxsService.saveDoxs(payloadoxs, function(err, result){
+					if(err) {
+						console.log('ERROR'+ response);
+						callback('ERROR IN DOX EARNED', {statusCode:1,additionalInfo : "Error in DOX Service"});
+					} else {
+						console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
+						result.additionalInfo.doxEarned = config.doxs.take_a_loan;
+						callback(null, result);
+					}
+				});
+		},
+
     ], function (err, result) {
         if(err){      
             callback('ERROR',result);

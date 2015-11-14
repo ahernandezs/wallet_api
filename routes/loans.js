@@ -61,6 +61,7 @@ exports.loanConfirm = function(req,res){
     logger.info('POST METHOD LOAN CONFIRM');
     var payload = req.body;
     payload.phoneID = req.headers['x-phoneid'];
+    payload.sessionid  = req.headers['x-auth-token'];
     var amountLoan = payload.amount;
 
     if (!payload.phoneID && !payload.countryCode) {

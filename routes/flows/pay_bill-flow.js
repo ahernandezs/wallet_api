@@ -9,6 +9,7 @@ var moment = require('moment-timezone');
 var billTransaction = require('../../model/billTransaction');
 var Userquery = require('../../model/queries/user-query');
 var urbanService = require('../../services/notification-service');
+var doxsService = require('../../services/doxs-service');
 var ReceiptQuery = require('../../model/queries/receipt-query');
 var transacctionQuery = require('../../model/queries/transacction-query');
 var messageQuery = require('../../model/queries/message-query');
@@ -96,6 +97,21 @@ exports.pay_bill = function(payload, callback){
                 },
 
                 function(sessionid,callback){
+                    console.log('RECEIVER FROM DOXS-> ' + payload.phoneID);
+                    console.log('DOXS EARNED-> ' + config.doxs.pay_a_bill);
+                    var payloadoxs = {phoneID: payload.phoneID, action: 'pay_a_bill', type: config.wallet.type.DOX}
+                    doxsService.saveDoxs(payloadoxs, function(err, result){
+                        if(err) {
+                            console.log('ERROR'+ response);
+                            callback('ERROR IN DOX EARNED', {statusCode:1,additionalInfo : "Error in DOX Service"});
+                        } else {
+                            console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
+                            callback(null, sessionid);
+                        }
+                    });
+                },
+
+                function(sessionid,callback){
                     logger.info('4.- GET BALANCE');
                     balance.balanceFlow(sessionid, function(err, balance) {
                         if(err){
@@ -159,6 +175,7 @@ exports.pay_bill = function(payload, callback){
                     callback(err,result);
                 }else{
                     logger.info('7.- BILLPAYMENT FLOW FINISHED');
+                    result.additionalInfo.doxEarned = config.doxs.pay_a_bill;
                     callback(null,result);
                 }
             });
