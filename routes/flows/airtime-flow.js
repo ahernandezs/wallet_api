@@ -3,6 +3,7 @@ var soap = require('soap');
 var config = require('../../config');
 var moment = require('moment-timezone');
 var urbanService = require('../../services/notification-service');
+var doxsService = require('../../services/doxs-service');
 var messageQuery = require('../../model/queries/message-query');
 var balance = require('./balance-flow');
 var Userquery = require('../../model/queries/user-query');
@@ -87,6 +88,21 @@ exports.buy = function(payload, callback){
         },
 
         function(sessionid,callback){
+            console.log('RECEIVER FROM DOXS-> ' + payload.phoneID);
+            console.log('DOXS EARNED-> ' + config.doxs.buy_airtime);
+            var payloadoxs = {phoneID: payload.phoneID, action: 'buy_airtime', type: config.wallet.type.DOX}
+            doxsService.saveDoxs(payloadoxs, function(err, result){
+                if(err) {
+                    console.log('ERROR'+ response);
+                    callback('ERROR IN DOX EARNED', {statusCode:1,additionalInfo : "Error in DOX Service"});
+                } else {
+                    console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
+                    callback(null, sessionid);
+                }
+            });
+        },
+
+        function(sessionid,callback){
             console.log('Get Balance');
             balance.balanceFlow(sessionid, function(err, balance) {
                 if(err){
@@ -139,6 +155,7 @@ exports.buy = function(payload, callback){
                         callback('ERROR', err);
                     else{
                         console.log('Transacction Created');
+                        balance.additionalInfo.doxEarned = config.doxs.buy_airtime;
                         callback(null, balance,receipt);
                     }
                 });

@@ -12,6 +12,7 @@ var balance = require('./balance-flow');
 var ReceiptQuery = require('../../model/queries/receipt-query');
 var userQuery = require('../../model/queries/user-query');
 var urbanService = require('../../services/notification-service');
+var doxsService = require('../../services/doxs-service');
 var transacctionQuery = require('../../model/queries/transacction-query');
 var soapurl = process.env.SOAP_URL;
 
@@ -166,6 +167,21 @@ exports.buy = function (payload, callback){
             urbanService.singlePush(message, function(err, result) {
                 var response = { statusCode: 0, additionalInfo: 'The Top-up was successful' };
                 callback(null,sessionid);
+            });
+        },
+
+        function(sessionid,callback){
+            console.log('RECEIVER FROM DOXS-> ' + payload.phoneID);
+            console.log('DOXS EARNED-> ' + config.doxs.top_up_account);
+            var payloadoxs = {phoneID: payload.phoneID, action: 'top_up_account', type: config.wallet.type.DOX}
+            doxsService.saveDoxs(payloadoxs, function(err, result){
+                if(err) {
+                    console.log('ERROR'+ response);
+                    callback('ERROR IN DOX EARNED', {statusCode:1,additionalInfo : "Error in DOX Service"});
+                } else {
+                    console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
+                    callback(null, sessionid);
+                }
             });
         },
 

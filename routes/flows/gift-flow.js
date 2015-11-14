@@ -19,7 +19,7 @@ exports.sendGift = function(payload,callback) {
 	var dateTime;
 	var forReceipt = {};
 	order['userId'] = payload.beneficiaryId;
-	var payloadoxs = {phoneID: payload.phoneID, action: 'send_coffe_to_a_friend', type: config.wallet.type.DOX}
+	var payloadoxs = {phoneID: payload.phoneID, action: 'send_a_coffee_to_a_friend', type: config.wallet.type.DOX}
 	var id;
 	var response;
 	var name;
@@ -134,7 +134,7 @@ exports.sendGift = function(payload,callback) {
 						var response = result.balanceReturn;
 						if(response.result  === '0' ) {
 							dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
-							var balance = { current : currentMoney , dox : response.current , doxAdded:config.doxs.gift,  order : orderID ,  status :'NEW' , date: dateTime } ;
+							var balance = { current : currentMoney , dox : response.current , doEarned:config.doxs.send_a_coffee_to_a_friend,  order : orderID ,  status :'NEW' , date: dateTime } ;
 							response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : balance };
 						}else{
 							var response = { statusCode:1 ,  additionalInfo : response };
@@ -146,6 +146,8 @@ exports.sendGift = function(payload,callback) {
 		},
 
 		function(sessionid, response, callback){
+			console.log('HACIENDO LA TRANSFERENCIA');
+			console.log(payloadoxs);
 			doxsService.saveDoxs(payloadoxs, function(err, result){
 				console.log('Transfer result ');
 				if(err) {
