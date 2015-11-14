@@ -9,6 +9,7 @@ var UserQuery = require('../model/queries/user-query');
 var parseString = require('xml2js').parseString;
 var Client = require('node-rest-client').Client;
 var doxsService = require('./doxs-service');
+var config = require('../config');
 
 
 exports.requestLoan = function(payload, callback) {
