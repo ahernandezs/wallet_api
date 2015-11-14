@@ -42,7 +42,7 @@ config.products.max_items_per_event = 3;
 config.products.max_amount_per_person = 10;
 config.products.loyalty = {};
 config.products.loyalty.productId = 4;
-config.products.loyalty.cost = '10000';
+config.products.loyalty.cost = '30000';
 
 config.wallet = {};
 config.wallet.type = { MONEY:1,OTHER2:2 ,DOX:3 };
@@ -117,6 +117,19 @@ config.doxs.facebook = 1000;
 config.doxs.instagram = 1000;
 config.doxs.invite = 1000;
 config.doxs.sms = 1000;
+
+config.doxs.transfer_money_to_a_friend = 1000;
+config.doxs.make_a_coffee_purchase = 1500;
+config.doxs.make_a_shop_purchase = 1500;
+config.doxs.send_a_coffee_to_a_friend = 1500;
+config.doxs.update_profile_photo = 1000;
+config.doxs.share_on_twitter = 1000;
+config.doxs.share_on_facebook = 1000;
+config.doxs.buy_tickets = 1000;
+config.doxs.pay_a_bill = 1000;
+config.doxs.buy_airtime = 1000;
+config.doxs.take_a_loan = 1500;
+config.doxs.top_up_account = 1000;
 
 config.prizes = {};
 config.prizes.top = 1;

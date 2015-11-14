@@ -19,7 +19,7 @@ exports.sendGift = function(payload,callback) {
 	var dateTime;
 	var forReceipt = {};
 	order['userId'] = payload.beneficiaryId;
-	var payloadoxs = {phoneID: payload.phoneID, action: 'gift', type: 3}
+	var payloadoxs = {phoneID: payload.phoneID, action: 'send_coffe_to_a_friend', type: config.wallet.type.DOX}
 	var id;
 	var response;
 	var name;
@@ -201,7 +201,7 @@ exports.sendGift = function(payload,callback) {
 											order: orderID,
 											amount :payload.order.total,
 											status: config.orders.status.NEW,
-											doxAdded : 500 ,
+											doxEarned : config.doxs.send_a_coffee_to_a_friend ,
 											facebook: fbInfo,
 											twitter:twInfo
 										});
@@ -320,6 +320,7 @@ exports.sendGift = function(payload,callback) {
                                 balance.additionalInfo.product = payload.order.products[0].name;
 								balance.additionalInfo.twitter = twInfo;
 								balance.additionalInfo.facebook = fbInfo;
+								balance.additionalInfo.doxEarned = config.doxs.send_a_coffee_to_a_friend;
 
 								callback(null, balance);
 							}

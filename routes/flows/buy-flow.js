@@ -104,7 +104,8 @@ exports.buyFlow = function(payload,callback) {
 		},*/
 
 		function(sessionid,callback){
-			payload['action']='payment';
+			//payload['action']='payment';
+			payload['action'] = 'make_a_coffee_purchase';
 			doxsService.saveDoxs(payload, function(err, result){
 				logger.info('Transfer result: '+JSON.stringify(result)+'\n\n');
 				if(err) {
@@ -116,7 +117,7 @@ exports.buyFlow = function(payload,callback) {
 		},
 
 		function(sessionid, callback){
-			var updateDoxs = {sessionid:sessionid, phoneID: payload.phoneID, operation: 'payment'};
+			var updateDoxs = {sessionid:sessionid, phoneID: payload.phoneID, operation: 'make_a_coffee_purchase'};
 			logger.info('Saving doxs in mongo');
 			Userquery.putDoxs(updateDoxs, function(err,result){
 				logger.info(sessionid);
@@ -220,7 +221,7 @@ exports.buyFlow = function(payload,callback) {
 							var balance = {
 								current: currentMoney,
 								dox: response.current,
-								doxAdded: config.doxs.payment,
+								doxEarned: config.doxs.make_a_coffee_purchase,
 								order: orderID,
 								status:'NEW',
 								date:dateTime,
@@ -308,7 +309,7 @@ exports.buyFlow = function(payload,callback) {
 			transacction.title = 'Amdocs cafe ';
 			transacction.type = 'DOX',
 			transacction.date = dateTime;
-			transacction.amount = config.doxs.payment;
+			transacction.amount = config.doxs.make_a_coffee_purchase;
 			transacction.additionalInfo = receipt.additionalInfo;
 			transacction.operation = 'BUY';
 			transacction.phoneID = receipt.emitter;
@@ -768,14 +769,30 @@ exports.buyFlowMobileShop = function(payload,callback) {
 								callback("ERROR", response);
 							}
 							else{
-								callback(null,sessionid);
+								callback(null,sessionid, payload);
 							}
 						}
 					});
 				});
 			}else
-				callback(null,sessionid);
+				callback(null,sessionid, payload);
 		},
+
+		function(sessionid,payload,callback){
+			console.log('RECEIVER FROM DOXS-> ' + payload.phoneID);
+			console.log('DOXS EARNED-> ' + config.doxs.make_a_shop_purchase);
+			var payloadoxs = {phoneID: payload.phoneID, action: 'make_a_shop_purchase', type: config.wallet.type.DOX}
+			doxsService.saveDoxs(payloadoxs, function(err, result){
+				if(err) {
+					console.log('ERROR'+ response);
+					callback('ERROR IN DOX EARNED', {statusCode:1,additionalInfo : "Error in DOX Service"});
+				} else {
+					console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
+					callback(null, sessionid);
+				}
+			});
+		},
+
 		function(sessionid, callback){
 			logger.info('balance e-wallet');
 			var  request = { sessionid: sessionid, type: 1  };
@@ -865,6 +882,7 @@ exports.buyFlowMobileShop = function(payload,callback) {
 					logger.error('Error to create transacction');
 				else{
 					logger.info(result);
+					balance.additionalInfo.doxEarned = config.doxs.make_a_shop_purchase;
 					callback(null, balance);
 				}
 			});
