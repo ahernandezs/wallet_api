@@ -236,7 +236,7 @@ exports.buy = function (payload, callback){
                         callback('ERROR', err);
                     else{
                         console.log('Transacction Created');
-                        banalce.additionalInfo = config.doxs.top_up_account;
+                        balance.additionalInfo = config.doxs.top_up_account;
                         callback(null, balance,receipt);
                     }
                 });
