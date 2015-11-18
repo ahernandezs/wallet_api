@@ -521,3 +521,22 @@ exports.setCoupon = function(req, res){
       }
   });
 }
+
+exports.buyMobileProducts = function(req, res){
+
+  logger.info('EXECUTING METHOD POST ' + req.path);
+
+  req.body.customerID = req.headers['x-phoneid'];
+  req.body.sessionid = req.headers['x-auth-token'];
+  req.body.status = 'ACCEPTED';
+  logger.info(req.body);
+
+  BuyFlow.customerMobileShopBuy(req.body,function(err,result){
+    if(err)
+      console.log('Error Flow');
+    else
+      console.log('Finish Flow');
+    console.log(result);
+    res.send(result);
+  });
+};

@@ -898,24 +898,113 @@ exports.buyFlowMobileShop = function(payload,callback) {
     });
 };
 
-/*
- {
- "customerID": "5530368070",
- "products": [
- {
- "productID": 1,
- "quantity": 1,
- "cost": 5
- } ,           {
- "productID": 2,
- "quantity": 1,
- "cost": "10"
- }
- ],
- "total": 15,
- "totalDox" : 2000,
- "status": "NEW"
- }*/
+exports.customerMobileShopBuy = function(payload, callback){
+	verify_shop_rules(payload, function(verified,transaction, message){
+		if (verified){
+			async.waterfall([
+				//save temporal order
+				function(callback){
+					logger.info('1.- SAVING ORDER');
+					shopOrderQuery.putOrder(payload, function(err, result) {
+						if(err){
+							var response = { statusCode:1 ,  additionalInfo : err };
+							callback('ERROR',response);
+						}
+						else{
+							console.log('Save mobile shop order' + result.order);
+							transaction.orderId = result.order;
+							transaction.save(function(err){
+								if (!err) {
+									callback(null,result.order);
+								}
+								else {
+									console.log(err);
+									callback('ERROR',{statusCode:1, additionalInfo: err});
+								}
+							});
+						}
+					});
+				},
+
+				function(orderId,callback){
+					logger.info('2.- SAVE MESSAGE IN MONGO');
+					var message = {};
+					var additionalInfo = {};
+					var title = 'Mobile Shop Purchase OrderID : ' + orderId;
+					//message = extraData;
+					message.status = config.messages.status.NOTREAD;
+					message.type = config.messages.type.MOBILESHOP;
+					message.title = title;
+					message.phoneID = payload.customerID;
+					message.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
+					message.message = title;
+					console.log('-----------MESSAGE---------');
+					console.log(message);
+					messageQuery.createMessage(payload.customerID, message, function(err, result) {
+						if (err) {
+							var resp = { statusCode: 1, additionalInfo: result };
+							callback('ERROR', resp);
+						} else {
+							callback(null, orderId);
+						}
+					});
+				},
+
+				//Get order
+				function(orderId, callback){
+					console.log('Get Temporal Order');
+					shopOrderQuery.getOrder(orderId ,function  (err,result) {
+						if(err){
+							console.log(err);
+							callback('ERROR',err);
+						} else {
+							console.log(result);
+							callback(null,result);
+						}
+					});
+				},
+
+				function(order,callback) {
+						console.log('Invoke buy flow');
+						order.status = 'ACCEPTED';
+					    var payloadBuyFlow = {};
+						payloadBuyFlow.order = order;
+						payloadBuyFlow.sessionid = payload.sessionid;
+						payloadBuyFlow.phoneID = payload.customerID;
+					    console.log(payloadBuyFlow);
+						purchaseFlow.buyFlowMobileShop(payloadBuyFlow, function (err, result) {
+							if (err) {
+								console.log(err);
+								callback('ERROR', err);
+							} else {
+								mobileProductTransaction.findOne({orderId: order.orderID}, function (err, tran) {
+									if (err)
+										callback('ERROR', {
+											statusCode: 1,
+											additionalInfo: 'ERROR saving mobileProductTransaction in MongoDB'
+										});
+									tran.status = config.orders.status.READY;
+									tran.save(function (err) {
+										console.log('Result purchase');
+										callback(null, result);
+									});
+								});
+							}
+						});
+				}
+			], function(err, result) {
+				if (err)
+					callback(err, result);
+				else{
+					console.log('Finish callback');
+					callback(null, result);
+				}
+			});
+		} else {
+			callback(true,{statusCode:1, additionalInfo: {message: message}});
+		}
+	});
+};
 
 function verify_shop_rules(order, callback){
 
