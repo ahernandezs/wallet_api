@@ -6,6 +6,7 @@ var uuid = require('uuid');
 var js2xmlparser = require("js2xmlparser");
 var async = require('async');
 var UserQuery = require('../model/queries/user-query');
+var transacctionQuery = require('../model/queries/transacction-query');
 var parseString = require('xml2js').parseString;
 var Client = require('node-rest-client').Client;
 var doxsService = require('./doxs-service');
@@ -147,8 +148,32 @@ exports.requestDecision = function(payload, callback){
 					}
 					callback(null,result.RESULT);
 				});
-});
-	    }], function (err, result) {
+			});
+	    },
+		function(resultLoan, callback) {
+				console.log( 'Create History transaction for requester loan.' );
+				var transacction = {};
+				transacction.title = config.transaction.operation.LOAN;
+				transacction.type = config.transaction.type.LOAN,
+				transacction.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
+				transacction.amount = resultLoan.MAXAMOUNT[0];
+				transacction.additionalInfo = JSON.stringify(resultLoan);
+				transacction.operation = config.transaction.operation.LOAN;
+				transacction.phoneID = payload.phoneID;
+
+				UserQuery.findAppID(payload.phoneID,function(err,result){
+					transacction.description ='To ' + result.name;
+					transacctionQuery.createTranssaction(transacction, function(err, result) {
+						console.log(result);
+						if (err)
+							callback('ERROR', err);
+						else
+							callback(null, resultLoan);
+					});
+				});
+		},
+
+		], function (err, result) {
 	        if(err){      
 	            callback('ERROR',result);
 	        } else {      

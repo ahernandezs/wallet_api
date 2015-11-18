@@ -43,9 +43,7 @@ exports.buy = function (req, res){
                     return;
                 }
             });
-        }
-
-        if ( ((new Date() - transaction.fecha)/1000) > 3600 ){
+        } else if ( ((new Date() - transaction.fecha)/1000) > 3600 ){
             topupFlow.buy(payload,function(err, result){
                 if(err){
                     //var response = { statusCode:1 , additionalInfo : JSON.stringify(err)};
