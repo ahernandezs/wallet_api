@@ -2,8 +2,9 @@ var mongoose = require('mongoose');
 var async = require('async');
 var loan = require('./flows/loan-flow');
 var loanQuery = require('../model/queries/loan-query');
-var  cashCreditService = require('../services/cashCredit-Service');
+var cashCreditService = require('../services/cashCredit-Service');
 var urbanService = require('../services/notification-service');
+var transaction = require('../model/transacction');
 var config = require('../config.js');
 var logger = config.logger;
 
@@ -44,15 +45,41 @@ exports.getDecision = function(req,res){
     var payload = req.body;
     payload.phoneID = req.headers['x-phoneid'];
 
-    cashCreditService.requestDecision(payload, function(err,result){
-      if(err) {
-        console.log(err);
-        res.send(500);
+    transaction.getLastTransaction(payload.phoneID, config.transaction.operation.LOAN, function(err,transaction){
+        if (err){
+            res.send({statusCode: 4, additionalInfo: {message: 'UNAVAILABLE DATABASE SERVICE'}});
+            return;
+        }
+
+        if (!transaction){
+            cashCreditService.requestDecision(payload, function(err,result) {
+                if (err) {
+                    console.log(err);
+                    res.send(500);
+                    return;
+                } else {
+                    console.log(result);
+                    var mockResponse = {approved: 'YES', maxAmount: result.MAXAMOUNT[0], maxPeriod: 5};
+                    var response = {statusCode: 0, additionalInfo: mockResponse}
+                    res.json(response);
+                    return;
+                }
+            });
+        } else if ( ((new Date() - transaction.fecha)/1000) > 3600 ){
+            cashCreditService.requestDecision(payload, function(err,result) {
+                if (err) {
+                    console.log(err);
+                    res.send(500);
+                } else {
+                    console.log(result);
+                    var mockResponse = {approved: 'YES', maxAmount: result.MAXAMOUNT[0], maxPeriod: 5};
+                    var response = {statusCode: 0, additionalInfo: mockResponse}
+                    res.json(response);
+                }
+            });
         } else {
-          console.log(result);
-          var mockResponse = { approved:'YES' , maxAmount :result.MAXAMOUNT[0], maxPeriod: 5 } ;
-          var response = {statusCode:0 , additionalInfo : mockResponse }
-          res.json(response);
+            res.send({statusCode: 14, additionalInfo : { message : 'ONLY 1 LOAN PER HOUR' }});
+            return;
         }
     });
 }
