@@ -136,14 +136,16 @@ exports.transferFunds = function(req, res) {
             return;
           } else {
             if (enable_sms) {
-              var message = "Hello! you receive a transfer from: " + req.headers.phoneID + " by " + config.currency.symbol + values.body.amount;
-              sms.sendMessage(values.body.countryCode + values.body.destiny, message, function (err, sms_response) {
-                if (err) {
-                  //res.status(503).send({code : 103, message : 'UNAVAILABLE SMS SERVICE' });
-                  res.send({statusCode: 3, additionalInfo: {message: 'UNAVAILABLE SMS SERVICE'}});
-                  console.log(sms_response);
-                  return;
-                }
+              Userquery.findUserByPhoneID(req.headers.phoneID, function(err, user){
+                var message = "Hello! you receive a transfer from: " + user.countryCode + req.headers.phoneID + " by " + config.currency.symbol + values.body.amount;
+                sms.sendMessage(user.countryCode + values.body.destiny, message, function (err, sms_response) {
+                  if (err) {
+                    //res.status(503).send({code : 103, message : 'UNAVAILABLE SMS SERVICE' });
+                    res.send({statusCode: 3, additionalInfo: {message: 'UNAVAILABLE SMS SERVICE'}});
+                    console.log(sms_response);
+                    return;
+                  }
+                });
               });
             }
             res.send(result);
@@ -180,8 +182,6 @@ exports.transferFunds = function(req, res) {
       }
 
     });
-
-
 }
 
 exports.sendGift = function(req, res){
@@ -202,15 +202,16 @@ exports.sendGift = function(req, res){
 
     if(err){
       if (enable_sms){
-        var message = "Hello! you have received a money request from " + req.body.phoneID;
+        Userquery.findUserByPhoneID(senderPhone, function(err,user){
+          var message = "Hello! you have received a gift from " + user.countryCode + senderPhone;
 
-        sms.sendMessage(user.countryCode + req.body.destinatary,message, function(err,sms_response) {
-          if (err) {
-            //res.status(503).send({code : 103, message : 'UNAVAILABLE SMS SERVICE' });
-            res.send({statusCode: 3, additionalInfo: {message: 'UNAVAILABLE SMS SERVICE'}});
-            console.log(sms_response);
-            return;
-          }
+          sms.sendMessage(user.countryCode + json.beneficiaryPhoneID, message, function(err,sms_response) {
+            if (err) {
+              //res.status(503).send({code : 103, message : 'UNAVAILABLE SMS SERVICE' });
+              res.send({statusCode: 3, additionalInfo: {message: 'UNAVAILABLE SMS SERVICE'}});
+              console.log(sms_response);
+            }
+          });
         });
       } else {
         logger.info('SENDED SIMULATION MESSAGE TO A NOT REGISTERED USER.!');
