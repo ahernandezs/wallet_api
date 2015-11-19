@@ -59,7 +59,7 @@ exports.getDecision = function(req,res){
                     return;
                 } else {
                     console.log(result);
-                    var mockResponse = {approved: 'YES', maxAmount: result.MAXAMOUNT[0], maxPeriod: 5};
+                    var mockResponse = {approved: 'YES',interestRate : result.INTERESTRATE[0], maxAmount: result.MAXAMOUNT[0], maxPeriod: 5};
                     var response = {statusCode: 0, additionalInfo: mockResponse}
                     res.json(response);
                     return;
@@ -72,7 +72,7 @@ exports.getDecision = function(req,res){
                     res.send(500);
                 } else {
                     console.log(result);
-                    var mockResponse = {approved: 'YES', maxAmount: result.MAXAMOUNT[0], maxPeriod: 5};
+                    var mockResponse = {approved: 'YES' ,interestRate : result.INTERESTRATE[0] , maxAmount: result.MAXAMOUNT[0], maxPeriod: 5};
                     var response = {statusCode: 0, additionalInfo: mockResponse}
                     res.json(response);
                 }
