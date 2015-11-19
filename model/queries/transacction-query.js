@@ -104,14 +104,10 @@ exports.getTransacctionsDox = function(phoneIDToSearch, callback) {
 exports.createTranssaction = function(data, callback) {
     console.log('Save transacction');
     var newTransacction = new transacction(data);
-    var result = newTransacction.save(function(err) {
-        if (err) return 1;
-        return 0;
+    newTransacction.save(function(err, tran) {
+        if (err) callback('ERROR', 'The transacction could not be created');
+        else callback(null, tran);
     });
-    if (result === 1)
-        callback('ERROR', 'The transacction could not be created');
-    else
-        callback(null, 'The Transacction was created successfully');
 };
 
 exports.updatePendingPayment = function(data, callback) {

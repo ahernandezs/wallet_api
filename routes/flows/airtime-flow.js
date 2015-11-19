@@ -155,7 +155,10 @@ exports.buy = function(payload, callback){
                         callback('ERROR', err);
                     else{
                         console.log('Transacction Created');
+                        console.log(result);
+                        balance.date = dateTime;
                         balance.additionalInfo.doxEarned = config.doxs.buy_airtime;
+                        balance.additionalInfo.transId = result.id;
                         callback(null, balance,receipt);
                     }
                 });

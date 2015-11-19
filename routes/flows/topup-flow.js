@@ -236,6 +236,8 @@ exports.buy = function (payload, callback){
                         callback('ERROR', err);
                     else{
                         console.log('Transacction Created');
+                        balance.date = dateTime;
+                        balance.additionalInfo.transId = result.id;
                         balance.additionalInfo.doxEarned = config.doxs.top_up_account;
                         callback(null, balance,receipt);
                     }

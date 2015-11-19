@@ -167,8 +167,10 @@ exports.requestDecision = function(payload, callback){
 						console.log(result);
 						if (err)
 							callback('ERROR', err);
-						else
+						else {
+							resultLoan.additionalInfo.transId = result.id;
 							callback(null, resultLoan);
+						}
 					});
 				});
 		},

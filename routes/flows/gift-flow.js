@@ -308,6 +308,8 @@ exports.sendGift = function(payload,callback) {
 						transacction.operation = 'GIFT';
 						transacction.phoneID = emitter;
 						transacction.description ='To ' + receiver;
+						balance.additionalInfo.transId = result.id;
+
 						transacctionQuery.createTranssaction(transacction, function(err, result) {
 							if (err)
 								callback('ERROR', err);

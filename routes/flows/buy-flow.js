@@ -287,23 +287,6 @@ exports.buyFlow = function(payload,callback) {
 		},
 
 		function(balance,receipt, callback) {
-			logger.info( 'Create  transacction money' );
-			var transacction = {};
-			transacction.title = 'Amdocs cafe ';
-			transacction.type = 'MONEY',
-			transacction.date = dateTime;
-			transacction.amount = (-1) * receipt.amount;
-			transacction.additionalInfo = receipt.additionalInfo;
-			transacction.operation = 'BUY';
-			transacction.phoneID = receipt.emitter;
-			transacction.description ='Order No '+ orderID;
-			transacctionQuery.createTranssaction(transacction, function(err, result) {
-				if (err)
-					logger.error('Error to create transacction');
-				else{
-					logger.info(result);
-				}
-			});
 			logger.info( 'Create  transacction DOX' );
 			var transacction = {};
 			transacction.title = 'Amdocs cafe ';
@@ -316,9 +299,28 @@ exports.buyFlow = function(payload,callback) {
 			transacction.description ='Order No '+ orderID;
 			transacctionQuery.createTranssaction(transacction, function(err, result) {
 				if (err)
-					callback('ERROR', err);
+					logger.error('Error to create transacction');
 				else{
 					logger.info(result);
+				}
+			});
+			logger.info( 'Create  transacction money' );
+			var transacction = {};
+			transacction.title = 'Amdocs cafe ';
+			transacction.type = 'MONEY',
+				transacction.date = dateTime;
+			transacction.amount = (-1) * receipt.amount;
+			transacction.additionalInfo = receipt.additionalInfo;
+			transacction.operation = 'BUY';
+			transacction.phoneID = receipt.emitter;
+			transacction.description ='Order No '+ orderID;
+			transacctionQuery.createTranssaction(transacction, function(err, result) {
+				if (err)
+					callback('ERROR', err);
+
+				else{
+					logger.info(result);
+					balance.additionalInfo.transId = result.id;
 					callback(null, balance);
 				}
 			});
@@ -853,7 +855,7 @@ exports.buyFlowMobileShop = function(payload,callback) {
 			    receipt.title = 'You have bought a mobile products of '+ config.currency.symbol + ' '+ data.order.total;
 			    receipt.additionalInfo = JSON.stringify(response.additionalInfo);
 			    receipt.amount = data.order.total;
-			    receipt.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
+			    receipt.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
 			    receipt.type = 'BUY-PRODUCT';
 			    receipt.status = 'NEW';
 			    receipt.orderID = orderID;
@@ -882,6 +884,8 @@ exports.buyFlowMobileShop = function(payload,callback) {
 					logger.error('Error to create transacction');
 				else{
 					logger.info(result);
+					balance.additionalInfo.transId = result.id;
+					balance.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
 					balance.additionalInfo.doxEarned = config.doxs.make_a_shop_purchase;
 					callback(null, balance);
 				}
@@ -1051,20 +1055,6 @@ function verify_shop_rules(order, callback){
 		if (transactions.length == 0) {
 			logger.info('RULES SUCCESS!!');
 			callback(true, transaction, transaction,'RULES SUCCESS!!');
-			/*
-			transaction.save(function(err){
-				if (!err) {
-					logger.info('RULES SUCCESS!!');
-					callback(true,'RULES SUCCESS!!');
-					return;
-				}
-				else {
-					logger.error('ERROR IN MONGODB!!!');
-					console.log(err);
-					callback(false,'ERROR IN MONGODB!!!');
-					return;
-				}
-			});*/
 		} else {
 			//Not exced total amount
 			var totalpp = 0;
@@ -1109,20 +1099,6 @@ function verify_shop_rules(order, callback){
 			}
 			callback(true,transaction,'RULES SUCCESS!!');
 			logger.info('RULES SUCCESS!!');
-			/*
-			transaction.save(function(err){
-				if (!err) {
-					logger.info('RULES SUCCESS!!');
-					callback(true,'RULES SUCCESS!!');
-					return;
-				}
-				else {
-					logger.error('ERROR IN MONGODB!!!');
-					console.log(err);
-					callback(false,'ERROR IN MONGODB!!!');
-					return;
-				}
-			});*/
 		}
 	});
 }
