@@ -337,6 +337,7 @@ exports.transferFunds = function(data, callback) {
                         callback('ERROR', err);
                     else{
                         console.log('Transacction Created');
+                        balance.additionalInfo.transId = result.id;
                         callback(null, balance,receipt);
                     }
                 });
@@ -347,7 +348,7 @@ exports.transferFunds = function(data, callback) {
             console.log( 'Create  transacction DOX' );
             var transacction = {};
             transacction.title = 'Transfer fund';
-            transacction.type = 'DOX',
+            transacction.type = 'DOX';
             transacction.date = dateTime;
             transacction.amount = config.doxs.transfer_money_to_a_friend;
             transacction.additionalInfo = receipt.additionalInfo;
@@ -640,6 +641,7 @@ exports.transferNotRegisteredUser = function(data, callback){
                         callback('ERROR', err);
                     else{
                         console.log('Transacction Created');
+                        balance.additionalInfo.transId = result.id;
                         callback(null, balance,receipt);
                     }
                 });

@@ -282,6 +282,7 @@ var updateLoanFlow = exports.updateLoanFlow = function(payload,callback){
                   callback('ERROR', err);
                 else{
                   logger.info('Transaction created');
+                  response.additionalInfo.transId = result.id;
                   callback(null, response);
                 }
               });

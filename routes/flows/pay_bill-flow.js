@@ -151,7 +151,7 @@ exports.pay_bill = function(payload, callback){
                     var transacction = {};
                     transacction.title = 'Bill Payment';
                     transacction.type = config.transaction.type.BILLPAYMENT ,
-                        transacction.date = dateTime;
+                    transacction.date = dateTime;
                     transacction.amount = (-1) * receipt.amount;
                     transacction.additionalInfo = receipt.additionalInfo;
                     transacction.operation = config.transaction.operation.BILLPAYMENT;
@@ -163,6 +163,9 @@ exports.pay_bill = function(payload, callback){
                                 callback('ERROR', err);
                             else{
                                 logger.info('---TRANSACTION CREATED');
+                                balance.date = dateTime;
+                                balance.additionalInfo.transId = result.id;
+                                balance.additionalInfo.doxEarned = config.doxs.pay_a_bill;
                                 callback(null, balance,receipt);
                             }
                         });
@@ -175,7 +178,6 @@ exports.pay_bill = function(payload, callback){
                     callback(err,result);
                 }else{
                     logger.info('7.- BILLPAYMENT FLOW FINISHED');
-                    result.additionalInfo.doxEarned = config.doxs.pay_a_bill;
                     callback(null,result);
                 }
             });
