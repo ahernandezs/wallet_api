@@ -14,6 +14,7 @@ var transacction = require('./routes/transacctions');
 var loan = require('./routes/loans');
 var spa = require('./routes/spa');
 var bill = require('./routes/bills');
+var task = require('./routes/task');
 var urbanService = require('./services/notification-service');
 var userQuery = require('./model/queries/user-query');
 var fs = require('fs');
@@ -177,6 +178,9 @@ app.get('/api/merchant/users',user.getUsers);
 //services for cash-credit
 app.post('/api/loanDecision', interceptorHeader, loan.getDecision);
 app.post('/api/loanConfirm',interceptorHeader, loan.loanConfirm);
+
+//Task
+app.delete('/api/dox/:phoneId',task.dox_reset);
 
 
 server.listen(process.env.PORT  || 3000);

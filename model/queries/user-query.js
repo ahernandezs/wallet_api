@@ -302,7 +302,7 @@ exports.getDoxs = function(phoneID, callback){
 };
 
 var putDoxs = exports.putDoxs = function(payload, callback){
-      console.log('payload update dox');
+  console.log('payload update dox');
   async.waterfall([
 
     //consultar doxs en utiba
