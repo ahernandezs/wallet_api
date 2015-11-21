@@ -9,6 +9,7 @@ var soapurl = process.env.SOAP_URL;
 var config = require('../../config.js');
 var urbanService = require('../../services/notification-service');
 var balance = require('./balance-flow');
+var sessionUser = require('./login-flow');
 var ReceiptQuery = require('../../model/queries/receipt-query');
 var transacctionQuery = require('../../model/queries/transacction-query');
 var pendingTranfer = require('../../model/pendingTransfer');
@@ -708,5 +709,94 @@ exports.transferNotRegisteredUser = function(data, callback){
             callback(err, result);
         else
             callback(null, result);
+    });
+};
+
+//Payload: {
+// amount:""
+// phoneId:""
+// pin:"",
+// }
+exports.resetDox = function resetDox(payload, callback){
+    console.log('------PAYLOAD--------');
+    console.log(payload);
+
+    async.waterfall([
+        function(callback) {
+            sessionUser.loginFlow(payload,function(err,sessionResult){
+                var token = sessionResult.sessionid;
+                if(err)
+                    callback(true,{statusCode:1,additionalInfo:'Error in Login!'});
+                else if(sessionResult.statusCode === 0){
+                    callback(null,sessionResult);
+                } else {
+                    callback(true,{statusCode:1,additionalInfo:'Error while Login in StatusCode!'});
+                }
+            });
+        },
+
+        function(sessionInfo, callback) {
+
+                var requestSoap = {
+                    sessionid: sessionInfo.sessionid,
+                    to: config.username,
+                    amount: payload.amount,
+                    type: config.wallet.type.DOX
+                };
+
+                var request = { transferRequest: requestSoap };
+                console.log('Request for transfer');
+                console.log(request);
+                soap.createClient(soapurl, function(err, client) {
+                    client.transfer(request, function(err, result) {
+                        if (err) {
+                            console.log(err);
+                            return new Error(err);
+                        } else {
+                            var response = result.transferReturn;
+                            console.log('TransactionID ->' + response.transid);
+                            if (response.result != 0) {
+                                console.log('Result '+ response.result);
+                                var responseTransfer = {};
+                                responseTransfer.statusCode = 1;
+                                if(response.result === 7 )
+                                    responseTransfer.additionalInfo = "Transaction not allowed";
+                                else
+                                    responseTransfer.additionalInfo = JSON.stringify(result);
+                                console.log('Error en la transferencia.');
+                                callback('ERROR', responseTransfer);
+                            } else {
+                                callback(null,sessionInfo, result);
+                            }
+                        }
+                    });
+                });
+        },
+
+        function(sessionInfo, result,callback){
+                var updateDoxs = {phoneID: payload.phoneID, sessionid: sessionInfo.sessionid};
+                logger.info('UPDATING DOX IN MONGO');
+                Userquery.putDoxs(updateDoxs, function(err,newDox){
+                    if (err) {
+                        console.log('------ERROR UPDATING DOX IN MONGO--------');
+                        console.log(err);
+                        callback(true, {statusCode: 1, additionalInfo: 'Error Updating DOX in Mongo.'});
+                    } else {
+                        console.log('----------OK UPDATING DOX IN  MONGO-----------');
+                        callback(null, newDox);
+                    }
+                });
+            },
+        ],
+
+        function(err, result){
+            if(err){
+                callback(err,result);
+                return;
+            }else{
+                console.log('--------FINISHED TRANSFER DOX--------');
+                callback(null,result);
+                return;
+            }
     });
 };
