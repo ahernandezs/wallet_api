@@ -67,7 +67,7 @@ exports.getPendingTransacctions = function(phoneIDToSearch, callback) {
             response = { statusCode: 0, additionalInfo: [] };
             callback(null, response);
         } else {
-           /* var info = JSON.parse(JSON.stringify(transacction));
+           var info = JSON.parse(JSON.stringify(transacction));
             if(info && info[0] ){
                 for(var i = 0; i < info.length; i++){
                     if (info[i].additionalInfo){
@@ -76,9 +76,9 @@ exports.getPendingTransacctions = function(phoneIDToSearch, callback) {
                         info[i].additionalInfo = JSON.parse(additionalInfo);
                     }
                 }
-            }*/
+            }
             console.log('Return Collection');
-            response = { statusCode: 0, additionalInfo: transacction };
+            response = { statusCode: 0, additionalInfo: info };
             callback(null, response);
         }
     });
