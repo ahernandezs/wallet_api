@@ -16,6 +16,7 @@ exports.sendMessage = function(to, message, callback){
         if (err)
             console.log(err);
         else {
+            console.log(to);
             console.log(response);
             callback(null, response);
         }

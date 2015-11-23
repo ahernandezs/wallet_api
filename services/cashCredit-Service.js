@@ -37,7 +37,7 @@ exports.requestLoan = function(payload, callback) {
 				MSISDN      :  "+" + countryCode +payload.phoneID, 
 				TOTALAMOUNT :  payload.amount,
 				INSTNUM     :  payload.installments,
-				INSTTYPE    :  payload.typeInstallment,
+				INSTTYPE    :  payload.typeInstallments,
 			};
 
 			console.log(js2xmlparser("DATA", xmlPayload));
