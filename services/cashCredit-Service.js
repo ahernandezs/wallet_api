@@ -37,7 +37,7 @@ exports.requestLoan = function(payload, callback) {
 				MSISDN      :  "+" + countryCode +payload.phoneID, 
 				TOTALAMOUNT :  payload.amount,
 				INSTNUM     :  payload.installments,
-				INSTTYPE    :  payload.typeInstallment,
+				INSTTYPE    :  payload.typeInstallments,
 			};
 
 			console.log(js2xmlparser("DATA", xmlPayload));
@@ -100,7 +100,8 @@ exports.requestDecision = function(payload, callback){
         },
         function(countryCode, callback) {
         	console.log('Invoke operation cashcredit for REQUESTLOAN ');
-			var dateTime = moment().tz(process.env.TZ).format('DD.MM.YYYY HH:mm:ss').substring(0,19);;
+			var dateTime = moment().tz(process.env.TZ).format('DD.MM.YYYY HH:mm:ss').substring(0,19);
+			var dateBirth = payload.birthDate.replace(/\//g,'.');
 			var xmlPayload = {
 				SYSTEMID       : 'AMDOCS' ,
 				REQUESTID      :  uuid.v1().replace(/-/g,'') ,
@@ -110,7 +111,7 @@ exports.requestDecision = function(payload, callback){
 				MSISDN         :  "+" + countryCode + payload.phoneID ,
 				CLIENTNAME     :  payload.clientName ,
 				IDNUMBER       :  payload.number ,
-				BIRTHDATE      :  payload.birthDate ,
+				BIRTHDATE      :  dateBirth ,
 				BIRTHPLACE     :  payload.birthPlace ,
 				GENDER         :  payload.gender ,
 				MARRITALSTATUS :  payload.marritalStatus ,
