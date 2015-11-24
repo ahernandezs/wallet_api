@@ -181,6 +181,8 @@ app.post('/api/loanConfirm',interceptorHeader, loan.loanConfirm);
 
 //Task
 app.delete('/api/dox/:phoneId',task.dox_reset);
+app.delete('/api/register/:phoneId', task.register_delete);
+app.put('/api/money/:phoneId', task.add_money);
 
 
 server.listen(process.env.PORT  || 3000);

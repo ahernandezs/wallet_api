@@ -2,10 +2,14 @@
  * Created by nemux on 19/11/15.
  */
 
+var soap = require('soap');
+var async = require('async');
+var crypto = require('crypto');
 var user = require('../model/user');
 var transfer = require('./flows/transfer-flow');
 var merchantQuery = require('../model/queries/merchant-query');
 var config = require('../config.js');
+var soapurl = process.env.SOAP_URL;
 var logger = config.logger;
 
 exports.dox_reset = function dox_reset_all(req, res){
@@ -65,5 +69,164 @@ exports.dox_reset = function dox_reset_all(req, res){
                 }
             });
         }
+    });
+};
+
+exports.register_delete = function(req, res){
+    var phoneId = req.params.phoneId;
+    var confirm = req.body.confirm;
+
+    console.log(req);
+
+    if (confirm == 'YES'){
+        console.log('Usuario removido')
+        user.findOneAndRemove({phoneID:phoneId},function(err,user,result){
+            if (err){
+                res.send({statusCode: 4, additionalInfo: {message: 'UNAVAILABLE DATABASE SERVICE'}});
+                return;
+            }
+            if (user){
+                console.log(result);
+                res.send({statusCode:0, additionalInfo:{ deleted:"YES", message:user }});
+            } else {
+                res.send({statusCode:0, additionalInfo : { message: 'User not found.'}});
+            }
+        });
+    }
+    res.send({statusCode:1, additionalInfo:{message:'Confirmation needed!.'}});
+    return;
+};
+
+exports.add_money = function(req, res){
+    var phoneId = req.params.phoneId;
+    var amount = req.body.amount;
+
+    async.waterfall([
+        function(callback) {
+            var response = null;
+
+            logger.info('1.- VALIDATE CONNECTION.');
+            soap.createClient(soapurl, function (err, client) {
+                if (err) {
+                    logger.error('1.- VALIDATE CONNECTION.');
+                    console.log(err);
+                    var response = {
+                        statusCode: 1,
+                        additionalInfo: err
+                    };
+                    callback(err, response);
+                } else
+                    callback(null);
+            });
+        },
+        function(callback) {
+            logger.info('2.- CREATE SESSION');
+            var response = null;
+            soap.createClient(soapurl, function (err, client) {
+                client.createsession({}, function (err, result) {
+                    if (err) {
+                        logger.error('2.- CREATE SESSION');
+                        console.log(err);
+                        var response = {statusCode: 1, additionalInfo: err};
+                        callback(err, response);
+                    } else {
+                        logger.info(result);
+                        var response = result.createsessionReturn;
+                        callback(null, response.sessionid);
+                    }
+                });
+            });
+        },
+        function(sessionid, callback) {
+            logger.info('3.- CREATE HASHPIN');
+            var hashpin = config.username.toLowerCase() + config.pin;
+            hashpin = sessionid + crypto.createHash('sha1').update(hashpin).digest('hex').toLowerCase();
+            hashpin = crypto.createHash('sha1').update(hashpin).digest('hex').toUpperCase();
+            logger.info(hashpin);
+            callback(null, sessionid, hashpin);
+        },
+        function(sessionid, hashpin, callback) {
+            logger.info('4.- LOGIN');
+            var request = {
+                loginRequest: {
+                    sessionid: sessionid,
+                    initiator: config.username,
+                    pin: hashpin
+                }
+            };
+            soap.createClient(soapurl, function (err, client) {
+                client.login(request, function (err, result) {
+                    if (err) {
+                        logger.error('4.- LOGIN');
+                        logger.error(err);
+                        var response = {
+                            statusCode: 1,
+                            additionalInfo: err
+                        };
+                        callback(err, response);
+                    } else {
+                        var response = result.loginReturn;
+                        logger.info(response);
+                        callback(null, sessionid);
+                    }
+                });
+            });
+        },
+
+        function(sessionid,callback) {
+
+            logger.info('5.- MAKE TRANSFER');
+            var requestSoap = {
+                sessionid: sessionid,
+                to: phoneId,
+                amount: amount,
+                type: config.wallet.type.MONEY
+            };
+
+            var request = {
+                transferRequest: requestSoap
+            };
+
+            logger.info(request);
+            soap.createClient(soapurl, function (err, client) {
+                client.transfer(request, function (err, result) {
+                    if (err) {
+                        logger.error('5.- MAKE TRANSFER');
+                        console.log(err);
+                        var response = {
+                            statusCode: 1,
+                            additionalInfo: err
+                        };
+                        callback(err, response);
+                    } else {
+                        var response = result.transferReturn;
+                        var error = null;
+                        if (response.result != 0) {
+                            logger.error(result)
+                            var response = {
+                                statusCode: 1,
+                                additionalInfo: result
+                            };
+                            error = 'ERROR';
+                        } else
+                            logger.info(result);
+                        callback(error, response);
+                    }
+                });
+            });
+        }
+    ], function (err, result) {
+        var response = {};
+        if(err){
+            logger.error('GENERAL ERROR  --->' + JSON.stringify(result));
+            response.statusCode = 1;
+            response.additoinalInfo = result;
+        } else {
+            response.statusCode = 0;
+            response.additionalInfo = {
+                message: 'ADDED ' + config.currency.symbol + amount + ' TO ' + phoneId
+            };
+        }
+        res.send(response);
     });
 };
