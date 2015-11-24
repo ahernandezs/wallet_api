@@ -5,6 +5,7 @@ var nexmo = require('easynexmo');
 var notification = require('./notification-service');
 var config = require('../config');
 var COUNTRY_CODE_USA = '1';
+var COUNTRY_CODE_CANADA = '+1';
 
 nexmo.initialize(config.nexmo.key, config.nexmo.secret, config.nexmo.api_protocol, config.nexmo.debug_on);
 
@@ -15,7 +16,7 @@ exports.sendMessage = function(codeArea, to, message, callback){
     };
 
     //send message to proxy
-    if(codeArea === COUNTRY_CODE_USA){
+    if(codeArea === COUNTRY_CODE_USA || codeArea === COUNTRY_CODE_CANADA ){
         console.log('Send push notification to proxy');
         notification.singlePushToProxy(to,message,function(err,response){
             if (err)
