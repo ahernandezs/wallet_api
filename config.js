@@ -175,6 +175,7 @@ config.nexmo.key = '3168d69c';
 config.nexmo.secret = '0fe0d188';
 //config.nexmo.from = '525549998455';
 config.nexmo.from = '525549998270';
+config.nexmo.from_usa = '12134657650';
 config.nexmo.api_protocol = 'http'; //Default
 config.nexmo.debug_on = 'true';
 config.nexmo.debug_false = 'false';

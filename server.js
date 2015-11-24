@@ -26,7 +26,7 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.static(__dirname + '/app'));
 app.set('view engine', 'jade');
-app.set('views', __dirname + '/views');
+app.set('views', [process.cwd() + '/views', process.cwd() + '/resources']);
 
 // usernames which are currently connected
 var usersockets = {};
