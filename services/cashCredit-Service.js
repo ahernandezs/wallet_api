@@ -170,7 +170,7 @@ exports.requestDecision = function(payload, callback){
 							callback('ERROR', err);
 						else {
 							console.log(result);
-							resultLoan.additionalInfo.transId = result.id;
+							resultLoan.additionalInfo.transId = result._id;
 							callback(null, resultLoan);
 						}
 					});
