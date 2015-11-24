@@ -169,6 +169,7 @@ exports.requestDecision = function(payload, callback){
 						if (err)
 							callback('ERROR', err);
 						else {
+							console.log(result);
 							resultLoan.additionalInfo.transId = result.id;
 							callback(null, resultLoan);
 						}
