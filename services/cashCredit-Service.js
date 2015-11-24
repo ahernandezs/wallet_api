@@ -164,12 +164,13 @@ exports.requestDecision = function(payload, callback){
 
 				UserQuery.findAppID(payload.phoneID,function(err,result){
 					transacction.description ='To ' + result.name;
-					transacctionQuery.createTranssaction(transacction, function(err, result) {
-						console.log(result);
+					transacctionQuery.createTranssaction(transacction, function(err, resultTrans) {
 						if (err)
 							callback('ERROR', err);
 						else {
-							resultLoan.additionalInfo.transId = result.id;
+							console.log(resultTrans);
+							console.log(resultLoan);
+							resultLoan.transId = resultTrans.id;
 							callback(null, resultLoan);
 						}
 					});
