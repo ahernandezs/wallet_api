@@ -472,7 +472,7 @@ exports.requestMoney = function(req, res){
             if (enable_sms){
                 var message = "Hello! you have received a money request from " + req.body.phoneID;
 
-                sms.sendMessage(user.countryCode + req.body.destinatary,message, function(err,sms_response) {
+                sms.sendMessage(req.body.destinatary,message, function(err,sms_response) {
                     if (err) {
                         //res.status(503).send({code : 103, message : 'UNAVAILABLE SMS SERVICE' });
                         res.send({statusCode: 3, additionalInfo: {message: 'UNAVAILABLE SMS SERVICE'}});

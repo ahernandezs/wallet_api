@@ -74,7 +74,7 @@ exports.requestMoneyFlow = function(payload,callback) {
             message.type = config.messages.type.REQUEST_MONEY;
             message.title = 'You have received a money transfer request from ' + senderName;
             message.phoneID = payload.destinatary;
-            message.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
+            message.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
             message.message = requestMessage.message;
             message.additionalInfo = JSON.stringify({phoneID:payload.phoneID, name: senderName, avatar :senderAvatar,  amount : requestMessage.amount, message : requestMessage.message, requestID : requestID  });
             messageQuery.createMessage(requestMessage.phoneID, message, function(err, result) {
@@ -84,8 +84,9 @@ exports.requestMoneyFlow = function(payload,callback) {
                 } else {
                     payload.message = message.title;
                     payload.phoneID = payload.destinatary;
-                    var extraData = {   action: 6, additionalInfo :  message.additionalInfo ,
-                        _id:result._id };
+                    var addInfo = JSON.parse(message.additionalInfo);
+                    addInfo.messageID = result.id;
+                    var extraData = {   action: 6, additionalInfo :  JSON.stringify(addInfo)};
                     payload.extra = { extra:extraData};
                     callback(null, payload,requestID);
                 }

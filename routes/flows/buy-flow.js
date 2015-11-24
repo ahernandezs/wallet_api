@@ -267,7 +267,7 @@ exports.buyFlow = function(payload,callback) {
 			var dateTime = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
 			var message = {};
 			message.phoneID = receipt.emitter;
-			message.title = 'Your order No ' + orderID +  ' is ' + config.orders.status.NEW;
+			message.title = 'Your order No ' + orderID +  ' is ordered.';
 			message.type = config.messages.type.BUY;
 			message.status = 'NOTREAD';
 			var additionalInfoJSON = JSON.parse(receipt.additionalInfo);
@@ -1042,12 +1042,13 @@ function verify_shop_rules(order, callback){
 			callback(false, transaction, 'MAX ITEMS PER TRANSACTION EXCEDED');
 			return;
 		}
+		/*
 		if (order.total > config.products.max_amount_per_person) {
 			logger.error('$10 LIMIT EXCEDED');
 			callback(false, transaction, '$10 LIMIT EXCEDED');
 			return;
 		}
-
+		*/
 		logger.info('--------OBJECT FOR TRANSACTION-----------------');
 		console.log(transaction);
 		logger.info('-------------------------');
@@ -1081,13 +1082,13 @@ function verify_shop_rules(order, callback){
 				callback(false, transaction, 'MAX ITEMS PER EVENT EXCEDED');
 				return;
 			}
-
+			/*
 			if (totalpp + order.total > config.products.max_amount_per_person) {
 				logger.error('$10 LIMIT EXCEDED');
 				callback(false, transaction, '$10 LIMIT EXCEDED');
 				return;
 			}
-
+            */
 			//Only 1 pz for the same product
 			for (var i = 0; i < order.products.length; i++){
 				console.log(order.products[i].productID);
@@ -1102,4 +1103,3 @@ function verify_shop_rules(order, callback){
 		}
 	});
 }
-

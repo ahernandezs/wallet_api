@@ -137,8 +137,8 @@ exports.transferFunds = function(req, res) {
           } else {
             if (enable_sms) {
               Userquery.findUserByPhoneID(req.headers.phoneID, function(err, user){
-                var message = "Hello! you receive a transfer from: " + user.countryCode + req.headers.phoneID + " by " + config.currency.symbol + values.body.amount;
-                sms.sendMessage(user.countryCode + values.body.destiny, message, function (err, sms_response) {
+                var message = "Hello! you receive a transfer from: " + user.countryCode +req.headers.phoneID + " by " + config.currency.symbol + values.body.amount;
+                sms.sendMessage(values.body.destiny, message, function (err, sms_response) {
                   if (err) {
                     //res.status(503).send({code : 103, message : 'UNAVAILABLE SMS SERVICE' });
                     res.send({statusCode: 3, additionalInfo: {message: 'UNAVAILABLE SMS SERVICE'}});
@@ -205,7 +205,7 @@ exports.sendGift = function(req, res){
         Userquery.findUserByPhoneID(senderPhone, function(err,user){
           var message = "Hello! you have received a gift from " + user.countryCode + senderPhone;
 
-          sms.sendMessage(user.countryCode + json.beneficiaryPhoneID, message, function(err,sms_response) {
+          sms.sendMessage(json.beneficiaryPhoneID, message, function(err,sms_response) {
             if (err) {
               //res.status(503).send({code : 103, message : 'UNAVAILABLE SMS SERVICE' });
               res.send({statusCode: 3, additionalInfo: {message: 'UNAVAILABLE SMS SERVICE'}});
