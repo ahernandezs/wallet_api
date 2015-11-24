@@ -155,3 +155,49 @@ exports.singlePush2Merchant = function(req, callback) {
 		}
 	});
 };
+
+exports.singlePushToProxy = function( destinatary,message,callback) {
+	var request = {};
+	request.application = '4AD13-8B0E5';
+
+	request.auth = 'Cwo07DWkNLLPE79PRpBiSuFPEJmhMsgZnMWpAe5js3uIaAMMaRhYaaYN4rdLlSA0pspaiXSFR7EMRQYMfxFi';
+	var notifications = [];
+	var devices = [];
+	//appID
+	devices.push('7b88db133b7382ee');
+
+	notifications.push({
+		'devices' : devices ,
+		send_date : 'now',
+		ignore_user_timezone : true,
+		content : 'SMS Proxy',
+		data: {}
+	});
+
+	request.notifications = notifications;
+	var requestWrapper = {'request': request};
+	requestWrapper.request.notifications[0].data.extra = {action: 666, additionalInfo: { destinatary: destinatary, message: message } };
+	var Client = require('node-rest-client').Client;
+	var client = new Client();
+	// set content-type header and data as json in args parameter
+	var args = {
+		data:  requestWrapper ,
+		headers:{"Content-Type": "application/json"}
+	};
+
+	console.log(JSON.stringify(requestWrapper));
+	client.post("http://cp.pushwoosh.com/json/1.3/createMessage", args, function(data,response) {
+		console.log('Response Push --> ' + data);
+		var responseStatus = JSON.parse(data);
+		if(responseStatus.status_code === 200){
+			console.log('Notification sent correctly');
+			var responseMessage = { statusCode: 0 ,  message: 'Notification sent correctly' };
+			callback(null, responseMessage);
+		}
+		else{
+			console.log('Error to send notification');
+			var responseMessage =  { statusCode: 1 ,  message: 'Error to send notification' };
+			callback("ERROR", responseMessage);
+		}
+	});
+}

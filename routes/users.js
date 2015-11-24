@@ -94,12 +94,12 @@ exports.preregister = function(req, res){
             return;
         }
 
-        if (enable_sms){
+        if (true){
             random.generate(11111,99999, function(number){
                 if (doc) doc.verificationCode = number;
                 else sms_verification_data.verificationCode = number;
                 var message = "Hello! your verification code is: " + number;
-                sms.sendMessage(countryCode + phoneNumber,message, function(err,sms_response){
+                sms.sendMessage(countryCode , countryCode + phoneNumber,message, function(err,sms_response){
                     if (err) {
                         //res.status(503).send({code : 103, message : 'UNAVAILABLE SMS SERVICE' });
                         res.send({statusCode: 3, additionalInfo: {message: 'UNAVAILABLE SMS SERVICE'}});
