@@ -1079,8 +1079,8 @@ function verify_shop_rules(order, callback){
 			console.log("---------------------------------------------");
 
 			if (purchased_products.length > config.products.max_items_per_event) {
-				logger.error('MAX ITEMS PER EVENT EXCEED');
-				callback(false, transaction, 'MAX ITEMS PER EVENT EXCEED');
+				logger.error('MAX PURCHASES PER EVENT EXCEED');
+				callback(false, transaction, 'MAX PURCHASES PER EVENT EXCEED');
 				return;
 			}
 			/*
