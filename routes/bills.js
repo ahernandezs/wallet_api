@@ -118,14 +118,14 @@ exports.get_bill_with_push = function(req, res){
 
                     logger.info('SENDING PUSH NOTIFICATION');
                     logger.info(payload);
-                    urbanService.singlePush(payload, function(err, result) {
+                    urbanService.singlePush(payload, function(err, pushResult) {
                         if (err) {
                             //res.send({statusCode: 1, additionalInfo : { message : "UNAVAILABLE PUSH SERVICE" }});
                             logger.info({statusCode: 1, additionalInfo : { message : "UNAVAILABLE PUSH SERVICE" }});
                             callback(null,{statusCode: 1, additionalInfo : { message : "UNAVAILABLE PUSH SERVICE" }})
                         }
                         //res.send({statusCode: 0, additionalInfo : { billPaymentInfo : bill, pushNotificationInfo: result }});
-                        logger.info({statusCode: 0, additionalInfo : { billPaymentInfo : bill, pushNotificationInfo: result }});
+                        logger.info({statusCode: 0, additionalInfo : { billPaymentInfo : bill, pushNotificationInfo: pushResult }});
                         callback(null,pushResult )
                     });
 
