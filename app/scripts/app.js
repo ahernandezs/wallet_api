@@ -26,6 +26,10 @@ angular.module('pantallasAdministradorApp', [
         templateUrl: 'views/leaderboard.html',
         controller: 'LeaderBoardCtrl'
       })
+      .when('/administration', {
+        templateUrl: 'views/administration.html',
+        controller: 'AdministrationCtrl'
+      })
       .when('/websockets', {
         templateUrl: 'views/webSocket.html'
       })
