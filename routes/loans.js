@@ -106,8 +106,9 @@ exports.loanConfirm = function(req,res){
           var payload = { body : bodyContent } ;
           console.log('Invoke create Loan Flow 2');
           console.log(payload);
-          loan.createLoanFlow(payload, function(err, result) {
-              res.json(result);
+          loan.createLoanFlow(payload, function(err, resultLoan) {
+              resultLoan.additionalInfo.doxEarned  = result.doxEarned;
+              res.json(resultLoan);
           });
       }
     });   

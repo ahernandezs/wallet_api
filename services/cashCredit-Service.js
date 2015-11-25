@@ -53,26 +53,26 @@ exports.requestLoan = function(payload, callback) {
 				parseString(data, function (err, result) {
 					if(result.RESULT.CODE[0] === '0' ){
 						console.log('result information ' + 'OK');
-						callback(null,result);
+						callback(null,payload.sessionid,result);
 					}else{
 						console.log('result information ' + 'Unknown error');
-						callback(null,payload.sessionid, result);
+						callback("ERROR", result);
 					}
 				});
 			});
         },
-		function(sessionid,result, callback){
+		function(sessionid,resultDox, callback){
 				console.log('RECEIVER FROM DOXS-> ' + payload.phoneID);
 				console.log('DOXS EARNED-> ' + config.doxs.take_a_loan);
 				var payloadoxs = {phoneID: payload.phoneID, action: 'take_a_loan', type: config.wallet.type.DOX}
 				doxsService.saveDoxs(payloadoxs, function(err, result){
 					if(err) {
 						console.log('ERROR'+ response);
-						callback('ERROR IN DOX EARNED', {statusCode:1,additionalInfo : "Error in DOX Service"});
+						cb('ERROR IN DOX EARNED', {statusCode:1,additionalInfo : "Error in DOX Service"});
 					} else {
-						console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
-						result.additionalInfo.doxEarned = config.doxs.take_a_loan;
-						callback(null, result);
+						console.log('Transfer result: '+JSON.stringify(resultDox)+'\n\n');
+						result.doxEarned = config.doxs.take_a_loan;
+						callback(null,result);
 					}
 				});
 		},
