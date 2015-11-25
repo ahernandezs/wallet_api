@@ -123,6 +123,7 @@ exports.transferFunds = function(data, callback) {
     async.waterfall([
         
         function(callback) {
+            console.log('find user Transfers '+ mainUser);
             transacctionQuery.findUserTransfers(mainUser, function(err,transfers){
                 if(err){
                     var response = { statusCode: 1, additionalInfo: err };
