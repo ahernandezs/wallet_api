@@ -59,7 +59,8 @@ exports.getDecision = function(req,res){
                     return;
                 } else {
                     console.log(result);
-                    var mockResponse = {approved: 'YES',interestRate : result.INTERESTRATE[0], maxAmount: result.MAXAMOUNT[0], maxPeriod: 5};
+                    var approvedFlag = (result.APPROVED[0] === 'Y' ? 'YES' : 'NO' );
+                    var mockResponse = {approved: approvedFlag ,interestRate : result.INTERESTRATE[0], maxAmount: result.MAXAMOUNT[0], maxPeriod: 5};
                     var response = {statusCode: 0, additionalInfo: mockResponse}
                     res.json(response);
                     return;
@@ -72,7 +73,8 @@ exports.getDecision = function(req,res){
                     res.send(500);
                 } else {
                     console.log(result);
-                    var mockResponse = {transId: result.transId, approved: 'YES' ,interestRate : result.INTERESTRATE[0] , maxAmount: result.MAXAMOUNT[0], maxPeriod: 5};
+                    var approvedFlag = (result.APPROVED[0] === 'Y' ? 'YES' : 'NO' );
+                    var mockResponse = {transId: result.transId, approved: approvedFlag ,interestRate : result.INTERESTRATE[0] , maxAmount: result.MAXAMOUNT[0], maxPeriod: 5};
                     var response = {statusCode: 0, additionalInfo: mockResponse}
                     res.json(response);
                 }

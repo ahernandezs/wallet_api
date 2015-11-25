@@ -141,6 +141,7 @@ exports.transferPendingPayment = function(req,res){
     var payloadoxs = {phoneID: req.body.destiny, action:'gift'};
     async.waterfall([
       function(callback){
+        console.log('Transfer Funds' );
         TransferFlow.transferFunds(values, function(err, result) {
             if(err) {
               res.json(result);
@@ -157,12 +158,14 @@ exports.transferPendingPayment = function(req,res){
         });
       },
       function(resultBalance, callback){
+        console.log('Save Dox' );
         doxsService.saveDoxs(payloadoxs, function(err, result){
           console.log('Transfer result: '+JSON.stringify(result)+'\n\n');
           callback(null, resultBalance);
         });
       },
       function(resultBalance, callback){
+          console.log(' UpdatePendingPayment' );
           transacctionQuery.updatePendingPayment(req.body.transferPendingID , function(err, response){
           if(err) {
           res.send(500);
