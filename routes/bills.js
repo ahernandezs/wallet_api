@@ -81,6 +81,7 @@ exports.pay_bill = function(req, res){
 
 exports.get_bill_with_push = function(req, res){
     var billId = req.params.id;
+    var phoneId = req.headers['x-phoneid'];
 
 
     console.log('execute GET method bill with PUSH');
@@ -104,7 +105,7 @@ exports.get_bill_with_push = function(req, res){
 
                 function(callback){
                     var payload = {};
-                    payload.phoneID = req.headers['x-phoneid'];
+                    payload.phoneID = phoneId;
                     payload.message = text_message;
                     var extraData = {
                         action: config.messages.action.BILLPAYMENT,
@@ -136,7 +137,7 @@ exports.get_bill_with_push = function(req, res){
                     message.status = config.messages.status.NOTREAD;
                     message.type = config.messages.type.BILLPAYMENT;
                     message.title = text_message;
-                    message.phoneID = payload.phoneID;
+                    message.phoneID = phoneId;
                     message.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
                     message.message = text_message;
                     message.additionalInfo = JSON.stringify({
@@ -144,7 +145,7 @@ exports.get_bill_with_push = function(req, res){
                     });
 
                     logger.info('SAVE MESSAGE IN DB');
-                    messageQuery.createMessage(payload.phoneID, message, function(err, messageResult) {
+                    messageQuery.createMessage(phoneId, message, function(err, messageResult) {
                         var error = null;
                         var response = {
                             additionalInfo : {
@@ -164,10 +165,7 @@ exports.get_bill_with_push = function(req, res){
                 }
             ],
             function(err, result){
-                if (err)
-                    callback(true,result);
-                else
-                    callback(null,result);
+                res.send(result);
             });
         }
     });
