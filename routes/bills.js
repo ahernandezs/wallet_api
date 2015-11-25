@@ -3,11 +3,14 @@
  */
 
 var mongoose = require('mongoose');
+var async = require('async');
+var moment = require('moment-timezone');
 var User = require('../model/user');
 var Bill = require('../model/bill');
 var config = require('../config.js');
 var payBillFlow = require('./flows/pay_bill-flow');
 var urbanService = require('../services/notification-service');
+var messageQuery = require('../model/queries/message-query');
 var logger = config.logger;
 
 exports.get_bill = function (req, res){
@@ -96,20 +99,75 @@ exports.get_bill_with_push = function(req, res){
             res.send({statusCode: 7, additionalInfo : { message : 'CANNOT FOUND BILLID' }});
         }
         else {
-            payload = {};
-            payload.phoneID = req.headers['x-phoneid'];
-            payload.message = "Bill info received";
-            var extraData = { action: config.messages.action.BILLPAYMENT , additionalInfo : {billPaymentInfo : bill }};
-            payload.extra = { extra:extraData };
-            console.log('Send push notification');
-            console.log(payload);
+            var text_message = "Bill info received";
+            async.waterfall([
 
-            urbanService.singlePush(payload, function(err, result) {
-                if (err) {
-                    res.send({statusCode: 1, additionalInfo : { message : "UNAVAILABLE PUSH SERVICE" }});
-                    return;
+                function(callback){
+                    var payload = {};
+                    payload.phoneID = req.headers['x-phoneid'];
+                    payload.message = text_message;
+                    var extraData = {
+                        action: config.messages.action.BILLPAYMENT,
+                        additionalInfo : {
+                            billPaymentInfo : bill
+                        }
+                    };
+                    payload.extra = {
+                        extra:extraData
+                    };
+
+                    logger.info('SENDING PUSH NOTIFICATION');
+                    logger.info(payload);
+                    urbanService.singlePush(payload, function(err, result) {
+                        if (err) {
+                            //res.send({statusCode: 1, additionalInfo : { message : "UNAVAILABLE PUSH SERVICE" }});
+                            logger.info({statusCode: 1, additionalInfo : { message : "UNAVAILABLE PUSH SERVICE" }});
+                            callback(null,{statusCode: 1, additionalInfo : { message : "UNAVAILABLE PUSH SERVICE" }})
+                        }
+                        //res.send({statusCode: 0, additionalInfo : { billPaymentInfo : bill, pushNotificationInfo: result }});
+                        logger.info({statusCode: 0, additionalInfo : { billPaymentInfo : bill, pushNotificationInfo: result }});
+                        callback(null,pushResult )
+                    });
+
+                },
+                function(pushResult, callback){
+                    var message = {};
+
+                    message.status = config.messages.status.NOTREAD;
+                    message.type = config.messages.type.BILLPAYMENT;
+                    message.title = text_message;
+                    message.phoneID = payload.phoneID;
+                    message.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
+                    message.message = text_message;
+                    message.additionalInfo = JSON.stringify({
+                        billPaymentInfo : bill
+                    });
+
+                    logger.info('SAVE MESSAGE IN DB');
+                    messageQuery.createMessage(payload.phoneID, message, function(err, messageResult) {
+                        var error = null;
+                        var response = {
+                            additionalInfo : {
+                                billPaymentInfo : bill,
+                                pushNotificationInfo: pushResult,
+                                messageInfo: messageResult
+                            }
+                        };
+                        if (err) {
+                            error = true;
+                            response.statusCode = 1;
+                        } else {
+                            response.statusCode = 0;
+                        }
+                        callback(error,response);
+                    });
                 }
-                res.send({statusCode: 0, additionalInfo : { billPaymentInfo : bill, pushNotificationInfo: result }});
+            ],
+            function(err, result){
+                if (err)
+                    callback(true,result);
+                else
+                    callback(null,result);
             });
         }
     });
