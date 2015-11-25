@@ -1039,8 +1039,8 @@ function verify_shop_rules(order, callback){
 		if (err)
 			handleError(err);
 		if (order.products.length > config.products.max_items_per_transaction) {
-			logger.error('MAX ITEMS PER TRANSACTION EXCEDED');
-			callback(false, transaction, 'MAX ITEMS PER TRANSACTION EXCEDED');
+			logger.error('MAX ITEMS PER TRANSACTION EXCEED');
+			callback(false, transaction, 'MAX ITEMS PER TRANSACTION EXCEED');
 			return;
 		}
 		/*
@@ -1079,8 +1079,8 @@ function verify_shop_rules(order, callback){
 			console.log("---------------------------------------------");
 
 			if (purchased_products.length > config.products.max_items_per_event) {
-				logger.error('MAX ITEMS PER EVENT EXCEDED');
-				callback(false, transaction, 'MAX ITEMS PER EVENT EXCEDED');
+				logger.error('MAX ITEMS PER EVENT EXCEED');
+				callback(false, transaction, 'MAX ITEMS PER EVENT EXCEED');
 				return;
 			}
 			/*
