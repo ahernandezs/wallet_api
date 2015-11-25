@@ -42,7 +42,7 @@ config.products.max_items_per_event = 3;
 config.products.max_amount_per_person = 10;
 config.products.loyalty = {};
 config.products.loyalty.productId = 4;
-config.products.loyalty.cost = '1000';
+config.products.loyalty.cost = '30000';
 
 config.wallet = {};
 config.wallet.type = { MONEY:1,OTHER2:2 ,DOX:3 };
