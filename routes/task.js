@@ -76,10 +76,10 @@ exports.register_delete = function(req, res){
     var phoneId = req.params.phoneId;
     var confirm = req.body.confirm;
 
-    console.log(req);
+    console.log(req.body);
 
     if (confirm == 'YES'){
-        console.log('Usuario removido')
+        logger.info('Eliminando usuario...');
         user.findOneAndRemove({phoneID:phoneId},function(err,user,result){
             if (err){
                 res.send({statusCode: 4, additionalInfo: {message: 'UNAVAILABLE DATABASE SERVICE'}});
@@ -92,9 +92,9 @@ exports.register_delete = function(req, res){
                 res.send({statusCode:0, additionalInfo : { message: 'User not found.'}});
             }
         });
+    } else {
+        res.send({statusCode: 1, additionalInfo: {message: 'Confirmation needed!.'}});
     }
-    res.send({statusCode:1, additionalInfo:{message:'Confirmation needed!.'}});
-    return;
 };
 
 exports.add_money = function(req, res){

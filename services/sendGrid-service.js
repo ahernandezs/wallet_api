@@ -31,7 +31,7 @@ exports.sendRegisterMessage= function(user, callback){
         subject:    'Welcome to Amdocs Wallet',
         text:       'hello'
     });
-    var disableMail = false;
+    var disableMail = process.env.EMAIL_ENABLED == "YES" ? true : false;
 
     if(disableMail){
         async.waterfall([
@@ -39,7 +39,7 @@ exports.sendRegisterMessage= function(user, callback){
                 console.log( 'Reading html file' );
                 var fs = require('fs');
                 var __dirname = 'resources';
-                fs.readFile( __dirname + '/index.html', function (err, data) {
+                fs.readFile( __dirname + '/templates/mail.html', function (err, data) {
                   if (err) {
                     callback('ERROR', 'There was an error sending the email');
                   }
@@ -47,7 +47,7 @@ exports.sendRegisterMessage= function(user, callback){
                 });
             },
             function(html, callback) {
-                html = html.replace('1234', user.pin);
+                html = html.replace('#{userPin}', user.pin);
                 email.setHtml(html);
                 sendgrid.send(email, function(err, json) {
                     if (err) {
