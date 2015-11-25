@@ -301,7 +301,8 @@ exports.buyFlow = function(payload,callback) {
 				if (err)
 					logger.error('Error to create transacction');
 				else{
-					logger.info(result);
+					//logger.info(result);
+					logger.info('Transaction created correctly!');
 				}
 			});
 			logger.info( 'Create  transacction money' );
@@ -317,9 +318,9 @@ exports.buyFlow = function(payload,callback) {
 			transacctionQuery.createTranssaction(transacction, function(err, result) {
 				if (err)
 					callback('ERROR', err);
-
 				else{
-					logger.info(result);
+					//logger.info(result);
+					logger.info('Transaction created correctly!');
 					balance.additionalInfo.transId = result.id;
 					callback(null, balance);
 				}
