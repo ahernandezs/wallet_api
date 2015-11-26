@@ -60,7 +60,7 @@
   color: #ff7e00;
   border-bottom: 3px solid #ff7e00;
 }
-.menuItem + button{
+.menuItem + button, .modal-dialog .btn{
   margin-left: 80px;
   background:#ff8e00;
   color:white;
@@ -71,7 +71,14 @@
   -moz-transition:0.3s;
   -webkit-transition:0.3s;
 }
-.menuItem + button:hover, .menuItem + button:active{
+.modal-dialog .modal-title{
+  color:#ff8e00;
+  font-size: 18px;
+}
+.modal-dialog .btn{
+  margin: 0;
+}
+.menuItem + button:hover, .menuItem + button:active, .modal-dialog .btn:hover, .modal-dialog .btn:active{
   color:white;
   background:#ff7e00;
   box-shadow:none;
@@ -167,20 +174,35 @@ ul.nav li{
   -moz-transition:0.3s;
   -webkit-transition:0.3s;
 }
+
 ul.nav li.active, ul.nav li:hover, ul.nav li:active{
   border:none;
   color:#ff8e00;
   border-bottom: 3px solid #ff8e00;
 }
+
+ul.nav li.pull-right.active, ul.nav li.pull-right:hover, ul.nav li.pull-right:active{
+  color:#abb401;
+  border-bottom: 3px solid #abb401;
+}
+
 ul.nav li a, ul.nav li.active a{
   font-weight: bold;
   color:#ff8e00;
   border:none !important;
 }
+
+ul.nav li.pull-right a, ul.nav li.pull-right.active a{
+  color:#abb401;
+}
 ul.nav li a:hover{
   color:#ff8e00 !important;
   background: none;
   border:none;
+}
+
+ul.nav li.pull-right a:hover{
+  color:#abb401 !important;
 }
 .tab-pane .form-inline{
   margin-top: 20px;
