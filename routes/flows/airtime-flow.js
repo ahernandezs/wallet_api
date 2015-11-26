@@ -127,7 +127,7 @@ exports.buy = function(payload, callback){
             receipt.additionalInfo = payload.additionalInfo;
             receipt.title = 'You had bought airtime of '+  config.currency.symbol + ' ' + receipt.amount + ' to ' + receipt.receiver;
             receipt.date = dateTime;
-            receipt.type = config.receipt.type.AIRTIMEBUY;
+            receipt.type = config.receipt.type.AIRTIME;
             receipt.status = 'DELIVERED';
             receipt.owner = 0;
             ReceiptQuery.createReceipt(receipt, function(err, result) {
@@ -142,7 +142,7 @@ exports.buy = function(payload, callback){
             console.log( 'Create History transaction for emitter' );
             var transacction = {};
             transacction.title = 'AirTime Buy';
-            transacction.type = 'MONEY',
+            transacction.type = config.transaction.type.AIRTIME;
             transacction.date = dateTime;
             transacction.amount = (-1) * receipt.amount;
             transacction.additionalInfo = receipt.additionalInfo;

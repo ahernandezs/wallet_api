@@ -17,7 +17,7 @@ config.group.env = {INTERNAL: 'INTERNAL' , PUBLIC : 'PUBLIC'};
 
 config.receipt = {};
 config.receipt.type = { BUY: 'BUY', COUPON: 'COUPON', GIFT:'GIFT', LOAN: 'LOAN', TRANSFER: 'TRANSFER', BILLPAYMENT: 'BILLPAYMENT',
-                        AIRTIMEBUY:'AIRTIMEBUY', TICKETBUY: 'TICKETBUY', TOPUP:'TOPUP'};
+                        AIRTIME:'AIRTIME', TICKET: 'TICKET', TOPUP:'TOPUP'};
 
 config.orders = {};
 config.orders.status = {NEW : 'NEW' ,IN_PROGRESS : 'IN PROGRESS' , READY : 'READY' , DELIVERED : 'DELIVERED' , CANCELED : 'CANCELED',PENDING : 'PENDING'};
@@ -57,12 +57,12 @@ config.S3.url = process.env.AS3_IMAGES;
 config.messages = {};
 config.messages.status = { READ : 'READ' ,NOTREAD : 'NOTREAD', DELIVERED: 'DELIVERED'};
 config.messages.type = { TRANSFER:'TRANSFER' , GIFT : 'GIFT' , BUY :'BUY' ,LOAN :'LOAN', COUPON: 'COUPON' , REQUEST_MONEY : 'REQUEST_MONEY' , MESSAGE : 'MESSAGE' ,
-                         AUTHORIZATION_PURCHASE:'AUTHORIZATION_PURCHASE', BILLPAYMENT: 'BILLPAYMENT', AIRTIMEBUY: 'AIRTIMEBUY', TICKETBUY : 'TICKETBUY', TOPUP:'TOPUP',
+                         AUTHORIZATION_PURCHASE:'AUTHORIZATION_PURCHASE', BILLPAYMENT: 'BILLPAYMENT', AIRTIME: 'AIRTIME', TICKET : 'TICKET', TOPUP:'TOPUP',
                          VERIFYCUSTOMER:'VERIFYCUSTOMER', MOBILESHOP:'MOBILESHOP'};
 config.messages.transferMsg = 'You have received money from ';
 config.messages.giftMsg = '[sender] has gifted you an Amdocs Café voucher';
 config.messages.billPayMsg = 'You have payed a bill from ';
-config.messages.airtimeBuyMsg = 'Successful airtime buy ';
+config.messages.airtimeBuyMsg = 'Successful airtime purchase of ';
 config.messages.ticketBuyMsg = 'You have bought a ticket ';
 config.messages.loanRequestMsg = 'You have requested a loan for €';
 config.messages.loanRejectedMsg = 'Build up your Dox score to be elegible for a loan';
@@ -94,10 +94,10 @@ config.messages.facebook =	{
 
 config.transaction = {};
 config.transaction.type = { TRANSFER:'TRANSFER' , GIFT : 'GIFT' , BUY :'BUY' ,LOAN :'LOAN', COUPON: 'COUPON' , REQUEST_MONEY : 'REQUEST_MONEY' , MESSAGE : 'MESSAGE' ,
-    AUTHORIZATION_PURCHASE:'AUTHORIZATION_PURCHASE', BILLPAYMENT: 'BILLPAYMENT', AIRTIMEBUY: 'AIRTIMEBUY', TICKETBUY : 'TICKETBUY', TOPUP:'TOPUP', MONEY:'MONEY',
+    AUTHORIZATION_PURCHASE:'AUTHORIZATION_PURCHASE', BILLPAYMENT: 'BILLPAYMENT', AIRTIME: 'AIRTIME', TICKET : 'TICKET', TOPUP:'TOPUP', MONEY:'MONEY',
     DOX: 'DOX'};
 config.transaction.operation = { TRANSFER:'TRANSFER' , GIFT : 'GIFT' , BUY :'BUY' ,LOAN :'LOAN', COUPON: 'COUPON' , REQUEST_MONEY : 'REQUEST_MONEY' , MESSAGE : 'MESSAGE' ,
-    AUTHORIZATION_PURCHASE:'AUTHORIZATION_PURCHASE', BILLPAYMENT: 'BILLPAYMENT', AIRTIMEBUY: 'AIRTIMEBUY', TICKETBUY : 'TICKETBUY', TOPUP:'TOPUP',
+    AUTHORIZATION_PURCHASE:'AUTHORIZATION_PURCHASE', BILLPAYMENT: 'BILLPAYMENT', AIRTIME: 'AIRTIME', TICKET : 'TICKET', TOPUP:'TOPUP',
     DOX: 'DOX'};
 
 config.requests = {};

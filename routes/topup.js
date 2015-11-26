@@ -23,7 +23,7 @@ exports.buy = function (req, res){
         return;
     }
 
-    payload.message = "You add a Topup of " + config.currency.symbol + payload.amount;
+    payload.message = "You added a topup of " + config.currency.symbol + payload.amount;
 
     transaction.getLastTransaction(payload.phoneID, config.transaction.operation.TOPUP, function(err,transaction){
         if (err){
