@@ -1031,16 +1031,16 @@ function verify_shop_rules(order, callback){
 
 		if (prods.contains(config.products.loyalty.productId))
 			if (order.totalDox < config.products.loyalty.cost) {
-				logger.error('LOYALTY PRODUCT CAN BE ONLY PURCHASED WITH DOXPOINTS');
-				callback(false, transaction, 'LOYALTY PRODUCT CAN BE ONLY PURCHASED WITH DOXPOINTS')
+				logger.error('Loyalty product can be only purchased with dox points');
+				callback(false, transaction, 'Loyalty product can be only purchased with dox points')
 				return;
 			}
 
 		if (err)
 			handleError(err);
 		if (order.products.length > config.products.max_items_per_transaction) {
-			logger.error('MAX ITEMS PER TRANSACTION EXCEED');
-			callback(false, transaction, 'MAX ITEMS PER TRANSACTION EXCEED');
+			logger.error('Max items per transaction exceed');
+			callback(false, transaction, 'Max items per transaction exceed');
 			return;
 		}
 		/*
@@ -1079,8 +1079,8 @@ function verify_shop_rules(order, callback){
 			console.log("---------------------------------------------");
 
 			if (purchased_products.length > config.products.max_items_per_event) {
-				logger.error('MAX PURCHASES PER EVENT EXCEED');
-				callback(false, transaction, 'MAX PURCHASES PER EVENT EXCEED');
+				logger.error('Max purchases per event exceed');
+				callback(false, transaction, 'Max purchases per event exceed');
 				return;
 			}
 			/*
@@ -1094,8 +1094,8 @@ function verify_shop_rules(order, callback){
 			for (var i = 0; i < order.products.length; i++){
 				console.log(order.products[i].productID);
 				if(purchased_products.contains(order.products[i].productID)) {
-					logger.error('YOU CAN NOT BUY THE SAME PRODUCT TWICE');
-					callback(false, transaction, 'YOU CAN NOT BUY THE SAME PRODUCT TWICE');
+					logger.error('You can not buy the same product twice');
+					callback(false, transaction, 'You can not buy the same product twice');
 					return;
 				}
 			}
