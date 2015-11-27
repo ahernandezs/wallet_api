@@ -103,6 +103,17 @@ exports.buy = function (payload, callback){
         },
 
         function(sessionid,callback){
+            var updateDoxs = {phoneID: payload.phoneID, sessionid: sessionid};
+            console.log('Saving doxs in mongo');
+            userQuery.putDoxs(updateDoxs, function(err,result){
+                if (err)
+                    callback('Error', { statusCode:1, additionalInfo: { error: err, result: result}});
+                else
+                    callback(null,sessionid);
+            });
+        },
+
+        function(sessionid,callback){
             console.log('Get Balance');
             balance.balanceFlow(sessionid, function(err, balance) {
                 if(err){
