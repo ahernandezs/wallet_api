@@ -134,7 +134,7 @@ angular.module('pantallasAdministradorApp')
 
     $scope.main = function(){
         $location.path('/main');
-    }
+    };
 
     $scope.resetDox = function(){
         console.log('Reset Dox to user -> ' + $routeParams.phoneId);
@@ -189,5 +189,35 @@ angular.module('pantallasAdministradorApp')
                 console.log(data.message);
                 $scope.errorMessage = data.message;
             });
-    }
+    };
+
+    $scope.topUp = function(topUpAmount){
+            if (!topUpAmount)
+                alert('You must put number!');
+            else
+                $http({
+                    url: '/api/money/' + $routeParams.phoneId,
+                    method: 'PUT',
+                    data: {
+                        amount: topUpAmount
+                    },
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).
+                    success(function (data, status, headers) {
+                        $scope.topUpInfo = data.additionalInfo;
+
+                        if (data.statusCode === 0)
+                            alert('Successful! ' + $scope.topUpInfo.message);
+                        else
+                            alert('Error while top up account! \nDetail error:' + $scope.topUpInfo);
+
+                    }).
+                    error(function (data, status) {
+                        console.log(data.message);
+                        $scope.errorMessage = data.message;
+                    });
+
+    };
 }]);

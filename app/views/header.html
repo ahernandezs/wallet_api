@@ -18,10 +18,10 @@
       </div>
       <div class="modal-body">
         <p>Enter the amount you want to add to the User Account</p>
-        <input type="number" class="form-control" placeholder="Amount">
+        <input type="number" class="form-control" min="1" placeholder="Amount" ng-model="topUpAmount">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-lg btn-block" data-dismiss="modal">Add</button>
+        <button type="button" class="btn btn-lg btn-block" data-dismiss="modal" ng-click="topUp(topUpAmount)">Add</button>
       </div>
     </div>
 
