@@ -121,16 +121,51 @@ exports.deleteMessage = function(messageID,callback){
 
 exports.getMessagesNoRead = function(phoneID, callback) {
     console.log( 'Getting NOREAD messages  : ' + phoneID);
-    Message.find({ 'phoneID': phoneID , 'status' :'NOTREAD' }, ' title type message status additionalInfo date', function (err, msgs) {
+    async.waterfall([
+
+    function(callback){
+      var message = {};
+      var condiciones = { 'phoneID': phoneID ,status :'NOTREAD', message:{ $ne: '' }  ,  $and:[ { type : { $ne : 'REQUEST_MONEY' } } , { type : { $ne : 'GIFT' }  } ] } ; 
+      Message.find(condiciones, ' title type message status additionalInfo date', {sort: {date: -1}}, function (err, msgs) {
         if (err) callback('ERROR', err);
         else if(msgs){
-          callback(null, msgs);
-      }
-      else{
-          console.log("messages not found");
-          callback("messages not found", null);
-      }
-  });
+          message = msgs;
+          callback(null, message);
+          }
+        });
+    },
+
+    function(emptyMessages, callback){
+      var condiciones = { 'phoneID': phoneID,status :'NOTREAD' , type : 'GIFT'  };
+      Message.find(condiciones, ' title type message status additionalInfo date', {sort: {date: -1}}, function (err, msgs) {
+        if (err) callback('ERROR', err);
+        else if(msgs && emptyMessages){
+          emptyMessages = emptyMessages.concat(msgs);
+          emptyMessages.sort(compare);
+          callback(null,emptyMessages);
+        }else{
+          callback(null,emptyMessages);
+        }
+      });
+    },
+
+    function(emptyMessages, callback){
+      var condiciones = { 'phoneID': phoneID , status :'NOTREAD' , type : 'REQUEST_MONEY'  };
+      Message.find(condiciones, ' title type message status additionalInfo date', {sort: {date: -1}}, function (err, msgs) {
+        if (err) callback('ERROR', err);
+        else if(msgs && emptyMessages){
+          emptyMessages = emptyMessages.concat(msgs);
+          emptyMessages.sort(compare);
+          callback(null,emptyMessages);
+        }else{
+          callback(null,emptyMessages);
+        }
+      });
+    }
+
+    ], function (err, result){
+        callback(null,result);
+    });
 };
 
 exports.getMessageByOrderID = function(orderID, callback) {
