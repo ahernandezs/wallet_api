@@ -153,7 +153,7 @@ exports.loginFlow = function(payload,callback) {
     function(sessionid,callback){
       logger.info('Search NotRead msgs connection');
       var response = null;
-      msgQuery.getMessages(payload.phoneID, function(err, result) {
+      msgQuery.getMessagesNoRead(payload.phoneID, function(err, result) {
         if(err) {
           logger.error(err);
           var response = { statusCode:1 ,  additionalInfo : err };
