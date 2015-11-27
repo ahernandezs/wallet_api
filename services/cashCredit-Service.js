@@ -71,11 +71,23 @@ exports.requestLoan = function(payload, callback) {
 						cb('ERROR IN DOX EARNED', {statusCode:1,additionalInfo : "Error in DOX Service"});
 					} else {
 						console.log('Transfer result: '+JSON.stringify(resultDox)+'\n\n');
-						result.doxEarned = config.doxs.take_a_loan;
-						callback(null,result);
+						callback(null,sessionid, result);
 					}
 				});
 		},
+
+		function(sessionid,result, callback) {
+			var updateDoxs = {phoneID: payload.phoneID, sessionid: sessionid};
+			console.log('Saving doxs in mongo');
+			userQuery.putDoxs(updateDoxs, function (err, res) {
+				if (err)
+					callback('Error', {statusCode: 1, additionalInfo: {error: err, result: res}});
+				else {
+					result.doxEarned = config.doxs.take_a_loan;
+					callback(null, result);
+				}
+			});
+		}
 
     ], function (err, result) {
         if(err){      

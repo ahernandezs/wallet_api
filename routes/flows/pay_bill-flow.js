@@ -112,6 +112,17 @@ exports.pay_bill = function(payload, callback){
                 },
 
                 function(sessionid,callback){
+                    var updateDoxs = {phoneID: payload.phoneID, sessionid: sessionid};
+                    console.log('Saving doxs in mongo');
+                    Userquery.putDoxs(updateDoxs, function(err,result){
+                        if (err)
+                            callback('Error', { statusCode:1, additionalInfo: { error: err, result: result}});
+                        else
+                            callback(null,sessionid);
+                    });
+                },
+
+                function(sessionid,callback){
                     logger.info('4.- GET BALANCE');
                     balance.balanceFlow(sessionid, function(err, balance) {
                         if(err){
