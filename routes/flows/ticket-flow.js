@@ -61,7 +61,7 @@ exports.buy = function (payload, callback){
             var message = {};
 
             message.status = config.messages.status.NOTREAD;
-            message.type = config.messages.type.TICKET;
+            message.type = config.messages.type.TICKETBUY;
             message.title = payload.message;
             message.phoneID = payload.phoneID;
             message.date = dateTime;
@@ -125,7 +125,7 @@ exports.buy = function (payload, callback){
             receipt.additionalInfo = payload.additionalInfo;
             receipt.title = 'You have bought a ticket';
             receipt.date = dateTime;
-            receipt.type = config.receipt.type.TICKET;
+            receipt.type = config.receipt.type.TICKETBUY;
             receipt.status = 'DELIVERED';
             receipt.owner = 0;
             ReceiptQuery.createReceipt(receipt, function(err, result) {
@@ -140,11 +140,11 @@ exports.buy = function (payload, callback){
             console.log( 'Create History transaction for emitter' );
             var transacction = {};
             transacction.title = 'Ticket Buy';
-            transacction.type = config.transaction.type.TICKET;
+            transacction.type = config.transaction.type.TICKETBUY;
             transacction.date = dateTime;
             transacction.amount = (-1) * receipt.amount;
             transacction.additionalInfo = receipt.additionalInfo;
-            transacction.operation = 'TRANSFER';
+            transacction.operation = config.transaction.operation.TICKETBUY;
             transacction.phoneID = receipt.emitter;
             userQuery.findAppID(receipt.emitter,function(err,result){
                 transacction.description ='To ' + result.name;

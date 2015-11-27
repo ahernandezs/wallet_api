@@ -135,4 +135,56 @@ angular.module('pantallasAdministradorApp')
     $scope.main = function(){
         $location.path('/main');
     }
+
+    $scope.resetDox = function(){
+        console.log('Reset Dox to user -> ' + $routeParams.phoneId);
+        $http({
+            url: '/api/dox/'+$routeParams.phoneId,
+            method: 'DELETE'
+        }).
+           success(function(data, status, headers) {
+                console.log('Deleted Correctly!');
+                $scope.totalDeleted = data.total;
+                $scope.deletedDoxDetails = data.additionalInfo;
+
+                console.log($scope.deletedDoxDetails);
+
+                if (data.statusCode == 0)
+                    alert('Successful!');
+                else
+                    alert('Error!');
+
+                $location.path('/main');
+            }).
+            error(function(data, status) {
+                console.log(data.message);
+                $scope.errorMessage = data.message;
+            });
+    };
+
+    $scope.deleteUser = function() {
+        console.log('Delete user -> ' + $routeParams.phoneId);
+        $http({
+            url: '/api/register/' + $routeParams.phoneId,
+            method: 'DELETE',
+            data: {
+                confirm: "YES"
+            }
+        }).
+            success(function (data, status, headers) {
+                $scope.deletedUserInfo = data.additionalInfo;
+                $scope.deletedUser = data.deleted;
+
+                if (data.statusCode == 0)
+                    alert('Successful!');
+                else
+                    alert('Error!');
+                $location.path('/main');
+
+            }).
+            error(function (data, status) {
+                console.log(data.message);
+                $scope.errorMessage = data.message;
+            });
+    }
 }]);
