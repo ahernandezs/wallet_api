@@ -752,7 +752,7 @@ exports.resetDox = function resetDox(payload, callback){
                     client.transfer(request, function(err, result) {
                         if (err) {
                             console.log(err);
-                            callback('ERROR',{statusCode:1, additionalInfo: err});
+                            return new Error(err);
                         } else {
                             var response = result.transferReturn;
                             console.log('TransactionID ->' + response.transid);
