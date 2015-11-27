@@ -224,7 +224,7 @@ exports.add_money = function(req, res){
         } else {
             response.statusCode = 0;
             response.additionalInfo = {
-                message: 'ADDED ' + config.currency.symbol + amount + ' TO ' + phoneId
+                message: 'Added ' + config.currency.symbol + amount + ' to ' + phoneId
             };
         }
         res.send(response);
