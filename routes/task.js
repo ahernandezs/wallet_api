@@ -86,8 +86,8 @@ exports.register_delete = function(req, res){
                 return;
             }
             if (user){
-                console.log(result);
-                res.send({statusCode:0, additionalInfo:{ deleted:"YES", message:user }});
+                console.log('Result -> ' + result);
+                res.send({statusCode:0, deleted:"YES", additionalInfo:{ userInfo:user }});
             } else {
                 res.send({statusCode:0, additionalInfo : { message: 'User not found.'}});
             }

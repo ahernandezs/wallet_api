@@ -7,7 +7,7 @@
   </span>
 </div>
 
-<div id="myModal" class="modal fade" role="dialog">
+<div id="myModalTopUp" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
     <!-- Modal content-->
@@ -22,6 +22,48 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-lg btn-block">Add</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="myModalResetDox" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Reset Dox</h4>
+      </div>
+      <div class="modal-body">
+        <p>¿Are you sure you want to reset all Dox? (This operation can't be undo)</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" data-dismiss="modal">CANCEL</button>
+        <button type="button" class="btn-sm btn-danger" ng-click="resetDox()">Confirm</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="myModalDeleteUser" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Delete User</h4>
+      </div>
+      <div class="modal-body">
+        <p>¿Are you sure you want to Delete User? (This operation can't be undo)</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" data-dismiss="modal">CANCEL</button>
+        <button type="button" class="btn-sm btn-danger" ng-click="deleteUser()">Confirm</button>
       </div>
     </div>
 
