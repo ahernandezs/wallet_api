@@ -147,12 +147,12 @@ angular.module('pantallasAdministradorApp')
                 $scope.totalDeleted = data.total;
                 $scope.deletedDoxDetails = data.additionalInfo;
 
-                console.log($scope.deletedDoxDetails);
+                console.log(data);
 
-                if (data.statusCode == 0)
+                if (data.statusCode === 0)
                     alert('Successful!');
                 else
-                    alert('Error!');
+                    alert('Dox already reset!');
 
                 $location.path('/main');
             }).
@@ -168,7 +168,10 @@ angular.module('pantallasAdministradorApp')
             url: '/api/register/' + $routeParams.phoneId,
             method: 'DELETE',
             data: {
-                confirm: "YES"
+                confirm: 'YES'
+            },
+            headers: {
+                'Content-Type': 'application/json'
             }
         }).
             success(function (data, status, headers) {
@@ -178,7 +181,7 @@ angular.module('pantallasAdministradorApp')
                 if (data.statusCode == 0)
                     alert('Successful!');
                 else
-                    alert('Error!');
+                    alert('Error deleting user!');
                 $location.path('/main');
 
             }).

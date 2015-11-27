@@ -3,7 +3,7 @@
 angular.module('pantallasAdministradorApp')
 .controller('LoginCtrl', ['$scope', '$rootScope', '$location', '$http',  function ($scope, $rootScope, $location,$http) {
 	$scope.login=function(username,password){
-		if(username=='j@j.com' && password=='1'){
+		if(username=='admin@amdocs.com' && password=='admin321'){
 			$rootScope.isAuthenticated = true;
 			$location.path('/main');
 		}else{

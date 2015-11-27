@@ -21,7 +21,7 @@
         <input type="number" class="form-control" placeholder="Amount">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-lg btn-block">Add</button>
+        <button type="button" class="btn btn-lg btn-block" data-dismiss="modal">Add</button>
       </div>
     </div>
 
@@ -42,7 +42,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn" data-dismiss="modal">CANCEL</button>
-        <button type="button" class="btn-sm btn-danger" ng-click="resetDox()">Confirm</button>
+        <button type="button" class="btn-sm btn-danger" ng-click="resetDox()" data-dismiss="modal">Confirm</button>
       </div>
     </div>
 
@@ -63,7 +63,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn" data-dismiss="modal">CANCEL</button>
-        <button type="button" class="btn-sm btn-danger" ng-click="deleteUser()">Confirm</button>
+        <button type="button" class="btn-sm btn-danger" ng-click="deleteUser()" data-dismiss="modal">Confirm</button>
       </div>
     </div>
 
