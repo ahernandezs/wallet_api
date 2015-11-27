@@ -152,7 +152,7 @@ angular.module('pantallasAdministradorApp')
                 if (data.statusCode === 0)
                     alert('Successful!');
                 else
-                    alert('Error!');
+                    alert('Dox already reset!');
 
                 $location.path('/main');
             }).
@@ -181,7 +181,7 @@ angular.module('pantallasAdministradorApp')
                 if (data.statusCode == 0)
                     alert('Successful!');
                 else
-                    alert('Error!');
+                    alert('Error deleting user!');
                 $location.path('/main');
 
             }).
