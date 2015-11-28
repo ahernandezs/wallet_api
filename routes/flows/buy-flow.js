@@ -500,15 +500,16 @@ exports.authorizeBuy = function(payload,callback){
             var message = {};
             var extraData = {};
             var title = 'Purchase validation';
+            var actionType = config.messages.action.BUY;
             message.message = title;
             message.phoneID = order.phoneID;
 
             if(payload.status === 'ACCEPTED'){
-				extraData = { status : payload.status , message:'Your purchase was approved. Please check your receipts.' , canPurchase :'YES' };
+				extraData = {action: actionType, status : payload.status , message:'Your purchase was approved. Please check your receipts.' , canPurchase :'YES' };
             }
 
 			else{
-				extraData = { status : payload.status , message:'Your purchase was rejected.' , canPurchase :'YES'};
+				extraData = {action: actionType, status : payload.status , message:'Your purchase was rejected.' , canPurchase :'YES'};
 			}
 
 			message.extra = {extra : extraData} ;
