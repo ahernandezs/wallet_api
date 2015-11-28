@@ -16,7 +16,7 @@ exports.requestLoan = function(payload, callback) {
 	    async.waterfall([
         function(callback) {
           console.log('Search countryCode ');
-		  UserQuery.findUserByPhoneID(payload.phoneID, function(err,result) {
+		  userQuery.findUserByPhoneID(payload.phoneID, function(err,result) {
 		  	if(err){      
             	callback('ERROR',result);
 	        } else {      
@@ -101,7 +101,7 @@ exports.requestDecision = function(payload, callback){
 	    async.waterfall([
         function(callback) {
           console.log('Search countryCode for requestDecision ');
-		  UserQuery.findUserByPhoneID(payload.phoneID, function(err,result) {
+		  userQuery.findUserByPhoneID(payload.phoneID, function(err,result) {
 		  	if(err){      
             	callback('ERROR',result);
 	        } else {
