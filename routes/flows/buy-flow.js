@@ -503,11 +503,13 @@ exports.authorizeBuy = function(payload,callback){
             message.message = title;
             message.phoneID = order.phoneID;
 
-            if(payload.status === 'ACCEPTED')
+            if(payload.status === 'ACCEPTED'){
 				extraData = { status : payload.status , message:'Your purchase was approved. Please check your receipts.' , canPurchase :'YES' };
+            }
 
-			else
+			else{
 				extraData = { status : payload.status , message:'Your purchase was rejected.' , canPurchase :'YES'};
+			}
 
 			message.extra = {extra : extraData} ;
 			urbanService.singlePush(message, function(err, result) {

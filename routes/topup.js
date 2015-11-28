@@ -19,7 +19,7 @@ exports.buy = function (req, res){
     }
 
     if (payload.amount <= 0){
-        res.send({statusCode: 10, additionalInfo : { message : 'CANNOT TOPUP NEGATIVE AMOUNT' }});
+        res.send({statusCode: 10, additionalInfo : { message : 'Cannot topup negative amount' }});
         return;
     }
 
@@ -56,7 +56,7 @@ exports.buy = function (req, res){
                 }
             });
         } else {
-            res.send({statusCode: 11, additionalInfo : { message : 'ONLY 1 TOPUP PER HOUR' }});
+            res.send({statusCode: 11, additionalInfo : { message : 'Only 1 topup per hour' }});
             return;
         }
     });
