@@ -1,11 +1,10 @@
-var UserQuery = require('../model/queries/user-query');
 var moment = require('moment-timezone');
 var async = require('async');
 var https = require('https');
 var uuid = require('uuid');
 var js2xmlparser = require("js2xmlparser");
 var async = require('async');
-var UserQuery = require('../model/queries/user-query');
+var userQuery = require('../model/queries/user-query');
 var transacctionQuery = require('../model/queries/transacction-query');
 var parseString = require('xml2js').parseString;
 var Client = require('node-rest-client').Client;
@@ -17,7 +16,7 @@ exports.requestLoan = function(payload, callback) {
 	    async.waterfall([
         function(callback) {
           console.log('Search countryCode ');
-		  UserQuery.findUserByPhoneID(payload.phoneID, function(err,result) {
+		  userQuery.findUserByPhoneID(payload.phoneID, function(err,result) {
 		  	if(err){      
             	callback('ERROR',result);
 	        } else {      
@@ -102,7 +101,7 @@ exports.requestDecision = function(payload, callback){
 	    async.waterfall([
         function(callback) {
           console.log('Search countryCode for requestDecision ');
-		  UserQuery.findUserByPhoneID(payload.phoneID, function(err,result) {
+		  userQuery.findUserByPhoneID(payload.phoneID, function(err,result) {
 		  	if(err){      
             	callback('ERROR',result);
 	        } else {
@@ -174,7 +173,7 @@ exports.requestDecision = function(payload, callback){
 				transacction.operation = config.transaction.operation.LOAN;
 				transacction.phoneID = payload.phoneID;
 
-				UserQuery.findAppID(payload.phoneID,function(err,result){
+				userQuery.findAppID(payload.phoneID,function(err,result){
 					transacction.description ='To ' + result.name;
 					transacctionQuery.createTranssaction(transacction, function(err, resultTrans) {
 						if (err)

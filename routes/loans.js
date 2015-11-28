@@ -80,7 +80,7 @@ exports.getDecision = function(req,res){
                 }
             });
         } else {
-            res.send({statusCode: 14, additionalInfo : { message : 'ONLY 1 LOAN PER HOUR' }});
+            res.send({statusCode: 14, additionalInfo : { message : 'Only 1 loan per hour' }});
             return;
         }
     });
