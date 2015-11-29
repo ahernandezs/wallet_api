@@ -24,6 +24,7 @@ var ReceiptQuery = require('../../model/queries/receipt-query');
 var messageQuery = require('../../model/queries/message-query');
 var transacctionQuery = require('../../model/queries/transacction-query');
 var citiService = require('../../services/citi-service');
+var userblackList = require('../../model/queries/userblackList-query');
 
 Array.prototype.contains = function(obj) {
 	var i = this.length;
@@ -1015,95 +1016,105 @@ exports.customerMobileShopBuy = function(payload, callback){
 };
 
 function verify_shop_rules(order, callback){
+	console.log(order.products);
+	var prods = [];
+	for (var i = 0; i < order.products.length; i++)
+		prods.push(order.products[i].productID);
 
-	mobileProductTransaction.find({phoneID:order.customerID, status : config.orders.status.READY},function(err,transactions){
+	var transDoc = {
+		phoneID: order.customerID,
+		productID: prods,
+		dateTime: moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0, 19),
+		status: config.orders.status.NEW,
+		total : [{type:"1", amount: order.total}, {type:"3", amount:order.totalDox}]
+	};
+	console.log(transDoc);
+	var transaction = new mobileProductTransaction(transDoc);
 
-		var prods = [];
-		for (var i = 0; i < order.products.length; i++)
-			prods.push(order.products[i].productID);
-
-		var transDoc = {
-			    phoneID: order.customerID,
-				productID: prods,
-				dateTime: moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0, 19),
-				status: config.orders.status.NEW,
-				total : [{type:"1", amount: order.total}, {type:"3", amount:order.totalDox}]
-		};
-		console.log(transDoc);
-		var transaction = new mobileProductTransaction(transDoc);
-
-		if (prods.contains(config.products.loyalty.productId))
-			if (order.totalDox < config.products.loyalty.cost) {
-				logger.error('Loyalty product can be only purchased with dox points');
-				callback(false, transaction, 'Loyalty product can be only purchased with dox points')
-				return;
-			}
-
-		if (err)
-			handleError(err);
-		if (order.products.length > config.products.max_items_per_transaction) {
-			logger.error('Max items per transaction exceed');
-			callback(false, transaction, 'Max items per transaction exceed');
-			return;
-		}
-		/*
-		if (order.total > config.products.max_amount_per_person) {
-			logger.error('$10 LIMIT EXCEDED');
-			callback(false, transaction, '$10 LIMIT EXCEDED');
-			return;
-		}
-		*/
-		logger.info('--------OBJECT FOR TRANSACTION-----------------');
-		console.log(transaction);
-		logger.info('-------------------------');
-
-		if (transactions.length == 0) {
-			logger.info('RULES SUCCESS!!');
-			callback(true, transaction, transaction,'RULES SUCCESS!!');
-		} else {
-			//Not exced total amount
-			var totalpp = 0;
-			var tmp = 0;
-			var purchased_products = [];
-			for (var i = 0; i < transactions.length; i++){
-				tmp = transactions[i].total[0].type == 1
-					? transactions[i].total[0].amount
-					: transactions[i].total[1].amount;
-				for (var j = 0; j < transactions[i].productID.length; j++)
-					purchased_products.push(transactions[i].productID[j]);
-				totalpp = totalpp + tmp;
-			}
-			console.log("---------------TOTAL PRICE PRODUCTS--------------------------");
-			console.log(totalpp);
-			console.log("---------------------------------------------");
-
-			console.log("---------------PURCHASED PRODUCTS ID-------------------------");
-			console.log(purchased_products);
-			console.log("---------------------------------------------");
-
-			if (purchased_products.length > config.products.max_items_per_event) {
-				logger.error('Max purchases per event exceed');
-				callback(false, transaction, 'Max purchases per event exceed');
-				return;
-			}
-			/*
-			if (totalpp + order.total > config.products.max_amount_per_person) {
-				logger.error('$10 LIMIT EXCEDED');
-				callback(false, transaction, '$10 LIMIT EXCEDED');
-				return;
-			}
-            */
-			//Only 1 pz for the same product
-			for (var i = 0; i < order.products.length; i++){
-				console.log(order.products[i].productID);
-				if(purchased_products.contains(order.products[i].productID)) {
-					logger.error('You can not buy the same product twice');
-					callback(false, transaction, 'You can not buy the same product twice');
-					return;
-				}
-			}
+	//check if user there is in black list
+	userblackList.findUserByPhoneID(order.customerID,function(err,user){
+		if (user){
+			console.log('Users is already inside blacklist');
 			callback(true,transaction,'RULES SUCCESS!!');
-			logger.info('RULES SUCCESS!!');
-		}
-	});
+		}else{
+			// else continue with  normal flow
+			mobileProductTransaction.find({phoneID:order.customerID, status : config.orders.status.READY},function(err,transactions){
+
+				if (prods.contains(config.products.loyalty.productId))
+					if (order.totalDox < config.products.loyalty.cost) {
+						logger.error('Loyalty product can be only purchased with dox points');
+						callback(false, transaction, 'Loyalty product can be only purchased with dox points')
+						return;
+					}
+
+					if (err)
+						handleError(err);
+					if (order.products.length > config.products.max_items_per_transaction) {
+						logger.error('Max items per transaction exceed');
+						callback(false, transaction, 'Max items per transaction exceed');
+						return;
+					}
+					/*
+					if (order.total > config.products.max_amount_per_person) {
+						logger.error('$10 LIMIT EXCEDED');
+						callback(false, transaction, '$10 LIMIT EXCEDED');
+						return;
+					}
+					*/
+					logger.info('--------OBJECT FOR TRANSACTION-----------------');
+					console.log(transaction);
+					logger.info('-------------------------');
+
+					if (transactions.length == 0) {
+						logger.info('RULES SUCCESS!!');
+						callback(true, transaction, transaction,'RULES SUCCESS!!');
+					} else {
+						//Not exced total amount
+						var totalpp = 0;
+						var tmp = 0;
+						var purchased_products = [];
+						for (var i = 0; i < transactions.length; i++){
+							tmp = transactions[i].total[0].type == 1
+							? transactions[i].total[0].amount
+							: transactions[i].total[1].amount;
+							for (var j = 0; j < transactions[i].productID.length; j++)
+								purchased_products.push(transactions[i].productID[j]);
+							totalpp = totalpp + tmp;
+						}
+						console.log("---------------TOTAL PRICE PRODUCTS--------------------------");
+						console.log(totalpp);
+						console.log("---------------------------------------------");
+
+						console.log("---------------PURCHASED PRODUCTS ID-------------------------");
+						console.log(purchased_products);
+						console.log("---------------------------------------------");
+
+						if (purchased_products.length > config.products.max_items_per_event) {
+							logger.error('Max purchases per event exceed');
+							callback(false, transaction, 'Max purchases per event exceed');
+							return;
+						}
+						/*
+						if (totalpp + order.total > config.products.max_amount_per_person) {
+							logger.error('$10 LIMIT EXCEDED');
+							callback(false, transaction, '$10 LIMIT EXCEDED');
+							return;
+						}
+						*/
+						//Only 1 pz for the same product
+						for (var i = 0; i < order.products.length; i++){
+							console.log(order.products[i].productID);
+							if(purchased_products.contains(order.products[i].productID)) {
+								logger.error('You can not buy the same product twice');
+								callback(false, transaction, 'You can not buy the same product twice');
+								return;
+							}
+						}
+						callback(true,transaction,'RULES SUCCESS!!');
+						logger.info('RULES SUCCESS!!');
+					}
+				});
+
+			}
+		});
 }
