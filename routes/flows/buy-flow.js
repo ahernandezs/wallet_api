@@ -1034,19 +1034,12 @@ function verify_shop_rules(order, callback){
 	//check if user there is in black list
 	userblackList.findUserByPhoneID(order.customerID,function(err,user){
 		if (user){
-<<<<<<< HEAD
-			console.log('Users is already inside blacklist');
-			callback(true,transaction,'RULES SUCCESS!!');
-		}else{
-			// else continue with  normal flow
-=======
 			console.log('User is inside blacklist');
 			console.log(user);
 			callback(true,transaction,'RULES SUCCESS!!');
 		}else{
 			// else continue with  normal flow
 			console.log('User without rules');
->>>>>>> Add new flow for validate user, before shop .
 			mobileProductTransaction.find({phoneID:order.customerID, status : config.orders.status.READY},function(err,transactions){
 
 				if (prods.contains(config.products.loyalty.productId))

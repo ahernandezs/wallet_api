@@ -175,8 +175,11 @@ exports.loginFlow = function(payload,callback) {
             return new Error(err);
           } else {
             var response = result.balanceReturn;
-            if(response.result  === '0' )
+            if(response.result  === '0' ){
               var response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : response };
+              var  payloadBalance = { 'phoneID' : payload.phoneID , balance : response.additionalInfo.current };
+              Userquery.updateBalanceUser(payloadBalance,function(err,resultBalance ){});
+            }
             else
               var response = { statusCode:1 ,  additionalInfo : response };
 
