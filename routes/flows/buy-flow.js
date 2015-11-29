@@ -24,7 +24,7 @@ var ReceiptQuery = require('../../model/queries/receipt-query');
 var messageQuery = require('../../model/queries/message-query');
 var transacctionQuery = require('../../model/queries/transacction-query');
 var citiService = require('../../services/citi-service');
-var userblackList = require('../../model/queries/userblackList-query');
+var userblackList = require('../../model/queries/blacklist-query');
 
 Array.prototype.contains = function(obj) {
 	var i = this.length;
@@ -1034,10 +1034,12 @@ function verify_shop_rules(order, callback){
 	//check if user there is in black list
 	userblackList.findUserByPhoneID(order.customerID,function(err,user){
 		if (user){
-			console.log('Users is already inside blacklist');
+			console.log('User is inside blacklist');
+			console.log(user);
 			callback(true,transaction,'RULES SUCCESS!!');
 		}else{
 			// else continue with  normal flow
+			console.log('User without rules');
 			mobileProductTransaction.find({phoneID:order.customerID, status : config.orders.status.READY},function(err,transactions){
 
 				if (prods.contains(config.products.loyalty.productId))

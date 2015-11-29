@@ -28,6 +28,7 @@ var userSchema = new Schema({
 	dateOfBirth: String ,
 	nationality: String ,
 	passportNumber: String,
+	balance : Number,
 	genre : String
 });
 

@@ -17,7 +17,7 @@ exports.getUsers = function(req, res) {
     async.waterfall([
 
         function(callback){
-        User.find( {}, 'OS company doxs email facebook group name phoneID twitter profileCompleted', { sort : { lastSession : -1 } }, function(err, users) {
+        User.find( {}, 'OS balance company doxs email facebook group name phoneID twitter profileCompleted', { sort : { lastSession : -1 } }, function(err, users) {
             if (err)
                 callback('ERROR', { statusCode : 1, additionalInfo : err } );
             else{

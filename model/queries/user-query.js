@@ -678,3 +678,15 @@ exports.getContactList = function(contactList, callback){
       });
 }
 
+exports.updateBalanceUser = function(payload,callback){
+    console.log('Sync balance ' + JSON.stringify(payload));
+    var conditions = { 'phoneID': payload.phoneID }
+    User.update(conditions, payload, null, function(err, result) {
+    if(err){
+      console.log(err);
+      callback('ERROR',err);
+    }else
+      callback(null,result);
+    });
+}
+
