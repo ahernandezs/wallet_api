@@ -14,7 +14,7 @@ var enviromentQuery = require('./enviroment-query');
 var transacction = require('../transacction');
 var soap = require('soap');
 var soapurl = process.env.SOAP_URL;
-var Userquery = require('../../model/queries/user-query');
+var userquery = require('../../model/queries/user-query');
 
 exports.findUserGifts = function(phoneID, callback) {
     var date = new Date(moment().tz(process.env.TZ));
@@ -548,7 +548,7 @@ console.log('invite friend');
     function(callback){
       var updateDoxs = {phoneID: payload.phoneID, operation: 'social', sessionid:payload.sessionid};
       console.log('Saving doxs in mongo');
-      Userquery.putDoxs(updateDoxs, function(err,result){
+      userquery.putDoxs(updateDoxs, function(err,result){
         callback(null);
       });
     },
