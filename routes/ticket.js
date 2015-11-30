@@ -68,7 +68,7 @@ exports.buy = function(req, res){
         }
 
         discount = event.discount;
-        payload.amount = payload.cost * ((100 - discount) / 100);
+        payload.amount = Math.round (payload.cost * ((100 - discount) / 100));
         payload.message = config.messages.ticketBuyMsg;
 
         ticketFlow.buy(payload,function(err,result){
