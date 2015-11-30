@@ -50,7 +50,7 @@ exports.sendMessage = function(payload,callback) {
                 } else {
                     payload.phoneID = payload.destinatary;
                     payload.message = message.title;
-                    var extraData = {   action: 6, additionalInfo :  message.additionalInfo ,
+                    var extraData = {   action: 14, additionalInfo :  message.additionalInfo ,
                                     _id:result._id };
                     payload.extra = { extra:extraData};
                     callback(null, payload);

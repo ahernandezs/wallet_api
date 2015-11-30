@@ -12,6 +12,7 @@ var urbanService = require('../../services/notification-service');
 var doxsService = require('../../services/doxs-service');
 var ReceiptQuery = require('../../model/queries/receipt-query');
 var transacctionQuery = require('../../model/queries/transacction-query');
+var userblackList = require('../../model/queries/blacklist-query');
 var messageQuery = require('../../model/queries/message-query');
 var soapurl = process.env.SOAP_URL;
 var logger = config.logger;
@@ -199,41 +200,64 @@ exports.pay_bill = function(payload, callback){
 };
 
 function verify_bill_rules(payload, callback) {
-    billTransaction.findOne({phoneID:payload.phoneID, billId:payload.bill.billId}, function(err,transaction){
-
-        var transDoc = {
-            phoneID: payload.phoneID,
-            billId:payload.bill.billId,
-            dateTime: moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0, 19),
-        };
-
-        if (err)
-            handleError();
-        if (!transaction){
-            logger.info('NO TRANSACTIONS! CREATING THE TRANSACTION');
-            var billTrans = new billTransaction(transDoc);
-
-            logger.info('--------OBJECT FOR TRANSACTION-----------------');
-            console.log(billTrans);
-            logger.info('-------------------------');
-
-            billTrans.save(function(err){
-                if (!err) {
-                    logger.info('RULES SUCCESS!!');
+    async.waterfall([
+        function(callback) {
+            userblackList.findUserByPhoneID(payload.phoneID,function(err,user){
+                if(user){
+                    console.log("USER WITHOUT RULES");
                     callback(true,'RULES SUCCESS!!');
-                    return;
-                }
-                else {
-                    logger.error('ERROR IN MONGODB!!!');
-                    console.log(err);
-                    callback(false,'ERROR IN MONGODB!!!');
-                    return;
+                }else{
+                    callback(null);
                 }
             });
-        } else {
-            logger.error('BILL ALREADY PAYED!');
-            callback(false,'BILL ALREADY PAYED!');
-            return;
-        }
-    });
+        },
+        function(callback) {
+            billTransaction.findOne({phoneID:payload.phoneID, billId:payload.bill.billId}, function(err,transaction){
+
+                var transDoc = {
+                    phoneID: payload.phoneID,
+                    billId:payload.bill.billId,
+                    dateTime: moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0, 19),
+                };
+
+                if (err)
+                    handleError();
+                if (!transaction){
+                    logger.info('NO TRANSACTIONS! CREATING THE TRANSACTION');
+                    var billTrans = new billTransaction(transDoc);
+
+                    logger.info('--------OBJECT FOR TRANSACTION-----------------');
+                    console.log(billTrans);
+                    logger.info('-------------------------');
+
+                    billTrans.save(function(err){
+                        if (!err) {
+                            logger.info('RULES SUCCESS!!');
+                            callback(true,'RULES SUCCESS!!');
+                            return;
+                        }
+                        else {
+                            logger.error('ERROR IN MONGODB!!!');
+                            console.log(err);
+                            callback(false,'ERROR IN MONGODB!!!');
+                            return;
+                        }
+                    });
+                } else {
+                    logger.error('BILL ALREADY PAYED!');
+                    callback(false,'BILL ALREADY PAYED!');
+                    return;
+                }
+            });   
+        },
+
+        ], function (err, result) {
+            if(err){
+                console.log('Error  --->' + JSON.stringify(result));
+                callback(err,result);
+            }else{
+                logger.info('7.- BILLPAYMENT FLOW FINISHED');
+                callback(null,result);
+            }
+        });
 }
