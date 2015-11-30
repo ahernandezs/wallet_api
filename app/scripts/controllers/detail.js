@@ -162,13 +162,16 @@ angular.module('pantallasAdministradorApp')
             });
     };
 
-    $scope.deleteUser = function() {
+    $scope.deleteUser = function(hard) {
         console.log('Delete user -> ' + $routeParams.phoneId);
+        console.log('HARD RESET ->' + hard);
+
         $http({
             url: '/api/register/' + $routeParams.phoneId,
             method: 'DELETE',
             data: {
-                confirm: 'YES'
+                confirm: 'YES',
+                hard_reset: hard
             },
             headers: {
                 'Content-Type': 'application/json'

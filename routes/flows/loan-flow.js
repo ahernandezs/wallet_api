@@ -103,7 +103,7 @@ exports.createLoanFlow = function(payload,callback) {
     },
     function(loan,callback){
       loan.additionalInfo = JSON.stringify ({_id: loan._id, customerName : loan.name, customerImage : loan.customerImage, status: config.loans.status.NEW, date :loan.date });
-        forResult.additionalInfo._id = loan._id;
+      forResult.additionalInfo._id = loan._id;
       var message = config.messages.loanRequestMsg + loan.amount;
       loan.message = message;
       var extraData = { action : config.messages.action.LOAN , loan : JSON.stringify(loan.additionalInfo) };
@@ -122,7 +122,7 @@ exports.createLoanFlow = function(payload,callback) {
           receipt.message = "You have requested a loan of €"+ receipt.amount;
           receipt.additionalInfo = additionalInfo;
           receipt.title = receipt.message;
-          receipt.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);;
+          receipt.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
           receipt.type = 'LOAN';
           receipt.status = 'NEW';
           receipt.loanID = loan._id;
@@ -268,12 +268,12 @@ var updateLoanFlow = exports.updateLoanFlow = function(payload,callback){
         else {
             logger.info( 'Create History transaction' );
             var transacction = {};
-            transacction.title = 'Transfer fund';
-            transacction.type = 'MONEY',
+            transacction.title = config.transaction.operation.LOAN;
+            transacction.type = config.transaction.type.LOAN;
             transacction.date = loan.date;
             transacction.amount = loan.amount;
             transacction.additionalInfo = loan.additionalInfo;
-            transacction.operation = 'LOAN';
+            transacction.operation = config.transaction.operation.LOAN;
             transacction.phoneID = receiver;
             userQuery.findAppID(receiver,function(err,result){
               transacction.description ='From amdocs Cafe';
