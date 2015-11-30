@@ -133,12 +133,13 @@ exports.buy = function (payload, callback){
             receipt.receiver = payload.to;
             receipt.amount = payload.amount;
             receipt.message = payload.message;
-            receipt.additionalInfo = payload.additionalInfo;
+            //receipt.additionalInfo = payload.additionalInfo;
             receipt.title = 'You have bought a ticket';
             receipt.date = dateTime;
             receipt.type = config.receipt.type.TICKETBUY;
             receipt.status = 'DELIVERED';
             receipt.owner = 0;
+            console.log(receipt);
             ReceiptQuery.createReceipt(receipt, function(err, result) {
                 if (err)
                     callback('ERROR', err);
