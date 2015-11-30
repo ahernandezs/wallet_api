@@ -78,7 +78,7 @@ exports.requestLoan = function(payload, callback) {
 		function(sessionid,result, callback) {
 			var updateDoxs = {phoneID: payload.phoneID, sessionid: sessionid};
 			console.log('Saving doxs in mongo');
-			UserQuery.putDoxs(updateDoxs, function (err, res) {
+			userQuery.putDoxs(updateDoxs, function (err, res) {
 				if (err)
 					callback('Error', {statusCode: 1, additionalInfo: {error: err, result: res}});
 				else {
