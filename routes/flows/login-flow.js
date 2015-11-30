@@ -9,6 +9,7 @@ var soapurl = process.env.SOAP_URL;
 var wallet = require('../wallet');
 var session =  require('../../model/queries/session-query');
 var msgQuery =  require('../../model/queries/message-query');
+var blockUserQuery =  require('../../model/queries/blockUser-query');
 var user =  require('../users');
 var config = require('../../config.js');
 var logger = config.logger;
@@ -18,7 +19,15 @@ exports.loginFlow = function(payload,callback) {
     var info = {};
   async.waterfall([
     function(callback){
-
+      blockUserQuery.findUserByPhoneID(payload.phoneID,function(err,user){
+        if (user){
+          callback("ERROR",{ statusCode:1 ,  additionalInfo : "User blocked"});
+        }else{
+          callback(null);
+        }
+      });
+    },
+    function(callback){
       Userquery.confirmPin(payload.phoneID, function(err, person) {
         if(err){
           logger.error(err);
