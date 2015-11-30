@@ -2,6 +2,7 @@ var async = require('async');
 var soap = require('soap');
 var crypto = require('crypto');
 var Userquery = require('../../model/queries/user-query');
+var blockUserQuery =  require('../../model/queries/blockUser-query');
 var sessionUser = require('./login-flow');
 var pendingTransfer = require('../../model/pendingTransfer');
 var soapurl = process.env.SOAP_URL;
@@ -18,6 +19,17 @@ exports.registerFlow = function(payload,callback) {
 
   console.log(endsWith(payload.phoneID, end));
   async.waterfall([
+    function(callback){
+      console.log('Verify if user is blocked');
+      console.log(payload);
+      blockUserQuery.findUserByPhoneID(payload.phoneID,function(err,user){
+        if (user){
+          callback("ERROR",{ statusCode:1 ,  additionalInfo : "User blocked"});
+        }else{
+          callback(null);
+        }
+      });
+    },
     function(callback){
       console.log('Validate connection');
       var response = null;

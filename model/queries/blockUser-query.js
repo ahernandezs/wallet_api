@@ -1,9 +1,9 @@
 var async = require('async');
 var moment = require('moment-timezone');
-var User = require('../blackListUser');
+var User = require('../blockUser');
 
-exports.  findUserByPhoneID = function(phoneID,callback){
-  console.log('Search  black list user in mongoDB');
+exports.findUserByPhoneID = function(phoneID,callback){
+  console.log('Search  user in block list');
   console.log(phoneID);
   User.findOne({ 'phoneID': phoneID }, function (err, person) {
     if (err) callback("ERROR",err);
