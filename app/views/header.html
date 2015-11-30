@@ -63,7 +63,8 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn" data-dismiss="modal">CANCEL</button>
-        <button type="button" class="btn-sm btn-danger" ng-click="deleteUser()" data-dismiss="modal">Confirm</button>
+        <button type="button" class="btn-sm btn-danger" ng-click="deleteUser('NO')" data-dismiss="modal">SOFT delete</button>
+        <button type="button" class="btn-sm btn-danger" ng-click="deleteUser('YES')" data-dismiss="modal">HARD delete</button>
       </div>
     </div>
 

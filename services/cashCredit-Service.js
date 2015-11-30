@@ -63,11 +63,11 @@ exports.requestLoan = function(payload, callback) {
 		function(sessionid,resultDox, callback){
 				console.log('RECEIVER FROM DOXS-> ' + payload.phoneID);
 				console.log('DOXS EARNED-> ' + config.doxs.take_a_loan);
-				var payloadoxs = {phoneID: payload.phoneID, action: 'take_a_loan', type: config.wallet.type.DOX}
+				var payloadoxs = {phoneID: payload.phoneID, action: 'take_a_loan', type: config.wallet.type.DOX};
 				doxsService.saveDoxs(payloadoxs, function(err, result){
 					if(err) {
 						console.log('ERROR'+ response);
-						cb('ERROR IN DOX EARNED', {statusCode:1,additionalInfo : "Error in DOX Service"});
+						callback('ERROR IN DOX EARNED', {statusCode:1,additionalInfo : "Error in DOX Service"});
 					} else {
 						console.log('Transfer result: '+JSON.stringify(resultDox)+'\n\n');
 						callback(null,sessionid, result);
@@ -78,7 +78,7 @@ exports.requestLoan = function(payload, callback) {
 		function(sessionid,result, callback) {
 			var updateDoxs = {phoneID: payload.phoneID, sessionid: sessionid};
 			console.log('Saving doxs in mongo');
-			userQuery.putDoxs(updateDoxs, function (err, res) {
+			UserQuery.putDoxs(updateDoxs, function (err, res) {
 				if (err)
 					callback('Error', {statusCode: 1, additionalInfo: {error: err, result: res}});
 				else {
@@ -161,37 +161,11 @@ exports.requestDecision = function(payload, callback){
 					callback(null,result.RESULT);
 				});
 			});
-	    },
-		function(resultLoan, callback) {
-				console.log( 'Create History transaction for requester loan.' );
-				var transacction = {};
-				transacction.title = config.transaction.operation.LOAN;
-				transacction.type = config.transaction.type.LOAN,
-				transacction.date = moment().tz(process.env.TZ).format().replace(/T/, ' ').replace(/\..+/, '').substring(0,19);
-				transacction.amount = resultLoan.MAXAMOUNT[0];
-				transacction.additionalInfo = JSON.stringify(resultLoan);
-				transacction.operation = config.transaction.operation.LOAN;
-				transacction.phoneID = payload.phoneID;
-
-				userQuery.findAppID(payload.phoneID,function(err,result){
-					transacction.description ='To ' + result.name;
-					transacctionQuery.createTranssaction(transacction, function(err, resultTrans) {
-						if (err)
-							callback('ERROR', err);
-						else {
-							console.log(resultTrans);
-							console.log(resultLoan);
-							resultLoan.transId = resultTrans.id;
-							callback(null, resultLoan);
-						}
-					});
-				});
-		},
-
+	    }
 		], function (err, result) {
 	        if(err){      
 	            callback('ERROR',result);
-	        } else {      
+	        } else {
 	            callback(null,result);
 	        }
 	    })
