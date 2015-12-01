@@ -74,7 +74,7 @@ config.messages.buyRejectedOneMsg = 'Sorry, you have exceeded your number of buy
 config.messages.loanAcceptedMsg = 'Congratulations,Your Loan is approved';
 config.messages.action = { TRANSFER:1 , GIFT :2 , BUY :3 ,LOAN : 4, COUPON: 5 , AUTH: 6 , LENDO : 7, BILLPAYMENT: 8, AIRTIME: 9, TICKET: 10,
                           VERIFYCUSTOMER:11, TOPUP: 12 , MOBILE_SHOP_PURCHASE :13  };
-config.messages.transferFund = 'You have sent a Transfer to ';
+config.messages.transferFund = 'You have sent a Transfer';
 config.messages.coupon = {};
 config.messages.coupon.message = 'Congratulations You are today’s winner of “Highest DOX score of the day wins a prize” promotion! We will be in touch shortly, along with your prize';
 config.messages.coupon.title = 'Congratulations, You won a prize';

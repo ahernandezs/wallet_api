@@ -138,7 +138,11 @@ exports.transferFunds = function(req, res) {
             if (enable_sms) {
               Userquery.findUserByPhoneID(req.headers.phoneID, function(err, user){
                 var message = 'Congratulations!  You have just received ' + config.currency.symbol + values.body.amount
-                            + ' from ' + user.name + ' Install the Amdocs wallet https://goo.gl/n8xD7g';
+                            + (user.name ? ' from ' + user.name : '') + '.Install the Amdocs wallet https://goo.gl/n8xD7g';
+
+                console.log('----------------------MESSAGE----------------------')
+                console.log(message);
+
                 sms.sendMessage(values.body.destiny, message, function (err, sms_response) {
                   if (err) {
                     //res.status(503).send({code : 103, message : 'UNAVAILABLE SMS SERVICE' });
@@ -205,7 +209,9 @@ exports.sendGift = function(req, res){
       if (enable_sms){
         Userquery.findUserByPhoneID(senderPhone, function(err,user){
           var message = 'Congratulations!  You have just received ' + config.currency.symbol + values.body.amount
-                      + ' gift from ' + user.name + ' Install the Amdocs wallet https://goo.gl/n8xD7g';
+                      + (user.name ?' gift from ' + user.name : '')+ '.Install the Amdocs wallet https://goo.gl/n8xD7g';
+          console.log('------------MESSAGE--------------')
+          console.log(message);
 
           sms.sendMessage(json.beneficiaryPhoneID, message, function(err,sms_response) {
             if (err) {

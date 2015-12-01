@@ -389,7 +389,7 @@ exports.transferFunds = function(data, callback) {
                         callback('ERROR', err);
                     else {
                         console.log( 'Transaction created for receiver' );
-                        balance.title = config.messages.transferFund + beneficiaryName;
+                        balance.title = config.messages.transferFund + (beneficiaryName ? ' to ' + beneficiaryName : '') + '.';
                         balance.additionalInfo.date = dateTime;
                         balance.additionalInfo.amount = receipt.amount;
                         balance.additionalInfo.name = beneficiaryName;
@@ -397,6 +397,9 @@ exports.transferFunds = function(data, callback) {
                         balance.date = dateTime;
                         balance.additionalInfo.avatar = receiptAvatar;
                         balance._id = transid;
+                        console.log('-------------------------------------------------');
+                        console.log(balance);
+                        console.log('-------------------------------------------------');
                         callback(null, balance);
                     }
                 });
@@ -692,7 +695,7 @@ exports.transferNotRegisteredUser = function(data, callback){
                         callback('ERROR', err);
                     else {
                         console.log( 'Transaction created for receiver' );
-                        balance.title = config.messages.transferFund + beneficiaryName;
+                        balance.title = config.messages.transferFund + (beneficiaryName ? ' to ' + beneficiaryName : '') + '.';
                         balance.additionalInfo.date = dateTime;
                         balance.additionalInfo.amount = receipt.amount;
                         balance.additionalInfo.name = beneficiaryName;
@@ -700,6 +703,9 @@ exports.transferNotRegisteredUser = function(data, callback){
                         balance.date = dateTime;
                         balance.additionalInfo.avatar = receiptAvatar;
                         balance._id = transid;
+                        console.log('-------------------------------------------------');
+                        console.log(balance);
+                        console.log('-------------------------------------------------');
                         callback(null, balance);
                     }
                 });
