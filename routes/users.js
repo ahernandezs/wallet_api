@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var User = require('../model/user');
+var liveUserRepository = require('../model/liveUser');
 var Userquery = require('../model/queries/user-query');
 var anzenUser = require('./flows/register-flow');
 var sessionUser = require('./flows/login-flow');
@@ -587,3 +588,35 @@ exports.authorizeShopMobileBuy = function(req , res){
       res.json(result);
   }); 
 }
+
+exports.getUserByPhoneId = function(req, res){
+    var phoneId = req.params.phoneId;
+
+    Userquery.findUserByPhoneID(phoneId, function(err, user){
+        if (err)
+            return res.send(user);
+
+        var additionalInfo = {
+            'phoneID': user.phoneID,
+            'email': user.email,
+            'name': user.name,
+            'company': user.company,
+            'balance': user.balance,
+            'doxs': user.doxs
+        };
+
+        var liveUser = new liveUserRepository(additionalInfo);
+
+        liveUser.save( function(err){
+            if (err) return res.send({statusCode: 1, additionalInfo: 'ERROR SAVING LIVEUSER'});
+
+            var response = { statusCode:0, additionalInfo : additionalInfo };
+            return res.send(response);
+        });
+    });
+}
+
+exports.getLiveUsers = function(req, res){
+
+
+};
