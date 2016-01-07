@@ -116,7 +116,7 @@ app.get('/api/balance', interceptorHeader, wallet.getBalance);
 //app.post('/api/loan', interceptorHeader, loan.createLoan);
 app.post('/api/buyflow', interceptorHeader, wallet.buyFlow);
 app.get('/api/users', interceptorHeader, user.getUsers);
-app.get('/api/users/:phoneId', user.getUserByPhoneId);
+app.get('/api/users/:phoneId(\\d+)', user.getUserByPhoneId);
 app.get('/api/users/live', user.getLiveUsers);
 app.post('/api/transferFunds', interceptorHeader, wallet.transferFunds);
 app.post('/api/gift', interceptorHeader, wallet.sendGift);
