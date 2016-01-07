@@ -1,5 +1,7 @@
 var mongoose = require('mongoose');
 var User = require('../model/user');
+var LiveUserRepository = require('../model/liveUser');
+var Order = require('../model/order');
 var Userquery = require('../model/queries/user-query');
 var anzenUser = require('./flows/register-flow');
 var sessionUser = require('./flows/login-flow');
@@ -587,3 +589,83 @@ exports.authorizeShopMobileBuy = function(req , res){
       res.json(result);
   }); 
 }
+
+exports.getUserByPhoneId = function(req, res){
+    var phoneId = req.params.phoneId;
+    var removeLive = req.query.remove_live;
+
+
+        Userquery.findUserByPhoneID(phoneId, function (err, user) {
+            if (err)
+                return res.send(user);
+
+            if (!removeLive) {
+                console.log("REMOVE FLAG NOT DEFINED!!!");
+
+                var additionalInfo = {
+                    'phoneID': user.phoneID,
+                    'email': user.email,
+                    'name': user.name,
+                    'company': user.company,
+                    'balance': user.balance,
+                    'doxs': user.doxs
+                };
+
+                var liveUser = new LiveUserRepository(additionalInfo);
+
+                LiveUserRepository.findOneAndRemove({ phoneID: additionalInfo.phoneID }, {}, function(err, doc, result){
+
+                    liveUser.save(function (err, lu) {
+                        if (err) return res.send({statusCode: 1, additionalInfo: 'ERROR SAVING LIVEUSER'});
+
+                        var response = {
+                            statusCode: 0,
+                            additionalInfo: {
+                                "phoneID": lu.phoneID,
+                                "email": lu.email,
+                                "name": lu.name,
+                                "company": lu.company,
+                                "balance": lu.balance,
+                                "doxs": lu.doxs,
+                                "lastVisit": lu.lastVisit
+                            }
+                        };
+                        return res.send(response);
+                    });
+                });
+
+            } else {
+                console.log("REMOVE FLAG DEFINED!!!");
+                Order.find({customerName: user.name, $or:[{status: 'NEW'}, {status:'READY'}]})
+                     .sort({orderId: -1})
+                     .limit(1)
+                     .exec( function(err, lastOrder) {
+                        if (err) {
+                            console.log(err);
+                            return res.send({statusCode: 1, additionalInfo: 'ERROR DELETING LIVEUSER'});
+                        }
+                        LiveUserRepository.findOneAndRemove({ phoneID: user.phoneID }, {}, function(err, doc, result) {
+                            var response = { statusCode : 0 };
+                            response.additionalInfo = {
+                                "phoneID": doc.phoneID,
+                                "email": doc.email,
+                                "name": doc.name,
+                                "company": doc.company,
+                                "balance": doc.balance,
+                                "doxs": doc.doxs,
+                                "lastVisit": doc.lastVisit,
+                                "lastOrderId": lastOrder.length > 0 ? lastOrder[0].orderId : 'NO ORDERS'
+                            };
+                            return res.send(response);
+                        });
+                });
+            }
+        });
+}
+
+exports.getLiveUsers = function(req, res){
+    LiveUserRepository.find({},{phoneID:1, email:1, name:1, company:1, balance:1, doxs:1, lastVisit: 1, _id:0},function(err, users){
+        console.log(users);
+        res.send({statusCode:0, additionalInfo: users});
+    });
+};

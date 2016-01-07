@@ -270,7 +270,7 @@ exports.findAppID = function(phoneID,callback){
 exports.findUserByPhoneID = function(phoneID,callback){
   console.log('Search user in mongoDB');
   console.log(phoneID);
-  User.findOne({ 'phoneID': phoneID }, 'name email countryCode', function (err, person) {
+  User.findOne({ 'phoneID': phoneID }, 'name email countryCode company phoneID doxs twitter facebook dateOfBirth nationality passportNumber balance genre', function (err, person) {
     if (err) return handleError(err);
     else if(!person)
       callback("ERROR", { statusCode: 0 ,  additionalInfo: 'User not  Found' });
