@@ -153,7 +153,7 @@ exports.buy = function(payload, callback){
             console.log( 'Create History transaction for emitter' );
             var transacction = {};
             transacction.title = 'AirTime Buy';
-            transacction.type = config.transaction.type.AIRTIMEBUY;
+            transacction.type = config.transaction.type.MONEY;
             transacction.date = dateTime;
             transacction.amount = (-1) * receipt.amount;
             transacction.additionalInfo = receipt.additionalInfo;

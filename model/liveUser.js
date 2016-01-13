@@ -12,6 +12,9 @@ var liveUserSchema = new Schema({
     company: String,
     balance: Number,
     doxs: Number,
+    profile: String,
+    date_of_birth: String,
+    genre: String,
     lastVisit : { type: Date, default: Date.now }
 });
 
