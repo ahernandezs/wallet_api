@@ -593,13 +593,14 @@ exports.authorizeShopMobileBuy = function(req , res){
 exports.getUserByPhoneId = function(req, res){
     var phoneId = req.params.phoneId;
     var removeLive = req.query.remove_live;
+    var imageProfile = process.env.AS3_IMAGES ? process.env.AS3_IMAGES + user.phoneID + '.png' : '';
 
 
         Userquery.findUserByPhoneID(phoneId, function (err, user) {
             if (err)
                 return res.send(user);
 
-            if (!removeLive) {
+            if (!(removeLive == true)) {
                 console.log("REMOVE FLAG NOT DEFINED!!!");
 
                 var additionalInfo = {
@@ -608,7 +609,9 @@ exports.getUserByPhoneId = function(req, res){
                     'name': user.name,
                     'company': user.company,
                     'balance': user.balance,
-                    'doxs': user.doxs
+                    'doxs': user.doxs,
+                    'profile': imageProfile,
+                    'genre': user.genre
                 };
 
                 var liveUser = new LiveUserRepository(additionalInfo);
@@ -621,13 +624,14 @@ exports.getUserByPhoneId = function(req, res){
                         var response = {
                             statusCode: 0,
                             additionalInfo: {
-                                "phoneID": lu.phoneID,
-                                "email": lu.email,
-                                "name": lu.name,
-                                "company": lu.company,
-                                "balance": lu.balance,
-                                "doxs": lu.doxs,
-                                "lastVisit": lu.lastVisit
+                                'phoneID': lu.phoneID,
+                                'email': lu.email,
+                                'name': lu.name,
+                                'company': lu.company,
+                                'balance': lu.balance,
+                                'doxs': lu.doxs,
+                                'profile': imageProfile,
+                                'lastVisit': lu.lastVisit
                             }
                         };
                         return res.send(response);
@@ -647,14 +651,15 @@ exports.getUserByPhoneId = function(req, res){
                         LiveUserRepository.findOneAndRemove({ phoneID: user.phoneID }, {}, function(err, doc, result) {
                             var response = { statusCode : 0 };
                             response.additionalInfo = {
-                                "phoneID": doc.phoneID,
-                                "email": doc.email,
-                                "name": doc.name,
-                                "company": doc.company,
-                                "balance": doc.balance,
-                                "doxs": doc.doxs,
-                                "lastVisit": doc.lastVisit,
-                                "lastOrderId": lastOrder.length > 0 ? lastOrder[0].orderId : 'NO ORDERS'
+                                'phoneID': doc.phoneID,
+                                'email': doc.email,
+                                'name': doc.name,
+                                'company': doc.company,
+                                'balance': doc.balance,
+                                'doxs': doc.doxs,
+                                'lastVisit': doc.lastVisit,
+                                'profile': imageProfile,
+                                'lastOrderId': lastOrder.length > 0 ? lastOrder[0].orderId : 'NO ORDERS'
                             };
                             return res.send(response);
                         });
@@ -664,8 +669,18 @@ exports.getUserByPhoneId = function(req, res){
 }
 
 exports.getLiveUsers = function(req, res){
-    LiveUserRepository.find({},{phoneID:1, email:1, name:1, company:1, balance:1, doxs:1, lastVisit: 1, _id:0},function(err, users){
-        console.log(users);
-        res.send({statusCode:0, additionalInfo: users});
-    });
+    var phoneId = req.query.phoneId;
+
+    if (phoneId){
+        LiveUserRepository.findOne({phoneID: phoneId},{phoneID:1, email:1, name:1, company:1, balance:1, doxs:1, lastVisit: 1, _id:0},function(err, user){
+            console.log(user);
+            return res.send({statusCode:0, additionalInfo: user ? true : false});
+        });
+
+    } else {
+        LiveUserRepository.find({},{phoneID:1, email:1, name:1, company:1, balance:1, doxs:1, lastVisit: 1, _id:0},function(err, users){
+            console.log(users);
+           return res.send({statusCode:0, additionalInfo: users});
+        });
+    }
 };
