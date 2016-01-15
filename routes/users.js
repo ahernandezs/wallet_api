@@ -640,7 +640,7 @@ exports.getUserByPhoneId = function(req, res){
 
             } else {
                 console.log("REMOVE FLAG DEFINED!!!");
-                Order.find({customerName: user.name, $or:[{status: 'NEW'}, {status:'READY'}]})
+                Order.find({customerName: user.name, $or:[{status:'READY'}]})
                      .sort({orderId: -1})
                      .limit(1)
                      .exec( function(err, lastOrder) {
@@ -662,7 +662,7 @@ exports.getUserByPhoneId = function(req, res){
                                 'doxs': doc.doxs,
                                 'lastVisit': doc.lastVisit,
                                 'profile': imageProfile,
-                                'lastOrderId': lastOrder.length > 0 ? lastOrder[0].orderId : 'NO ORDERS'
+                                'lastOrder': lastOrder.length > 0 ? lastOrder[0] : 'NO ORDERS'
                             };
                             return res.send(response);
                         });
