@@ -201,6 +201,9 @@ exports.buyFlow = function(payload,callback) {
 					for (var i = 0; i < result.length; i++)
 						imageProduct.push(result[i].url);
                     config.messages.facebook.picture = imageProduct;
+					console.log('******IMAGE PINCTURE********');
+					console.log(imageProduct);
+					console.log('****************************');
 					callback(null,sessionid,currentMoney);
 				}
 			});
