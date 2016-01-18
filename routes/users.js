@@ -268,8 +268,8 @@ exports.verify_customer = function (req, res){
         else {
             var payload = {};
             payload.phoneID = phoneNumber;
-            payload.message = "Phone Validated. Receive a " + config.currency.symbol + "5 Topup!";
-            payload.amount = 5;
+            payload.message = "Phone Validated. Receive a " + config.currency.symbol + config.merchantValidationAmount + " Topup!";
+            payload.amount = config.merchantValidationAmount;
 
             console.log(payload);
             topup.verify_customer(payload, function(err, result){

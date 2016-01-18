@@ -135,7 +135,8 @@ config.prizes.top = 1;
 config.conn = {};
 config.username = 'anzen_01';
 config.pin = '1234';
-config.initialTransferAmount = 10;
+config.initialTransferAmount = 15;
+config.merchantValidationAmount = 10;
 
 config.mail = {};
 config.mail.bodyPin= 'Thank you for registering with Amdocs wallet! Your pin number is: ';
@@ -163,9 +164,9 @@ config.logger = new (winston.Logger)({
 });
 
 config.currency = {};
-config.currency.type ='Dollar';
-config.currency.symbol='$';
-config.currency.position ='L';
+config.currency.type ='EURO';
+config.currency.symbol='€';
+config.currency.position ='R';
 config.currency.proportion =1;
 config.currency.decimal='false';
 config.currency.airtimeRadio = 10;
