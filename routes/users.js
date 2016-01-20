@@ -687,3 +687,7 @@ exports.getLiveUsers = function(req, res){
         });
     }
 };
+
+exports.getCurrency = function(req, res){
+    res.send(config.currency);
+}
