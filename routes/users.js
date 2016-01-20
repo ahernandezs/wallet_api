@@ -681,7 +681,7 @@ exports.getLiveUsers = function(req, res){
         });
 
     } else {
-        LiveUserRepository.find({},{phoneID:1, email:1, name:1, company:1, balance:1, doxs:1, lastVisit: 1, profile:1, _id:0},{ sort: {doxs: -1}},function(err, users){
+        LiveUserRepository.find({},{phoneID:1, email:1, name:1, company:1, balance:1, doxs:1, lastVisit: 1, profile:1, _id:0},{ sort: {doxs: -1,lastVisit:-1 }},function(err, users){
             console.log(users);
            return res.send({statusCode:0, additionalInfo: users});
         });
