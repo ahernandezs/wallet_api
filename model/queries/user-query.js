@@ -118,7 +118,7 @@ exports.createUser = function(user,callback){
   var propInitiator = "initiator";
   delete user[propInitiator];
   user.email = user.email_address;
-  user.validated = true;
+  user.validated = process.env.VALIDATED_USER == 'TRUE' ? true : false;
   console.log(user);
   var userToPersist = new User(user);
   console.log('User to persist user' + userToPersist);
