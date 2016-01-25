@@ -593,7 +593,7 @@ exports.authorizeShopMobileBuy = function(req , res){
 exports.getUserByPhoneId = function(req, res){
     var phoneId = req.params.phoneId;
     var removeLive = req.query.remove_live;
-    var imageProfile = process.env.AS3_IMAGES ? process.env.AS3_IMAGES + phoneId + '.png' : '';
+    var imageProfile = process.env.AS3_IMAGES ? process.env.AS3_IMAGES + phoneId + '.png' : process.env.AS3_IMAGES + 'ico-default-tv.png';
 
             Userquery.findUserByPhoneID(phoneId, function (err, user) {
                 if (err)
@@ -667,7 +667,7 @@ exports.getUserByPhoneId = function(req, res){
                                     'doxs': doc.doxs,
                                     'lastVisit': doc.lastVisit,
                                     'profile': imageProfile,
-                                    'lastOrder': lu.lastOrder
+                                    'lastOrder': doc.lastOrder
                                 };
                                 return res.send(response);
                             });
