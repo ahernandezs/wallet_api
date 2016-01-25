@@ -208,7 +208,7 @@ exports.loginFlow = function(payload,callback) {
           } else {
             var response = result.balanceReturn;
             if(response.result  === '0' ) {
-              var balance = { current : currentMoney , dox : response.current ,unreadMsgs :length } ;
+              var balance = { current : currentMoney , dox : response.current ,unreadMsgs :length, promotionTimeout:90000 } ;
               console.log(info);
               response = { statusCode: 0, sessionid : sessionid, additionalInfo : balance, userInfo : info };
             }
