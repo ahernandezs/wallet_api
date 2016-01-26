@@ -50,7 +50,7 @@ exports.buyFlow = function(payload,callback) {
 	var response;
     var forReceipt = {};
     var additionalInfo;
-    var imageProduct;
+    var imageProduct = [];
     forReceipt.payload = payload;
 
 	async.waterfall([
@@ -190,13 +190,20 @@ exports.buyFlow = function(payload,callback) {
 
 		function(sessionid,currentMoney ,callback){
 			logger.info('Get product image');
-			productQuery.getProduct(payload.order.products[0].name ,function(err,result){
+			var pImages = [];
+			for (var i = 0; i < payload.order.products.length; i++)
+				pImages.push(payload.order.products[i].name)
+			productQuery.getProduct(pImages ,function(err,result){
 				if(err){
 					var response = { statusCode:1 ,  additionalInfo : result };
 					callback('ERROR',response);
 				}else{
-					imageProduct = result.url;
+					for (var i = 0; i < result.length; i++)
+						imageProduct.push(result[i].url);
                     config.messages.facebook.picture = imageProduct;
+					console.log('******IMAGE PINCTURE********');
+					console.log(imageProduct);
+					console.log('****************************');
 					callback(null,sessionid,currentMoney);
 				}
 			});

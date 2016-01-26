@@ -104,7 +104,7 @@ exports.updateOrderFlow = function(payload,callback) {
 		},
 		function(message, callback){
 			console.log('Send message to customer');
-			if(status === config.orders.status.READY){
+			if((status === config.orders.status.READY) || (status === config.orders.status.DELIVERED)){
 				urbanService.singlePush(message, function(err, result) {
 					if (err) {
 						var response = { statusCode: 3, additionalInfo: 'Error to send notification' };

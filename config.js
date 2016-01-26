@@ -41,8 +41,8 @@ config.products.max_items_per_transaction = 2;
 config.products.max_items_per_event = 3;
 config.products.max_amount_per_person = 10;
 config.products.loyalty = {};
-config.products.loyalty.productId = 4;
-config.products.loyalty.cost = '30000';
+config.products.loyalty.productId = 1;
+config.products.loyalty.cost = '50000';
 
 config.wallet = {};
 config.wallet.type = { MONEY:1,OTHER2:2 ,DOX:3 };
@@ -135,7 +135,8 @@ config.prizes.top = 1;
 config.conn = {};
 config.username = 'anzen_01';
 config.pin = '1234';
-config.initialTransferAmount = 10;
+config.initialTransferAmount = 15;
+config.merchantValidationAmount = 10;
 
 config.mail = {};
 config.mail.bodyPin= 'Thank you for registering with Amdocs wallet! Your pin number is: ';
@@ -163,8 +164,8 @@ config.logger = new (winston.Logger)({
 });
 
 config.currency = {};
-config.currency.type ='Dollar';
-config.currency.symbol='$';
+config.currency.type ='EURO';
+config.currency.symbol='€';
 config.currency.position ='L';
 config.currency.proportion =1;
 config.currency.decimal='false';
@@ -176,7 +177,7 @@ config.nexmo.secret = '0fe0d188';
 //config.nexmo.from = '525549998455';
 config.nexmo.from_mex = '525549998270';
 config.nexmo.from_usa = '12134657650';
-config.nexmo.api_protocol = 'http'; //Default
+config.nexmo.api_protocol = 'https'; //Default
 config.nexmo.debug_on = 'true';
 config.nexmo.debug_false = 'false';
 module.exports = config;

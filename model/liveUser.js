@@ -15,6 +15,7 @@ var liveUserSchema = new Schema({
     profile: String,
     date_of_birth: String,
     genre: String,
+    lastOrder: Schema.Types.Mixed,
     lastVisit : { type: Date, default: Date.now }
 });
 
