@@ -156,7 +156,7 @@ app.post('/api/receipt', wallet.getReceipts);
 app.put('/api/receiptStatus', product.changeReceiptStatus);
 app.post('/api/coupon', wallet.setCoupon);
 app.get('/api/orderTemporals',product.getOrderTemporals);
-app.post('/api/buyProducts',wallet.buyMobileProducts);
+app.post('/api/buyProducts',interceptorHeader, wallet.buyMobileProducts);
 // SPA operations
 app.get('/api/spa/users', spa.getUsers);
 app.get('/api/spa/transactions/:phoneID/:type', spa.getTransactions);
