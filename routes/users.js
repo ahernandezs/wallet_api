@@ -28,6 +28,7 @@ exports.login =  function(req, res, callback){
       var token = result.sessionid;
       result.countryID = 'AP';
       result.currency = config.currency;
+      result.additionalInfo.findAroundMe = process.env.FINDAROUNDME ? true : false;
       console.log('Token '+ token);
       if(result.statusCode === 0){
         res.setHeader('X-AUTH-TOKEN', result.sessionid);
@@ -178,6 +179,7 @@ exports.register = function(req, res){
       result.currency = config.currency;
     }
     //res.send({'dox':result.additionalInfo.dox, 'current':result.additionalInfo.current});
+    result.additionalInfo.findAroundMe = process.env.FINDAROUNDME ? true : false;
     res.json(result);
   });
 };
