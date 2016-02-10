@@ -10,6 +10,7 @@ var wallet = require('../wallet');
 var session =  require('../../model/queries/session-query');
 var msgQuery =  require('../../model/queries/message-query');
 var blockUserQuery =  require('../../model/queries/blockUser-query');
+var userblackList = require('../../model/queries/blacklist-query');
 var user =  require('../users');
 var config = require('../../config.js');
 var logger = config.logger;
@@ -218,6 +219,21 @@ exports.loginFlow = function(payload,callback) {
           }
         });
       });
+    },
+    function(response, callback){
+
+        userblackList.findUserByPhoneID(payload.phoneID, function(err, user){
+            response.additionalInfo.presenter = false;
+            if (err)
+                callback(err, response);
+
+            if(user)
+                response.additionalInfo.presenter = true;
+
+            response.additionalInfo.findAroundMe = process.env.FINDAROUNDME == 'TRUE' || process.env.FINDAROUNDME == 'true' ? true : false;
+
+            callback(null,response);
+        });
     },
     ], function (err, result) {
       logger.info(result);
