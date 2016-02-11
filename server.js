@@ -162,6 +162,7 @@ app.get('/api/spa/users', spa.getUsers);
 app.get('/api/spa/transactions/:phoneID/:type', spa.getTransactions);
 app.get('/api/spa/receipts/:phoneID', spa.getReceipts);
 app.get('/api/spa/loans/:phoneID', spa.getLoans);
+app.get('/api/spa/whitelist',spa.getWhiteList); //blackList collection
 
 //services for OFFLA integration
 app.post('/api/offla/validateanswer', user.validateAnswer);
