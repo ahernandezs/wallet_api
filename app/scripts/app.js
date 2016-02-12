@@ -6,7 +6,8 @@ angular.module('pantallasAdministradorApp', [
   'ngSanitize',
   'ngRoute',
   'ngTable',
-  'ui.bootstrap'
+  'ui.bootstrap',
+  'xeditable'
 ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -28,6 +29,10 @@ angular.module('pantallasAdministradorApp', [
       })
       .when('/websockets', {
         templateUrl: 'views/webSocket.html'
+      })
+      .when('/whitelist', {
+        templateUrl: 'views/whitelist.html',
+        controller: 'EditableRowCtrl'
       })
       .otherwise({
         redirectTo: '/login'
