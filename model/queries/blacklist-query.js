@@ -14,21 +14,54 @@ exports.findUserByPhoneID = function(phoneID,callback){
   });
 };
 
-exports.findAllUsers = function(callback){
+exports.findAllUsers = function(callback) {
 
   console.log('Searching all users in MongoDB');
-  BlackListModel.find({},function(err, users){
-
+  BlackListModel.find({}, function (err, users) {
     var blackListUsers = [];
+    var tempUsers = [];
 
-    for (var i = 0; i <  users.length; i++)
+    if (err)
+      return callback(true, 'Error!');
+
+    for (var i = 0, l = users.length; i < l; i++) {
       blackListUsers.push(users[i].phoneID);
+      tempUsers.push(users[i].phoneID);
+    }
 
+    console.log('ALL BLACKLISTED');
     console.log(blackListUsers);
 
-    UserModel.find({phoneID: {$in:blackListUsers}}, {_id:0, phoneID:1, name:1, email:1}, callback);
+    UserModel.find({phoneID: {$in: blackListUsers}}, {_id: 0, phoneID: 1, name: 1, email: 1},function(err, usersd){
+
+      if (err)
+        return callback(true, 'Error!');
+
+      for (var i = 0, l = usersd.length; i < l; i++) {
+        var index = tempUsers.indexOf(usersd[i].phoneID);
+        console.log(index)
+
+        if (index > -1)
+          tempUsers.splice(index,1);
+      }
+
+      console.log('TEMP USERS');
+      console.log(tempUsers);
+
+
+      for (var i = 0, l = tempUsers.length; i < l ; i++){
+        var u = {
+            phoneID : tempUsers[i],
+            name : 'USER NOT REGISTERED',
+            email: 'USER NOT REGISTERED'
+        };
+
+        usersd.push(u);
+      }
+      callback(null, usersd);
+    });
   });
-};
+}
 
 exports.deleteUser = function(phoneId, callback){
   BlackListModel.findOneAndRemove({phoneID: phoneId}, callback);
