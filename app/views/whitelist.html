@@ -1,10 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-10">
+        <div class="content row menu">
+            <div class="col-md-6">
+                <img src="https://s3-us-west-1.amazonaws.com/amdocs-images/mail/logo_amdocs_header.png" alt="amdocs">
+            </div>
+            <div class="col-md-6">
+                <div class="pull-right" >
+                    <a class="menuItem" href='#/whitelist'>Whitelist</a>
+                    <a class="menuItem" href='#/leaderboard'>Leader Board</a>
+                    <a class="menuItem active" href='#/main'>Home</a>
+                    <button class="btn" ng-click="logOut()">Exit</button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div ng-include="'views/header.html'" class="usertype"></div>
+            </div>
+        </div>
 
-</body>
-</html>
+        <div class="main">
+            <table class="table table-bordered table-hover table-condensed">
+                <tr style="font-weight: bold">
+                    <td style="width:35%">PhoneID</td>
+                    <td style="width:20%">Name</td>
+                    <td style="width:20%">Email</td>
+                    <td style="width:25%">Edit</td>
+                </tr>
+                <tr ng-repeat="user in users">
+                    <td>
+                        <!-- editable username (text with validation) -->
+                        <span editable-text="user.phoneID" e-name="phoneID" e-form="rowform" e-required>
+                            {{ user.phoneID }}
+                        </span>
+                    </td>
+                    <td>
+                        <!-- editable status (select-local) -->
+                    <span >
+                        {{ user.name }}
+                    </span>
+                    </td>
+                    <td>
+                        <!-- editable group (select-remote) -->
+                    <span >
+                        {{ user.email }}
+                    </span>
+                    </td>
+                    <td style="white-space: nowrap">
+                        <!-- form -->
+                        <form editable-form name="rowform" onbeforesave="saveUser($data, user.id)"
+                              ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == user">
+                            <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary">
+                                save
+                            </button>
+                            <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="btn btn-default">
+                                cancel
+                            </button>
+                        </form>
+                        <div class="buttons" ng-show="!rowform.$visible">
+                            <button class="btn btn-primary" ng-click="rowform.$show()">edit</button>
+                            <button class="btn btn-danger" ng-click="removeUser($index)">del</button>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+            <button class="btn btn-default" ng-click="addUser()">Add row</button>
+
+
+        </div> <!-- // END CLASS MAIN -->
+    </div>
+    <div class="col-md-1"> </div>
+</div>

@@ -106,3 +106,27 @@ exports.getWhiteList = function(req, res){
       res.send({statusCode: 0, additionalInfo: users});
     });
 };
+
+exports.removeUserWhitelist = function(req, res){
+    var phoneId = req.params.phoneId;
+
+    userblackList.deleteUser(phoneId, function(err,user){
+       if (err)
+        return res.send({statusCode:1, additionalInfo: 'Error removing user from Blacklist in DB.'});
+
+       console.log('Removed user from BLACKLIST -> ' + user.phoneID);
+       res.send({statusCode:0, additionalInfo: 'User with phoneID:' + user.phoneID + ' successful removed.'});
+    });
+};
+
+exports.addUserWhitelist = function(req, res){
+    var phoneId = req.body.phoneId;
+
+    userblackList.addUser(phoneId, function(err,user, total){
+        if (err)
+            return res.send({statusCode:1, additionalInfo: 'Error adding user from Blacklist in DB.'});
+        console.log(err);
+        console.log('Added user to BLACKLIST -> ' + user);
+        res.send({statusCode:0, additionalInfo: 'User with phoneID:' + user.phoneID + ' successful added.'});
+    });
+};

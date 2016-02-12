@@ -1,12 +1,12 @@
 var async = require('async');
 var moment = require('moment-timezone');
-var BlackListRepository = require('../blackListUser');
-var UserRepository = require('../user');
+var BlackListModel = require('../blackListUser');
+var UserModel = require('../user');
 
 exports.findUserByPhoneID = function(phoneID,callback){
   console.log('Search  black list user in mongoDB');
   console.log(phoneID);
-  BlackListRepository.findOne({ 'phoneID': phoneID }, function (err, person) {
+  BlackListModel.findOne({ 'phoneID': phoneID }, function (err, person) {
     if (err) callback("ERROR",err);
     else{
       callback(null, person);
@@ -15,9 +15,9 @@ exports.findUserByPhoneID = function(phoneID,callback){
 };
 
 exports.findAllUsers = function(callback){
-  console.log('Searching all users in MongoDB');
 
-  BlackListRepository.find({},function(err, users){
+  console.log('Searching all users in MongoDB');
+  BlackListModel.find({},function(err, users){
 
     var blackListUsers = [];
 
@@ -26,7 +26,25 @@ exports.findAllUsers = function(callback){
 
     console.log(blackListUsers);
 
-    UserRepository.find({phoneID: {$in:blackListUsers}}, {_id:0, phoneID:1, name:1, email:1}, callback);
+    UserModel.find({phoneID: {$in:blackListUsers}}, {_id:0, phoneID:1, name:1, email:1}, callback);
+  });
+};
+
+exports.deleteUser = function(phoneId, callback){
+  BlackListModel.findOneAndRemove({phoneID: phoneId}, callback);
+};
+
+exports.addUser = function(phoneId, callback){
+
+  BlackListModel.findOneAndRemove({ phoneID: phoneId }, function(err, user){
+    var blackUser = new BlackListModel({ phoneID: phoneId });
+
+    console.log(blackUser);
+
+    if (err)
+      return callback(err,{statusCode:1, additionalInfo: 'Error in DB Service.'});
+
+    blackUser.save(callback);
   });
 
 };

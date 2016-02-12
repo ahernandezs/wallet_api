@@ -163,6 +163,9 @@ app.get('/api/spa/transactions/:phoneID/:type', spa.getTransactions);
 app.get('/api/spa/receipts/:phoneID', spa.getReceipts);
 app.get('/api/spa/loans/:phoneID', spa.getLoans);
 app.get('/api/spa/whitelist',spa.getWhiteList); //blackList collection
+app.post('/api/spa/whitelist', spa.addUserWhitelist);
+app.delete('/api/spa/whitelist/:phoneId(\\d+)', spa.removeUserWhitelist);
+
 
 //services for OFFLA integration
 app.post('/api/offla/validateanswer', user.validateAnswer);
@@ -184,9 +187,9 @@ app.post('/api/loanDecision', interceptorHeader, loan.getDecision);
 app.post('/api/loanConfirm',interceptorHeader, loan.loanConfirm);
 
 //Task
-app.delete('/api/dox/:phoneId',task.dox_reset);
-app.delete('/api/register/:phoneId', task.register_delete);
-app.put('/api/money/:phoneId', task.add_money);
+app.delete('/api/dox/:phoneId(\\d+)',task.dox_reset);
+app.delete('/api/register/:phoneId(\\d+)', task.register_delete);
+app.put('/api/money/:phoneId(\\d+)', task.add_money);
 
 
 server.listen(process.env.PORT  || 3000);
