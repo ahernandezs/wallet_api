@@ -52,8 +52,6 @@ exports.findAllUsers = function(callback) {
       for (var i = 0, l = tempUsers.length; i < l ; i++){
         var u = {
             phoneID : tempUsers[i],
-            name : 'USER NOT REGISTERED',
-            email: 'USER NOT REGISTERED'
         };
 
         usersd.push(u);

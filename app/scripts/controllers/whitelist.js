@@ -27,7 +27,7 @@ angular.module('pantallasAdministradorApp')
         angular.extend(data, {id: id});
         console.log('Modificando usuario...');
         console.log(data);
-        
+
         if (data.phoneID == null || data.phoneID == 'Insert PhoneID')
             return alert ('You MUST insert a valid phoneID');
 
@@ -51,6 +51,8 @@ angular.module('pantallasAdministradorApp')
                     console.log('User updated!');
                     console.log('Old -> ' + oldPhoneId);
                     console.log('New -> ' + data.phoneID);
+                    $scope.users[id].name = data2.name;
+                    $scope.users[id].email = data2.email;
                 });
             });
 
@@ -60,6 +62,12 @@ angular.module('pantallasAdministradorApp')
                 url: '/api/spa/whitelist',
                 method: 'POST',
                 data: { phoneId: data.phoneID }
+            }).success(function(data4, status, headers){
+                $scope.users[id].name = data4.additionalinfo.name;
+                $scope.users[id].email = data4.additionalinfo.email;
+                console.log($scope.users[id].name);
+                console.log($scope.users[id].email);
+
             });
         }
     };
