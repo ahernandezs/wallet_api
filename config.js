@@ -80,16 +80,17 @@ config.messages.coupon.message = 'Congratulations You are today’s winner of �
 config.messages.coupon.title = 'Congratulations, You won a prize';
 config.messages.inviteError = 'Sorry, You have exceeded your number of invitations';
 
-config.messages.twitter = { message :'I just bought a {0} from AmdocsCafe at {1}' , url :''};
-config.messages.twitter1 = 'I just bought a ';
-config.messages.twitter2 = ' from AmdocsCafe at ';
-config.messages.twitterURL = '';
-config.messages.twitterMsg = 'Having a great time, enjoying the delicious coffee bought with my #AmdocsWallet ';
+config.messages.twitter = { message :'Buying” free stuff at #MWC16 with Amdocs #mobilewallet at #amdocsdigitalstore. Download yours today at https://goo.gl/Nq0ppe ' ,
+                            url :'https://goo.gl/Nq0ppe '};
+config.messages.twitter1 = 'Buying” free stuff at #MWC16 ';
+config.messages.twitter2 = ' with Amdocs #mobilewallet at #amdocsdigitalstore ';
+config.messages.twitterURL = 'https://goo.gl/Nq0ppe ';
+config.messages.twitterMsg = '“Buying” free stuff at #MWC16 with Amdocs #mobilewallet at #amdocsdigitalstore. Download yours today at https://goo.gl/Nq0ppe ';
 config.messages.facebook =	{
 								name:'Amdocs Wallet',
-								caption:'I just bought a coffee',
-								description:'Just downloaded my Amdocs Wallet  looking forward to the delicous coffee at the fully cashless Amdocs Café ',
-								link:'http://amdocs.com/MFS'
+								caption:'Using Amdocs #mobilewallet at #MWC16',
+								description:'Using Amdocs #mobilewallet at #MWC16 and getting some great stuff at #amdocsdigitalstore. Download your app today ',
+								link:'https://goo.gl/Nq0ppe'
 							};
 
 config.transaction = {};
