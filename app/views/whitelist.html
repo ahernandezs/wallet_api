@@ -20,7 +20,23 @@
             </div>
         </div>
 
+        <form class="form-inline">
+            <input ng-model="query" type="text" placeholder="Filter by name, company, group or email" autofocus class="form-control">
+        </form>
         <div class="main">
+            <div class="row">
+                <div class="row">
+                    <table ng-table="tableParams">
+                        <tr ng-repeat="user in $data | filter:query" ng-click="user.$selected = !user.$selected; detail(user)">
+                            <td data-title="'PhoneID'" sortable="'phoneID'">{{user.phoneID}}</td>
+                            <td data-title="'Name'" sortable="'name'">{{user.name}}</td>
+                            <td data-title="'Email'">{{user.email}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+         </div>
+            <div class="row">
             <table class="table table-bordered table-hover table-condensed">
                 <tr style="font-weight: bold">
                     <td style="width:35%">PhoneID</td>
@@ -32,19 +48,19 @@
                     <td>
                         <!-- editable username (text with validation) -->
                         <span editable-text="user.phoneID" e-name="phoneID" e-form="rowform" e-required>
-                            {{ user.phoneID }}
+                            {{ user.phoneID || 'Empty'}}
                         </span>
                     </td>
                     <td>
                         <!-- editable status (select-local) -->
                     <span >
-                        {{ user.name }}
+                        {{ user.name || 'User not registered' }}
                     </span>
                     </td>
                     <td>
                         <!-- editable group (select-remote) -->
                     <span >
-                        {{ user.email }}
+                        {{ user.email || 'User not registered' }}
                     </span>
                     </td>
                     <td style="white-space: nowrap">
@@ -65,11 +81,9 @@
                     </td>
                 </tr>
             </table>
-
             <button class="btn btn-default" ng-click="addUser()">Add row</button>
-
-
-        </div> <!-- // END CLASS MAIN -->
+            </div>
+       <!-- </div> <!-- // END CLASS MAIN -->
     </div>
     <div class="col-md-1"> </div>
 </div>

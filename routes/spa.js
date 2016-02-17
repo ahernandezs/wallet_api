@@ -124,9 +124,19 @@ exports.addUserWhitelist = function(req, res){
 
     userblackList.addUser(phoneId, function(err,user, total){
         if (err)
-            return res.send({statusCode:1, additionalInfo: 'Error adding user from Blacklist in DB.'});
+            return res.send({statuscode:1, additionalinfo: 'error adding user from blacklist in db.'});
         console.log(err);
-        console.log('Added user to BLACKLIST -> ' + user);
-        res.send({statusCode:0, additionalInfo: 'User with phoneID:' + user.phoneID + ' successful added.'});
+
+        User.findOne({phoneID: phoneId}, function(err, us){
+            if (us){
+                console.log('added user to blacklist -> ' + user);
+                console.log(us);
+                res.send({statuscode:0, additionalinfo: us});
+
+            } else {
+                console.log('added user to blacklist -> ' + user);
+                res.send({statuscode:0, additionalinfo: user});
+            }
+        });
     });
 };
