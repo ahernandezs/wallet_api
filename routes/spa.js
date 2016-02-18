@@ -99,12 +99,26 @@ exports.getLoans =  function(req, res) {
 
 exports.getWhiteList = function(req, res){
 
-    userblackList.findAllUsers(function(err, users){
-      if (err)
-        return res.send({statusCode: 1, additionalInfo: 'There was an error in DB.'});
+    var reverse = req.query.reverse;
 
-      res.send({statusCode: 0, additionalInfo: users});
-    });
+    if (reverse && reverse == 'true'){
+        console.log('REVERSE OPTION ACTIVATED');
+        userblackList.findNotBlackListed(function (err, users) {
+            if (err)
+                return res.send({statusCode: 1, additionalInfo: 'There was an error in DB.'});
+
+            res.send({statusCode: 0, additionalInfo: users});
+        });
+
+    } else {
+        console.log('NORMAL NOT REVERSED');
+        userblackList.findAllUsers(function (err, users) {
+            if (err)
+                return res.send({statusCode: 1, additionalInfo: 'There was an error in DB.'});
+
+            res.send({statusCode: 0, additionalInfo: users});
+        });
+    }
 };
 
 exports.removeUserWhitelist = function(req, res){
