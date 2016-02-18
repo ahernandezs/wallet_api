@@ -2,9 +2,12 @@
  * Created by nemux on 10/02/16.
  */
 
+'use strict';
+
 
 angular.module('pantallasAdministradorApp')
-    .controller('EditableRowCtrl', ['$scope', '$rootScope','$http', function($scope, $rootScope, $http) {
+    .controller('EditableRowCtrl', ['$scope', '$rootScope', '$location', '$http', '$filter', 'ngTableParams',
+        function ($scope, $rootScope, $location, $http, $filter, ngTableParams) {
 
     $scope.users = [];
     $scope.loadBlackListUsers = function(){
@@ -18,6 +21,63 @@ angular.module('pantallasAdministradorApp')
 
           $scope.users = data.additionalInfo;
       });
+    };
+
+    $scope.getAllNotBlackistedUsers = function(){
+       return $http({
+            url: '/api/spa/whitelist?reverse=true',
+            method: 'GET',
+        }).
+            success(function(data, status, headers) {
+                $scope.tableParams = new ngTableParams({
+                    page: 1,
+                    count: 5,
+                    sorting: {
+                        name: 'asc'
+                    }
+                }, {
+                    total: data.additionalInfo.length,
+                    getData: function($defer, params) {
+
+                        var orderedData = params.sorting() ?
+                            $filter('orderBy')(data.additionalInfo, params.orderBy()) :
+                            data.additionalInfo;
+
+                        $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+                    }
+                });
+            }).
+            error(function(data, status) {
+                $scope.errorMessage = data.message;
+            });
+    };
+
+    $scope.addToWihiteList = function(user){
+        console.log(user);
+        /*
+        $http({
+            url: '/api/spa/whitelist',
+            method: 'POST',
+            data: { phoneId: user.phoneID }
+        }).success(function(data, status, headers){
+            console.log(data)
+            $scope.inserted = {
+                id: $scope.users.length,
+                phoneID: data.additionalinfo.phoneID,
+                name: data.additionalinfo.name ? data.additionalinfo.name : 'User not registered',
+                email: data.additionalinfo.email ? data.additionalinfo.email : 'User not registered'
+            };
+            $scope.users.push($scope.inserted);
+        });*/
+
+        $scope.inserted = {
+            id: $scope.users.length,
+            phoneID: user.phoneID,
+            name: user.name,
+            email: user.email
+        };
+        $scope.users.push($scope.inserted);
+
     };
 
     $scope.saveUser = function(data, id) {
@@ -94,5 +154,6 @@ angular.module('pantallasAdministradorApp')
         $scope.users.push($scope.inserted);
     };
 
+    $scope.getAllNotBlackistedUsers();
     $scope.loadBlackListUsers();
 }]);

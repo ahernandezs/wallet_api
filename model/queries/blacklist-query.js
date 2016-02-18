@@ -59,6 +59,31 @@ exports.findAllUsers = function(callback) {
       callback(null, usersd);
     });
   });
+};
+
+exports.findNotBlackListed = function(callback) {
+  BlackListModel.find({}, function (err, users) {
+    var blackListUsers = [];
+
+    if (err)
+      return callback(true, 'Error!');
+
+    for (var i = 0, l = users.length; i < l; i++)
+      blackListUsers.push(users[i].phoneID);
+
+    console.log('ALL BLACKLISTED');
+    console.log(blackListUsers);
+
+    UserModel.find({phoneID: {$nin: blackListUsers}}, {_id: 0, phoneID: 1, name: 1, email: 1}, function (err, usersd) {
+      if (err)
+        return callback(true, 'Error!');
+
+      console.log(usersd);
+
+      return callback(null, usersd);
+
+    });
+  });
 }
 
 exports.deleteUser = function(phoneId, callback){

@@ -21,13 +21,14 @@
         </div>
 
         <form class="form-inline">
-            <input ng-model="query" type="text" placeholder="Filter by name, company, group or email" autofocus class="form-control">
+            <input ng-model="query" type="text" placeholder="Filter by phoneID, name or email" autofocus class="form-control">
         </form>
+        <span>Click on a row to add user to whitelist.</span>
         <div class="main">
             <div class="row">
                 <div class="row">
                     <table ng-table="tableParams">
-                        <tr ng-repeat="user in $data | filter:query" ng-click="user.$selected = !user.$selected; detail(user)">
+                        <tr ng-repeat="user in $data | filter:query" ng-click="user.$selected = !user.$selected; addToWihiteList(user)">
                             <td data-title="'PhoneID'" sortable="'phoneID'">{{user.phoneID}}</td>
                             <td data-title="'Name'" sortable="'name'">{{user.name}}</td>
                             <td data-title="'Email'">{{user.email}}</td>
@@ -35,7 +36,7 @@
                     </table>
                 </div>
             </div>
-         </div>
+        </div>
             <div class="row">
             <table class="table table-bordered table-hover table-condensed">
                 <tr style="font-weight: bold">
@@ -46,7 +47,6 @@
                 </tr>
                 <tr ng-repeat="user in users">
                     <td>
-                        <!-- editable username (text with validation) -->
                         <span editable-text="user.phoneID" e-name="phoneID" e-form="rowform" e-required>
                             {{ user.phoneID || 'Empty'}}
                         </span>
