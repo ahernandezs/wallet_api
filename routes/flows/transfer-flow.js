@@ -193,7 +193,7 @@ exports.transferFunds = function(data, callback) {
 
         function(sessionid,payload,callback){
             console.log('Get sender in db ' + mainUser);
-            var requestSession = { phoneID :  mainUser };
+            var requestSession = { phoneID :  mainUser, sessionid:sessionid};
             sessionQuery.getCredentials(requestSession,function(err,user){
                 forReceipt.user = user;
                 var payloadoxs = {phoneID: user.data.phoneID, action: 'transfer_money_to_a_friend', type: config.wallet.type.DOX}
