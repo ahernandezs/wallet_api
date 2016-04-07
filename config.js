@@ -165,8 +165,8 @@ config.logger = new (winston.Logger)({
 });
 
 config.currency = {};
-config.currency.type ='EURO';
-config.currency.symbol='€';
+config.currency.type ='Dollar';
+config.currency.symbol='$';
 config.currency.position ='L';
 config.currency.proportion =1;
 config.currency.decimal='false';
@@ -182,6 +182,3 @@ config.nexmo.api_protocol = 'https'; //Default
 config.nexmo.debug_on = 'true';
 config.nexmo.debug_false = 'false';
 module.exports = config;
-
-
-
