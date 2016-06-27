@@ -98,7 +98,7 @@ exports.loginFlow = function(payload,callback) {
             callback(err,response);
           } else {
             var response = result.createsessionReturn;
-            callback(null, response.sessionid); 
+            callback(null, response.sessionid);
           }
         });
       });
@@ -150,7 +150,7 @@ exports.loginFlow = function(payload,callback) {
             var response = result.loginReturn;
             logger.info(response);
             if(response.result  === 0 )
-              var response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : response };       
+              var response = { statusCode:0 ,sessionid : sessionid ,  additionalInfo : response };
             else
               var response = { statusCode:1 ,  additionalInfo : response };
 
@@ -209,7 +209,7 @@ exports.loginFlow = function(payload,callback) {
           } else {
             var response = result.balanceReturn;
             if(response.result  === '0' ) {
-              var balance = { current : currentMoney , dox : response.current ,unreadMsgs :length, promotionTimeout:90000 } ;
+              var balance = { current : currentMoney , dox : response.current ,unreadMsgs :length, promotionTimeout:15000 } ;
               console.log(info);
               response = { statusCode: 0, sessionid : sessionid, additionalInfo : balance, userInfo : info };
             }
@@ -237,11 +237,11 @@ exports.loginFlow = function(payload,callback) {
     },
     ], function (err, result) {
       logger.info(result);
-      if(err){      
-        callback(err,result);    
+      if(err){
+        callback(err,result);
       }else{
-        callback(null,result);    
-      }  
+        callback(null,result);
+      }
     });
 };
 
@@ -346,11 +346,11 @@ exports.regenerate = function(request, res, callback) {
             });
         }
     ], function(err, result) {
-        if (err) 
+        if (err)
             callback(err, result);
         else{
             console.log('Finalize Flow');
-            callback(null, result);   
+            callback(null, result);
         }
     });
 };
