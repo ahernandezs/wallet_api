@@ -34,6 +34,10 @@ angular.module('pantallasAdministradorApp', [
         templateUrl: 'views/whitelist.html',
         controller: 'EditableRowCtrl'
       })
+      .when('/tv', {
+        templateUrl: 'views/tv.html',
+        controller: 'tvCtrl'
+      })
       .otherwise({
         redirectTo: '/login'
       });
