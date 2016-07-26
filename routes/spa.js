@@ -9,7 +9,6 @@ var Loan = require('../model/loan');
 var userblackList = require('../model/queries/blacklist-query');
 var async = require('async');
 
-
 exports.getUsers = function(req, res) {
     var totalUsers;
     var countPublic;

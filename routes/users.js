@@ -22,6 +22,21 @@ var logger = config.logger;
 var soap = require('soap');
 var soapurl = process.env.SOAP_URL;
 
+
+
+var mubsub = require('mubsub');
+
+var client = mubsub('mongodb://localhost/amdocs');
+var channel = client.channel('sendUpdate');
+client.on('error', console.error);
+channel.on('error', console.error);
+
+exports.sendUpdate = function(req, res){
+    channel.publish('update_tv',{'name':'Jonathan', 'orderNumber': Math.round(Math.random()*100000), 'photo': '/images/persona.png'});
+}
+
+
+
 exports.login =  function(req, res, callback){
   console.log('execute POST method login');
   sessionUser.loginFlow(req.body,function(err,result){
