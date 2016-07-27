@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Digital Store interactive tv screen</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="styles/stylesheet.css">
+</head>
+<body>
+  <div id="card">
+    <div class="card_holder"> <img src="{{lista[0].photo}}"/>
+      <a href="http://localhost:8017"><div class="casa"></div></a>
+      <div class="name_holder" ng-hide="lista[0].name===''">
+        <div class="hello">Hello,</div>
+        <div class="name">{{lista[0].name}}!</div>
+      </div>
+    </div>
+    <div class="welcome">Welcome to <img src="/images/welcome.png"></div>
+    <div class="order_holder" ng-hide="lista[0].orderNumber==='NO ORDERS'">
+      <div class="order">Your order</div>
+      <div class="id">#{{lista[0].orderNumber}}</div>
+      <div class="ready">is ready!</div>
+      <div class="please">Please approach Amdocs rep</div>
+    </div>
+  </div>
+  <div ng-click="audio.paused ? audio.play() : audio.pause()">
+    <div ng-show="audio.paused"><img src="../images/ico-play.png" height="42" width="42"></div>
+    <div ng-show="!audio.paused"><img src="../images/ico-pause.png" height="42" width="42"></div>
+  </div>
+</body>
+</html>

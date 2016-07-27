@@ -7,7 +7,8 @@ angular.module('pantallasAdministradorApp', [
   'ngRoute',
   'ngTable',
   'ui.bootstrap',
-  'xeditable'
+  'xeditable',
+  'ngAudio'
 ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -33,6 +34,10 @@ angular.module('pantallasAdministradorApp', [
       .when('/whitelist', {
         templateUrl: 'views/whitelist.html',
         controller: 'EditableRowCtrl'
+      })
+      .when('/tv', {
+        templateUrl: 'views/tv.html',
+        controller: 'tvCtrl'
       })
       .otherwise({
         redirectTo: '/login'

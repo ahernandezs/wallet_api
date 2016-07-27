@@ -22,6 +22,12 @@ var logger = config.logger;
 var soap = require('soap');
 var soapurl = process.env.SOAP_URL;
 
+var mubsub = require('mubsub');
+var client = mubsub(process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/amdocs');
+var channel = client.channel('test');
+client.on('error', console.error);
+channel.on('error', console.error);
+
 exports.login =  function(req, res, callback){
   console.log('execute POST method login');
   sessionUser.loginFlow(req.body,function(err,result){
@@ -608,6 +614,10 @@ exports.getUserByPhoneId = function(req, res){
                 .sort({orderId: -1})
                 .limit(1)
                 .exec(function (err, lastOrder) {
+                    var orderNumber = lastOrder.length > 0 ? lastOrder[0].orderId : 'NO ORDERS';
+                    var photo = "https://s3-us-west-1.amazonaws.com/amdocs-images/profile/"+phoneId+".png";
+                    var shopper = user.name.split(' ')[0];
+                    channel.publish('update_tv_one', {'name':shopper, 'orderNumber':orderNumber, 'photo':photo});
                     if (!(removeLive == 'true')) {
                         console.log("REMOVE FLAG NOT DEFINED!!!");
 
