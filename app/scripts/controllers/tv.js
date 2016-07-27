@@ -4,11 +4,15 @@ angular.module('pantallasAdministradorApp')
 .controller('tvCtrl', ['$scope', '$rootScope', '$location', '$http', '$interval', 'ngAudio', function ($scope, $rootScope, $location, $http, $interval, ngAudio) {
 
 	$scope.lista = new Array();
-	$scope.lista.push({'name':'Jonathan', 'orderNumber': '3231231', 'photo': '/images/persona.png'});
+	$scope.lista.push({'name':'', 'orderNumber': 'NO ORDERS', 'photo': '/images/persona.png'});
 
-	var socket = io.connect('http://localhost');
+	var socket = io.connect('http://localhost:3000');
+	socket.on('connect',function(){
+		socket.emit("adduser", 6666);
+	})
+
 	socket.on('update_tv', function(payload){
-		lista.push(payload);
+		$scope.lista.push(payload);
 	});
 
 	$interval(function(){

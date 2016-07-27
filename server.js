@@ -40,6 +40,24 @@ io.on('connection', function (socket) {
 	});
 });
 
+var mubsub = require('mubsub');
+
+var client = mubsub(process.env.MONGOLAB_URI || process.env.MONGOHQ_URL ||   'mongodb://localhost/amdocs');
+var channel = client.channel('test');
+client.on('error', console.error);
+channel.on('error', console.error);
+
+channel.subscribe('update_tv_one', function (message) {
+	if(usersockets){
+		var socketid = usersockets[6666];
+		if(socketid) {
+			io.sockets.connected[socketid].emit('update_tv', message);
+		} else {
+			console.log("This user is not connected " + message);
+		}
+	}
+});
+
 // ## CORS middleware
 var allowCrossDomain = function(req, res, next) {
 	res.header('Access-Control-Allow-Origin', '*');
@@ -69,15 +87,15 @@ var interceptorHeader = function(req, res, next) {
 	console.log('Running interceptor');
 	console.log(req.originalUrl.toString());
 	console.log(req.headers['x-auth-token']);
-    console.log('user: ' + req.headers['x-phoneid']);
-    user.regenerate(req, res, function(err, result) {
-        if (err)
-            res.json(result);
-        else {
-            req.headers['x-auth-token'] = result;
-            next();
-        }
-    });
+	console.log('user: ' + req.headers['x-phoneid']);
+	user.regenerate(req, res, function(err, result) {
+		if (err)
+			res.json(result);
+		else {
+			req.headers['x-auth-token'] = result;
+			next();
+		}
+	});
 };
 
 app.get('/api/ping', function(req, res){

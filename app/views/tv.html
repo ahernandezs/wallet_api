@@ -10,13 +10,13 @@
   <div id="card">
     <div class="card_holder"> <img src="{{lista[0].photo}}"/>
       <a href="http://localhost:8017"><div class="casa"></div></a>
-      <div class="name_holder">
+      <div class="name_holder" ng-hide="lista[0].name===''">
         <div class="hello">Hello,</div>
         <div class="name">{{lista[0].name}}!</div>
       </div>
     </div>
     <div class="welcome">Welcome to <img src="/images/welcome.png"></div>
-    <div class="order_holder">
+    <div class="order_holder" ng-hide="lista[0].orderNumber==='NO ORDERS'">
       <div class="order">Your order</div>
       <div class="id">#{{lista[0].orderNumber}}</div>
       <div class="ready">is ready!</div>
