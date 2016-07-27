@@ -50,4 +50,4 @@ body { font-family: 'open_sanslight'; background: url(../images/bgtv.png) no-rep
 }
 
 .please{ font-family: 'open_sansbold'; font-size: 60px; color: #083e64; line-height: 80px;  float:left;     clear: both; }
-
+.casa{ background: url(../images/ico-home.png) no-repeat; background-size: cover; float: right; width: 80px; height: 80px;}

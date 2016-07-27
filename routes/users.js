@@ -22,20 +22,9 @@ var logger = config.logger;
 var soap = require('soap');
 var soapurl = process.env.SOAP_URL;
 
-
-
 var mubsub = require('mubsub');
-
-var client = mubsub('mongodb://localhost/amdocs');
-var channel = client.channel('sendUpdate');
-client.on('error', console.error);
-channel.on('error', console.error);
-
-exports.sendUpdate = function(req, res){
-    channel.publish('update_tv',{'name':'Jonathan', 'orderNumber': Math.round(Math.random()*100000), 'photo': '/images/persona.png'});
-}
-
-
+var client = mubsub(process.env.MONGOLAB_URI || process.env.MONGOHQ_URL || 'mongodb://localhost/amdocs');
+var channel = client.channel('tv_channel');
 
 exports.login =  function(req, res, callback){
   console.log('execute POST method login');
@@ -623,6 +612,13 @@ exports.getUserByPhoneId = function(req, res){
                 .sort({orderId: -1})
                 .limit(1)
                 .exec(function (err, lastOrder) {
+                    var orderNumber = lastOrder.length > 0 ? lastOrder[0] : 'NO ORDERS';
+
+channel.suscribe('tv_channel', function(){
+      channel.publish('update_tv', {'name':user.name, 'orderNumber': orderNumber, 'photo': imageProfile});
+});
+
+
                     if (!(removeLive == 'true')) {
                         console.log("REMOVE FLAG NOT DEFINED!!!");
 

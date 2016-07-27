@@ -1,0 +1,85 @@
+{
+  "_args": [
+    [
+      "angular-audio@1.7.3",
+      "/home/maximo/Documentos/wallet_demo_api"
+    ]
+  ],
+  "_from": "angular-audio@1.7.3",
+  "_id": "angular-audio@1.7.3",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/angular-audio",
+  "_nodeVersion": "4.4.5",
+  "_npmOperationalInternal": {
+    "host": "packages-16-east.internal.npmjs.com",
+    "tmp": "tmp/angular-audio-1.7.3.tgz_1468260301857_0.22725183726288378"
+  },
+  "_npmUser": {
+    "email": "amitmoryossef@gmail.com",
+    "name": "amit-my"
+  },
+  "_npmVersion": "2.15.5",
+  "_phantomChildren": {},
+  "_requested": {
+    "name": "angular-audio",
+    "raw": "angular-audio@1.7.3",
+    "rawSpec": "1.7.3",
+    "scope": null,
+    "spec": "1.7.3",
+    "type": "version"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/angular-audio/-/angular-audio-1.7.3.tgz",
+  "_shasum": "15833fbbc13f563149868c6a6f2a61f90ca5976a",
+  "_shrinkwrap": null,
+  "_spec": "angular-audio@1.7.3",
+  "_where": "/home/maximo/Documentos/wallet_demo_api",
+  "author": {
+    "name": "danielstern"
+  },
+  "bugs": {
+    "url": "https://github.com/danielstern/ngAudio/issues"
+  },
+  "dependencies": {
+    "browser-sync": "^2.7.12",
+    "gulp": "^3.9.0"
+  },
+  "description": "Total awesomeness for playing sounds in AngularJS",
+  "devDependencies": {
+    "gulp-gh-pages": "^0.5.2"
+  },
+  "directories": {},
+  "dist": {
+    "shasum": "15833fbbc13f563149868c6a6f2a61f90ca5976a",
+    "tarball": "https://registry.npmjs.org/angular-audio/-/angular-audio-1.7.3.tgz"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "gitHead": "e84ce103f5f232efccdaa8f5489659672f5461e0",
+  "homepage": "http://danielstern.github.io/ngAudio/",
+  "keywords": [
+    "ngaudio",
+    "angular-audio"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "maintainers": [
+    {
+      "email": "amitmoryossef@gmail.com",
+      "name": "amit-my"
+    }
+  ],
+  "name": "angular-audio",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danielstern/ngAudio.git"
+  },
+  "scripts": {},
+  "version": "1.7.3"
+}

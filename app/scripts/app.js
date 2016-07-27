@@ -7,7 +7,8 @@ angular.module('pantallasAdministradorApp', [
   'ngRoute',
   'ngTable',
   'ui.bootstrap',
-  'xeditable'
+  'xeditable',
+  'ngAudio'
 ])
   .config(function ($routeProvider) {
     $routeProvider
