@@ -48,13 +48,8 @@ client.on('error', console.error);
 channel.on('error', console.error);
 
 channel.subscribe('update_tv_one', function (message) {
-	if(usersockets){
-		var socketid = usersockets[6666];
-		if(socketid) {
-			io.sockets.connected[socketid].emit('update_tv', message);
-		} else {
-			console.log("This user is not connected " + message);
-		}
+	for(usuario in io.sockets.connected){
+		io.sockets.connected[usuario].emit('update_tv', message);
 	}
 });
 

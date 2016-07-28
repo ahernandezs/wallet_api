@@ -6,10 +6,10 @@ angular.module('pantallasAdministradorApp')
 	$scope.lista = new Array();
 	$scope.lista.push({'name':'', 'orderNumber': 'NO ORDERS', 'photo': '/images/persona.png'});
 
-	var socket = io.connect('http://localhost:3000');
+	var socket = io.connect();
 	socket.on('connect',function(){
-		socket.emit("adduser", 6666);
-	})
+		socket.emit("adduser", Math.round(Math.random()*10000));
+	});
 
 	socket.on('update_tv', function(payload){
 		$scope.lista.push(payload);
