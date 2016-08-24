@@ -1,53 +1,50 @@
 @charset "utf-8";
 body { font-family: 'open_sanslight'; background: url(../images/bgtv.png) no-repeat; background-size: cover; padding: 0; margin: 0; }
-#card { width: 1455px; height: 998px; background: url(../images/card.png) no-repeat; float: left; margin-left: 40px; margin-top: 40px; }
-.card_holder { width: 1360px; height: 325px; background: rgba(141,202,233,0.3); float: left; margin-left: 40px; margin-top: 40px; }
-.card_holder img { width: 325px; height: 325px; float: left; }
-.name_holder { float: left; margin-left: 50px; }
-.hello { font-family: 'open_sanslight'; font-size: 140px; color: #083e64; line-height: 80px; margin-top: 50px; }
-.name { font-family: 'open_sansbold'; font-size: 140px; color: #1195d3; }
+#card { width: 76vw; height: 90vh; background: url(../images/card.png) no-repeat; background-size: contain; float: left; margin-left: 3vw; margin-top: 3vh; }
+.card_holder { width: 71vw; height: 29vh; background: rgba(141,202,233,0.3); float: left; margin-left: 2vw; margin-top: 4vh; }
+.card_holder img { height: 29vh; float: left; }
+.name_holder { float: left; margin-left: 3vw; }
+.hello { font-family: 'open_sanslight'; font-size: 12vh; color: #083e64; line-height: 7vh; margin-top: 4vh; }
+.name { font-family: 'open_sansbold'; font-size: 12vh; color: #1195d3; }
 
 .welcome {
     font-family: 'open_sanslight';
-    font-size: 73px;
+    font-size: 3.5vw;
     color: #1195d3;
-    margin-left: 40px;
+    margin-left: 2vw;
     float: left;
-    margin-right: 14px;
-    margin-top: 50px;
+    margin-top: 3vh;
     border-bottom: 1px solid #083e64;
-    padding-bottom: 22px;
-    margin-bottom: 60px;
+    padding-bottom: 2vh;
+    margin-bottom: 6vh;
 }
 
-
-.welcome img {
+.welcome1{
     vertical-align: bottom;
-    margin-left: -2px;
+    height: 8vh;
 }
 
-
-.order_holder { float:left; margin-left:40px; margin-top:0px; }
-.order { font-family: 'open_sansbold'; font-size: 90px; color: #0068ae; float:left; }
+.order_holder { float:left; margin-left:2vw; margin-top:0px; }
+.order { font-family: 'open_sansbold'; font-size: 5vw; color: #0068ae; float:left; }
 .ready {
     font-family: 'open_sansbold';
-    font-size: 90px;
+    font-size: 5vw;
     color: #0068ae;
     float: left;
     clear: both;
-    line-height: 60px;
-    margin-bottom: 60px;
+    line-height: 6vh;
+    margin-bottom: 5vh;
 }
 
 .id {
     font-family: 'open_sansbold';
-    font-size: 140px;
+    font-size: 7vw;
     color: #083e64;
-    line-height: 88px;
+    line-height: 10vh;
     float: left;
     clear: right;
-    margin-left: 30px;
+    margin-left: 2vw;
 }
 
-.please{ font-family: 'open_sansbold'; font-size: 60px; color: #083e64; line-height: 80px;  float:left;     clear: both; }
+.please{ font-family: 'open_sansbold'; font-size: 5vh; color: #083e64; line-height: 10vh;  float:left;     clear: both; }
 .casa{ background: url(../images/ico-home.png) no-repeat; background-size: cover; float: right; width: 80px; height: 80px;}
