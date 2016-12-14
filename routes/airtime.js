@@ -30,3 +30,26 @@ exports.buy = function(req, res){
         res.send(result);
     });
 };
+
+
+exports.topup = function(req, res){
+    var payload = req.body;
+    payload.phoneID = req.headers['x-phoneid'];
+    payload.sessionid = req.headers['x-auth-token'];
+
+    console.log('execute POST method Buy Airtime for family or friend');
+    console.log(payload);
+
+    if (!payload.to && !payload.amount) {
+        res.send({'statusCode' : 1, additionalInfo: {'message': 'INVALID JSON'}});
+        return;
+    }
+
+    airtimeFlow.topup(payload, function(err, result){
+        if (err) {
+            res.send(result);
+            return;
+        }
+        res.send(result);
+    });
+};

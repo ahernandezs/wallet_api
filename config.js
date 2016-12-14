@@ -63,6 +63,7 @@ config.messages.transferMsg = 'You have received money from ';
 config.messages.giftMsg = '[sender] has gifted you an Amdocs Café voucher';
 config.messages.billPayMsg = 'You have payed a bill from ';
 config.messages.airtimeBuyMsg = 'Successful airtime purchase of ';
+config.messages.airtimeTopUp = 'Congratulation! You have just received &money of airtime from user';
 config.messages.ticketBuyMsg = 'You have bought a ticket ';
 config.messages.loanRequestMsg = 'You have requested a loan for €';
 config.messages.loanRejectedMsg = 'Build up your Dox score to be elegible for a loan';
