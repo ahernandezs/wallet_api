@@ -6,7 +6,7 @@ angular.module('pantallasAdministradorApp')
 	$scope.lista = new Array();
 	$scope.lista.push({'name':'', 'orderNumber': 'NO ORDERS', 'photo': '/images/persona.png'});
 
-	var socket = io.connect('http://localhost:3000');
+	var socket = io.connect('http://amdocswalletapidemonode-muymevnpey.elasticbeanstalk.com');
 	socket.on('connect',function(){
 		socket.emit("adduser", Math.round(Math.random()*10000));
 	});

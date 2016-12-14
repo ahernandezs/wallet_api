@@ -115,6 +115,7 @@ app.get('/api/bill/:id',bill.get_bill);
 app.get('/api/bill/:id/push',bill.get_bill_with_push);
 app.post('/api/bill/pay',interceptorHeader, bill.pay_bill);
 app.post('/api/airtime',interceptorHeader, airtime.buy);
+app.post('/api/airtime/topup',interceptorHeader , airtime.topup);
 app.get('/api/ticket',ticket.get_all);
 app.get('/api/ticket/:id',ticket.get_by_id);
 app.post('/api/ticket/pay',interceptorHeader, ticket.buy);

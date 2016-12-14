@@ -310,7 +310,7 @@ var putDoxs = exports.putDoxs = function(payload, callback){
       console.log('the sessionid: '+payload.sessionid);
         balance.balanceFlow(payload.sessionid, function(err, result) {
           if(err){
-            callback('ERROR', response);
+            callback('ERROR', "Error to get balance");
           }
           else{
             console.log("\n\nDoxes en UTIBA: "+result.additionalInfo.dox);
