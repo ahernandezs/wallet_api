@@ -135,7 +135,7 @@ config.prizes.top = 1;
 
 config.conn = {};
 config.username = 'anzen_01';
-config.pin = '1234';
+config.pin = '1111';
 config.initialTransferAmount = 15;
 config.merchantValidationAmount = 10;
 
