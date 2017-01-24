@@ -383,7 +383,7 @@ exports.getUsers = function(parameters,callback){
         });
       }// end else if
       else{
-        User.find({}, 'phoneID name email lastSession company', { sort : { name : 1 }}, function (err, people) {
+        User.find({}, 'phoneID name email lastSession company countryCode', { sort : { name : 1 }}, function (err, people) {
           if (err) return handleError(err);
           else if(people){
             people.sort(sortstring);
@@ -399,7 +399,7 @@ exports.getUsers = function(parameters,callback){
   }//end of if
   else{
     console.log('Get all users');
-    User.find({},'name phoneID', { sort : { name : 1 }}, function (err, people) {
+    User.find({},'name phoneID countryCode', { sort : { name : 1 }}, function (err, people) {
       if (err) return handleError(err);
       else if(people){
         callback(null, people);
@@ -635,7 +635,7 @@ function getUsersByTeam(callback){
     //Get all users that start name with 'TEAM'
     function(callback){
       var conditionsIncludeTeam= { name: /Team/ };
-      var includeTeamQuery = User.find(conditionsIncludeTeam,'phoneID name email lastSession company');
+      var includeTeamQuery = User.find(conditionsIncludeTeam,'phoneID name email lastSession company countryCode');
       includeTeamQuery.sort({name: 1});
       includeTeamQuery.exec(function (err1, usersTeam) {
         console.log('Users with Team');
@@ -647,7 +647,7 @@ function getUsersByTeam(callback){
     //Get all users that start name different 'TEAM'
     function(usersTeam, callback){
       var conditionsNotIncludeTeam = {name: {"$not": /Team/}};
-      var usersQuery = User.find(conditionsNotIncludeTeam,'phoneID name email lastSession company');
+      var usersQuery = User.find(conditionsNotIncludeTeam,'phoneID name email lastSession company countryCode');
       usersQuery.sort({name: 1});
       usersQuery.exec(function (err1, usersWithoutTeam) {
         usersWithoutTeam.sort(sortstring);
@@ -671,7 +671,7 @@ exports.getUserVerified = function(callback){
 
 exports.getContactList = function(contactList, callback){
       var conditions= { phoneID : {'$in' : contactList }  };
-      var query = User.find(conditions,'phoneID name _id ');
+      var query = User.find(conditions,'phoneID name countryCode _id ');
       query.sort({name: 1});
       query.exec(function (err1, usersTeam) {
         callback(null,usersTeam);
